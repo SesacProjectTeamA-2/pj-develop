@@ -10,6 +10,7 @@ import { grey } from '@mui/material/colors';
 import { Button, ButtonGroup, Divider } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../../styles/scss/layout/header.scss';
+import Alarm from './Alarm';
 
 export default function Header(props: any) {
     const [isCookie, setIsCookie] = useState(false); // 쿠키 유무
@@ -267,13 +268,6 @@ export default function Header(props: any) {
                     >
                         <Link to="/">
                             <div className="title1 logo-text">MOTI</div>
-                            {/* <div className="logo-container">
-                            <img
-                                src="/asset/logo.svg"
-                                className="logo-img"
-                                alt="logo"
-                            />
-                        </div> */}
                         </Link>
                     </div>
 
@@ -425,8 +419,33 @@ export default function Header(props: any) {
                                                 onClick={alarmHandler}
                                                 id="logout-btn"
                                             />
+                                            <div className="noti-count-wrapper">
+                                                <span className="notification-count">
+                                                    6
+                                                </span>
+                                            </div>
                                             {/* <span id="logout-text">Bell</span> */}
                                         </div>
+                                        {/* 알람창 컴포넌트 */}
+
+                                        {isAlarm && (
+                                            <Alarm
+                                                alarmHandler={alarmHandler}
+                                            />
+                                        )}
+
+                                        {/* [참고] 움직이는 알람 */}
+                                        {/* <div className="notification-box">
+                                            <span className="notification-count">
+                                                6
+                                            </span>
+                                            <div className="notification-bell">
+                                                <span className="bell-top"></span>
+                                                <span className="bell-middle"></span>
+                                                <span className="bell-bottom"></span>
+                                                <span className="bell-rad"></span>
+                                            </div>
+                                        </div> */}
 
                                         <div className="logout-icon-container">
                                             <img

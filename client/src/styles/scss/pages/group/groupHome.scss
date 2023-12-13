@@ -259,11 +259,13 @@
 
 .ranking-list-cur {
     display: flex;
-
     width: 100%;
+    align-items: center;
+    justify-content: space-around;
 
     .name-bar-wrapper {
-        width: 100%;
+        width: 85%;
+        margin-left: 1rem;
     }
 
     .progress-div {
@@ -281,7 +283,7 @@
 .ranking-list-cur img {
     @include box(40px);
     border-radius: 50%;
-    padding-right: 0.8rem;
+    // padding-right: 0.8rem;
 }
 
 .ranking-list-acc {
@@ -298,7 +300,8 @@
 }
 
 .acc-name {
-    width: 200%;
+    width: 80%;
+    margin-left: 1rem;
 }
 
 .ranking-list-acc img {
