@@ -4,39 +4,18 @@ const redisCli = require('../models/redis');
 
 const redisAdapter = require('socket.io-redis');
 
-exports.setupSocket = async (server, options, req, res) => {
+exports.setupSocket = async (server, options) => {
   try {
-    let token = req.headers.authorization.split(' ')[1];
-    const user = await jwt.verify(token);
-    const uSeq = user.uSeq;
-    const uName = user.uName;
-    if (!token) {
-      res.send({
-        success: false,
-        msg: '토큰 X',
-      });
-    }
-    if (!uSeq) {
-      res.send({
-        success: false,
-        msg: '로그인X or 비정상적인 접근',
-      });
-      return;
-    }
-
     const io = IO(server, options);
     const connectedUser = {}; // 연결된 클라이언트를 저장할 객체
 
     // Set 객체생성 : 중복된 값을 허용하지 않는 데이터 구조.
-    const connectedSockets = new Set();
+    // const connectedSockets = new Set();
 
     // 네임스페이스 생성(모임챗) - 룸: 각 모임별 챗
     // Express의 라우팅처럼 url에 지정된 위치에 따라 신호의 처리를 다르게 하는 기술(특정 페이지에서 소켓이 보내주는 모든 실시간 메세지를 받을 필요는 없다)
     // Room은 namespace의 하위개념에 해당.(카톡 단톡방 1, 단톡방 2...)
     const groupChat = io.of(`/api/chat`);
-
-    const test1 = redisCli.get('test1');
-    console.log(test1);
 
     const printConnectedSocketIds = () => {
       const connectedSocketIds = Object.keys(groupChat.sockets);
@@ -54,16 +33,19 @@ exports.setupSocket = async (server, options, req, res) => {
         console.log(`/api/socket/chat 네임스페이스 연결 완료 ::: `, socketId);
 
         // 이미 연결된 소켓인지 확인
-        if (connectedSockets.has(socketId)) {
-          // 중복 연결이면 처리하지 않고 종료
-          console.log(`Socket ${socketId} is already connected.`);
-          return;
-        }
+        // if (connectedSockets.has(socketId)) {
+        //   // 중복 연결이면 처리하지 않고 종료
+        //   console.log(`Socket ${socketId} is already connected.`);
+        //   return;
+        // }
 
         // 1. 로그인메세지 전달
         // 2. 모임별 채팅방에 입장 및 notice (생성된 룸없을 경우 직접 생성)
         socket.on('login', (data) => {
           try {
+            const uSeq = data.uSeq;
+            const uName = data.uName;
+
             if (Array.isArray(data)) {
               data.gSeq.map((info) => {
                 const isExisting = groupChat.adapter.rooms.has(
@@ -119,6 +101,9 @@ exports.setupSocket = async (server, options, req, res) => {
           try {
             // 닉네임(socketId)/시간/룸/
             const { socketId, uName, timeStamp, msg, gSeq } = data;
+            const roomChat = groupChat.to(`room${gSeq}`);
+
+            roomChat.emit('msg', { uName, timeStamp, msg });
           } catch (err) {
             console.error(err);
           }
@@ -126,6 +111,7 @@ exports.setupSocket = async (server, options, req, res) => {
 
         socket.on('logout', () => {
           console.log('logout');
+          delete connectedUser[socketId];
           socket.disconnect();
         });
 
@@ -138,7 +124,7 @@ exports.setupSocket = async (server, options, req, res) => {
             // `${connectedUser[socketId].uName}님이 로그아웃하셨습니다.`
           );
           delete connectedUser[socketId];
-          connectedSockets.delete(socketId);
+          // connectedSockets.delete(socketId);
         });
       } catch (err) {
         console.error('nameSpace error', err);
