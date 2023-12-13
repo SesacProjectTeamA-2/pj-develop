@@ -28,15 +28,15 @@ export default function Header(props: any) {
     //     console.log('클라이언트 연결 완료 ::', socket.id);
     // });
 
-    socket.on('connect', (data: any) => {
-        console.log('클라이언트 연결 완료 ::', data);
-    });
+    // socket.on('connect', (data: any) => {
+    //     console.log('클라이언트 연결 완료 ::', data);
+    // });
 
     // [ TEST ]
-    socket.on('send', (data: any) => {
-        console.log('socket server connected.');
-        console.log('socket server connected.', data);
-    });
+    // socket.on('send', (data: any) => {
+    //     console.log('socket server connected.');
+    //     console.log('socket server connected.', data);
+    // });
 
     const [loginData, setLoginData] = useState([]);
 
@@ -153,16 +153,12 @@ export default function Header(props: any) {
         if (window.confirm('로그아웃하시겠습니까 ?')) {
             //-- 채팅 종료
             socket.emit('logout', () => {
-                // socket.disconnect();
-
                 console.log('socket server disconnected.');
             });
 
             socket.emit('discoonect', () => {
                 console.log('socket server disconnected.');
             });
-
-            // getChat();
 
             cookie.remove('isUser', { path: '/' });
 
