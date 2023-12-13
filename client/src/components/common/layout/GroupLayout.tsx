@@ -52,36 +52,34 @@ export default function GroupLayout({ children, showChat }: any) {
                     <>
                         {/* 그룹 메뉴 바 컴포넌트 들어갈 곳 */}
                         <Grid md={2} sm={12} xs={12} className="groupMenu-div">
-                            {/* <div
-                                style={{
-                                    height: '21.5%',
-                                    zIndex: '0',
-                                    backgroundColor: '#f5e060',
-                                    width: '100%',
-                                }}
-                            ></div> */}
-
                             <Item
                                 className="item-sidebar-box-list"
                                 style={
-                                    isLeader
-                                        ? isShrinkView
+                                    isJoin
+                                        ? isLeader
+                                            ? isShrinkView
+                                                ? {
+                                                      backgroundColor:
+                                                          '#f5e060',
+                                                      width: '50%',
+                                                  }
+                                                : {
+                                                      backgroundColor:
+                                                          '#f5e060',
+                                                      width: '100%',
+                                                  }
+                                            : isShrinkView
                                             ? {
-                                                  backgroundColor: '#f5e060',
-                                                  width: '80%',
+                                                  width: '50%',
+                                                  backgroundColor: '#ffc8cd',
                                               }
                                             : {
-                                                  backgroundColor: '#f5e060',
                                                   width: '100%',
+                                                  backgroundColor: '#ffc8cd',
                                               }
-                                        : isShrinkView
-                                        ? {
-                                              width: '75%',
-                                              backgroundColor: '#ffc8cd',
-                                          }
                                         : {
                                               width: '100%',
-                                              backgroundColor: '#ffc8cd',
+                                              backgroundColor: '#e0e0e0',
                                           }
                                 }
                             >

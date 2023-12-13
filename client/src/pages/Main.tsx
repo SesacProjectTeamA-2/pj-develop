@@ -14,6 +14,26 @@ export default function Main() {
     const [uSeq, setUSeq] = useState(1); // 유저 번호
     const [gSeq, setGSeq] = useState([]); // 참여 모임
 
+    const getChat = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/socket/chat`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                console.log(res);
+
+                socket.on('connect', (data: any) => {
+                    console.log('socket server connected.');
+                    console.log(data);
+                });
+
+                // 닉네임 서버에 전송
+                // socket.emit('setName', uName);
+            });
+    };
+
     // 1. 사용자 명언 정보 가져오기
     // 1-1. 명언 변수
     const [phraseCtt, setPhraseCtt] = useState<string | null>(null);
@@ -34,17 +54,16 @@ export default function Main() {
     if (uToken) {
         myCookie.set('isUser', uToken);
 
-        socket.emit('login', () => {
-            console.log('클라이언트 login ======= ', loginData);
-        });
+        getChat();
 
-        // const loginData = {
-        //     uSeq,
-        //     uName: 'Test 유저',
-        //     gName: '임시 모임',
-        //     gSeq,
-        //   };
+        // socket.emit('login', () => {
+        //     console.log('클라이언트 login ======= ', loginData);
+        // });
     }
+
+    useEffect(() => {
+        getChat();
+    }, []);
 
     // console.log('isUser', myCookie.get('isUser'));
 
@@ -61,7 +80,7 @@ export default function Main() {
             .then((res) => {
                 const { nickname } = res.data;
                 setUName(nickname);
-                console.log('===========', res.data);
+                // console.log('===========', res.data);
             });
     };
 
