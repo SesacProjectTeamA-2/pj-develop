@@ -5,6 +5,8 @@ import '../../styles/scss/layout/footer.scss';
 export default function Footer() {
     return (
         <div className="footer-container">
+            <div className="fence"></div>
+
             <div className="title4 footer-content">
                 <div className="footer-item">
                     <img
@@ -50,6 +52,9 @@ export default function Footer() {
                         </a>
                     </div>
                 </div>
+                {/* </div> */}
+
+                {/* footer 추가 */}
             </div>
         </div>
     );

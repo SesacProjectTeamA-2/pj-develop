@@ -419,7 +419,10 @@ export default function Header(props: any) {
                                                 onClick={alarmHandler}
                                                 id="logout-btn"
                                             />
-                                            <div className="noti-count-wrapper">
+                                            <div
+                                                className="noti-count-wrapper"
+                                                onClick={alarmHandler}
+                                            >
                                                 <span className="notification-count">
                                                     6
                                                 </span>
