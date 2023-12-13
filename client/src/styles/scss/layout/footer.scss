@@ -8,6 +8,7 @@
 }
 
 .footer-container {
+    position: relative;
     display: flex;
     justify-content: center;
     width: 100%;
@@ -15,7 +16,6 @@
     min-height: 3rem;
     background-color: #574141;
     padding: 8rem;
-
 
     .footer-content {
         font-size: 1rem;
@@ -49,4 +49,33 @@
 
 .word-break {
     white-space: normal;
+}
+
+// footer 추가
+.fence {
+    position: absolute;
+    top: -27px;
+    left: 0;
+    right: 0;
+    z-index: 5;
+    height: 34px;
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2ZXJzaW9uPSIxLjEiICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIKCSB2aWV3Qm94PSIwIDAgMzAgMzMuOCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzAgMzMuODsiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtmaWxsOiNGRkZGRkY7fQo8L3N0eWxlPgo8cG9seWdvbiBjbGFzcz0ic3QwIiBwb2ludHM9IjgsMzMuOCAwLDMzLjggMCwzLjggNCwwIDgsMy44ICIvPgo8L3N2Zz4=)
+        top left repeat-x;
+    background-size: 30px 34px;
+    &:before,
+    &:after {
+        background: white;
+        height: 4px;
+        content: '';
+        display: block;
+        left: 0;
+        right: 0;
+        position: absolute;
+    }
+    &:before {
+        top: 12px;
+    }
+    &:after {
+        top: 22px;
+    }
 }

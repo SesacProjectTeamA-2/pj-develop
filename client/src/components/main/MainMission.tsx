@@ -20,7 +20,6 @@ export default function MainMission() {
             })
             .then((res) => {
                 console.log(res.data);
-                console.log('groupArray어레이>>>>>>>>>>>>>>>', res.data);
 
                 const { missionArray, groupArray, uName, uCharImg } = res.data;
                 setMissionArray(missionArray);
@@ -40,8 +39,6 @@ export default function MainMission() {
     const [uCharImg, setCharImg] = useState('');
     const [missionArray, setMissionArray] = useState([]);
     const [groupArray, setGroupInfo] = useState<any>([]);
-
-    console.log('groupArray어레이>>>>>>>>>>>>>>>', missionArray);
 
     return (
         <Paper elevation={3} className="content-grid-box">

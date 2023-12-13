@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
 import { getSocket } from 'src/socket';
+import { io } from 'socket.io-client';
 
 import Content from '../components/main/Content';
 
@@ -16,17 +17,18 @@ export default function Main() {
 
     const getChat = async () => {
         const res = await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/socket/chat`, {
+            .get(`${process.env.REACT_APP_DB_HOST}/chat`, {
                 headers: {
                     Authorization: `Bearer ${uToken}`,
                 },
             })
             .then((res) => {
-                console.log(res);
+                const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
 
-                socket.on('connect', (data: any) => {
+                console.log('????????', res);
+
+                socket.on('connect', () => {
                     console.log('socket server connected.');
-                    console.log(data);
                 });
 
                 // 닉네임 서버에 전송
