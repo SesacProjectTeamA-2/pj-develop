@@ -74,9 +74,7 @@ const options = {
 };
 
 // 해당 요청이 있을 경우 소켓통신 시작
-app.get('/api/chat', authUtil, (req, res) =>
-  setupSocket(server, options, req, res)
-);
+setupSocket(server, options);
 
 /**
  * @path {GET} ${URL}:${PORT}/api
