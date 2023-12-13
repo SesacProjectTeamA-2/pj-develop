@@ -1,8 +1,6 @@
 const IO = require('socket.io');
 const jwt = require('../modules/jwt');
 const redisCli = require('../models/redis');
-const express = require('express');
-const app = express();
 
 const redisAdapter = require('socket.io-redis');
 
@@ -10,6 +8,8 @@ exports.setupSocket = async (server, options, req, res) => {
   try {
     let token = req.headers.authorization.split(' ')[1];
     const user = await jwt.verify(token);
+    const uSeq = user.uSeq;
+    const uName = user.uName;
     if (!token) {
       res.send({
         success: false,
@@ -23,8 +23,6 @@ exports.setupSocket = async (server, options, req, res) => {
       });
       return;
     }
-    const uSeq = user.uSeq;
-    const uName = user.uName;
 
     const io = IO(server, options);
     const connectedUser = {}; // 연결된 클라이언트를 저장할 객체
@@ -35,7 +33,7 @@ exports.setupSocket = async (server, options, req, res) => {
     // 네임스페이스 생성(모임챗) - 룸: 각 모임별 챗
     // Express의 라우팅처럼 url에 지정된 위치에 따라 신호의 처리를 다르게 하는 기술(특정 페이지에서 소켓이 보내주는 모든 실시간 메세지를 받을 필요는 없다)
     // Room은 namespace의 하위개념에 해당.(카톡 단톡방 1, 단톡방 2...)
-    const groupChat = io.of(`/api/socket/chat`);
+    const groupChat = io.of(`/api/chat`);
 
     const test1 = redisCli.get('test1');
     console.log(test1);
@@ -99,7 +97,7 @@ exports.setupSocket = async (server, options, req, res) => {
             const gSeq = data.gSeq;
             const roomChat = groupChat.to(`room${gSeq}`);
 
-            // 닉네임(socketId)/시간/룸/
+            // 룸에 해당하는 메세지 가져오기
             await redisCli.hgetall(`room${gSeq}`);
 
             const newMessages = Object.entries(messages)
