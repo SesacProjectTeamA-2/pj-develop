@@ -15,27 +15,6 @@ export default function Main() {
     const [uSeq, setUSeq] = useState(1); // 유저 번호
     const [gSeq, setGSeq] = useState([]); // 참여 모임
 
-    const getChat = async () => {
-        const res = await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/chat`, {
-                headers: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            })
-            .then((res) => {
-                const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
-
-                console.log('????????', res);
-
-                socket.on('connect', () => {
-                    console.log('socket server connected.');
-                });
-
-                // 닉네임 서버에 전송
-                // socket.emit('setName', uName);
-            });
-    };
-
     // 1. 사용자 명언 정보 가져오기
     // 1-1. 명언 변수
     const [phraseCtt, setPhraseCtt] = useState<string | null>(null);
@@ -56,20 +35,41 @@ export default function Main() {
     if (uToken) {
         myCookie.set('isUser', uToken);
 
-        getChat();
+        // getChat();
 
         // socket.emit('login', () => {
         //     console.log('클라이언트 login ======= ', loginData);
         // });
     }
 
-    useEffect(() => {
-        getChat();
-    }, []);
+    // useEffect(() => {
+    //     getChat();
+    // }, []);
 
     // console.log('isUser', myCookie.get('isUser'));
 
     //=== 채팅 login ===
+
+    const getChat = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/chat`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                // const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
+
+                console.log('????????', res);
+
+                socket.emit('connection', () => {
+                    console.log('socket server connected.');
+                });
+
+                // 닉네임 서버에 전송
+                // socket.emit('setName', uName);
+            });
+    };
 
     // 1. 사용자 데이터 가져오기
     const getUserData = async () => {
@@ -88,6 +88,7 @@ export default function Main() {
 
     useEffect(() => {
         getUserData();
+        // getChat();
     }, []);
 
     //_ loginData = {uSeq, uName, [gSeq]}
