@@ -28,10 +28,10 @@ export default function GroupList() {
                     },
                 }
             );
-            const data = response.data; // 데이터에 접근
+            const data = response.data;
 
-            setMadeGroup(data.groupInfo); // 받은 데이터를 joinGroup 상태로 설정
-            setMadeNumGroup(data.groupUserCount); // 받은 데이터를 joinGroup 상태로 설정
+            setMadeGroup(data.groupInfo);
+            setMadeNumGroup(data.groupUserCount);
         } catch (error) {
             console.error('Error while fetching data:', error);
         }
@@ -54,9 +54,9 @@ export default function GroupList() {
                     },
                 }
             );
-            const data = response.data; // 데이터에 접근
-            console.log('참여한 모임', data);
-            setJoinGroup(data.groupInfo); // 받은 데이터를 joinGroup 상태로 설정
+            const data = response.data;
+            // console.log('참여한 모임', data);
+            setJoinGroup(data.groupInfo);
         } catch (error) {
             console.error('Error while fetching data:', error);
         }

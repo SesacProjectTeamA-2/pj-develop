@@ -93,8 +93,9 @@ $secondary: #6fa57f;
 
 .panel .notifications {
     position: relative;
-    height: 100%;
-    overflow: hidden;
+    height: 405px;
+    // overflow: hidden;
+    overflow: auto;
 }
 .panel .notifications .line {
     position: absolute;
@@ -194,7 +195,7 @@ $secondary: #6fa57f;
 
     svg {
         top: 3px;
-        right: 155px;
+        right: 140px;
     }
 
     .check-text {
@@ -202,7 +203,7 @@ $secondary: #6fa57f;
         display: none;
         position: absolute;
         top: 4px;
-        right: 100px;
+        right: 86px;
         font-size: 0.8rem;
         color: fade-out($main-color, 0.38);
         font-weight: bold;

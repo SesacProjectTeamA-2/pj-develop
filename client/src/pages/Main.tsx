@@ -7,14 +7,6 @@ import { io } from 'socket.io-client';
 import Content from '../components/main/Content';
 
 export default function Main() {
-    const socket = getSocket();
-
-    //_ loginData = {uSeq, uName, [gSeq]}
-    const [loginData, setLoginData] = useState([]); // socket 서버 전송
-    const [uName, setUName] = useState(''); // 닉네임
-    const [uSeq, setUSeq] = useState(1); // 유저 번호
-    const [gSeq, setGSeq] = useState([]); // 참여 모임
-
     // 1. 사용자 명언 정보 가져오기
     // 1-1. 명언 변수
     const [phraseCtt, setPhraseCtt] = useState<string | null>(null);
@@ -47,52 +39,6 @@ export default function Main() {
     // }, []);
 
     // console.log('isUser', myCookie.get('isUser'));
-
-    //=== 채팅 login ===
-
-    const getChat = async () => {
-        const res = await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/chat`, {
-                headers: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            })
-            .then((res) => {
-                // const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
-
-                console.log('????????', res);
-
-                socket.emit('connection', () => {
-                    console.log('socket server connected.');
-                });
-
-                // 닉네임 서버에 전송
-                // socket.emit('setName', uName);
-            });
-    };
-
-    // 1. 사용자 데이터 가져오기
-    const getUserData = async () => {
-        await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/user/mypage`, {
-                headers: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            })
-            .then((res) => {
-                const { nickname } = res.data;
-                setUName(nickname);
-                // console.log('===========', res.data);
-            });
-    };
-
-    useEffect(() => {
-        getUserData();
-        // getChat();
-    }, []);
-
-    //_ loginData = {uSeq, uName, [gSeq]}
-    console.log('loginData::::::', loginData);
 
     return (
         <div className="section-main">

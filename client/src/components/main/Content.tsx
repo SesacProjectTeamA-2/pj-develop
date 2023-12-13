@@ -8,6 +8,7 @@ import Quotes from './Quotes';
 import MainMission from './MainMission';
 import MyPercentage from './MyPercentage';
 import TeamPercentage from './TeamPercentage';
+import { io } from 'socket.io-client';
 
 import '../../styles/scss/pages/main/percentage.scss';
 import Progressbar from '../common/Progressbar';
@@ -15,6 +16,15 @@ import Progressbar from '../common/Progressbar';
 export default function Content(props: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
+
+    //_ loginData = {uSeq, uName, [gSeq]}
+    const [loginData, setLoginData] = useState<any>({
+        uSeq: 1,
+        uName: '',
+        gSeq: [],
+    }); // socket 서버 전송
+    const [uSeq, setUSeq] = useState(1); // 유저 번호
+    const [gSeqList, setGSeqList] = useState<any>([]); // 참여 모임
 
     // 프로필 사진 , 명언 가져오기
     // -1) 프로필 사진
@@ -34,6 +44,7 @@ export default function Content(props: any) {
     const [selectedCharacter, setSelectedCharacter] = useState<
         string | undefined
     >('/asset/images/sqr2.svg');
+
     const getUserData = async () => {
         await axios
             .get(`${process.env.REACT_APP_DB_HOST}/user/mypage`, {
@@ -120,6 +131,27 @@ export default function Content(props: any) {
                 setNowRanking(nowRanking);
                 setGroupRates(GroupRates);
                 setMainGroup(mainGroup);
+
+                //-- gSeqList => 채팅 서버 전송
+                const updatedGSeqList = [...gSeqList]; // 기존 배열을 복사
+
+                for (let i = 0; i < groupInfo.length; i++) {
+                    updatedGSeqList.push(groupInfo[i].gSeq);
+                }
+
+                setGSeqList(updatedGSeqList);
+
+                //-- 보낼 데이터 업데이트
+                // uSeq: 1,
+                // uName: '',
+                // gSeq: [],
+                if (loginData.uName !== uName) {
+                    setLoginData((prevData: any) => ({
+                        ...prevData,
+                        uName,
+                        gSeq: [...updatedGSeqList],
+                    }));
+                }
             });
     };
 
@@ -150,9 +182,18 @@ export default function Content(props: any) {
                 },
             })
             .then((res) => {
-                const { groupInfo } = res.data;
+                const { groupInfo, uSeq } = res.data;
 
                 setJoinGroupInfo(groupInfo);
+                setUSeq(uSeq);
+
+                //-- 보낼 데이터 업데이트
+                if (loginData.uSeq !== uSeq) {
+                    setLoginData((prevData: any) => ({
+                        ...prevData,
+                        uSeq,
+                    }));
+                }
             });
     };
 
@@ -219,6 +260,36 @@ export default function Content(props: any) {
     useEffect(() => {
         setSelectedCharacter(newChar);
     }, [totalPercent]);
+
+    //=== 채팅 login ===
+
+    const getChat = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/chat`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
+
+                console.log('????????', res);
+
+                socket.emit('connection', () => {
+                    console.log('socket server connected.');
+                });
+
+                // 닉네임 서버에 전송
+                // socket.emit('setName', uName);
+            });
+    };
+
+    //_ loginData = {uSeq, uName, [gSeq]}
+    console.log('uName::::::', uName);
+    console.log('uSeq::::::', uSeq);
+    console.log('groupInfo::::::', groupInfo);
+    console.log('gSeqList::::::', gSeqList);
+    console.log('loginData::::::', loginData);
 
     return (
         <div
