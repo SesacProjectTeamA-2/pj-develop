@@ -56,6 +56,24 @@ export default function Alarm({ alarmHandler }: any) {
                             <b>Luke Wayne</b> followed you.
                         </p>
                     </div>
+                    <div className="notification">
+                        <div className="circle"></div>
+
+                        <span className="time">Yesterday</span>
+                        <button>읽음 표시</button>
+                        <p>
+                            <b>Luke Wayne</b> followed you.
+                        </p>
+                    </div>
+                    <div className="notification">
+                        <div className="circle"></div>
+
+                        <span className="time">Yesterday</span>
+                        <button>읽음 표시</button>
+                        <p>
+                            <b>Luke Wayne</b> followed you.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
