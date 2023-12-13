@@ -70,9 +70,9 @@ exports.setupSocket = async (server, options, req, res) => {
                   `room${info.gSeq}`
                 );
                 if (isExisting) {
-                  socket.join(`room${info.gSeq}`);
+                  socket.join(`room${info}`);
                   groupChat
-                    .to(`room${info.gSeq}`)
+                    .to(`room${info}`)
                     .emit('success', { msg: `${uName}님이 로그인하셨어요` });
                 } else {
                   groupChat.adapter.socketsJoin(socketId, `room${info.gSeq}`);
