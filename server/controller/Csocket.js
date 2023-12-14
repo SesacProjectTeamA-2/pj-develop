@@ -1,12 +1,14 @@
 const IO = require('socket.io');
-const jwt = require('../modules/jwt');
 const redisCli = require('../models/redis');
-
+const authSocketUtil = require('../middlewares/authSocket');
 const redisAdapter = require('socket.io-redis');
 
 exports.setupSocket = async (server, options) => {
   try {
     const io = IO(server, options);
+
+    io.use(authSocketUtil);
+
     const connectedUser = {}; // 연결된 클라이언트를 저장할 객체
 
     // Set 객체생성 : 중복된 값을 허용하지 않는 데이터 구조.
@@ -25,8 +27,7 @@ exports.setupSocket = async (server, options) => {
     // 네임스페이스에 이벤트 리스너 등록
     groupChat.on('connection', async (socket) => {
       try {
-        // printConnectedSocketIds();
-
+        console.log('소켓 토큰 검증된 uSeq>>>>>>>>>>', socket.uSeq);
         // 클라이언트 소켓의 고유한 ID를 가져옴
         const socketId = socket.id;
         // console.log(socket);
@@ -38,6 +39,8 @@ exports.setupSocket = async (server, options) => {
         //   console.log(`Socket ${socketId} is already connected.`);
         //   return;
         // }
+
+        groupChat.emit('success', '연결 성공!');
 
         // 1. 로그인메세지 전달
         // 2. 모임별 채팅방에 입장 및 notice (생성된 룸없을 경우 직접 생성)
@@ -99,8 +102,9 @@ exports.setupSocket = async (server, options) => {
 
         socket.on('sendMsg', async (data) => {
           try {
+            // zadd : 시간순서로 메세지 저장
             // 닉네임(socketId)/시간/룸/
-            const { socketId, uName, timeStamp, msg, gSeq } = data;
+            const { socketId, uName, timeStamp, msg, gSeq, toId } = data;
             const roomChat = groupChat.to(`room${gSeq}`);
 
             roomChat.emit('msg', { uName, timeStamp, msg });
