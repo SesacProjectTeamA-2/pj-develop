@@ -81,7 +81,7 @@ exports.setupSocket = async (server, options) => {
           try {
             const gSeq = data.gSeq;
             // 룸에 접속중인 소켓 로드
-            const result = groupChat.sockets.in(`room${gSeq}`);
+            const result = groupChat.adapter.rooms.get(`room${gSeq}`);
             const socketsInRoom = Array.from(result);
             const arrayInRoom = connectedUser.filter((user) =>
               socketsInRoom.includes(user.socketId)
@@ -89,9 +89,6 @@ exports.setupSocket = async (server, options) => {
             const uNameInRoom = arrayInRoom.map((user) => user.uName);
 
             console.log(`room${gSeq}에 접속된 아이디 목록`, uNameInRoom);
-
-            // 접속한 이후의 모든 메세지 로드
-            const roomChat = groupChat.to(`room${gSeq}`);
 
             // LLEN을 사용하여 리스트의 길이(메시지 개수)를 가져옴
             const listLength = await redisCli.lLEN(`room${gSeq}`);
