@@ -6,7 +6,7 @@ import { io } from 'socket.io-client';
 // import { socket } from '../SidebarChat';
 
 import '../../../styles/scss/components/chatroom.scss';
-import { Divider } from '@mui/material';
+import { getSocket } from 'src/socket';
 
 export default function ChatRoom({
     isEnter,
@@ -19,7 +19,8 @@ export default function ChatRoom({
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
-    const socket = io(`${process.env.REACT_APP_DB_HOST}/socket/chat`);
+    const socket = getSocket();
+    // const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
 
     // 특정 그룹 정보 가져오기
     const [groupDetail, setGroupDetail] = useState<any>({
@@ -70,13 +71,6 @@ export default function ChatRoom({
         getGroup();
     }, []);
 
-    // useEffect(() => {
-    //     // 컴포넌트가 마운트되었을 때 실행되는 코드
-    //     socket.on('message', (data: string) => {
-    //         setSendMsg(data);
-    //     });
-    // }, []);
-
     const leaveHandler = () => {
         setIsEnter(false);
     };
@@ -85,21 +79,30 @@ export default function ChatRoom({
         setSendMsg(message);
     };
 
-    const sendMessage = () => {
-        socket.emit('sendMessage', 'Hello, Server!');
-    };
+    // const sendMessage = () => {
+    //     socket.emit('sendMessage', 'Hello, Server!');
+    // };
 
-    const send = () => {
-        console.log('전송');
-    };
+    // useEffect(() => {
+    //     // 컴포넌트가 마운트되었을 때 실행되는 코드
+    //     socket.on('message', (data: string) => {
+    //         setSendMsg(data);
+    //     });
+    // }, []);
+
+    // const send = () => {
+    //     console.log('전송');
+    // };
 
     //] 입장 알림
 
     useEffect(() => {
+        // console.log('joinRoom event received on client');
+
         socket.emit('joinRoom', { gSeq: nowGSeq });
 
         // joinRoom 이벤트에 대한 리스너 추가
-        socket.on('joinRoom', (data) => {
+        socket.on('joinRoom', (data: any) => {
             // 여기서 data에 서버에서 보낸 데이터가 들어있습니다.
             console.log('joinRoom event received on client', data);
         });
@@ -153,11 +156,7 @@ export default function ChatRoom({
 
     // // joinRoom 이벤트에 대한 리스너 추가
     // socket.on('joinRoom', (data) => {
-    //     // 여기서 data에 서버에서 보낸 데이터가 들어있습니다.
     //     console.log('joinRoom event received on client', data);
-
-    //     // 받은 데이터를 사용하여 원하는 작업을 수행할 수 있습니다.
-    //     // 예: setChat, 다른 상태 업데이트 등
     // });
 
     return (
