@@ -79,6 +79,7 @@ exports.setupSocket = async (server, options) => {
         // 모임별 채팅방 입장시
         socket.on('joinRoom', async (data) => {
           try {
+            const gSeq = data.gSeq;
             // 룸에 접속중인 소켓 로드
             const result = groupChat.sockets.in(`room${gSeq}`);
             const socketsInRoom = Array.from(result);
@@ -90,11 +91,11 @@ exports.setupSocket = async (server, options) => {
             console.log(`room${gSeq}에 접속된 아이디 목록`, uNameInRoom);
 
             // 접속한 이후의 모든 메세지 로드
-            const gSeq = data.gSeq;
             const roomChat = groupChat.to(`room${gSeq}`);
 
             // LLEN을 사용하여 리스트의 길이(메시지 개수)를 가져옴
             const listLength = await redisCli.lLEN(`room${gSeq}`);
+
             if (listLength !== 0) {
               // 사용자가 접속한 이후의 메시지만을 가져옴
               const messages = await redisCli.lRange(`room${gSeq}`, 0, -1);
@@ -104,15 +105,18 @@ exports.setupSocket = async (server, options) => {
                   (message) => message.timeStamp >= loginTime
                 )
               );
+
+              socket.emit('joinRoom', {
+                allMsg: parsedMessages,
+                loginUser: uNameInRoom,
+              });
             } else {
               //room data가 없는경우
-              console.log(`room 내의 메세지가 없음!`);
+              socket.emit('joinRoom', {
+                allMsg: '모임방 메세지 없음!',
+                loginUser: uNameInRoom,
+              });
             }
-
-            socket.emit('joinRoom', {
-              allMsg: parsedMessages,
-              loginUser: uNameInRoom,
-            });
           } catch (err) {
             console.log('joinRoomError', err);
           }
