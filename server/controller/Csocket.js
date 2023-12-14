@@ -6,8 +6,7 @@ const redisAdapter = require('socket.io-redis');
 exports.setupSocket = async (server, options) => {
   try {
     const io = IO(server, options);
-
-    const connectedUser = {}; // 연결된 클라이언트를 저장할 객체
+    const connectedUser = []; // 연결된 클라이언트를 저장할 객체
 
     // Set 객체생성 : 중복된 값을 허용하지 않는 데이터 구조.
     // const connectedSockets = new Set();
@@ -47,26 +46,29 @@ exports.setupSocket = async (server, options) => {
             const uSeq = data.uSeq;
             const uName = data.uName;
 
-            if (Array.isArray(data)) {
+            // 현재 로그인 중인 유저 정보 추가
+            connectedUser.push({
+              socketId: socketId,
+              uSeq: uSeq,
+              uName: uName,
+              loginTime: new Date(),
+              gSeq: data.gSeq,
+            });
+
+            if (Array.isArray(data.gSeq)) {
               data.gSeq.map((info) => {
-                const isExisting = groupChat.adapter.rooms.has(
-                  `room${info.gSeq}`
-                );
-                if (isExisting) {
-                  socket.join(`room${info}`);
-                  groupChat
-                    .to(`room${info}`)
-                    .emit('success', { msg: `${uName}님이 로그인하셨어요` });
-                } else {
-                  groupChat.adapter.socketsJoin(socketId, `room${info.gSeq}`);
-                }
+                const isExisting = groupChat.adapter.rooms.has(`room${info}`);
+                console.log(`room${info} 현재 생성되어 있음?`, isExisting);
+
+                // 방에 참가 및 notice
+                socket.join(`room${info}`);
+                groupChat
+                  .to(`room${info}`)
+                  .emit('success', { msg: `${uName}님이 로그인하셨어요` });
               });
             }
 
-            const loginTime = new Date();
-
             // 현재 연결 중인 유저 추가 : socketId의 키값을 가진 객체로 저장.
-            connectedUser[socketId] = { socketId, uSeq, uName, loginTime };
 
             socket.emit('loginSuccess', { msg: `${uName}님이 로그인하셨어요` });
           } catch (err) {
@@ -79,20 +81,29 @@ exports.setupSocket = async (server, options) => {
             // 접속한 이후의 모든 메세지 로드
             const gSeq = data.gSeq;
             const roomChat = groupChat.to(`room${gSeq}`);
+            // 룸에 접속중인 소켓 로드
+            const result = groupChat.sockets.in(`room${gSeq}`);
+            const socketsInRoom = Array.from(result);
+            const arrayInRoom = connectedUser.filter((user) =>
+              socketsInRoom.includes(user.socketId)
+            );
+            const uNameInRoom = arrayInRoom.map((user) => user.uName);
 
-            // 룸에 해당하는 메세지 가져오기
-            await redisCli.hgetall(`room${gSeq}`);
+            console.log(`room${gSeq}에 접속된 아이디 목록`, uNameInRoom);
 
-            const newMessages = Object.entries(messages)
-              .filter(([timestamp]) => parseInt(timestamp) > loginTime)
-              .map(([timestamp, message]) => ({
-                timestamp: parseInt(timestamp),
-                message,
-              }));
+            // 룸(hash)에 해당하는 메세지 가져오기(uName, msg, socketid, timestamp, gSeq)
+            // const roomData = await redisCli.hgetall(`room${gSeq}`);
 
-            newMessages.sort((a, b) => a.timestamp - b.timestamp);
+            // const newMessages = Object.entries(messages)
+            //   .filter(([timestamp]) => parseInt(timestamp) > loginTime)
+            //   .map(([timestamp, message]) => ({
+            //     timestamp: parseInt(timestamp),
+            //     message,
+            //   }));
 
-            roomChat.emit('allMessages', { messages: newMessages });
+            // newMessages.sort((a, b) => a.timestamp - b.timestamp);
+
+            // roomChat.emit('allMessages', { messages: newMessages });
           } catch (err) {
             console.log('joinRoomError', err);
           }
@@ -126,6 +137,8 @@ exports.setupSocket = async (server, options) => {
             // `${connectedUser[socketId].uName}님이 로그아웃하셨습니다.`
           );
           delete connectedUser[socketId];
+
+          console.log(connectedUser);
           // connectedSockets.delete(socketId);
         });
       } catch (err) {
