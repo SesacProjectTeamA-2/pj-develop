@@ -8,21 +8,20 @@ import Quotes from './Quotes';
 import MainMission from './MainMission';
 import MyPercentage from './MyPercentage';
 import TeamPercentage from './TeamPercentage';
-import { io } from 'socket.io-client';
 
 import '../../styles/scss/pages/main/percentage.scss';
 import Progressbar from '../common/Progressbar';
 
-export default function Content(props: any) {
+export default function Content({ setLoginData, loginData }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
     //_ loginData = {uSeq, uName, [gSeq]}
-    const [loginData, setLoginData] = useState<any>({
-        uSeq: 1,
-        uName: '',
-        gSeq: [],
-    }); // socket 서버 전송
+    // const [loginData, setLoginData] = useState<any>({
+    //     uSeq: 1,
+    //     uName: '',
+    //     gSeq: [],
+    // }); // socket 서버 전송
     const [uSeq, setUSeq] = useState(1); // 유저 번호
     const [gSeqList, setGSeqList] = useState<any>([]); // 참여 모임
 
@@ -263,26 +262,27 @@ export default function Content(props: any) {
 
     //=== 채팅 login ===
 
-    const getChat = async () => {
-        const res = await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/chat`, {
-                headers: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            })
-            .then((res) => {
-                const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
+    //? axios 사용
+    // const getChat = async () => {
+    //     const res = await axios
+    //         .get(`${process.env.REACT_APP_DB_HOST}/chat`, {
+    //             headers: {
+    //                 Authorization: `Bearer ${uToken}`,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
 
-                console.log('????????', res);
+    //             console.log('????????', res);
 
-                socket.emit('connection', () => {
-                    console.log('socket server connected.');
-                });
+    //             socket.emit('connection', () => {
+    //                 console.log('socket server connected.');
+    //             });
 
-                // 닉네임 서버에 전송
-                // socket.emit('setName', uName);
-            });
-    };
+    //             // 닉네임 서버에 전송
+    //             // socket.emit('setName', uName);
+    //         });
+    // };
 
     //_ loginData = {uSeq, uName, [gSeq]}
     console.log('uName::::::', uName);
