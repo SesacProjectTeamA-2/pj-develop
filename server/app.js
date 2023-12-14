@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
-const authUtil = require('./middlewares/auth.js').checkToken;
 const { setupSocket } = require('./controller/Csocket.js');
 
 // NODE.ENV가 지정되어 있지 않으면 development 모드로 실행

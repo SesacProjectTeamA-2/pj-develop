@@ -7,8 +7,6 @@ exports.setupSocket = async (server, options) => {
   try {
     const io = IO(server, options);
 
-    io.use(authSocketUtil);
-
     const connectedUser = {}; // 연결된 클라이언트를 저장할 객체
 
     // Set 객체생성 : 중복된 값을 허용하지 않는 데이터 구조.
@@ -18,7 +16,7 @@ exports.setupSocket = async (server, options) => {
     // Express의 라우팅처럼 url에 지정된 위치에 따라 신호의 처리를 다르게 하는 기술(특정 페이지에서 소켓이 보내주는 모든 실시간 메세지를 받을 필요는 없다)
     // Room은 namespace의 하위개념에 해당.(카톡 단톡방 1, 단톡방 2...)
     const groupChat = io.of(`/api/chat`);
-
+    groupChat.use(authSocketUtil.checkToken);
     const printConnectedSocketIds = () => {
       const connectedSocketIds = Object.keys(groupChat.sockets);
       console.log('Connected socket IDs in the namespace:', connectedSocketIds);
