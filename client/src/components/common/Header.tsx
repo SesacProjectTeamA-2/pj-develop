@@ -19,18 +19,8 @@ export default function Header(props: any) {
     const uToken = cookie.get('isUser'); // 토큰 값
 
     //=== 채팅 ===
-    // const socket = io(`${process.env.REACT_APP_DB_HOST}/socket/chat`);
+
     const socket = getSocket();
-
-    // if (!uToken) {
-    //     socket.emit('logout', () => {
-    //         console.log('socket server disconnected.');
-    //     });
-
-    //     socket.emit('discoonect', () => {
-    //         console.log('socket server disconnected.');
-    //     });
-    // }
 
     const [loginData, setLoginData] = useState([]);
 
@@ -67,19 +57,6 @@ export default function Header(props: any) {
             // data =[{gSeq: , uName:}]
         } else setIsCookie(false);
     }, [cookie]);
-
-    // useEffect(() => {
-    //     // const socket = io(`${process.env.REACT_APP_DB_HOST}/socket/chat`);
-
-    //     socket.on('connect', () => {
-    //         console.log('클라이언트 연결 완료 ::', socket.id);
-    //     });
-
-    //     socket.on('send', (data: any) => {
-    //         console.log('socket server connected.');
-    //         console.log('socket server connected.', data);
-    //     });
-    // }, []);
 
     const theme = createTheme({
         palette: {
@@ -118,28 +95,6 @@ export default function Header(props: any) {
     //         window.removeEventListener('resize', handleResize);
     //     };
     // }, []); // 빈 배열을 전달하여 마운트 및 언마운트 시에만 실행되도록 함
-
-    // const getChat = async () => {
-    //     const res = await axios
-    //         .get(`${process.env.REACT_APP_DB_HOST}/socket/chat`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${uToken}`,
-    //             },
-    //         })
-    //         .then((res) => {
-    //             console.log(res.data);
-
-    //             socket.emit('logout', () => {
-    //                 // socket.disconnect();
-
-    //                 console.log('socket server disconnected.');
-    //             });
-    //         });
-    // };
-
-    // useEffect(() => {
-    //     getChat();
-    // }, []);
 
     const nvg = useNavigate();
     const logoutHandler = () => {
