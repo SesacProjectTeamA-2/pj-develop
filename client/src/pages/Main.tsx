@@ -7,6 +7,12 @@ import { io } from 'socket.io-client';
 import Content from '../components/main/Content';
 
 export default function Main() {
+    const [loginData, setLoginData] = useState<any>({
+        uSeq: 1,
+        uName: '',
+        gSeq: [],
+    }); // socket 서버 전송
+
     // 1. 사용자 명언 정보 가져오기
     // 1-1. 명언 변수
     const [phraseCtt, setPhraseCtt] = useState<string | null>(null);
@@ -27,11 +33,9 @@ export default function Main() {
     if (uToken) {
         myCookie.set('isUser', uToken);
 
-        // getChat();
+        const socket = getSocket();
 
-        // socket.emit('login', () => {
-        //     console.log('클라이언트 login ======= ', loginData);
-        // });
+        socket.emit('login', loginData);
     }
 
     // useEffect(() => {
@@ -42,7 +46,7 @@ export default function Main() {
 
     return (
         <div className="section-main">
-            <Content />
+            <Content setLoginData={setLoginData} loginData={loginData} />
         </div>
     );
 }
