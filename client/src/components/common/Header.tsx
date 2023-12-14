@@ -22,21 +22,15 @@ export default function Header(props: any) {
     // const socket = io(`${process.env.REACT_APP_DB_HOST}/socket/chat`);
     const socket = getSocket();
 
-    //-- socket 연결
-    // Login 여부 상관없이 연결 (토큰 인증 때문)
-    // socket.on('connect', () => {
-    //     console.log('클라이언트 연결 완료 ::', socket.id);
-    // });
+    // if (!uToken) {
+    //     socket.emit('logout', () => {
+    //         console.log('socket server disconnected.');
+    //     });
 
-    // socket.on('connect', (data: any) => {
-    //     console.log('클라이언트 연결 완료 ::', data);
-    // });
-
-    // [ TEST ]
-    // socket.on('send', (data: any) => {
-    //     console.log('socket server connected.');
-    //     console.log('socket server connected.', data);
-    // });
+    //     socket.emit('discoonect', () => {
+    //         console.log('socket server disconnected.');
+    //     });
+    // }
 
     const [loginData, setLoginData] = useState([]);
 

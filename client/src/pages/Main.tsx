@@ -7,6 +7,8 @@ import { io } from 'socket.io-client';
 import Content from '../components/main/Content';
 
 export default function Main() {
+    const cookie = new Cookies();
+
     const [loginData, setLoginData] = useState<any>({
         uSeq: 1,
         uName: '',
@@ -32,10 +34,23 @@ export default function Main() {
     let myCookie = new Cookies();
     if (uToken) {
         myCookie.set('isUser', uToken);
+    }
 
-        const socket = getSocket();
+    if (cookie.get('isUser')) {
+        // const socket = getSocket();
+        const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
+            extraHeaders: {
+                Authorization: `Bearer ${uToken}`,
+            },
+        });
+
+        console.log('!!!!!!!!!!!!!', uToken);
 
         socket.emit('login', loginData);
+
+        socket.on('loginSuccess', (data) => {
+            console.log(data.msg); // Log the success message
+        });
     }
 
     // useEffect(() => {

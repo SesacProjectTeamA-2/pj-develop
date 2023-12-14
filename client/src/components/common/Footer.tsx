@@ -4,10 +4,26 @@ import '../../styles/scss/layout/footer.scss';
 
 export default function Footer() {
     return (
-        <div className="footer-container">
-            <div className="fence"></div>
-
-            <div className="title4 footer-content">
+        <div className="container">
+            {/* <div className="footer-container"> */}
+            {/* <div className="fence"></div> */}
+            <div className="dark-layer"></div>
+            <div className="text-big">
+                <h1>MOTI</h1>
+            </div>
+            <div className="info">
+                <h2>
+                    We can't find <span>that page</span>
+                </h2>
+                <p>
+                    We're pretty sure <span>that page</span> used to be here but
+                    seems to have gone missing. We apologize on behalf of{' '}
+                    <span>that page</span>.
+                </p>
+                <button>Home</button>
+            </div>
+            {/* 기존 footer */}
+            <div className="footer-content">
                 <div className="footer-item">
                     <img
                         src="/asset/logo_tr.svg"
@@ -52,10 +68,18 @@ export default function Footer() {
                         </a>
                     </div>
                 </div>
-                {/* </div> */}
-
-                {/* footer 추가 */}
             </div>
+            <footer>
+                Based on the{' '}
+                <a
+                    href="https://dribbble.com/shots/6257174-404-Page"
+                    target="blank"
+                >
+                    Dribble
+                </a>
+                . NOT RESPONSIVE
+            </footer>
+            {/* </div> */}
         </div>
     );
 }
