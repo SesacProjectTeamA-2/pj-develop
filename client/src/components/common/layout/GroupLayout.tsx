@@ -120,7 +120,11 @@ export default function GroupLayout({ children, showChat }: any) {
                                 {showChat ? <SidebarChat /> : null}
                             </Item>
                         </Grid>
-                        <Footer />
+                        <div className="footer-layout-wrapper">
+                            <div className="fence"></div>
+
+                            <Footer />
+                        </div>
                     </>
                 </Grid>
             </div>

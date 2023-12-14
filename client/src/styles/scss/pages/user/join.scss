@@ -18,9 +18,10 @@
 #interested-h3 {
     font-weight: bold;
 }
-img {
-    @include box(100%);
-}
+
+// img {
+//     @include box(100%);
+// }
 
 .nickname-sub-div {
     display: flex;
