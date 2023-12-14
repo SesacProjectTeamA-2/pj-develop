@@ -174,8 +174,18 @@ export default function ChatRoom({
                                 alt="userImg"
                             />
                         </div>
-                        <div className="name">
-                            {groupDetail.leaderInfo.uName}
+                        <div>
+                            <div
+                                style={{
+                                    fontWeight: 'bold',
+                                    paddingLeft: '0.5rem',
+                                }}
+                            >
+                                LEADER
+                            </div>
+                            <div className="name">
+                                {groupDetail.leaderInfo.uName}
+                            </div>
                         </div>
 
                         {/* [추후] 소켓 통신 유무를 통한 온라인 구분 */}

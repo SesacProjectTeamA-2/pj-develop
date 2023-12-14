@@ -2,10 +2,6 @@
 @import '../../abstracts/utils';
 @import '~include-media/dist/include-media';
 
-// .login-section {
-//     background: #e0e0e0;
-// }
-
 body {
     background: #e0e0e0;
 }
@@ -36,14 +32,16 @@ body {
 
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
 
-p {
-    padding-top: 3rem;
-    font-size: 1.6rem;
-    z-index: 10;
-    cursor: pointer;
-}
+.login-section {
+    p {
+        padding-top: 3rem;
+        font-size: 1.6rem;
+        z-index: 10;
+        cursor: pointer;
+    }
 
-p:hover {
+    p:hover {
+    }
 }
 
 .login {

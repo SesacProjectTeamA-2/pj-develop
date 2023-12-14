@@ -266,6 +266,8 @@ function App() {
                         />
                     }
                 />
+
+                {/* 관리자 */}
                 <Route
                     path="/management"
                     element={

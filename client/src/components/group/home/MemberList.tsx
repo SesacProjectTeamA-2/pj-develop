@@ -66,7 +66,7 @@ export default function MemberList({
                     </span>
                 </div>
             </div>
-            <div className="main-content">
+            <div className="main-content  bottom-group-home">
                 <ul className="list-unstyled">
                     {/* 모임장 */}
                     <li>
