@@ -33,28 +33,42 @@ export default function Footer() {
                     <p>
                         <div className="team-title">Renewal</div>
                         <div>
-                            <span> Front </span>
-                            <span>| </span>
-                            <span>김세화 (Project Leader)</span>
+                            <a
+                                href="https://github.com/loveflora"
+                                className="link-none profile-hover"
+                                target="_blank"
+                            >
+                                <span> Front </span>
+                                <span>| </span>
+                                <span>김세화 (Project Leader)</span>
+                            </a>
                         </div>
                         <div>
-                            <span> Back </span>
-                            <span>| </span>
-                            <span>최태영</span>
+                            <a
+                                href="https://github.com/chitty12"
+                                className="link-none profile-hover"
+                                target="_blank"
+                            >
+                                <span> Back </span>
+                                <span>| </span>
+                                <span>최태영</span>
+                            </a>
                         </div>
                     </p>
 
                     <p>
                         <div className="team-title">Origin</div>
-                        <div>
-                            <span> Front </span>
-                            <span>| </span>
-                            <span>김세화, 강혜빈, 최제윤</span>
-                        </div>
-                        <div>
-                            <span> Back </span>
-                            <span>| </span>
-                            <span>최태영, 문영민, 문효진</span>
+                        <div className="team-member">
+                            <div>
+                                <span> Front </span>
+                                <span>| </span>
+                                <span>김세화, 강혜빈, 최제윤</span>
+                            </div>
+                            <div>
+                                <span> Back </span>
+                                <span>| </span>
+                                <span>최태영, 문영민, 문효진</span>
+                            </div>
                         </div>
                     </p>
                 </div>
@@ -99,23 +113,12 @@ export default function Footer() {
                     <h2>Contact us</h2>
 
                     <div>
-                        <p>문의 사항 / 기타 의견 / 에러 신고</p>
+                        <p>문의 사항 | 기타 의견 | 에러 신고 </p>
 
                         <p>아래로 연락주세요 !</p>
                     </div>
 
-                    <div>
-                        <span> Front </span>
-                        <span>| </span>
-                        <span>김세화 (Project Leader)</span>
-                    </div>
-
-                    <div>
-                        <span> Back </span>
-                        <span>| </span>
-                        <span>최태영</span>
-                    </div>
-
+                    <br />
                     <svg
                         viewBox="0 0 24 24"
                         fill="currentColor"
@@ -124,6 +127,21 @@ export default function Footer() {
                     >
                         <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6m-2 0l-8 5-8-5h16m0 12H4V8l8 5 8-5v10z" />
                     </svg>
+
+                    <br />
+
+                    <div>
+                        <span> Front </span>
+                        <span>| </span>
+                        <span>김세화</span>
+                    </div>
+
+                    <div>
+                        <span> Back </span>
+                        <span>| </span>
+                        <span>최태영</span>
+                    </div>
+
                     <input />
 
                     <button>Contact</button>
@@ -131,7 +149,7 @@ export default function Footer() {
                     <div className="frame">
                         <input type="checkbox" id="cb" />
                         <label htmlFor="cb" className="button">
-                            Send mail
+                            Click !
                         </label>
                         <label htmlFor="cb" className="button reset">
                             Reset
@@ -157,7 +175,7 @@ export default function Footer() {
             </div>
 
             <footer>
-                Created for the
+                Created for
                 <a
                     href="https://polydactyl-cello-2db.notion.site/Motimates-4617b0dbabe640deb5336bb2dddcd54a?pvs=4"
                     target="blank"

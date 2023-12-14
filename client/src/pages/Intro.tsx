@@ -132,7 +132,7 @@ export default function Intro(props: any) {
                 var p = particles[t];
                 var nowX = p.r + mouse.x / 4.6;
                 var nowY = p.r + mouse.y / 4.6;
-                var color = '#9bc3fa9c';
+                var color = '#ffffffca';
 
                 if (p.r < 10) {
                     nowX = p.x + mouse.x / 0.5;
@@ -182,7 +182,7 @@ export default function Intro(props: any) {
             }
         };
 
-        setInterval(draw, 40);
+        setInterval(draw, 30);
     }, []);
 
     //색종이 커스터마이징
@@ -197,7 +197,7 @@ export default function Intro(props: any) {
             //     '#f9bec7',
             // ],
             emojis: ['🎉', '💵', '🏆'],
-            emojiSize: 60,
+            emojiSize: 120,
             confettiNumber: 30,
         });
     };

@@ -3,12 +3,14 @@ import { Cookies } from 'react-cookie';
 import axios from 'axios';
 
 // import { socket } from '../SidebarChat';
+import '../../../styles/scss/components/chatlist.scss';
 
 export default function ChatList({
     isEnter,
     setIsEnter,
     setNowGSeq,
     setNowGName,
+    setShowChat,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -55,14 +57,10 @@ export default function ChatList({
 
     const [madeGroupInfo, setMadeGroupInfo] = useState<any>([]);
 
-    // console.log(madeGroupInfo);
-    // console.log(madeJoinInfo);
-
     const enterChatRoom = (gSeq: number, gName: string) => {
         setNowGSeq(gSeq);
         setNowGName(gName);
         setIsEnter(true);
-        console.log('isEnter', isEnter);
     };
 
     return (
@@ -74,6 +72,17 @@ export default function ChatList({
                         className="group-list"
                         onClick={() => enterChatRoom(group.gSeq, group.gName)}
                     >
+                        <svg
+                            viewBox="0 0 512 512"
+                            fill="currentColor"
+                            height="1.5em"
+                            width="1.5em"
+                            onClick={() => {
+                                setShowChat(false);
+                            }}
+                        >
+                            <path d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z" />
+                        </svg>
                         <div>내가 모임장 !</div>
                         <div>👑</div>
                         <div className="group-name">

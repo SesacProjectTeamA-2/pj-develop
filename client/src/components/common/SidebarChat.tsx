@@ -34,7 +34,7 @@ import ChatList from './chat/ChatList';
 
 let socketInstance: any = null;
 
-export default function SidebarChat() {
+export default function SidebarChat({ setShowChat, showChat }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -66,18 +66,6 @@ export default function SidebarChat() {
     useEffect(() => {
         getUserData();
     }, []);
-
-    // 2. socket
-    // if (!socketInstance) {
-    //     socketInstance = io(`${process.env.REACT_APP_DB_HOST}/socket/chat`, {
-    //         path: '/wapi/socket.io',
-    //         withCredentials: true,
-    //     });
-    // }
-
-    // if (!socketInstance) {
-    //     socketInstance = io(`${process.env.REACT_APP_DB_HOST}/socket/chat`);
-    // }
 
     // const socket = io(`${process.env.REACT_APP_DB_HOST}/socket/chat`);
     // const socket = io('http://localhost:8888/api/socket/chat');
@@ -139,16 +127,15 @@ export default function SidebarChat() {
 
     return (
         <div className="chat-container">
-            {/* <div onClick={onSocket}>{uName} 님</div> */}
             {!isEnter ? (
                 <div>
-                    {/* <button onClick={onSocket}>socket 통신 시작</button> */}
-
                     <ChatList
                         isEnter={isEnter}
                         setIsEnter={setIsEnter}
                         setNowGSeq={setNowGSeq}
                         setNowGName={setNowGName}
+                        setShowChat={setShowChat}
+                        showChat={showChat}
                     />
                 </div>
             ) : (

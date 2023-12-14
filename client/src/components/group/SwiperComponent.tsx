@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 
-import 'swiper/scss';
 import '../../styles/scss/components/swiper.scss';
-import { red } from '@mui/material/colors';
 
 export default function SwiperComponent({
     groupArray,
@@ -100,8 +98,7 @@ export default function SwiperComponent({
                             <>
                                 <SwiperSlide
                                     style={{
-                                        backgroundColor: getRandomColor(),
-                                        // padding: '10px',
+                                        // backgroundColor: getRandomColor(),
                                         fontWeight: 'bold',
                                         color: 'white',
                                         display: 'flex',
@@ -110,9 +107,393 @@ export default function SwiperComponent({
                                         alignContent: 'space-between',
                                         justifyItems: 'center',
                                         height: '100%',
+                                        width: '100%',
+                                        overflow: 'hidden',
                                     }}
                                 >
-                                    <Link to={`/group/home/${groupInfo.gSeq}`}>
+                                    {/* <div className="container-fluid"> */}
+                                    {/* <div className="container"> */}
+                                    {/* <div className="row"> */}
+                                    {/* <div className="col-sm-4"> */}
+                                    <div className="swiper-card card-wrapper">
+                                        {/* <div className=" "> */}
+                                        <div className="card text-center">
+                                            <div className="title">
+                                                <i
+                                                    className="fa fa-paper-plane"
+                                                    aria-hidden="true"
+                                                ></i>
+                                                <h2>Basic</h2>
+                                            </div>
+                                            <div className="price">
+                                                <h4>
+                                                    <sup>$</sup>
+                                                    25
+                                                </h4>
+                                            </div>
+                                            <div className="option">
+                                                <ul>
+                                                    {/* <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    10 GB Space{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    3 Domain Names{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    20 Email Address{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-times"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    Live Support{' '}
+                                                </li> */}
+                                                </ul>
+                                            </div>
+                                            <a href="#">Order Now </a>
+                                        </div>
+
+                                        {/* ========== TEST2 ========== */}
+                                        <div className="card text-center">
+                                            <div className="title">
+                                                <i
+                                                    className="fa fa-paper-plane"
+                                                    aria-hidden="true"
+                                                ></i>
+                                                <h2>Basic</h2>
+                                            </div>
+                                            <div className="price">
+                                                <h4>
+                                                    <sup>$</sup>
+                                                    25
+                                                </h4>
+                                            </div>
+                                            <div className="option">
+                                                <ul>
+                                                    {/* <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    10 GB Space{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    3 Domain Names{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    20 Email Address{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-times"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    Live Support{' '}
+                                                </li> */}
+                                                </ul>
+                                            </div>
+                                            <a href="#">Order Now </a>
+                                        </div>
+                                        {/* </div> */}
+
+                                        {/* ========== TEST 3 ========== */}
+                                        <div className="card text-center">
+                                            <div className="title">
+                                                <i
+                                                    className="fa fa-paper-plane"
+                                                    aria-hidden="true"
+                                                ></i>
+                                                <h2>Basic</h2>
+                                            </div>
+                                            <div className="price">
+                                                <h4>
+                                                    <sup>$</sup>
+                                                    25
+                                                </h4>
+                                            </div>
+                                            <div className="option">
+                                                <ul>
+                                                    {/* <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    10 GB Space{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    3 Domain Names{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    20 Email Address{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-times"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    Live Support{' '}
+                                                </li> */}
+                                                </ul>
+                                            </div>
+                                            <a href="#">Order Now </a>
+                                        </div>
+
+                                        {/* ========== TEST 3 ========== */}
+                                        <div className="card text-center">
+                                            <div className="title">
+                                                <i
+                                                    className="fa fa-paper-plane"
+                                                    aria-hidden="true"
+                                                ></i>
+                                                <h2>Basic</h2>
+                                            </div>
+                                            <div className="price">
+                                                <h4>
+                                                    <sup>$</sup>
+                                                    25
+                                                </h4>
+                                            </div>
+                                            <div className="option">
+                                                <ul>
+                                                    {/* <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    10 GB Space{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    3 Domain Names{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-check"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    20 Email Address{' '}
+                                                </li>
+                                                <li>
+                                                    {' '}
+                                                    <i
+                                                        className="fa fa-times"
+                                                        aria-hidden="true"
+                                                    ></i>{' '}
+                                                    Live Support{' '}
+                                                </li> */}
+                                                </ul>
+                                            </div>
+                                            <a href="#">Order Now </a>
+                                        </div>
+                                        {/* </div> */}
+                                    </div>
+
+                                    {/* <div className="col-sm-4">
+                                                    <div className="card text-center">
+                                                        <div className="title">
+                                                            <i
+                                                                className="fa fa-plane"
+                                                                aria-hidden="true"
+                                                            ></i>
+                                                            <h2>Standard</h2>
+                                                        </div>
+                                                        <div className="price">
+                                                            <h4>
+                                                                <sup>$</sup>
+                                                                50
+                                                            </h4>
+                                                        </div>
+                                                        <div className="option">
+                                                            <ul>
+                                                                <li>
+                                                                    {' '}
+                                                                    <i
+                                                                        className="fa fa-check"
+                                                                        aria-hidden="true"
+                                                                    ></i>{' '}
+                                                                    50 GB Space{' '}
+                                                                </li>
+                                                                <li>
+                                                                    {' '}
+                                                                    <i
+                                                                        className="fa fa-check"
+                                                                        aria-hidden="true"
+                                                                    ></i>{' '}
+                                                                    5 Domain
+                                                                    Names{' '}
+                                                                </li>
+                                                                <li>
+                                                                    {' '}
+                                                                    <i
+                                                                        className="fa fa-check"
+                                                                        aria-hidden="true"
+                                                                    ></i>{' '}
+                                                                    Unlimited
+                                                                    Email
+                                                                    Address{' '}
+                                                                </li>
+                                                                <li>
+                                                                    {' '}
+                                                                    <i
+                                                                        className="fa fa-times"
+                                                                        aria-hidden="true"
+                                                                    ></i>{' '}
+                                                                    Live Support{' '}
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <a href="#">
+                                                            Order Now{' '}
+                                                        </a>
+                                                    </div>
+
+                                                    <div className="col-sm-4">
+                                                        <div className="card text-center">
+                                                            <div className="title">
+                                                                <i
+                                                                    className="fa fa-rocket"
+                                                                    aria-hidden="true"
+                                                                ></i>
+                                                                <h2>Premium</h2>
+                                                            </div>
+                                                            <div className="price">
+                                                                <h4>
+                                                                    <sup>$</sup>
+                                                                    100
+                                                                </h4>
+                                                            </div>
+                                                            <div className="option">
+                                                                <ul>
+                                                                    <li>
+                                                                        {' '}
+                                                                        <i
+                                                                            className="fa fa-check"
+                                                                            aria-hidden="true"
+                                                                        ></i>{' '}
+                                                                        Unlimited
+                                                                        GB Space{' '}
+                                                                    </li>
+                                                                    <li>
+                                                                        {' '}
+                                                                        <i
+                                                                            className="fa fa-check"
+                                                                            aria-hidden="true"
+                                                                        ></i>{' '}
+                                                                        30
+                                                                        Domain
+                                                                        Names{' '}
+                                                                    </li>
+                                                                    <li>
+                                                                        {' '}
+                                                                        <i
+                                                                            className="fa fa-check"
+                                                                            aria-hidden="true"
+                                                                        ></i>{' '}
+                                                                        Unlimited
+                                                                        Email
+                                                                        Address{' '}
+                                                                    </li>
+                                                                    <li>
+                                                                        {' '}
+                                                                        <i
+                                                                            className="fa fa-check"
+                                                                            aria-hidden="true"
+                                                                        ></i>{' '}
+                                                                        Live
+                                                                        Support{' '}
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <a href="#">
+                                                                Order Now{' '}
+                                                            </a>
+                                                        </div>
+                                                    </div> 
+                                                </div>*/}
+                                    {/* </div> */}
+                                    {/* </div> */}
+                                    {/* </div> */}
+
+                                    {/* 검정 카드 2 */}
+                                    {/* <figure className="snip1336">
+                                        <img
+                                            src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/sample87.jpg"
+                                            alt="sample87"
+                                        />
+                                        <figcaption>
+                                            <img
+                                                src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/331810/profile-sample4.jpg"
+                                                alt="profile-sample4"
+                                                className="profile"
+                                            />
+                                            <h2>
+                                                Hans Down<span>Engineer</span>
+                                            </h2>
+                                            <p>
+                                                I'm looking for something that
+                                                can deliver a 50-pound payload
+                                                of snow on a small feminine
+                                                target. Can you suggest
+                                                something? Hello...?{' '}
+                                            </p>
+                                            <a href="#" className="follow">
+                                                Follow
+                                            </a>
+                                            <a href="#" className="info">
+                                                More Info
+                                            </a>
+                                        </figcaption>
+                                    </figure> */}
+
+                                    {/* ========= 기존 버전 ========== */}
+                                    {/* <Link to={`/group/home/${groupInfo.gSeq}`}>
                                         <div className="swiper-card">
                                             <span className="title4">
                                                 {groupInfo.gName}
@@ -128,10 +509,7 @@ export default function SwiperComponent({
                                         >
                                             <span
                                                 style={{
-                                                    // margin: '0px 15px',
                                                     color: '#8D6262',
-                                                    // fontWeight: 'bold',
-                                                    // fontSize: '1.2rem',
                                                 }}
                                                 className="title5"
                                             >
@@ -146,17 +524,16 @@ export default function SwiperComponent({
                                                     margin: '2px 30px',
                                                     fontSize: '11px',
                                                 }}
-                                            >
-                                                {/* 참석인원 수 {madeNumGroup.count}
+                                            > */}
+                                    {/* 참석인원 수 {madeNumGroup.count}
                                                 /{groupInfo.gMaxMem} */}
-                                                {/* <div>남은 일수 : {groupInfo.gDday}</div> */}
-                                            </div>
-                                        </div>
+                                    {/* <div>남은 일수 : {groupInfo.gDday}</div> */}
+                                    {/* </div>
+                                        </div> */}
 
-                                        {/* <div>남은 일수 : {groupInfo.gDday}</div> */}
-                                    </Link>
+                                    {/* <div>남은 일수 : {groupInfo.gDday}</div> */}
+                                    {/* </Link> */}
                                 </SwiperSlide>
-                                ;
                             </>
                         );
                     })}

@@ -103,7 +103,7 @@ export default function Content({ setLoginData, loginData }: any) {
                 },
             })
             .then((res) => {
-                console.log('유저 미션 조회 >> ', res.data);
+                // console.log('유저 미션 조회 >> ', res.data);
 
                 const {
                     missionArray,
@@ -228,7 +228,6 @@ export default function Content({ setLoginData, loginData }: any) {
     const [madeGroupInfo, setMadeGroupInfo] = useState<any>([]);
 
     //=== 달성률에 따른 캐릭터 이미지 변경 ===
-    console.log('selectedCharacter', selectedCharacter); // /asset/images/sqr1.svg
 
     let charNum = selectedCharacter?.slice(-5, -4); // 2
 
@@ -285,11 +284,11 @@ export default function Content({ setLoginData, loginData }: any) {
     // };
 
     //_ loginData = {uSeq, uName, [gSeq]}
-    console.log('uName::::::', uName);
-    console.log('uSeq::::::', uSeq);
-    console.log('groupInfo::::::', groupInfo);
-    console.log('gSeqList::::::', gSeqList);
-    console.log('loginData::::::', loginData);
+    // console.log('uName::::::', uName);
+    // console.log('uSeq::::::', uSeq);
+    // console.log('groupInfo::::::', groupInfo);
+    // console.log('gSeqList::::::', gSeqList);
+    // console.log('loginData::::::', loginData);
 
     return (
         <div

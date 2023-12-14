@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-// import { socket, SocketContext } from './components/common/SidebarChat';
-
 import './styles/scss/base/reset.scss';
 
 import Header from './components/common/Header';
@@ -36,12 +34,6 @@ import MissionPost from './pages/group/MissionPost';
 import BoardMissionEdit from './pages/group/BoardMissionEdit';
 
 function App() {
-    // useEffect(() => {
-    //     return () => {
-    //         socket.disconnect();
-    //     };
-    // }, []);
-
     // 헤더 채팅 버튼 눌렀을 때 채팅창 보여주는 함수
     const [showChat, setShowChat] = useState<boolean>(false);
     const showChatting = (): void => {
@@ -53,7 +45,6 @@ function App() {
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
 
     return (
-        // <SocketContext.Provider value={socket}>
         <div className="App">
             <Header
                 showChatting={showChatting}
@@ -93,7 +84,11 @@ function App() {
                 <Route
                     path="/main"
                     element={
-                        <BasicLayout children={<Main />} showChat={showChat} />
+                        <BasicLayout
+                            children={<Main />}
+                            showChat={showChat}
+                            setShowChat={setShowChat}
+                        />
                     }
                 />
 
@@ -103,6 +98,7 @@ function App() {
                         <BasicLayout
                             children={<Groups />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -112,6 +108,7 @@ function App() {
                         <BasicLayout
                             children={<GroupCreate />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -123,6 +120,7 @@ function App() {
                         <GroupLayout
                             children={<GroupHome />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -133,6 +131,7 @@ function App() {
                         <GroupLayout
                             children={<GroupNoti />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -143,6 +142,7 @@ function App() {
                         <GroupLayout
                             children={<GroupBoard />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -153,6 +153,7 @@ function App() {
                         <GroupLayout
                             children={<GroupMission />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -162,6 +163,7 @@ function App() {
                         <GroupLayout
                             children={<GroupMissionDone />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -174,6 +176,7 @@ function App() {
                         <GroupLayout
                             children={<BoardPost />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -186,6 +189,7 @@ function App() {
                         <GroupLayout
                             children={<MissionPost />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -198,6 +202,7 @@ function App() {
                         <GroupLayout
                             children={<BoardPost />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -208,6 +213,7 @@ function App() {
                         <GroupLayout
                             children={<GroupPostDetail />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -218,6 +224,7 @@ function App() {
                         <GroupLayout
                             children={<GroupMissionDetail />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -229,6 +236,7 @@ function App() {
                         <GroupLayout
                             children={<BoardEdit />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -240,6 +248,7 @@ function App() {
                         <GroupLayout
                             children={<BoardMissionEdit />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -251,6 +260,7 @@ function App() {
                         <GroupLayout
                             children={<GroupEdit />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -263,6 +273,7 @@ function App() {
                         <BasicLayout
                             children={<MyPage />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -274,6 +285,7 @@ function App() {
                         <ManagementLayout
                             children={<Management />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -283,6 +295,7 @@ function App() {
                         <ManagementLayout
                             children={<AllUser />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -292,6 +305,7 @@ function App() {
                         <ManagementLayout
                             children={<AllGroup />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -301,6 +315,7 @@ function App() {
                         <ManagementLayout
                             children={<Report />}
                             showChat={showChat}
+                            setShowChat={setShowChat}
                         />
                     }
                 />
@@ -308,7 +323,6 @@ function App() {
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </div>
-        // </SocketContext.Provider>
     );
 }
 
