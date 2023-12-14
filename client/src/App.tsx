@@ -50,6 +50,7 @@ function App() {
 
     const [isIntro, setIsIntro] = useState<boolean>(false);
     const [isLogin, setIsLogin] = useState<boolean>(false);
+    const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
 
     return (
         // <SocketContext.Provider value={socket}>
@@ -61,6 +62,8 @@ function App() {
                 setIsIntro={setIsIntro}
                 isLogin={isLogin}
                 setIsLogin={setIsLogin}
+                isJoinPage={isJoinPage}
+                setIsJoinPage={setIsJoinPage}
             />
 
             <Routes>
@@ -76,7 +79,16 @@ function App() {
                         <Login setIsLogin={setIsLogin} isLogin={isLogin} />
                     }
                 />
-                <Route path="/join" element={<Join />} />
+
+                <Route
+                    path="/join"
+                    element={
+                        <Join
+                            isJoinPage={isJoinPage}
+                            setIsJoinPage={setIsJoinPage}
+                        />
+                    }
+                />
 
                 <Route
                     path="/main"

@@ -19,7 +19,7 @@ export default function MainMission() {
                 },
             })
             .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
 
                 const { missionArray, groupArray, uName, uCharImg } = res.data;
                 setMissionArray(missionArray);

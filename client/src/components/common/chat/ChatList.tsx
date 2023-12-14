@@ -55,8 +55,8 @@ export default function ChatList({
 
     const [madeGroupInfo, setMadeGroupInfo] = useState<any>([]);
 
-    console.log(madeGroupInfo);
-    console.log(madeJoinInfo);
+    // console.log(madeGroupInfo);
+    // console.log(madeJoinInfo);
 
     const enterChatRoom = (gSeq: number, gName: string) => {
         setNowGSeq(gSeq);

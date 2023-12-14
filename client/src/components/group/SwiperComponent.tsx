@@ -12,7 +12,7 @@ export default function SwiperComponent({
     setGroupArray,
     madeNumGroup,
 }: any) {
-    console.log('GroupArray : ', groupArray);
+    // console.log('GroupArray : ', groupArray);
 
     // 랜덤 색상을 선택하는 함수
     const getRandomColor = () => {

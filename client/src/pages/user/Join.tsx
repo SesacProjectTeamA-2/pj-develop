@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
 
@@ -10,9 +10,26 @@ import CharacterList from '../../components/common/CharacterList';
 import InterestedList from '../../components/common/InterestedList';
 import { Divider } from '@mui/material';
 
-export default function Join() {
+export default function Join(props: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
+
+    //-- 회원가입 페이지 구분
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        props.setIsJoinPage(true);
+
+        // 컴포넌트가 마운트될 때 이벤트 핸들러 등록
+        const unmountHandler = () => {
+            props.setIsJoinPage(false);
+        };
+
+        // 컴포넌트가 언마운트될 때 등록한 이벤트 핸들러 제거
+        return () => {
+            unmountHandler();
+        };
+    }, [navigate, props]);
 
     // [참고] 회원가입 페이지 오자마자 모달창 띄우고 싶으면, 아래 주석 풀면 됩니다.
     // alert('회원가입이 필요합니다.');
