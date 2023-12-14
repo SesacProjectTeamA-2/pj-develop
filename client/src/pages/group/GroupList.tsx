@@ -41,7 +41,7 @@ export default function GroupList() {
         getMadeGroup();
     }, []);
 
-    console.log(madeGroup);
+    // console.log(madeGroup);
 
     //] 참여한 모임
     const getJoinedGroup = async () => {
@@ -64,7 +64,7 @@ export default function GroupList() {
 
     useEffect(() => {
         getJoinedGroup();
-        console.log('madeGroup', madeGroup);
+        // console.log('madeGroup', madeGroup);
     }, []);
 
     const createHandler = () => {

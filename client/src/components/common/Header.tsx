@@ -261,84 +261,100 @@ export default function Header(props: any) {
                         </Link>
                     </div>
 
-                    <div className="header-divTwo pcMode">
-                        <nav className="header-nav ">
-                            {/* <ThemeProvider theme={theme}> */}
-                            <input
-                                type="text"
-                                id="grpSearch-input"
-                                value={grpInput}
-                                placeholder="초대 링크를 넣어보세요"
-                                onChange={(
-                                    e: React.ChangeEvent<HTMLInputElement>
-                                ) => setGrpInput(e.target.value)}
-                            />
-                            <img
-                                src="/asset/icons/search.svg"
-                                id="grpSearch-btn"
-                                onClick={(e: React.MouseEvent) => goInvited()}
-                                alt="search"
-                            ></img>
+                    {/* 회원가입 페이지 */}
+                    {props.isJoinPage ? (
+                        ''
+                    ) : (
+                        <div className="header-divTwo pcMode">
+                            <nav className="header-nav ">
+                                {/* <ThemeProvider theme={theme}> */}
+                                <input
+                                    type="text"
+                                    id="grpSearch-input"
+                                    value={grpInput}
+                                    placeholder="초대 링크를 넣어보세요"
+                                    onChange={(
+                                        e: React.ChangeEvent<HTMLInputElement>
+                                    ) => setGrpInput(e.target.value)}
+                                />
+                                <img
+                                    src="/asset/icons/search.svg"
+                                    id="grpSearch-btn"
+                                    onClick={(e: React.MouseEvent) =>
+                                        goInvited()
+                                    }
+                                    alt="search"
+                                ></img>
 
-                            <div id="navbar-animmenu">
-                                <ul className="show-dropdown main-navbar">
-                                    <div className="hori-selector">
-                                        <div className="left"></div>
-                                        <div className="right"></div>
-                                    </div>
-                                    {props.isIntro || props.isLogin ? (
-                                        <div className="menu-list-btn">
-                                            <li onClick={mainActiveHandler}>
-                                                <Link
-                                                    to="/main"
-                                                    style={{ color: 'black' }}
-                                                >
-                                                    Main
-                                                </Link>
-                                            </li>
-                                            <li onClick={groupActiveHandler}>
-                                                <Link
-                                                    to="/group"
-                                                    style={{ color: 'black' }}
-                                                >
-                                                    Group
-                                                </Link>
-                                            </li>
+                                <div id="navbar-animmenu">
+                                    <ul className="show-dropdown main-navbar">
+                                        <div className="hori-selector">
+                                            <div className="left"></div>
+                                            <div className="right"></div>
                                         </div>
-                                    ) : (
-                                        <div className="menu-list-btn">
-                                            <li onClick={mainActiveHandler}>
-                                                <Link
-                                                    to="/main"
-                                                    style={{
-                                                        color:
-                                                            isActive === 'main'
-                                                                ? 'black'
-                                                                : '',
-                                                    }}
+                                        {props.isIntro || props.isLogin ? (
+                                            <div className="menu-list-btn">
+                                                <li onClick={mainActiveHandler}>
+                                                    <Link
+                                                        to="/main"
+                                                        style={{
+                                                            color: 'black',
+                                                        }}
+                                                    >
+                                                        Main
+                                                    </Link>
+                                                </li>
+                                                <li
+                                                    onClick={groupActiveHandler}
                                                 >
-                                                    Main
-                                                </Link>
-                                            </li>
-                                            <li onClick={groupActiveHandler}>
-                                                <Link
-                                                    to="/group"
-                                                    style={{
-                                                        color:
-                                                            isActive === 'group'
-                                                                ? 'black'
-                                                                : '',
-                                                    }}
+                                                    <Link
+                                                        to="/group"
+                                                        style={{
+                                                            color: 'black',
+                                                        }}
+                                                    >
+                                                        Group
+                                                    </Link>
+                                                </li>
+                                            </div>
+                                        ) : (
+                                            <div className="menu-list-btn">
+                                                <li onClick={mainActiveHandler}>
+                                                    <Link
+                                                        to="/main"
+                                                        style={{
+                                                            color:
+                                                                isActive ===
+                                                                'main'
+                                                                    ? 'black'
+                                                                    : '',
+                                                        }}
+                                                    >
+                                                        Main
+                                                    </Link>
+                                                </li>
+                                                <li
+                                                    onClick={groupActiveHandler}
                                                 >
-                                                    Group
-                                                </Link>
-                                            </li>
-                                        </div>
-                                    )}
-                                </ul>
-                            </div>
+                                                    <Link
+                                                        to="/group"
+                                                        style={{
+                                                            color:
+                                                                isActive ===
+                                                                'group'
+                                                                    ? 'black'
+                                                                    : '',
+                                                        }}
+                                                    >
+                                                        Group
+                                                    </Link>
+                                                </li>
+                                            </div>
+                                        )}
+                                    </ul>
+                                </div>
 
-                            {/* <ButtonGroup
+                                {/* <ButtonGroup
                                     aria-label="outlined button group"
                                     variant="outlined"
                                     sx={{ p: 1 }}
@@ -354,81 +370,83 @@ export default function Header(props: any) {
                                             GROUP
                                         </Button>
                                     </Link> */}
-                            {/* </li> */}
-                            {/* 관리자만 보이는 버튼 */}
-                            {/* <Link to="/management/users">
+                                {/* </li> */}
+                                {/* [추후] 관리자만 보이는 버튼 */}
+                                {/* <Link to="/management/users">
                                     <Button className="menu-button">
                                         Management
                                     </Button>
                                 </Link> */}
-                            {/* </ButtonGroup> */}
-                            {/* </ThemeProvider> */}
+                                {/* </ButtonGroup> */}
+                                {/* </ThemeProvider> */}
 
-                            <ul className="menu">
-                                {!isCookie ? (
-                                    <li>
-                                        {/* 비로그인 시 */}
-                                        <ThemeProvider theme={theme}>
-                                            {/* <Link to="/login">Login</Link> */}
+                                <ul className="menu">
+                                    {!isCookie ? (
+                                        <li>
+                                            {/* 비로그인 시 */}
+                                            <ThemeProvider theme={theme}>
+                                                {/* <Link to="/login">Login</Link> */}
 
-                                            <Link to="/login">
-                                                <Button
-                                                    aria-label="outlined button group"
-                                                    variant="outlined"
-                                                    className="menu-button"
-                                                >
-                                                    Login
-                                                </Button>
-                                            </Link>
-                                        </ThemeProvider>
-                                    </li>
-                                ) : (
-                                    <>
-                                        {!props.isIntro && (
-                                            <div className="chat-icon-container">
+                                                <Link to="/login">
+                                                    <Button
+                                                        aria-label="outlined button group"
+                                                        variant="outlined"
+                                                        className="menu-button"
+                                                    >
+                                                        Login
+                                                    </Button>
+                                                </Link>
+                                            </ThemeProvider>
+                                        </li>
+                                    ) : (
+                                        <>
+                                            {!props.isIntro && (
+                                                <div className="chat-icon-container">
+                                                    <img
+                                                        src="/asset/icons/chat.svg"
+                                                        style={{
+                                                            width: '40px',
+                                                            height: '40px',
+                                                        }}
+                                                        alt="chatImg"
+                                                        onClick={() =>
+                                                            props.showChatting()
+                                                        }
+                                                        id="chat-btn"
+                                                    />
+                                                    <span id="chat-text">
+                                                        Chat
+                                                    </span>
+                                                </div>
+                                            )}
+
+                                            <div className="logout-icon-container">
                                                 <img
-                                                    src="/asset/icons/chat.svg"
-                                                    style={{
-                                                        width: '40px',
-                                                        height: '40px',
-                                                    }}
-                                                    alt="chatImg"
-                                                    onClick={() =>
-                                                        props.showChatting()
-                                                    }
-                                                    id="chat-btn"
+                                                    src="/asset/icons/Bell.svg"
+                                                    alt="alarm"
+                                                    onClick={alarmHandler}
+                                                    id="logout-btn"
                                                 />
-                                                <span id="chat-text">Chat</span>
+                                                <div
+                                                    className="noti-count-wrapper"
+                                                    onClick={alarmHandler}
+                                                >
+                                                    <span className="notification-count">
+                                                        6
+                                                    </span>
+                                                </div>
+                                                {/* <span id="logout-text">Bell</span> */}
                                             </div>
-                                        )}
+                                            {/* 알람창 컴포넌트 */}
 
-                                        <div className="logout-icon-container">
-                                            <img
-                                                src="/asset/icons/Bell.svg"
-                                                alt="alarm"
-                                                onClick={alarmHandler}
-                                                id="logout-btn"
-                                            />
-                                            <div
-                                                className="noti-count-wrapper"
-                                                onClick={alarmHandler}
-                                            >
-                                                <span className="notification-count">
-                                                    6
-                                                </span>
-                                            </div>
-                                            {/* <span id="logout-text">Bell</span> */}
-                                        </div>
-                                        {/* 알람창 컴포넌트 */}
+                                            {isAlarm && (
+                                                <Alarm
+                                                    alarmHandler={alarmHandler}
+                                                />
+                                            )}
 
-                                        {isAlarm && (
-                                            <Alarm
-                                                alarmHandler={alarmHandler}
-                                            />
-                                        )}
-
-                                        {/* [참고] 움직이는 알람 */}
-                                        {/* <div className="notification-box">
+                                            {/* [참고] 움직이는 알람 */}
+                                            {/* <div className="notification-box">
                                             <span className="notification-count">
                                                 6
                                             </span>
@@ -440,38 +458,41 @@ export default function Header(props: any) {
                                             </div>
                                         </div> */}
 
-                                        <div className="logout-icon-container">
-                                            <img
-                                                src="/asset/icons/logout.svg"
-                                                alt="logout"
-                                                onClick={logoutHandler}
-                                                id="logout-btn"
-                                            />
-                                            <span id="logout-text">Logout</span>
-                                        </div>
-
-                                        <li>
-                                            {/* <div className="mypage-icon-container"> */}
-                                            <Link to="/mypage">
+                                            <div className="logout-icon-container">
                                                 <img
-                                                    src={userImgSrc}
-                                                    style={{
-                                                        width: '40px',
-                                                        height: '40px',
-                                                    }}
-                                                    alt="userImg"
-                                                    className="myPage-btn"
+                                                    src="/asset/icons/logout.svg"
+                                                    alt="logout"
+                                                    onClick={logoutHandler}
+                                                    id="logout-btn"
                                                 />
-                                            </Link>
+                                                <span id="logout-text">
+                                                    Logout
+                                                </span>
+                                            </div>
 
-                                            {/* <span id="mypage-text">My</span>
+                                            <li>
+                                                {/* <div className="mypage-icon-container"> */}
+                                                <Link to="/mypage">
+                                                    <img
+                                                        src={userImgSrc}
+                                                        style={{
+                                                            width: '40px',
+                                                            height: '40px',
+                                                        }}
+                                                        alt="userImg"
+                                                        className="myPage-btn"
+                                                    />
+                                                </Link>
+
+                                                {/* <span id="mypage-text">My</span>
                                             </div> */}
-                                        </li>
-                                    </>
-                                )}
-                            </ul>
-                        </nav>
-                    </div>
+                                            </li>
+                                        </>
+                                    )}
+                                </ul>
+                            </nav>
+                        </div>
+                    )}
 
                     {/* 메뉴 탭 버튼 */}
                     <div className="tab-menu-div">
