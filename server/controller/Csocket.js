@@ -27,8 +27,7 @@ exports.setupSocket = async (server, options) => {
     // 네임스페이스에 이벤트 리스너 등록
     groupChat.on('connection', async (socket) => {
       try {
-        console.log(socket.uSeq);
-        console.log(socket.uName);
+        console.log('소켓 토큰 검증된 uSeq>>>>>>>>>>', socket.uSeq);
         // 클라이언트 소켓의 고유한 ID를 가져옴
         const socketId = socket.id;
         // console.log(socket);
