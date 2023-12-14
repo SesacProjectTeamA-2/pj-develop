@@ -14,26 +14,15 @@ const redisCli = redisClient.v4;
 redisClient.on('connect', async () => {
   console.log('Redis에 연결되었습니다');
 
-  redisClient.set('test', '123');
-  let data = await redisCli.get('test');
-  console.log(data);
+  // redisClient.set('test', '123');
+  // let data = await redisCli.get('test');
+  // console.log(data);
+  // const result = await redisCli.lPush('testRoom', '1');
+  // console.log(result);
 
-  //   // 키에 연결된 값 가져오기
-  //   redisClient.get('test', (err, value) => {
-  //     if (err) {
-  //       console.error(err);
-  //     } else {
-  //       // 값이 문자열이 아니라면 다른 처리를 수행
-  //       if (typeof value !== 'string') {
-  //         console.error(`키 ${key}에 저장된 데이터의 유형이 문자열이 아닙니다.`);
-  //       } else {
-  //         console.log(`키 ${key}에 대한 값:`, value);
-  //       }
-  //     }
-
-  //     // 연결 닫기
-  //     // redisClient.quit();
-  //   });
+  // 레디스 모든 데이터 삭제
+  const result = await redisCli.flushAll();
+  console.log(result);
 
   redisClient.on('error', (err) => {
     console.error('redis client error!', err);

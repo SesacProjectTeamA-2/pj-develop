@@ -9,7 +9,7 @@ const authSocketUtil = {
   checkToken: async (socket, next) => {
     try {
       var token = socket.handshake.headers.authorization.split(' ')[1];
-      console.log('>>>>>>>>>>>>>>>>>', token);
+      let loginTime = new Date();
       // 토큰 없음
       if (!token) return next('토큰 없음');
 
@@ -27,6 +27,7 @@ const authSocketUtil = {
 
       socket.uSeq = user.uSeq;
       socket.uName = user.uName;
+      socket.loginTime = loginTime;
       next();
     } catch (error) {
       console.error('토큰 확인 중 서버 에러:', error);
