@@ -77,7 +77,6 @@ export default function GroupList() {
     return (
         <div>
             <div className="groups created">
-                {/* <Toaster /> */}
                 <div className="title3">내가 생성한 모임</div>
                 <div>
                     {madeGroup?.length > 0 ? (

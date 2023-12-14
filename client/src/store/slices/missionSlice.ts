@@ -77,7 +77,7 @@ const missionSlice = createSlice({
         addMission(state, action) {
             const newMission = action.payload;
             state.push(newMission);
-            console.log(':::', newMission);
+            // console.log('newMission', newMission);
         },
     },
 });

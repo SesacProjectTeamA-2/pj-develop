@@ -14,7 +14,7 @@ import '../../../styles/scss/layout/layout.scss';
 import { useParams } from 'react-router-dom';
 
 // groupbar section chat
-export default function GroupLayout({ children, showChat }: any) {
+export default function GroupLayout({ children, showChat, setShowChat }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -117,7 +117,12 @@ export default function GroupLayout({ children, showChat }: any) {
                                     paddingTop: 0,
                                 }}
                             >
-                                {showChat ? <SidebarChat /> : null}
+                                {showChat ? (
+                                    <SidebarChat
+                                        showChat={showChat}
+                                        setShowChat={setShowChat}
+                                    />
+                                ) : null}
                             </Item>
                         </Grid>
                         <div className="footer-layout-wrapper">

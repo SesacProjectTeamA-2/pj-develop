@@ -44,8 +44,6 @@ export default function Main() {
             },
         });
 
-        console.log('!!!!!!!!!!!!!', uToken);
-
         socket.emit('login', loginData);
 
         socket.on('loginSuccess', (data) => {
