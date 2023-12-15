@@ -3,7 +3,6 @@ import { Cookies } from 'react-cookie';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 
-// [추후]
 // import { socket } from '../SidebarChat';
 
 import '../../../styles/scss/components/chatroom.scss';
