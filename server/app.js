@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
-const { setupSocket } = require('./controller/Csocket.js');
+const { setupSocket } = require('./routes/socket.js');
 
 // NODE.ENV가 지정되어 있지 않으면 development 모드로 실행
 process.env.NODE_ENV =
