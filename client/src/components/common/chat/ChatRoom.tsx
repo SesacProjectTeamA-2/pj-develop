@@ -98,15 +98,18 @@ export default function ChatRoom({
     //] 입장 알림
 
     useEffect(() => {
-        // console.log('joinRoom event received on client');
+        console.log(socket);
 
-        socket.emit('joinRoom', { gSeq: nowGSeq });
+        if (socket) {
+            console.log('????????');
+            socket.emit('joinRoom', { gSeq: nowGSeq });
 
-        // joinRoom 이벤트에 대한 리스너 추가
-        socket.on('joinRoom', (data: any) => {
-            // 여기서 data에 서버에서 보낸 데이터가 들어있습니다.
-            console.log('joinRoom event received on client', data);
-        });
+            // joinRoom 이벤트에 대한 리스너 추가
+            socket.on('joinRoom', (data: any) => {
+                // 여기서 data에 서버에서 보낸 데이터가 들어있습니다.
+                console.log('joinRoom event received on client', data);
+            });
+        }
 
         // --컴포넌트가 언마운트될 때 리스너 해제
         // return () => {

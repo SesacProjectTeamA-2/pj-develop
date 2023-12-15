@@ -8,7 +8,7 @@ export const getSocket = () => {
     const uToken = cookie.get('isUser');
 
     if (!socket) {
-        socket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
+        socket = io(`${process.env.REACT_APP_DB_HOST}/socket`, {
             extraHeaders: {
                 Authorization: `Bearer ${uToken}`,
             },

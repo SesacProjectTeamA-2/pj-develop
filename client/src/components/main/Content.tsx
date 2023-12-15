@@ -14,7 +14,13 @@ import TeamPercentage from './TeamPercentage';
 import '../../styles/scss/pages/main/percentage.scss';
 import Progressbar from '../common/Progressbar';
 
-export default function Content({ setLoginData, loginData }: any) {
+export default function Content({
+    setLoginData,
+    loginData,
+    newSocket,
+    setInitialLogin,
+    initialLogin,
+}: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -288,6 +294,24 @@ export default function Content({ setLoginData, loginData }: any) {
     // console.log('groupInfo::::::', groupInfo);
     // console.log('gSeqList::::::', gSeqList);
     // console.log('loginData::::::', loginData);
+
+    useEffect(() => {
+        if (
+            newSocket &&
+            loginData.uSeq !== 0 &&
+            loginData.uName !== '' &&
+            loginData.uName !== undefined &&
+            !initialLogin
+        ) {
+            newSocket.emit('login', loginData);
+
+            newSocket.on('loginSuccess', (data: any) => {
+                console.log('loginSuccess !!!!!!!!!!', data.msg); // Log the success message
+            });
+
+            setInitialLogin(true);
+        }
+    }, [loginData]);
 
     return (
         <div
