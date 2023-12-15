@@ -57,6 +57,7 @@ function App() {
     const [isIntro, setIsIntro] = useState<boolean>(false);
     const [isLogin, setIsLogin] = useState<boolean>(false);
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
+    const [initialLogin, setInitialLogin] = useState<any>(false);
 
     return (
         <div className="App">
@@ -99,7 +100,12 @@ function App() {
                     path="/main"
                     element={
                         <BasicLayout
-                            children={<Main />}
+                            children={
+                                <Main
+                                    initialLogin={initialLogin}
+                                    setInitialLogin={setInitialLogin}
+                                />
+                            }
                             showChat={showChat}
                             setShowChat={setShowChat}
                         />
