@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
-import { getSocket } from 'src/socket';
+// import { getSocket } from 'src/socket';
 import { io } from 'socket.io-client';
 
 import Content from '../components/main/Content';
+import useSocket from 'src/hooks/useSocket';
 
 export default function Main() {
     const cookie = new Cookies();
@@ -36,26 +37,36 @@ export default function Main() {
         myCookie.set('isUser', uToken);
     }
 
-    if (cookie.get('isUser')) {
-        // const socket = getSocket();
-        const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
-            extraHeaders: {
-                Authorization: `Bearer ${uToken}`,
-            },
-        });
+    const socket = useSocket();
 
-        socket.emit('login', loginData);
+    useEffect(() => {
+        if (uToken) {
+            socket.emit('login', loginData);
 
-        socket.on('loginSuccess', (data) => {
-            console.log(data.msg); // Log the success message
-        });
-    }
+            socket.on('loginSuccess', (data: any) => {
+                console.log(data.msg); // Log the success message
+                // 로그인 성공 후의 추가 작업 수행
+            });
+        }
+    }, [socket, uToken]);
+
+    // if (cookie.get('isUser')) {
+    //     // const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
+    //     //     extraHeaders: {
+    //     //         Authorization: `Bearer ${uToken}`,
+    //     //     },
+    //     // });
+
+    //     socket.emit('login', loginData);
+
+    //     socket.on('loginSuccess', (data: any) => {
+    //         console.log(data.msg); // Log the success message
+    //     });
+    // }
 
     // useEffect(() => {
     //     getChat();
     // }, []);
-
-    // console.log('isUser', myCookie.get('isUser'));
 
     return (
         <div className="section-main">
