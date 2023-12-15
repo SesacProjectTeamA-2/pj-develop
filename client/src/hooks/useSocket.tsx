@@ -13,7 +13,7 @@ export default function useSocket() {
         const uToken = cookie.get('isUser');
 
         // if (!currentSocket) {
-        const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
+        const newSocket = io(`${process.env.REACT_APP_DB_HOST}/socket`, {
             extraHeaders: {
                 Authorization: `Bearer ${uToken}`,
             },
