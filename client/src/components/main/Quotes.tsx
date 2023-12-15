@@ -6,8 +6,8 @@ import '../../styles/scss/pages/main.scss';
 export default function Quotes(props: any) {
     const advice = kadvice.getOne();
 
-    console.log(props.phraseModeSelf);
-    console.log(props.phraseCtt);
+    // console.log(props.phraseModeSelf);
+    // console.log(props.phraseCtt);
     return (
         // <div className="content-grid-box quotes-div-flex">
         //     <div className="quotes ">

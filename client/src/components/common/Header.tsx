@@ -11,6 +11,7 @@ import { Button, ButtonGroup, Divider } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../../styles/scss/layout/header.scss';
 import Alarm from './Alarm';
+import useSocket from 'src/hooks/useSocket';
 
 export default function Header(props: any) {
     const [isCookie, setIsCookie] = useState(false); // 쿠키 유무
@@ -20,7 +21,9 @@ export default function Header(props: any) {
 
     //=== 채팅 ===
 
-    const socket = getSocket();
+    // const socket = getSocket();
+
+    const socket = useSocket();
 
     const [loginData, setLoginData] = useState([]);
 

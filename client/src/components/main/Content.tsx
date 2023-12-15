@@ -1,3 +1,5 @@
+// ============= 삭제 예정 ===============
+
 import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';

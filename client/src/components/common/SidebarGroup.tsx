@@ -46,8 +46,8 @@ export default function SideBarGroup({ isShrinkView, setIsShrinkView }: any) {
     const [isJoin, setIsJoin] = useState(false);
     const [leaderName, setLeaderName] = useState('');
 
-    console.log('leaderName', leaderName);
-    console.log('groupMissions', groupMissions);
+    // console.log('leaderName', leaderName);
+    // console.log('groupMissions', groupMissions);
 
     let mSeqList = [];
 
