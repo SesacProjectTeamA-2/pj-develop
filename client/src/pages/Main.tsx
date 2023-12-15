@@ -17,7 +17,7 @@ import Progressbar from '../components/common/Progressbar';
 
 let newSocket: Socket | null = null;
 
-export default function Main() {
+export default function Main({ initialLogin, setInitialLogin }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -27,7 +27,7 @@ export default function Main() {
         gSeq: [],
     }); // socket 서버 전송
 
-    const [initialLogin, setInitialLogin] = useState<any>(false);
+    // const [initialLogin, setInitialLogin] = useState<any>(false);
 
     const [uSeq, setUSeq] = useState(1); // 유저 번호
     const [gSeqList, setGSeqList] = useState<any>([]); // 참여 모임
@@ -64,12 +64,14 @@ export default function Main() {
         if (uToken) {
             myCookie.set('isUser', uToken);
 
-            // socket 연결 요청
+            // 최초 로그인 시, socket 연결 요청
             newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
                 extraHeaders: {
                     Authorization: `Bearer ${uToken}`,
                 },
             });
+
+            // console.log(':::::::::::: 최초 로그인 시, socket 연결 요청');
         }
     }, []);
 
@@ -253,8 +255,6 @@ export default function Main() {
     const [madeGroupInfo, setMadeGroupInfo] = useState<any>([]);
 
     useEffect(() => {
-        //  console.log('loginData', loginData);
-        console.log('????????initialLogin', initialLogin);
         if (
             newSocket &&
             loginData.uSeq !== 0 &&
@@ -271,8 +271,6 @@ export default function Main() {
             setInitialLogin(true);
         }
     }, [loginData]);
-
-    console.log('initialLogin', initialLogin);
 
     //=== 달성률에 따른 캐릭터 이미지 변경 ===
 
