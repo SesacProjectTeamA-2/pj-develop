@@ -2,6 +2,7 @@ import { io } from 'socket.io-client';
 import { Cookies } from 'react-cookie';
 
 let socket = null;
+
 export const getSocket = () => {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');

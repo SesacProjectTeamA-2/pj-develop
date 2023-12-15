@@ -32,8 +32,22 @@ import BoardEdit from './pages/group/BoardEdit';
 import GroupMissionDetail from './pages/group/GroupMissionDetail';
 import MissionPost from './pages/group/MissionPost';
 import BoardMissionEdit from './pages/group/BoardMissionEdit';
+// import { getSocket } from './socket';
+// import { setSocket } from './global';
 
 function App() {
+    // useEffect(() => {
+    //     setSocket(getSocket);
+
+    //     // 클린업 로직
+    //     return () => {
+    //         const socket = getSocket();
+    //         if (socket) {
+    //             socket.close();
+    //         }
+    //     };
+    // }, []);
+
     // 헤더 채팅 버튼 눌렀을 때 채팅창 보여주는 함수
     const [showChat, setShowChat] = useState<boolean>(false);
     const showChatting = (): void => {

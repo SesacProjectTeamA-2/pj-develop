@@ -7,6 +7,7 @@ import { io } from 'socket.io-client';
 
 import '../../../styles/scss/components/chatroom.scss';
 import { getSocket } from 'src/socket';
+import useSocket from 'src/hooks/useSocket';
 
 export default function ChatRoom({
     isEnter,
@@ -19,7 +20,9 @@ export default function ChatRoom({
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
-    const socket = getSocket();
+    const socket = useSocket();
+
+    // const socket = getSocket();
     // const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
 
     // 특정 그룹 정보 가져오기
@@ -57,8 +60,6 @@ export default function ChatRoom({
                 },
             })
             .then((res) => {
-                // console.log(res.data);
-
                 setGroupDetail(res.data);
 
                 setIsLeader(res.data.isLeader);

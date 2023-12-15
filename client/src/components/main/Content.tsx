@@ -277,9 +277,6 @@ export default function Content({ setLoginData, loginData }: any) {
     //             socket.emit('connection', () => {
     //                 console.log('socket server connected.');
     //             });
-
-    //             // 닉네임 서버에 전송
-    //             // socket.emit('setName', uName);
     //         });
     // };
 

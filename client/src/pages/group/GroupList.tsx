@@ -41,8 +41,6 @@ export default function GroupList() {
         getMadeGroup();
     }, []);
 
-    // console.log(madeGroup);
-
     //] 참여한 모임
     const getJoinedGroup = async () => {
         try {
