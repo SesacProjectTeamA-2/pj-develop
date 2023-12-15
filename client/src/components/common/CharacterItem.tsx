@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 export default function CharacterItem(props: any) {
     useEffect(() => {
-        console.log('Selected Character:', props.selectedCharacter);
+        // console.log('Selected Character:', props.selectedCharacter);
     }, [props.selectedCharacter]);
 
     return (

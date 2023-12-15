@@ -28,17 +28,17 @@ export default function GroupContent({ action }: any) {
                 },
             })
             .then((res) => {
-                console.log('getUserData 로그인 후 ', res.data);
+                // console.log('getUserData 로그인 후 ', res.data);
                 const { userImg } = res.data; //null
 
                 if (userImg !== null || userImg !== undefined) {
                     //user가 업로드한 값 없으면 기본 이미지
                     setUserImgSrc(userImg);
-                    console.log('userImgSrc 있음', userImgSrc);
+                    // console.log('userImgSrc 있음', userImgSrc);
                 } else {
                     // user가 업로드한 값이 없거나 undefined일 때
                     setUserImgSrc('/asset/images/user.svg');
-                    console.log('userImgSrc 없음', userImgSrc);
+                    // console.log('userImgSrc 없음', userImgSrc);
                 }
                 // else if (userImg) {
                 //     setUserImgSrc('/asset/images/user.svg');
@@ -65,7 +65,7 @@ export default function GroupContent({ action }: any) {
 
     const { gSeq, mSeq, gCategory } = useParams();
 
-    console.log(' gSeq, mSeq, gCategory', gSeq, mSeq, gCategory);
+    // console.log(' gSeq, mSeq, gCategory', gSeq, mSeq, gCategory);
 
     //] 1. 자유게시글
     const [freeList, setFreeList] = useState<any>([]);
@@ -80,9 +80,6 @@ export default function GroupContent({ action }: any) {
                 },
             })
             .then((res) => {
-                console.log('자유게시글');
-                console.log('---', res.data.groupInfo);
-
                 setFreeList(res.data.groupInfo);
             });
 
@@ -120,8 +117,6 @@ export default function GroupContent({ action }: any) {
                     },
                 }
             );
-
-            console.log(res.data);
 
             setMissionList(res.data.groupInfo);
         };

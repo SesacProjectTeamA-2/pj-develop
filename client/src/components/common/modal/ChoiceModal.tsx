@@ -31,8 +31,6 @@ export default function ChoiceModal({
                 },
             })
             .then((res) => {
-                console.log(res.data);
-
                 setGName(res.data.groupName);
             });
     };
@@ -80,15 +78,12 @@ export default function ChoiceModal({
                     }
                 )
                 .then((res) => {
-                    console.log(res.data);
-
                     alert(
                         `${selectedMemberName} 님에게 모임장을 위임하였습니다.`
                     );
                     window.location.reload();
                 });
         } catch (err) {
-            console.log(err);
             alert('모임장 위임에 실패하였습니다.');
         }
     };
