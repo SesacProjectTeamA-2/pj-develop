@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Cookies } from 'react-cookie';
 
 import SwiperComponent from '../../components/group/SwiperComponent';
+import SwiperTest from 'src/components/group/SwiperTest';
 
 export default function GroupList() {
     const nvg = useNavigate();
@@ -99,6 +100,19 @@ export default function GroupList() {
                     />
                 ) : (
                     '가입한 모임이 없습니다. '
+                )}
+            </div>
+
+            {/* TEST */}
+            <div className="title3"> TEST </div>
+            <div>
+                {madeGroup?.length > 0 ? (
+                    <SwiperTest
+                        groupArray={madeGroup}
+                        setGroupArray={setMadeGroup}
+                    />
+                ) : (
+                    '생성한 모임이 없습니다. '
                 )}
             </div>
 

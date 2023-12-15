@@ -16,7 +16,37 @@ export default function GroupSearchAll({
 
     const [allGroupList, setAllGroupList] = useState<any>([]);
 
-    console.log(selectedArr);
+    useEffect(() => {
+        const cards = document.querySelectorAll('.glow-card-container');
+
+        cards.forEach((card) => {
+            const overlay = card.querySelector(
+                '.glow-card-overlay'
+            ) as HTMLElement;
+
+            card.addEventListener('mouseover', function () {
+                overlay.style.filter = 'opacity(1)';
+            });
+
+            card.addEventListener('mouseout', function () {
+                overlay.style.filter = 'opacity(0)';
+            });
+
+            card.addEventListener('mousemove', function (e: any) {
+                const x = e.offsetX;
+                const y = e.offsetY;
+                const rotateY = (-1 / 5) * x + 20;
+                const rotateX = (4 / 30) * y - 20;
+
+                overlay.style.backgroundPosition = `${x / 5 + y / 5}%`;
+                overlay.style.filter = `opacity(${x / 200}) brightness(1.2)`;
+
+                (
+                    card as HTMLElement
+                ).style.transform = `perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+        });
+    }, []);
 
     useEffect(() => {
         const getSearchGroupList = async () => {
@@ -45,27 +75,32 @@ export default function GroupSearchAll({
                     : allGroupList?.map((searchGroup: GroupStateType) => (
                           <div
                               key={searchGroup.gSeq}
-                              className="search-group-container"
+                              className="glow-card-container"
                           >
+                              {/* === 새로 추가한 코드 === */}
                               <Link to={`/group/home/${searchGroup.gSeq}`}>
-                                  <div className="title-card">
-                                      {searchGroup.gName}
-                                  </div>
-                                  <br />
-                                  <span
-                                      style={{
-                                          // margin: '0px 15px',
-                                          color: '#8D6262',
-                                          //   fontWeight: 'bold',
-                                          //   fontSize: '1.2rem',
-                                      }}
-                                  >
-                                      <span className="title5">D-day</span>
-                                  </span>
-                                  <div className="title6">
-                                      {searchGroup.gDday}
-                                  </div>
+                                  <div className="glow-card-overlay"></div>
+                                  <div className="glow-card"></div>
                               </Link>
+
+                              {/* === 기존 코드 === */}
+                              {/* <div className="title-card">
+                            {searchGroup.gName}
+                        </div>
+                        <br />
+                        <span
+                            style={{
+                                // margin: '0px 15px',
+                                color: '#8D6262',
+                                //   fontWeight: 'bold',
+                                //   fontSize: '1.2rem',
+                            }}
+                        >
+                            <span className="title5">D-day</span>
+                        </span>
+                        <div className="title6">
+                            {searchGroup.gDday}
+                        </div> */}
                           </div>
                       ))}
             </div>

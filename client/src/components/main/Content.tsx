@@ -24,7 +24,7 @@ export default function Content({ setLoginData, loginData }: any) {
     //     uName: '',
     //     gSeq: [],
     // }); // socket 서버 전송
-    const [uSeq, setUSeq] = useState(1); // 유저 번호
+    const [uSeq, setUSeq] = useState(0); // 유저 번호
     const [gSeqList, setGSeqList] = useState<any>([]); // 참여 모임
 
     // 프로필 사진 , 명언 가져오기
@@ -142,10 +142,7 @@ export default function Content({ setLoginData, loginData }: any) {
 
                 setGSeqList(updatedGSeqList);
 
-                //-- 보낼 데이터 업데이트
-                // uSeq: 1,
-                // uName: '',
-                // gSeq: [],
+                //-- 서버에 전송할 데이터 업데이트
                 if (loginData.uName !== uName) {
                     setLoginData((prevData: any) => ({
                         ...prevData,

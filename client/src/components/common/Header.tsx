@@ -19,48 +19,123 @@ export default function Header(props: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
 
-    //=== 채팅 ===
-
-    // const socket = getSocket();
-
+    //-- 채팅
     const socket = useSocket();
+    const nvg = useNavigate();
 
-    const [loginData, setLoginData] = useState([]);
+    const [uSeqData, setUSeqData] = useState({ uSeq: 0 });
 
-    //-- Login
+    //-- 프로필 사진 가져오기
+    const [userImgSrc, setUserImgSrc] = useState<any>('/asset/images/user.svg'); // 문자열 변수
+
+    const getUserData = async () => {
+        await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/user/mypage`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                const { userImg, uSeq } = res.data; //null
+
+                setUSeqData(uSeq);
+
+                if (userImg !== null && userImg !== undefined) {
+                    // user가 업로드한 값이 있을 때
+                    setUserImgSrc(userImg);
+                } else {
+                    // user가 업로드한 값이 없거나 undefined일 때
+                    setUserImgSrc('/asset/images/user.svg');
+                }
+            })
+            .catch((err) => {
+                console.log('error 발생: ', err);
+            });
+    };
+
+    //] 로그인 여부 구분해 사진 넣기
+    const [isUser, setIsUser] = useState<boolean>(false); // 비로그인 상태
+
+    //] Login
     useEffect(() => {
         if (cookie.get('isUser')) {
             setIsCookie(true);
 
-            //; 채팅 login
-
-            // 1. 사용자 데이터 가져오기
-            // const getUserData = async () => {
-            //     await axios
-            //         .get(`${process.env.REACT_APP_DB_HOST}/user/mypage`, {
-            //             headers: {
-            //                 Authorization: `Bearer ${uToken}`,
-            //             },
-            //         })
-            //         .then((res) => {
-            //             // console.log('user', res.data);
-            //             const { nickname } = res.data;
-            //             setUName(nickname);
-            //         });
-            // };
-
-            // useEffect(() => {
-            //     getUserData();
-            // }, []);
-
-            // socket.emit('login', () => {
-            //     console.log('클라이언트 login ======= ', loginData);
-            // });
-
-            // data =[{gSeq: , uName:}]
+            const loginProfileLoad = async () => {
+                setIsUser(true); //로그인 상태
+                await getUserData();
+            };
+            loginProfileLoad();
         } else setIsCookie(false);
     }, [cookie]);
 
+    // ] disconnect 시, uSeq 데이터 전송
+    const getJoinedGroup = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/group/joined`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                const { uSeq } = res.data;
+
+                setUSeqData({
+                    uSeq,
+                });
+            });
+    };
+
+    const logoutHandler = () => {
+        // [추후] 로그아웃 모달창 처리
+        if (window.confirm('로그아웃하시겠습니까 ?')) {
+            getJoinedGroup();
+
+            //-- 채팅 종료
+            socket.emit('logout', uSeqData);
+
+            // socket.emit('disconnect');
+
+            cookie.remove('isUser', { path: '/' });
+
+            nvg('/');
+        } else {
+            return;
+        }
+    };
+
+    console.log(uSeqData);
+
+    //] 초대장 링크 입력 후 버튼 클릭 시 그 그룹으로 이동
+    const [grpInput, setGrpInput] = useState<string>('');
+    const grpInputObj = {
+        gLink: grpInput,
+    };
+    const goInvited = (): void => {
+        axios
+            .post(
+                `${process.env.REACT_APP_DB_HOST}/group/joinByLink`,
+                grpInputObj,
+                {
+                    headers: {
+                        Authorization: `Bearer ${uToken}`,
+                    },
+                }
+            )
+            .then((res) => {
+                const { success, msg } = res.data;
+                success
+                    ? toast.success(msg, {
+                          duration: 2000,
+                      })
+                    : toast.error(msg, {
+                          duration: 2000,
+                      });
+                setGrpInput('');
+            });
+    };
+
+    //_ [ START ] 반응형 CSS
     const theme = createTheme({
         palette: {
             primary: {
@@ -98,97 +173,7 @@ export default function Header(props: any) {
     //         window.removeEventListener('resize', handleResize);
     //     };
     // }, []); // 빈 배열을 전달하여 마운트 및 언마운트 시에만 실행되도록 함
-
-    const nvg = useNavigate();
-    const logoutHandler = () => {
-        // [추후] 로그아웃 모달창 처리
-        if (window.confirm('로그아웃하시겠습니까 ?')) {
-            //-- 채팅 종료
-            socket.emit('logout', () => {
-                console.log('socket server disconnected.');
-            });
-
-            socket.emit('discoonect', () => {
-                console.log('socket server disconnected.');
-            });
-
-            cookie.remove('isUser', { path: '/' });
-
-            nvg('/');
-        } else {
-            return;
-        }
-    };
-
-    // 프로필 사진 가져오기
-    const [userImgSrc, setUserImgSrc] = useState<any>('/asset/images/user.svg'); // 문자열 변수
-
-    const getUserData = async () => {
-        await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/user/mypage`, {
-                headers: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            })
-            .then((res) => {
-                const { userImg } = res.data; //null
-
-                if (userImg !== null && userImg !== undefined) {
-                    // user가 업로드한 값이 있을 때
-                    setUserImgSrc(userImg);
-                } else {
-                    // user가 업로드한 값이 없거나 undefined일 때
-                    setUserImgSrc('/asset/images/user.svg');
-                }
-            })
-            .catch((err) => {
-                console.log('error 발생: ', err);
-            });
-    };
-
-    // 로그인 여부 구분 해 사진 넣기 => 동기화 처리
-    const [isUser, setIsUser] = useState<boolean>(false); // 비로그인 상태
-
-    useEffect(() => {
-        const loginProfileLoad = async () => {
-            if (cookie.get('isUser')) {
-                setIsUser(true); //로그인 상태
-                await getUserData();
-            } else {
-                return;
-            }
-        };
-        loginProfileLoad();
-    }, [isUser]);
-
-    // 초대장 링크 입력 후 버튼 클릭 시 그 그룹으로 이동
-    const [grpInput, setGrpInput] = useState<string>('');
-    const grpInputObj = {
-        gLink: grpInput,
-    };
-    const goInvited = (): void => {
-        axios
-            .post(
-                `${process.env.REACT_APP_DB_HOST}/group/joinByLink`,
-                grpInputObj,
-                {
-                    headers: {
-                        Authorization: `Bearer ${uToken}`,
-                    },
-                }
-            )
-            .then((res) => {
-                const { success, msg } = res.data;
-                success
-                    ? toast.success(msg, {
-                          duration: 2000,
-                      })
-                    : toast.error(msg, {
-                          duration: 2000,
-                      });
-                setGrpInput('');
-            });
-    };
+    //_ [ END ]
 
     const [isActive, setIsActive] = useState('main');
 
