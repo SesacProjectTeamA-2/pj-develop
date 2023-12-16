@@ -1,50 +1,55 @@
-const IO = require('socket.io');
-const authSocketUtil = require('../middlewares/authSocket');
-const chatSocket = require('../controller/Cchat').chatSocket;
+// const chatSocket = require('../controller/Cchat').chatSocket;
+// const io = req.app.get('io'); // 전역변수로 등록해논 io객체를 가져옴
+// 미들웨어 설정
+const authSocketUtil = require('../middlewares/authSocket.js');
 
-exports.setupSocket = async (server, options) => {
+const redisCli = require('../models/redis');
+
+exports.chatSocket = async (io, socket) => {
   try {
-    const io = IO(server, options);
-    const connectedUser = []; // 연결된 클라이언트를 저장할 객체
-
     // 네임스페이스 생성(모임챗) - 룸: 각 모임별 챗
     // Express의 라우팅처럼 url에 지정된 위치에 따라 신호의 처리를 다르게 하는 기술(특정 페이지에서 소켓이 보내주는 모든 실시간 메세지를 받을 필요는 없다)
     // Room은 namespace의 하위개념에 해당.(카톡 단톡방 1, 단톡방 2...)
-    const userIO = io.of(`/api/socket`);
-
-    // 토큰 검증 미들웨어 추가
-    userIO.use(authSocketUtil.checkToken);
+    const groupChat = io.of(`/api/chat`);
+    groupChat.use(authSocketUtil.checkToken);
 
     // 네임스페이스에 이벤트 리스너 등록
-    userIO.on('connection', async (socket) => {
+    groupChat.on('connection', async (socket) => {
       try {
-        // 클라이언트 소켓의 고유한 ID를 가져옴
-        const socketId = socket.id;
-        const loginTime = socket.loginTime;
+        const connectedUser = socket.connectedUser;
+        const userInfo = socket.userInfo;
+
+        const { uName, uSeq, loginTime, socketId } = userInfo;
+
+        console.log('현재 접속중인 유저', connectedUser);
+
         console.log(
-          `/api/socket 네임스페이스 연결 완료, 접속시간 ${socket.loginTime}::: `,
+          `/api/chat 네임스페이스 연결 완료, 접속시간 ${loginTime}::: `,
           socketId
         );
 
-        // 네임스페이스 생성/참가(채팅)
-        const groupChat = io.of(`/api/socket/chat`);
-
-        // 현재 로그인 중인 유저 정보 추가
+        // 로그인시 각 방에 참여
         socket.on('login', (data) => {
           try {
-            const uSeq = data.uSeq;
-            const uName = data.uName;
+            userInfo.gSeq = data.gSeq;
+            console.log(userInfo);
+            if (Array.isArray(data.gSeq)) {
+              data.gSeq.map((info) => {
+                const isExisting = groupChat.adapter.rooms.has(`room${info}`);
+                console.log(`room${info} 현재 생성되어 있음?`, isExisting);
 
-            const userInfo = {
-              socketId: socketId,
-              uSeq: uSeq,
-              uName: uName,
-              loginTime,
-              gSeq: data.gSeq,
-            };
+                // 방에 참가 및 notice
+                socket.join(`room${info}`);
 
-            connectedUser.push(userInfo);
-            console.log(connectedUser);
+                groupChat.to(`room${info}`).emit('loginNotice', {
+                  msg: `${uName}님이 로그인하셨어요`,
+                });
+              });
+            } else {
+              console.log(`gSeq is not Array!`);
+              return;
+            }
+
             socket.emit('loginSuccess', {
               msg: `${uName}님이 로그인하셨어요`,
               userInfo,
@@ -54,16 +59,9 @@ exports.setupSocket = async (server, options) => {
           }
         });
 
-        // 모임별 채팅 컨트롤러
-        groupChat.on('connect', () => {
-          console.log('groupChat 네임스페이스 연결');
-          chatSocket(groupChat, connectedUser);
-        });
-
         // 각 모임방에 notice
         socket.on('logout', (data) => {
           try {
-            const uSeq = data.uSeq;
             // 해당 소켓에 대한 정보를 connectedUser 배열에서 찾아 제거
             console.log('User logged out:', socketId);
             // connectedUser 배열에서 uSeq가 일치하는 객체 찾기

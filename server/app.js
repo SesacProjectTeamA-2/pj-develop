@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
-const { setupSocket } = require('./routes/socket.js');
 
 // NODE.ENV가 지정되어 있지 않으면 development 모드로 실행
 process.env.NODE_ENV =
@@ -70,10 +69,17 @@ const options = {
     // client 와 server 가 쿠키 값을 공유하겠다는 말
     // client server 모두 credentials 사용한다는 속성 설정해줘야 한다.
   },
+  path: '/socket.io',
 };
+const IO = require('socket.io');
+const io = IO(server, options);
 
-// 해당 요청이 있을 경우 소켓통신 시작
-setupSocket(server, options);
+// 전역변수 설정
+app.set('io', io);
+
+// 라우터
+const { chatSocket } = require('./routes/socket.js');
+chatSocket(io);
 
 /**
  * @path {GET} ${URL}:${PORT}/api
