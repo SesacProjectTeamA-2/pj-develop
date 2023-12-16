@@ -65,7 +65,8 @@ export default function Main({ initialLogin, setInitialLogin }: any) {
             myCookie.set('isUser', uToken);
 
             // 최초 로그인 시, socket 연결 요청
-            newSocket = io(`${process.env.REACT_APP_DB_HOST}/socket`, {
+            newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
+                path: '/socket.io',
                 extraHeaders: {
                     Authorization: `Bearer ${uToken}`,
                 },
