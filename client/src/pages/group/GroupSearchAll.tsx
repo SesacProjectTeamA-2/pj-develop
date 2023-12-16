@@ -80,7 +80,14 @@ export default function GroupSearchAll({
                               {/* === 새로 추가한 코드 === */}
                               <Link to={`/group/home/${searchGroup.gSeq}`}>
                                   <div className="glow-card-overlay"></div>
-                                  <div className="glow-card"></div>
+                                  <div className="glow-card">
+                                      <div className="title-card">
+                                          {searchGroup.gName}
+                                      </div>
+                                      <div className="title6">
+                                          {searchGroup.gDday}
+                                      </div>
+                                  </div>
                               </Link>
 
                               {/* === 기존 코드 === */}
