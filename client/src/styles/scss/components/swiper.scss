@@ -1,14 +1,25 @@
-.swiper-button-container {
+.swiper {
+    width: 100%;
+    height: 20rem;
+    padding: 1rem 0rem;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    // background: #fff;
+
+    /* Center slide text vertically */
     display: flex;
+    justify-content: center;
     align-items: center;
 }
 
-.swiper {
-    width: 600px;
-    height: 200px;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .swiper-button-next,
@@ -22,58 +33,166 @@
     display: block;
     cursor: pointer;
     margin: 10px;
+    z-index: 0;
 }
 
-// .swiper-button-next {
-//     background-image: url('../../../../public/asset/icons/search.svg');
-//     background-size: 100%;
-//     background-position: bottom;
-//     position: relative;
-// }
-
-// .swiper-button-prev {
-//     background-image: url('../../../../public/asset/icons/search.svg') no-repeat;
-//     background-size: 100%;
-//     background-position: bottom;
-//     position: relative;
-// }
-
-.swiper-button-next::after,
-.swiper-button-prev::after {
-    display: none;
+.swiper-button-container {
+    display: flex;
+    align-items: center;
 }
 
-// 카드 스타일링
-.swiper-slide {
+// .card-wrapper {
+//     display: flex;
+//     gap: 5rem;
+// }
+
+.card {
+    position: relative;
+    z-index: 40;
+    min-width: 180px;
+    // max-width: 300px;
+    // height: auto;
+    background: linear-gradient(-45deg, #fe0847, #feae3f);
+    border-radius: 15px;
+    margin: 0 auto;
+    padding: 20px 10px;
+    -webkit-box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.3);
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+
+    @media (min-width: 0px) and (max-width: 300px) {
+        min-width: 50px;
+    }
+
+    @media (min-width: 0px) and (max-width: 400px) {
+        min-width: 60px;
+    }
+
+    @media (min-width: 900px) and (max-width: 1000px) {
+        min-width: 150px;
+    }
+
+    @media (min-width: 1000px) and (max-width: 1250px) {
+        min-width: 160px;
+    }
+
+    @media (min-width: 1250px) and (max-width: 1400px) {
+        min-width: 170px;
+    }
+
+    @media (min-width: 1400px) {
+        min-width: 200px;
+    }
+
+    // 모임명
+    .title h2 {
+        position: relative;
+        margin: 20px 0 0;
+        padding: 0;
+        color: #fff;
+        font-size: 1.6rem;
+        z-index: 2;
+    }
+
+    button {
+        position: relative;
+        z-index: 2;
+        background: #fff;
+        color: black;
+        width: 130px;
+        height: 30px;
+        line-height: 40px;
+        border-radius: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin: 20px auto 0;
+        font-size: 16px;
+        -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        font-weight: bold;
+        border: none;
+
+        @media (min-width: 0px) and (max-width: 300px) {
+            display: none;
+        }
+    }
+
+    // button:hover {
+    //     text-decoration: none;
+    // }
+}
+
+.card:hover {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.title .fa {
+    color: #fff;
+    font-size: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 60px;
+    -webkit-box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 6px 8px 8px rgba(0, 0, 0, 0.2);
+}
+
+// D-day
+.price h4 {
+    margin: 0;
+    padding: 20px 0;
+    color: #fff;
+    font-size: 1rem;
+
+    @media (min-width: 0px) and (max-width: 300px) {
+        display: none;
+    }
+}
+
+.card::before {
+    //     content: '';
+    //     position: absolute;
+    //     bottom: 0;
+    //     left: 0;
     width: 100%;
-    height: 100%;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    // margin: 0 5px; // 카드 간격
-    border-radius: 14px;
+    height: 40%;
+    background: rgba(255, 255, 255, 0.1);
+    //     z-index: 1;
+    -webkit-transform: skewY(-5deg) scale(1.5);
+    transform: skewY(-5deg) scale(1.5);
 }
 
-// 카드 이미지 가운데
-.swiper-slide img {
-    width: 100%;
-}
-
-// .swiper-slide {
-//     background-position: center;
-//     background-size: cover;
+//) [참고] 반응 없음..
+// .col-sm-4:nth-child(1) .card,
+// .col-sm-4:nth-child(1) .card .title .fa {
+//     background: linear-gradient(-45deg, #f403d1, #64b5f6);
+// }
+// .col-sm-4:nth-child(2) .card,
+// .col-sm-4:nth-child(2) .card .title .fa {
+//     background: linear-gradient(-45deg, #ffec61, #f321d7);
+// }
+// .col-sm-4:nth-child(3) .card,
+// .col-sm-4:nth-child(3) .card .title .fa {
+//     background: linear-gradient(-45deg, #24ff72, #9a4eff);
 // }
 
-/* 마지막 슬라이드의 오른쪽 여백 제거 (옵션) */
-// .swiper-slide:last-child {
-//     margin-right: 10px;
+// .option ul {
+//     margin: 0;
+//     padding: 0;
 // }
+.option ul li {
+    margin: 0 0 10px;
+    padding: 0;
+    list-style: none;
+    color: #fff;
+    font-size: 16px;
 
-.swiper-card {
-    // font-size: 22px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    margin: 0 16px;
+    @media (min-width: 0px) and (max-width: 300px) {
+        display: none;
+    }
 }

@@ -75,18 +75,14 @@ export default function GroupList() {
 
     return (
         <div>
-            <div className="groups created">
-                <div className="title3">내가 생성한 모임</div>
-                <div>
-                    {madeGroup?.length > 0 ? (
-                        <SwiperComponent
-                            groupArray={madeGroup}
-                            setGroupArray={setMadeGroup}
-                        />
-                    ) : (
-                        '생성한 모임이 없습니다. '
-                    )}
-                </div>
+            {/* === 변경 === */}
+            <div className="title3"> 생성한 모임 </div>
+            <div>
+                {madeGroup?.length > 0 ? (
+                    <SwiperComponent groupArray={madeGroup} />
+                ) : (
+                    '생성한 모임이 없습니다. '
+                )}
             </div>
 
             <div className="groups join">
@@ -95,25 +91,26 @@ export default function GroupList() {
                 {joinGroup?.length > 0 ? (
                     <SwiperComponent
                         groupArray={joinGroup}
-                        setGroupArray={setJoinGroup}
-                        madeNumGroup={madeNumGroup}
+                        // setGroupArray={setJoinGroup}
+                        // madeNumGroup={madeNumGroup}
                     />
                 ) : (
                     '가입한 모임이 없습니다. '
                 )}
             </div>
 
-            {/* TEST */}
-            <div className="title3"> TEST </div>
-            <div>
-                {madeGroup?.length > 0 ? (
-                    <SwiperTest
-                        groupArray={madeGroup}
-                        setGroupArray={setMadeGroup}
-                    />
-                ) : (
-                    '생성한 모임이 없습니다. '
-                )}
+            <div className="groups created">
+                <div className="title3"> TEST </div>
+                <div>
+                    {madeGroup?.length > 0 ? (
+                        <SwiperTest
+                            groupArray={madeGroup}
+                            setGroupArray={setMadeGroup}
+                        />
+                    ) : (
+                        '생성한 모임이 없습니다. '
+                    )}
+                </div>
             </div>
 
             {/* <div className="groups recommend">

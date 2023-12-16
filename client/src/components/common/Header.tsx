@@ -94,8 +94,6 @@ export default function Header(props: any) {
             //-- 채팅 종료
             socket.emit('logout', uSeqData);
 
-            // socket.emit('disconnect');
-
             cookie.remove('isUser', { path: '/' });
 
             nvg('/');
