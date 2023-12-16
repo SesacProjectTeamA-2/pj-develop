@@ -48,7 +48,7 @@
 
 .search-group-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     @include media('<700px') {
         grid-template-columns: repeat(1, 1fr);
@@ -58,7 +58,7 @@
 .search-group-container {
     width: 8rem;
     height: 8rem;
-    background-color: $color-primary;
+    // background-color: $color-primary;
     border-radius: 1rem;
     color: white;
     padding: 2rem;
@@ -76,15 +76,21 @@
     display: flex;
 }
 
+//-- 전체 검색결과
+
 .glow-card-container {
     width: 220px;
     height: 310px;
     transition: all 0.1s;
     position: relative;
     background-color: antiquewhite;
+    margin: 1rem;
+    border-radius: 1rem;
 }
 
 .glow-card-overlay {
+    border-radius: 1rem;
+
     position: absolute;
     width: 220px;
     height: 310px;
@@ -105,6 +111,5 @@
 .glow-card {
     width: 220px;
     height: 310px;
-    // background-image: url(pika.webp);
-    // background-size: cover;
+    padding: 1rem 2rem;
 }
