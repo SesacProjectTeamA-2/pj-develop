@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 
-import '../../styles/scss/components/swiper.scss';
+import '../../styles/scss/components/swipertest.scss';
 
 export default function SwiperComponent({
     groupArray,

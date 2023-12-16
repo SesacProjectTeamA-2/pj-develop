@@ -111,7 +111,7 @@ export default function Main({ initialLogin, setInitialLogin }: any) {
                     setSelectedCharacter(character);
                     // console.log('character 있음', character);
                 } else {
-                    setSelectedCharacter('/asset/images/sqr1.svg');
+                    setSelectedCharacter('/asset/images/ali3.gif');
                     // console.log('character 없음', character);
                 }
             });

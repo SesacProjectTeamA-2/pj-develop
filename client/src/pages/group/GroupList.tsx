@@ -76,13 +76,19 @@ export default function GroupList() {
     return (
         <div>
             {/* === 변경 === */}
-            <div className="title3"> 생성한 모임 </div>
-            <div>
-                {madeGroup?.length > 0 ? (
-                    <SwiperComponent groupArray={madeGroup} />
-                ) : (
-                    '생성한 모임이 없습니다. '
-                )}
+            <div className="groups created">
+                <div className="title3"> 생성한 모임 </div>
+                <div>
+                    {madeGroup?.length > 0 ? (
+                        <SwiperComponent
+                            groupArray={madeGroup}
+                            color1="#ff9400"
+                            color2="#ffde04"
+                        />
+                    ) : (
+                        '생성한 모임이 없습니다. '
+                    )}
+                </div>
             </div>
 
             <div className="groups join">
@@ -93,25 +99,25 @@ export default function GroupList() {
                         groupArray={joinGroup}
                         // setGroupArray={setJoinGroup}
                         // madeNumGroup={madeNumGroup}
+                        color1="#ffbccd"
+                        color2="#ff7575"
                     />
                 ) : (
                     '가입한 모임이 없습니다. '
                 )}
             </div>
 
-            <div className="groups created">
-                <div className="title3"> TEST </div>
-                <div>
-                    {madeGroup?.length > 0 ? (
-                        <SwiperTest
-                            groupArray={madeGroup}
-                            setGroupArray={setMadeGroup}
-                        />
-                    ) : (
-                        '생성한 모임이 없습니다. '
-                    )}
-                </div>
-            </div>
+            {/* --- 이전 코드 --- */}
+            {/* <div className="groups created"> */}
+            {/* <div className="title3"> TEST </div> */}
+            {/* <div> */}
+            {/* {madeGroup?.length > 0 ? ( */}
+            {/* <SwiperTest groupArray={madeGroup} /> */}
+            {/* ) : (
+                '생성한 모임이 없습니다. '
+            )} */}
+            {/* </div> */}
+            {/* </div> */}
 
             {/* <div className="groups recommend">
                 <div className="title1">이런 모임 어떠세요 ?</div>

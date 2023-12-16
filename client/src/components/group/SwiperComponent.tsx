@@ -6,9 +6,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay, Pagination } from 'swiper/modules';
 
 import 'swiper/css';
-import '../../styles/scss/components/swipertest.scss';
+import '../../styles/scss/components/swiper.scss';
 
-export default function SwiperTest({ groupArray, madeNumGroup }: any) {
+export default function SwiperTest({
+    groupArray,
+    color1,
+    color2,
+    madeNumGroup,
+}: any) {
     return (
         <div className="swiper-button-container">
             <div className="swiper-button-prev">
@@ -92,7 +97,12 @@ export default function SwiperTest({ groupArray, madeNumGroup }: any) {
                                     className="link-none"
                                 >
                                     <div className="swiper-group-wrapper">
-                                        <div className="card text-center">
+                                        <div
+                                            className="card text-center"
+                                            style={{
+                                                background: `linear-gradient(-45deg, ${color1},${color2})`,
+                                            }}
+                                        >
                                             <div className="title">
                                                 {/* [추후] 카테고리별 icon */}
                                                 <i
