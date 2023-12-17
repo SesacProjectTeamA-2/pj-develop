@@ -10,7 +10,12 @@ import '../../../styles/scss/layout/sidebarChat.scss';
 import SidebarChat from '../SidebarChat';
 import Footer from '../Footer';
 
-export default function BasicLayout({ children, showChat, setShowChat }: any) {
+export default function BasicLayout({
+    children,
+    showChat,
+    setShowChat,
+    socket,
+}: any) {
     return (
         <>
             <div className="layout-container ">
@@ -59,6 +64,7 @@ export default function BasicLayout({ children, showChat, setShowChat }: any) {
                                     <SidebarChat
                                         setShowChat={setShowChat}
                                         showChat={showChat}
+                                        socket={socket}
                                     />
                                 ) : null}
                             </Item>

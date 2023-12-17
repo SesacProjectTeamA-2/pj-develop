@@ -17,6 +17,8 @@ export default function ChatRoom({
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
+    // console.log('socket:::::', socket);
+
     const [msgData, setMsgData] = useState<any>({
         uSeq: 0,
         timeStamp: '',
@@ -24,6 +26,8 @@ export default function ChatRoom({
         gSeq: nowGSeq,
         socketId: socket.id,
     });
+
+    const [inputValue, setInputValue] = useState('');
 
     const [isSent, setIsSent] = useState(false);
 
@@ -122,6 +126,7 @@ export default function ChatRoom({
     //] 메세지 입력
     const handleChangeMsg = (msg: string) => {
         setIsSent(false);
+        setInputValue(msg);
 
         setMsgData((prevData: any) => ({
             ...prevData,
@@ -140,6 +145,7 @@ export default function ChatRoom({
         }));
 
         setIsSent(true);
+        setInputValue('');
     };
 
     useEffect(() => {
@@ -326,7 +332,7 @@ export default function ChatRoom({
 
                 <div id="chat" className="messages">
                     <div className="time">Today at 11:41</div>
-                    <div className="message parker">
+                    <div className="message send-msg">
                         Hey, man! What's up, Mr Stark? 👋
                     </div>
                     <div className="message stark">
@@ -354,7 +360,7 @@ export default function ChatRoom({
                     {/* === 메세지 입력창 === */}
                     <input
                         type="text"
-                        // value={inputValue}
+                        value={inputValue}
                         placeholder="Type your message here!"
                         onChange={(e) => handleChangeMsg(e.target.value)}
                     />

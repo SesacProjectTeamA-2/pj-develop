@@ -14,7 +14,12 @@ import '../../../styles/scss/layout/layout.scss';
 import { useParams } from 'react-router-dom';
 
 // groupbar section chat
-export default function GroupLayout({ children, showChat, setShowChat }: any) {
+export default function GroupLayout({
+    children,
+    showChat,
+    setShowChat,
+    socket,
+}: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -121,6 +126,7 @@ export default function GroupLayout({ children, showChat, setShowChat }: any) {
                                     <SidebarChat
                                         showChat={showChat}
                                         setShowChat={setShowChat}
+                                        socket={socket}
                                     />
                                 ) : null}
                             </Item>

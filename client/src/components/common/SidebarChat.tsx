@@ -5,9 +5,9 @@ import axios from 'axios';
 import '../../styles/scss/layout/sidebarChat.scss';
 import ChatRoom from './chat/ChatRoom';
 import ChatList from './chat/ChatList';
-import useSocket from 'src/hooks/useSocket';
+// import useSocket from 'src/hooks/useSocket';
 
-export default function SidebarChat({ setShowChat, showChat }: any) {
+export default function SidebarChat({ socket, setShowChat, showChat }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -19,11 +19,9 @@ export default function SidebarChat({ setShowChat, showChat }: any) {
     // const [chat, setChat] = useState<any>([]); // 받아올 채팅 1️⃣
     // const [sendMsg, setSendMsg] = useState(''); // 입력한 채팅 2️⃣
 
-    const socket = useSocket();
+    // const socket = useSocket();
 
-    // console.log(socket.id);
-
-    // 1. 사용자 데이터 가져오기
+    //] 1. 사용자 데이터 가져오기
     const getUserData = async () => {
         await axios
             .get(`${process.env.REACT_APP_DB_HOST}/user/mypage`, {

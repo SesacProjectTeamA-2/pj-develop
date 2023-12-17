@@ -15,7 +15,11 @@ import Progressbar from '../components/common/Progressbar';
 
 let newSocket: Socket | null = null;
 
-export default function Main({ initialLogin, setInitialLogin }: any) {
+export default function Main({
+    initialLogin,
+    setInitialLogin,
+    setSocket,
+}: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -60,13 +64,15 @@ export default function Main({ initialLogin, setInitialLogin }: any) {
         if (uToken) {
             myCookie.set('isUser', uToken);
 
-            // 최초 로그인 시, socket 연결 요청
+            //] 최초 로그인 시, socket 연결 요청
             newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
                 path: '/socket.io',
                 extraHeaders: {
                     Authorization: `Bearer ${uToken}`,
                 },
             });
+
+            setSocket(newSocket);
 
             // console.log(':::::::::::: 최초 로그인 시, socket 연결 요청');
         }
