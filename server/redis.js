@@ -19,10 +19,11 @@ redisClient.on('connect', async () => {
   // console.log(data);
   // const result = await redisCli.lPush('testRoom', '1');
   // console.log(result);
-
-  // 레디스 모든 데이터 삭제
-  const result = await redisCli.flushAll();
+  const result = await redisCli.lRange('room1', 0, -1);
   console.log(result);
+  // 레디스 모든 데이터 삭제
+  // const result = await redisCli.flushAll();
+  // console.log(result);
 
   redisClient.on('error', (err) => {
     console.error('redis client error!', err);

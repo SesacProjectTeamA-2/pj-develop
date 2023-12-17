@@ -67,6 +67,10 @@ export default function Main({
             //] 최초 로그인 시, socket 연결 요청
             newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
                 path: '/socket.io',
+                reconnection: true,
+                reconnectionAttempts: Infinity,
+                reconnectionDelay: 1000, // 1초 간격으로 재시도
+                reconnectionDelayMax: 5000, // 최대 5초 간격으로 재시도
                 extraHeaders: {
                     Authorization: `Bearer ${uToken}`,
                 },
