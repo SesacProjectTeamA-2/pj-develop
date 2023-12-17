@@ -9,16 +9,18 @@ import { Button, ButtonGroup, Divider } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../../styles/scss/layout/header.scss';
 import Alarm from './Alarm';
-import useSocket from 'src/hooks/useSocket';
+// import useSocket from 'src/hooks/useSocket';
 
 export default function Header(props: any) {
     const [isCookie, setIsCookie] = useState(false); // 쿠키 유무
+
+    console.log('^^^^^', props.socket);
 
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
 
     //-- 채팅
-    const socket = useSocket();
+    // const socket = useSocket();
     const nvg = useNavigate();
 
     const [uSeqData, setUSeqData] = useState({ uSeq: 0 });
@@ -93,8 +95,9 @@ export default function Header(props: any) {
             // console.log('socket ::::::', socket);
 
             //-- 채팅 종료
+            //~ [추후] 올바른 데이터 전송
             // socket.emit('logout', uSeqData);
-            socket.emit('logout', { uSeq: 8 });
+            // props.socket.emit('logout', { uSeq: 8 });
             // uSeqData
             // {uSeq : 8}
 

@@ -5,6 +5,7 @@ import { Cookies } from 'react-cookie';
 // let socket = null;
 
 export default function useSocket() {
+    // export default function useSocket(initialLogin: boolean) {
     const [currentSocket, setCurrentSocket] = useState<any>(null);
     // const [isSocketReady, setIsSocketReady] = useState(false);
 
@@ -14,23 +15,25 @@ export default function useSocket() {
         const cookie = new Cookies();
         const uToken = cookie.get('isUser');
 
-        // if (!currentSocket) {
-        const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
-            path: '/socket.io',
-            extraHeaders: {
-                Authorization: `Bearer ${uToken}`,
-            },
-        });
+        // console.log('initialLogin ::::', initialLogin);
 
-        setCurrentSocket(newSocket);
+        if (!currentSocket) {
+            const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
+                path: '/socket.io',
+                extraHeaders: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            });
 
-        // 클린업 로직
-        // return () => {
-        //     // newSocket.close();
-        //     setCurrentSocket(null);
-        // };
-        // }
-    }, []);
+            setCurrentSocket(newSocket);
+
+            // 클린업 로직
+            // return () => {
+            //     // newSocket.close();
+            //     setCurrentSocket(null);
+            // };
+        }
+    }, [currentSocket]);
 
     return currentSocket;
 }

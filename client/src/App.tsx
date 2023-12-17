@@ -59,6 +59,8 @@ function App() {
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
     const [initialLogin, setInitialLogin] = useState<any>(false);
 
+    const [socket, setSocket] = useState<any>();
+
     return (
         <div className="App">
             <Header
@@ -70,6 +72,7 @@ function App() {
                 setIsLogin={setIsLogin}
                 isJoinPage={isJoinPage}
                 setIsJoinPage={setIsJoinPage}
+                socket={socket}
             />
 
             <Routes>
@@ -104,10 +107,12 @@ function App() {
                                 <Main
                                     initialLogin={initialLogin}
                                     setInitialLogin={setInitialLogin}
+                                    setSocket={setSocket}
                                 />
                             }
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -119,6 +124,7 @@ function App() {
                             children={<Groups />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -129,6 +135,7 @@ function App() {
                             children={<GroupCreate />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -141,6 +148,7 @@ function App() {
                             children={<GroupHome />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -152,6 +160,7 @@ function App() {
                             children={<GroupNoti />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -163,6 +172,7 @@ function App() {
                             children={<GroupBoard />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -174,6 +184,7 @@ function App() {
                             children={<GroupMission />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -184,6 +195,7 @@ function App() {
                             children={<GroupMissionDone />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -197,6 +209,7 @@ function App() {
                             children={<BoardPost />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -210,6 +223,7 @@ function App() {
                             children={<MissionPost />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -223,6 +237,7 @@ function App() {
                             children={<BoardPost />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -234,6 +249,7 @@ function App() {
                             children={<GroupPostDetail />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -245,6 +261,7 @@ function App() {
                             children={<GroupMissionDetail />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -257,6 +274,7 @@ function App() {
                             children={<BoardEdit />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -269,6 +287,7 @@ function App() {
                             children={<BoardMissionEdit />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -281,6 +300,7 @@ function App() {
                             children={<GroupEdit />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -294,6 +314,7 @@ function App() {
                             children={<MyPage />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -306,6 +327,7 @@ function App() {
                             children={<Management />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -316,6 +338,7 @@ function App() {
                             children={<AllUser />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -326,6 +349,7 @@ function App() {
                             children={<AllGroup />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
@@ -336,6 +360,7 @@ function App() {
                             children={<Report />}
                             showChat={showChat}
                             setShowChat={setShowChat}
+                            socket={socket}
                         />
                     }
                 />
