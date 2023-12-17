@@ -70,6 +70,10 @@ const options = {
     // client server 모두 credentials 사용한다는 속성 설정해줘야 한다.
   },
   path: '/socket.io',
+  reconnection: true,
+  reconnectionAttempts: Infinity,
+  reconnectionDelay: 1000, // 1초 간격으로 재시도
+  reconnectionDelayMax: 5000, // 최대 5초 간격으로 재시도
 };
 const IO = require('socket.io');
 const io = IO(server, options);
