@@ -126,6 +126,7 @@ export default function MyPage() {
     const [selectedCharacter, setSelectedCharacter] = useState<string | null>(
         null
     );
+
     const selectCharacter = (characterSrc: string): void => {
         setSelectedCharacter(characterSrc);
     };

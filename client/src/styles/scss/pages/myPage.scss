@@ -229,14 +229,16 @@ button {
     background-color: white;
     width: 80%;
     height: 100%;
-    // border: 5px solid $color-primary;
     border-radius: 25px;
+    display: flex;
 }
 .character-item-div {
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 1rem 2rem;
+    gap: 1rem;
 }
 .character-radio {
     display: none;
@@ -247,8 +249,13 @@ button {
     cursor: pointer;
 }
 .character-img {
-    width: 90%;
-    height: 100%;
+    width: 95%;
+    height: 88%;
+}
+
+.char-check-icon {
+    position: absolute;
+    bottom: 34px;
 }
 // Character END
 
