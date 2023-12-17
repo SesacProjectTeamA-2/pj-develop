@@ -44,7 +44,7 @@ export default function Content({ setLoginData, loginData }: any) {
     // -4) 캐릭터 가져오기
     const [selectedCharacter, setSelectedCharacter] = useState<
         string | undefined
-    >('/asset/images/sqr2.svg');
+    >('/asset/images/hiEmo.gif');
 
     const getUserData = async () => {
         await axios
@@ -85,7 +85,7 @@ export default function Content({ setLoginData, loginData }: any) {
                     setSelectedCharacter(character);
                     console.log('character 있음', character);
                 } else {
-                    setSelectedCharacter('/asset/images/sqr1.svg');
+                    setSelectedCharacter('/asset/images/hiEmo.gif');
                     console.log('character 없음', character);
                 }
             });

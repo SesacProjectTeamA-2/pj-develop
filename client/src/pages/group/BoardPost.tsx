@@ -10,6 +10,7 @@ import '../../styles/scss/pages/group/post.scss';
 
 import GroupHeader from '../../components/group/content/GroupHeader';
 import Editor from './Editor';
+import EditorTest from './EditorTest';
 import { GroupDetailType, MissionType } from 'src/types/types';
 import SuccessModal from 'src/components/common/modal/SuccessModal';
 
@@ -188,9 +189,13 @@ export default function BoardPost() {
                     </div>
                 </div>
                 <div>
-                    <Editor
+                    {/* <Editor
                         value={board.gbContent}
                         onChange={handleEditorChange}
+                    /> */}
+                    <EditorTest
+                    // value={board.gbContent}
+                    // onChange={handleEditorChange}
                     />
                 </div>
             </div>

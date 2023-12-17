@@ -111,7 +111,8 @@ export default function Main({ initialLogin, setInitialLogin }: any) {
                     setSelectedCharacter(character);
                     // console.log('character 있음', character);
                 } else {
-                    setSelectedCharacter('/asset/images/ali3.gif');
+                    //++ 기본 캐릭터 이미지
+                    setSelectedCharacter('/asset/images/hiEmo.gif');
                     // console.log('character 없음', character);
                 }
             });
@@ -275,7 +276,10 @@ export default function Main({ initialLogin, setInitialLogin }: any) {
 
     //=== 달성률에 따른 캐릭터 이미지 변경 ===
 
-    let charNum = selectedCharacter?.slice(-5, -4); // 2
+    // let charNum = selectedCharacter?.slice(-5, -4); // 2
+    let charNum = selectedCharacter?.slice(-5); // 2.svg
+
+    console.log('charNum', charNum);
 
     let totalRates = 0;
     let totalPercent = 0;
@@ -286,18 +290,25 @@ export default function Main({ initialLogin, setInitialLogin }: any) {
     }
 
     if (totalPercent > 70) {
-        charNum = '1';
+        // charNum = '1';
+        charNum = '1.gif';
     } else if (totalPercent < 30) {
-        charNum = '3';
+        // charNum = '3';
+        charNum = '3.gif';
     }
+
+    // let newChar =
+    //     selectedCharacter?.slice(0, 17) +
+    //     (charNum ?? '') +
+    //     selectedCharacter?.slice(-4);
 
     let newChar =
         selectedCharacter?.slice(0, 17) +
         (charNum ?? '') +
         selectedCharacter?.slice(-4);
+    //++ edit
 
-    // console.log('charNum', charNum);
-    // console.log('newChar ::: ', newChar);
+    console.log('newChar ::: ', newChar);
     // console.log('totalRates', totalRates);
     // console.log('totalPercent', totalPercent);
 

@@ -91,8 +91,14 @@ export default function Header(props: any) {
         if (window.confirm('로그아웃하시겠습니까 ?')) {
             getJoinedGroup();
 
+            console.log('::::::', uSeqData);
+            console.log('socket ::::::', socket);
+
             //-- 채팅 종료
-            socket.emit('logout', uSeqData);
+            // socket.emit('logout', uSeqData);
+            socket.emit('logout', { uSeq: 8 });
+            // uSeqData
+            // {uSeq : 8}
 
             cookie.remove('isUser', { path: '/' });
 
@@ -102,7 +108,7 @@ export default function Header(props: any) {
         }
     };
 
-    console.log(uSeqData);
+    console.log('--+++++----', uSeqData);
 
     //] 초대장 링크 입력 후 버튼 클릭 시 그 그룹으로 이동
     const [grpInput, setGrpInput] = useState<string>('');
