@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
-// import { getSocket } from 'src/socket';
 import { io, Socket } from 'socket.io-client';
 
 import Content from '../components/main/Content';
-import useSocket from 'src/hooks/useSocket';
 import MainMission from 'src/components/main/MainMission';
 
 import { Paper } from '@mui/material';
@@ -26,8 +24,6 @@ export default function Main({ initialLogin, setInitialLogin }: any) {
         uName: '',
         gSeq: [],
     }); // socket 서버 전송
-
-    // const [initialLogin, setInitialLogin] = useState<any>(false);
 
     const [uSeq, setUSeq] = useState(1); // 유저 번호
     const [gSeqList, setGSeqList] = useState<any>([]); // 참여 모임

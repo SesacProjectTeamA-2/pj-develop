@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
-// import { io } from 'socket.io-client';
-import { getSocket } from 'src/socket';
 
 import { grey } from '@mui/material/colors';
 import { Button, ButtonGroup, Divider } from '@mui/material';
@@ -91,8 +89,8 @@ export default function Header(props: any) {
         if (window.confirm('로그아웃하시겠습니까 ?')) {
             getJoinedGroup();
 
-            console.log('::::::', uSeqData);
-            console.log('socket ::::::', socket);
+            // console.log('uSeqData ::::::', uSeqData);
+            // console.log('socket ::::::', socket);
 
             //-- 채팅 종료
             // socket.emit('logout', uSeqData);
@@ -108,7 +106,7 @@ export default function Header(props: any) {
         }
     };
 
-    console.log('--+++++----', uSeqData);
+    // console.log('uSeqData', uSeqData);
 
     //] 초대장 링크 입력 후 버튼 클릭 시 그 그룹으로 이동
     const [grpInput, setGrpInput] = useState<string>('');

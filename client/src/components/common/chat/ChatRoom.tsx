@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
-import { io } from 'socket.io-client';
-
-// import { socket } from '../SidebarChat';
+// import useSocket from 'src/hooks/useSocket';
 
 import '../../../styles/scss/components/chatroom.scss';
-import { getSocket } from 'src/socket';
-import useSocket from 'src/hooks/useSocket';
 
 export default function ChatRoom({
     isEnter,
     setIsEnter,
-    setSendMsg,
-    sendMsg,
+    // setSendMsg,
+    // sendMsg,
     nowGSeq,
     nowGName,
     socket,
@@ -21,12 +17,15 @@ export default function ChatRoom({
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
-    // const socket = useSocket();
+    const [msgData, setMsgData] = useState<any>({
+        uSeq: 0,
+        timeStamp: '',
+        msg: '',
+        gSeq: nowGSeq,
+        socketId: socket.id,
+    });
 
-    // const socket = getSocket();
-    // const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
-
-    console.log('socket, rooms ????', socket);
+    const [isSent, setIsSent] = useState(false);
 
     // 특정 그룹 정보 가져오기
     const [groupDetail, setGroupDetail] = useState<any>({
@@ -55,6 +54,7 @@ export default function ChatRoom({
     // 모임장 / 멤버
     const [isLeader, setIsLeader] = useState(false);
 
+    //] 입장한 그룹 정보 가져오기
     const getGroup = async () => {
         const res = await axios
             .get(`${process.env.REACT_APP_DB_HOST}/group/detail/${nowGSeq}`, {
@@ -71,16 +71,92 @@ export default function ChatRoom({
             });
     };
 
-    useEffect(() => {
-        getGroup();
-    }, []);
+    // ] uSeq 데이터 전송
+    const getJoinedGroup = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/group/joined`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                const { uSeq } = res.data;
 
-    const leaveHandler = () => {
-        setIsEnter(false);
+                setMsgData((prevData: any) => ({
+                    ...prevData,
+                    uSeq,
+                }));
+            });
     };
 
-    const handleChangeMsg = (message: string) => {
-        setSendMsg(message);
+    useEffect(() => {
+        getGroup(); // 입장한 특정 그룹 정보
+        getJoinedGroup(); // uSeq
+    }, []);
+
+    //] 채팅방 입장
+    useEffect(() => {
+        // console.log('joinRoom nowGSeq :::::', nowGSeq);
+
+        socket.emit('joinRoom', { gSeq: nowGSeq });
+
+        // joinRoom 이벤트에 대한 리스너 추가
+        socket.on('joinRoom', (data: any) => {
+            console.log('joinRoom event received on client', data); // 서버에서 보낸 data
+        });
+
+        // --컴포넌트가 언마운트될 때 리스너 해제
+        // return () => {
+        //     socket.off('joinRoom');
+        // };
+
+        //   socketInstances[id].on('alert', (message: string) => {
+        //     const welcomeChat: ChatMsg = {
+        //       username: '알림',
+        //       message: message,
+        //     };
+        //     setChat((prevChat) => [...prevChat, welcomeChat]);
+        //  }
+    }, []);
+
+    //] 메세지 입력
+    const handleChangeMsg = (msg: string) => {
+        setIsSent(false);
+
+        setMsgData((prevData: any) => ({
+            ...prevData,
+            msg,
+        }));
+    };
+
+    //] 메세지 전송
+    const sendMessage = () => {
+        const timeStamp = Date.now();
+        const currentDate = new Date(timeStamp);
+
+        setMsgData((prevData: any) => ({
+            ...prevData,
+            timeStamp: currentDate,
+        }));
+
+        setIsSent(true);
+    };
+
+    useEffect(() => {
+        if (isSent) {
+            console.log('Sent!!!!!!', isSent);
+            socket.emit('sendMsg', msgData);
+
+            socket.on('msg', (data: any) => {
+                console.log('MSG event received on client', data); // 서버에서 보낸 data
+            });
+        }
+    }, [isSent]);
+
+    //] 방 나가기
+    const leaveHandler = () => {
+        setIsSent(false);
+        setIsEnter(false);
     };
 
     // const sendMessage = () => {
@@ -98,36 +174,6 @@ export default function ChatRoom({
     //     console.log('전송');
     // };
 
-    //] 입장 알림
-
-    console.log('socket !!!!!', socket);
-
-    useEffect(() => {
-        console.log('joinRoom nowGSeq :::::', nowGSeq);
-        console.log('socket :::::', socket);
-
-        socket.emit('joinRoom', { gSeq: nowGSeq });
-
-        // joinRoom 이벤트에 대한 리스너 추가
-        socket?.on('joinRoom', (data: any) => {
-            // 여기서 data에 서버에서 보낸 데이터가 들어있습니다.
-            console.log('joinRoom event received on client', data);
-        });
-
-        // --컴포넌트가 언마운트될 때 리스너 해제
-        // return () => {
-        //     socket.off('joinRoom');
-        // };
-
-        //   socketInstances[id].on('alert', (message: string) => {
-        //     const welcomeChat: ChatMsg = {
-        //       username: '알림',
-        //       message: message,
-        //     };
-        //     setChat((prevChat) => [...prevChat, welcomeChat]);
-        //  }
-    }, []);
-
     //-- 입력한 채팅을 서버 측으로 보내는 소켓 이벤트 함수
     // const handleSendMsg = () => {
     //     socketInstances[id].emit('chat', {
@@ -137,21 +183,21 @@ export default function ChatRoom({
     // };
 
     //-- 채팅 받아오기
-    useEffect(() => {
-        // 방 고유 Id
-        // socket 연결
-        // if (!socketInstances[id]) {
-        //   socketInstances[id] = socket(`${id}`)
-        // 서버에서 넘어오는 chat 응답 받아오기
-        //   socketInstances[id].on('chat', (data: socketChatMsg) => {
-        //     const newChat: ChatMsg = {
-        //       username: data.userInfo.userId,
-        //       message: data.message.message,
-        //       admin: data.userInfo.isAdmin,
-        //     };
-        //     setChat((prevChat) => [...prevChat, newChat]);
-        //   });
-    }, []);
+    // useEffect(() => {
+    //     // 방 고유 Id
+    //     // socket 연결
+    //     // if (!socketInstances[id]) {
+    //     //   socketInstances[id] = socket(`${id}`)
+    //     // 서버에서 넘어오는 chat 응답 받아오기
+    //     //   socketInstances[id].on('chat', (data: socketChatMsg) => {
+    //     //     const newChat: ChatMsg = {
+    //     //       username: data.userInfo.userId,
+    //     //       message: data.message.message,
+    //     //       admin: data.userInfo.isAdmin,
+    //     //     };
+    //     //     setChat((prevChat) => [...prevChat, newChat]);
+    //     //   });
+    // }, []);
 
     // useEffect(() => {
     //     socket.on('receive_message', (data) => {
@@ -159,12 +205,7 @@ export default function ChatRoom({
     //     });
     // }, [socket]);
 
-    // socket.emit('joinRoom', { gSeq: nowGSeq });
-
-    // // joinRoom 이벤트에 대한 리스너 추가
-    // socket.on('joinRoom', (data) => {
-    //     console.log('joinRoom event received on client', data);
-    // });
+    console.log(msgData);
 
     return (
         <main className="chat-box">
@@ -310,9 +351,10 @@ export default function ChatRoom({
                     {/* <i className="fas fa-camera" /> */}
                     {/* <i className="far fa-laugh-beam" /> */}
 
-                    {/* 메세지 입력창 */}
+                    {/* === 메세지 입력창 === */}
                     <input
                         type="text"
+                        // value={inputValue}
                         placeholder="Type your message here!"
                         onChange={(e) => handleChangeMsg(e.target.value)}
                     />
@@ -320,6 +362,7 @@ export default function ChatRoom({
                         src="/asset/icons/chat.svg"
                         alt="chatImg"
                         className="send-icon"
+                        onClick={sendMessage}
                     />
                 </div>
             </div>
