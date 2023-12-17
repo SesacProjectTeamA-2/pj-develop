@@ -11,6 +11,7 @@ import axios from 'axios';
 import '../../styles/scss/layout/sidebarChat.scss';
 import ChatRoom from './chat/ChatRoom';
 import ChatList from './chat/ChatList';
+import useSocket from 'src/hooks/useSocket';
 
 //-- 토큰 인증하여 서버 연결
 // API 뒤에 오는 Id 값으로 namespace 구분이 된다. ▶️ io('API주소/Id값')
@@ -28,6 +29,8 @@ export default function SidebarChat({ setShowChat, showChat }: any) {
 
     const [chat, setChat] = useState<any>([]); // 받아올 채팅 1️⃣
     const [sendMsg, setSendMsg] = useState(''); // 입력한 채팅 2️⃣
+
+    const socket = useSocket();
 
     // 1. 사용자 데이터 가져오기
     const getUserData = async () => {
@@ -68,6 +71,7 @@ export default function SidebarChat({ setShowChat, showChat }: any) {
                     setSendMsg={setSendMsg}
                     nowGSeq={nowGSeq}
                     nowGName={nowGName}
+                    socket={socket} // socket
                 />
             )}
         </div>

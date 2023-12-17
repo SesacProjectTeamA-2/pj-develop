@@ -8,6 +8,8 @@ export default function useSocket() {
     const [currentSocket, setCurrentSocket] = useState<any>(null);
     // const [isSocketReady, setIsSocketReady] = useState(false);
 
+    console.log('******* useSocket *******');
+
     useEffect(() => {
         const cookie = new Cookies();
         const uToken = cookie.get('isUser');
@@ -23,10 +25,10 @@ export default function useSocket() {
         setCurrentSocket(newSocket);
 
         // 클린업 로직
-        return () => {
-            // newSocket.close();
-            setCurrentSocket(null);
-        };
+        // return () => {
+        //     // newSocket.close();
+        //     setCurrentSocket(null);
+        // };
         // }
     }, []);
 

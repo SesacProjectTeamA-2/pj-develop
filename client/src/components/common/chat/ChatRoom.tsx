@@ -16,14 +16,17 @@ export default function ChatRoom({
     sendMsg,
     nowGSeq,
     nowGName,
+    socket,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
-    const socket = useSocket();
+    // const socket = useSocket();
 
     // const socket = getSocket();
     // const socket = io(`${process.env.REACT_APP_DB_HOST}/chat`);
+
+    console.log('socket, rooms ????', socket);
 
     // 특정 그룹 정보 가져오기
     const [groupDetail, setGroupDetail] = useState<any>({
@@ -97,13 +100,16 @@ export default function ChatRoom({
 
     //] 입장 알림
 
+    console.log('socket !!!!!', socket);
+
     useEffect(() => {
-        // console.log('joinRoom event received on client');
+        console.log('joinRoom nowGSeq :::::', nowGSeq);
+        console.log('socket :::::', socket);
 
         socket.emit('joinRoom', { gSeq: nowGSeq });
 
         // joinRoom 이벤트에 대한 리스너 추가
-        socket.on('joinRoom', (data: any) => {
+        socket?.on('joinRoom', (data: any) => {
             // 여기서 data에 서버에서 보낸 데이터가 들어있습니다.
             console.log('joinRoom event received on client', data);
         });
