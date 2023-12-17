@@ -344,7 +344,7 @@ export default function MissionAddModal({
         const updatedGroupEditDday = { ...groupEditDday, gDday: newDay };
         setGroupEditDday(updatedGroupEditDday);
 
-        console.log('+++++groupEditDday', groupEditDday);
+        // console.log('+++++groupEditDday', groupEditDday);
     };
 
     const dday = useDdayCount(targetDate);

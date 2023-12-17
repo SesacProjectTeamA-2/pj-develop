@@ -32,7 +32,6 @@ export default function BoardMissionEdit() {
     const [successModalSwitch, setSuccessModalSwitch] = useState(false);
 
     const successHandler = () => {
-        console.log('Success!!!!!!!!!!');
         setSuccessModalSwitch(true);
     };
 

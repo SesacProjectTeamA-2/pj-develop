@@ -8,7 +8,7 @@ export default function useSocket() {
     const [currentSocket, setCurrentSocket] = useState<any>(null);
     // const [isSocketReady, setIsSocketReady] = useState(false);
 
-    console.log('******* useSocket *******');
+    // console.log('******* useSocket *******');
 
     useEffect(() => {
         const cookie = new Cookies();

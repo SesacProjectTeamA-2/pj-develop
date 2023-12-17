@@ -77,7 +77,7 @@ export default function GroupMission() {
         setGroupDetail(res.data);
         setMissionList(res.data.groupMission);
 
-        console.log('+++++++', res.data.groupMission);
+        // console.log('res.data.groupMission', res.data.groupMission);
     };
 
     useEffect(() => {

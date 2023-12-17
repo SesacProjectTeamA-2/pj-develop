@@ -1,3 +1,5 @@
+//=== 지울 예정 ===
+
 import { io } from 'socket.io-client';
 import { Cookies } from 'react-cookie';
 
