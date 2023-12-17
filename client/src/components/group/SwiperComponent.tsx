@@ -14,6 +14,41 @@ export default function SwiperTest({
     color2,
     madeNumGroup,
 }: any) {
+    // const [gCategory, setGCategory] = useState<any>([]);
+    let categories: any = [];
+
+    for (let i = 0; i < groupArray.length; i++) {
+        switch (groupArray[i].gCategory) {
+            case 'ex':
+                categories.push('🏃🏻‍♂️');
+
+                break;
+            case 're':
+                categories.push('📚');
+                break;
+            case 'lan':
+                categories.push('🔠');
+                break;
+            case 'cert':
+                categories.push('🪪');
+                break;
+            case 'st':
+                categories.push('✍🏻');
+                break;
+            case 'eco':
+                categories.push('💵');
+                break;
+            case 'it':
+                categories.push('🌐');
+                break;
+            case 'etc':
+                categories.push('👥');
+                break;
+        }
+    }
+
+    console.log(categories);
+
     return (
         <div className="swiper-button-container">
             <div className="swiper-button-prev">
@@ -82,7 +117,7 @@ export default function SwiperTest({
                     },
                 }}
             >
-                {groupArray?.map((groupInfo: any) => {
+                {groupArray?.map((groupInfo: any, idx: number) => {
                     return (
                         <>
                             <SwiperSlide
@@ -105,10 +140,12 @@ export default function SwiperTest({
                                         >
                                             <div className="title">
                                                 {/* [추후] 카테고리별 icon */}
-                                                <i
+                                                {/* <i
                                                     className="fa fa-paper-plane"
                                                     aria-hidden="true"
-                                                ></i>
+                                                ></i> */}
+
+                                                <h1> {categories[idx]}</h1>
                                                 <h2> {groupInfo.gName}</h2>
                                             </div>
                                             <div className="price">
@@ -130,6 +167,17 @@ export default function SwiperTest({
                                                         참석인원 수
                                                         {/* {madeNumGroup.count}/ */}
                                                         {groupInfo.gMaxMem}
+                                                    </li>
+                                                    <li>
+                                                        {/* <div
+                                                            style={{
+                                                                fontSize:
+                                                                    '2rem',
+                                                            }}
+                                                        >
+                                                    
+                                                        </div> */}
+                                                        {/* {groupInfo.gCategory} */}
                                                     </li>
                                                 </ul>
                                             </div>

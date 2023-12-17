@@ -9,12 +9,11 @@ import { Button, ButtonGroup, Divider } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../../styles/scss/layout/header.scss';
 import Alarm from './Alarm';
-// import useSocket from 'src/hooks/useSocket';
 
 export default function Header(props: any) {
     const [isCookie, setIsCookie] = useState(false); // 쿠키 유무
 
-    console.log('^^^^^', props.socket);
+    console.log('^  socket  ^', props.socket);
 
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값

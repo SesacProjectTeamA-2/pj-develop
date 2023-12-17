@@ -12,7 +12,8 @@ export default function CharacterList(props: any) {
         {
             id: 'character-radio-rabbit',
             // imgSrc: '/asset/images/rab2.svg',
-            imgSrc: '/asset/images/emo2.gif',
+            // imgSrc: '/asset/images/emo2.gif',
+            imgSrc: '/asset/images/emo2.jpeg',
             alt: 'img1',
             val: 'rabbit',
         },
@@ -26,14 +27,15 @@ export default function CharacterList(props: any) {
         {
             id: 'character-radio-cat',
             // imgSrc: '/asset/images/cat2.svg',
-            imgSrc: '/asset/images/ali2.png',
+            imgSrc: '/asset/images/rab2.jpeg',
             alt: 'img3',
             val: 'cat',
         },
         {
             id: 'character-radio-sqr',
             // imgSrc: '/asset/images/sqr2.svg',
-            imgSrc: '/asset/images/cat2.gif',
+            imgSrc: '/asset/images/ali2.png',
+
             alt: 'img4',
             val: 'sqr',
         },
