@@ -449,6 +449,7 @@ exports.postGroup = async (req, res) => {
             isSuccess: true,
             msg: '모임 생성에 성공했습니다.',
             uSeq: uSeq,
+            gSeq: insertOneGroupUser.gSeq,
             uEmail: uEmail,
             uName: uName,
           });
@@ -919,6 +920,7 @@ exports.postJoinByLink = async (req, res) => {
         success: true,
         msg: '모임 참여에 성공했습니다.',
         uSeq: uSeq,
+        gSeq: group.gSeq,
         uEmail: uEmail,
         uName: uName,
       });
@@ -980,6 +982,7 @@ exports.postJoin = async (req, res) => {
       res.status(200).send({
         success: true,
         msg: '모임 참여에 성공했습니다.',
+        gSeq,
         uSeq: uSeq,
         uEmail: uEmail,
         uName: uName,
