@@ -50,10 +50,8 @@ exports.chatSocket = async (io, socket) => {
               data.gSeq.map((info) => {
                 const isExisting = groupChat.adapter.rooms.has(`room${info}`);
                 console.log(`room${info} 현재 생성되어 있음?`, isExisting);
-
-                // 방에 참가 및 notice
+                // 1. 방에 참가 및 notice
                 socket.join(`room${info}`);
-
                 groupChat.to(`room${info}`).emit('loginNotice', {
                   msg: `${uName}님이 로그인하셨어요`,
                 });
@@ -62,13 +60,40 @@ exports.chatSocket = async (io, socket) => {
               console.log(`gSeq is not Array!`);
               return;
             }
-
             socket.emit('loginSuccess', {
               msg: `${uName}님이 로그인하셨어요`,
               userInfo,
             });
           } catch (err) {
             console.error(err);
+          }
+        });
+
+        // 모임별 채팅에 대한 정보
+        socket.on('roomInfo', async () => {
+          try {
+            console.log('userinfo.gSeq>>>>', userInfo.gSeq);
+
+            // 모임의 마지막 메세지 정보 송출
+            if (Array.isArray(userInfo.gSeq)) {
+              // 아래와같이 사용할 경우, map이 끝날때까지 기다리지 않음 => map에 대한 동작을 변수로 할당해 promise.all() 사용해야한다.
+              // userInfo.gSeq.map(async (info) => {
+              //   const message = await redisCli.lRange(`room${info}`, -1, -1);
+              //   socket.emit('roomInfo', JSON.parse(message));});
+
+              const roomInfoArray = [];
+              for (const info of userInfo.gSeq) {
+                const message = await redisCli.lRange(`room${info}`, -1, -1);
+                const roomInfo = { gSeq: info, msg: JSON.parse(message) };
+                roomInfoArray.push(roomInfo);
+              }
+              socket.emit('roomInfo', roomInfoArray);
+            } else {
+              console.log(`gSeq is not Array!`);
+              return;
+            }
+          } catch (err) {
+            console.error('roomInfo 에러', err);
           }
         });
 
@@ -87,7 +112,6 @@ exports.chatSocket = async (io, socket) => {
               currentUserInfo.gSeq.push(data.gSeq);
 
               // 해당 모임방에 참여한 사람들에게 알림 전송
-
               socket.join(`room${data.gSeq}`);
               groupChat.to(`room${data.gSeq}`).emit('loginNotice', {
                 msg: `${uName}님이 모임에 참여하셨어요!`,
@@ -95,9 +119,7 @@ exports.chatSocket = async (io, socket) => {
             } else {
               // 2. 이미 가입되어 있는 경우 채팅방 입장.
               const gSeq = data.gSeq;
-
-              console.log('::::', groupChat.adapter.rooms);
-
+              console.log('rooms목록: ', groupChat.adapter.rooms);
               // 룸에 접속중인 소켓 로드 (접속중인 소켓 없을 때는 빈 배열 반환)
               const socketsInRoom = Array.from(
                 groupChat.adapter.rooms.get(`room${gSeq}`) || []
@@ -110,11 +132,10 @@ exports.chatSocket = async (io, socket) => {
 
               console.log(`room${gSeq}에 접속된 아이디 목록`, uNameInRoom);
 
-              // LLEN을 사용하여 리스트의 길이(메시지 개수)를 가져옴
+              // 사용자가 접속한 이후의 메시지만을 가져옴
+              // LLEN을 사용하여 리스트의 길이(메시지 개수)
               const listLength = await redisCli.lLen(`room${gSeq}`);
-
               if (listLength !== 0) {
-                // 사용자가 접속한 이후의 메시지만을 가져옴
                 const messages = await redisCli.lRange(`room${gSeq}`, 0, -1);
                 // 가져온 메시지를 파싱
                 console.log(messages);
@@ -125,6 +146,7 @@ exports.chatSocket = async (io, socket) => {
                       new Date(parsedMessage.timeStamp) >= loginTime
                   );
                 console.log('파싱된 메세지', parsedMessages);
+
                 socket.emit('joinRoom', {
                   allMsg: parsedMessages,
                   loginUser: uNameInRoom,
@@ -156,7 +178,8 @@ exports.chatSocket = async (io, socket) => {
               `room${gSeq}`,
               JSON.stringify({ msg, timeStamp, uSeq })
             );
-
+            // 메세지 유효시간 : 12시간
+            await redisCli.expire(`room${gSeq}`, 43200);
             roomChat.emit('msg', { uName, socketId, timeStamp, msg });
 
             console.log('msg 전송 성공 !!!! ', data);
