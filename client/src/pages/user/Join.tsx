@@ -65,7 +65,7 @@ export default function Join(props: any) {
 
     // 3. 사용자 선택 캐릭터 이미지 값 설정
     const [selectedCharacter, setSelectedCharacter] = useState<string>(
-        '/asset/images/sqr2.svg'
+        '/asset/images/emo2.gif'
     );
     const selectCharacter = (characterSrc: string): void => {
         setSelectedCharacter(characterSrc);

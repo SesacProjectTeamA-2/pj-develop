@@ -50,7 +50,7 @@ export default function Main({
     // 4) 캐릭터 가져오기
     const [selectedCharacter, setSelectedCharacter] = useState<
         string | undefined
-    >('/asset/images/sqr2.svg');
+    >('/asset/images/emo2.gif');
 
     useEffect(() => {
         // 2. 회원가입 url에서 user 정보 가져오기

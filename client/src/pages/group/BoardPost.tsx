@@ -13,6 +13,7 @@ import Editor from './Editor';
 import EditorTest from './EditorTest';
 import { GroupDetailType, MissionType } from 'src/types/types';
 import SuccessModal from 'src/components/common/modal/SuccessModal';
+import EditorDraft from 'src/components/common/EditorDraft';
 
 export default function BoardPost() {
     const cookie = new Cookies();
@@ -189,14 +190,16 @@ export default function BoardPost() {
                     </div>
                 </div>
                 <div>
+                    <EditorDraft />
+
                     {/* <Editor
                         value={board.gbContent}
                         onChange={handleEditorChange}
                     /> */}
-                    <EditorTest
+                    {/* <EditorTest
                     // value={board.gbContent}
                     // onChange={handleEditorChange}
-                    />
+                    /> */}
                 </div>
             </div>
             <div>

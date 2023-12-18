@@ -14,14 +14,17 @@
         "@testing-library/jest-dom": "^5.17.0",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
+        "@types/draftjs-to-html": "^0.8.4",
         "@types/gsap": "^3.0.0",
         "@types/jest": "^27.5.2",
         "@types/node": "^16.18.59",
         "@types/react": "^18.2.31",
         "@types/react-dom": "^18.2.14",
+        "@types/react-draft-wysiwyg": "^1.13.7",
         "@types/three": "^0.158.0",
         "animate.css": "^4.1.1",
         "axios": "^1.6.0",
+        "draft-js": "^0.11.7",
         "include-media": "^2.0.0",
         "js-confetti": "^0.11.0",
         "kadvice": "^2.0.2",
@@ -31,6 +34,7 @@
         "react-cookies": "^0.1.1",
         "react-copy-to-clipboard": "^5.1.0",
         "react-dom": "^18.2.0",
+        "react-draft-wysiwyg": "^1.15.0",
         "react-hot-toast": "^2.4.1",
         "react-infinite-scroller": "^1.2.6",
         "react-modal": "^3.16.1",
@@ -72,6 +76,7 @@
         ]
     },
     "devDependencies": {
+        "@types/draft-js": "^0.11.16",
         "@types/react-copy-to-clipboard": "^5.0.6",
         "@types/react-infinite-scroller": "^1.2.4",
         "@types/react-modal": "^3.16.2"
