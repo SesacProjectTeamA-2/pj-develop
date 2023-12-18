@@ -47,7 +47,7 @@ export default function SwiperTest({
         }
     }
 
-    console.log(categories);
+    // console.log(categories);
 
     return (
         <div className="swiper-button-container">

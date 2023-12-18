@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
+import { io } from 'socket.io-client';
 
 import { grey } from '@mui/material/colors';
 import { Button, ButtonGroup, Divider } from '@mui/material';
@@ -13,10 +14,28 @@ import Alarm from './Alarm';
 export default function Header(props: any) {
     const [isCookie, setIsCookie] = useState(false); // 쿠키 유무
 
-    console.log('^  socket  ^', props.socket);
+    console.log('^^^^ socket 연결 여부  ^^^^', props.socket);
 
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
+
+    //++ 연결 끊어졌을 경우, socket 연결 요청 (재연결)
+    useEffect(() => {
+        if (!props.socket) {
+            const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
+                path: '/socket.io',
+                reconnection: true,
+                reconnectionAttempts: Infinity,
+                reconnectionDelay: 1000, // 1초 간격으로 재시도
+                reconnectionDelayMax: 5000, // 최대 5초 간격으로 재시도
+                extraHeaders: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            });
+
+            props.setSocket(newSocket);
+        }
+    }, []);
 
     //-- 채팅
     // const socket = useSocket();

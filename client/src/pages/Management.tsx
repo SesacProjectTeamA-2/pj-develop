@@ -6,7 +6,7 @@ import SummaryCard from '../components/management/SummaryCard';
 
 export default function Management() {
     return (
-        <div className="section" style={{ backgroundColor: ' red' }}>
+        <div className="section">
             <Report />
             <AllUser />
             <AllGroup />
