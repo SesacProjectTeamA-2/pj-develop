@@ -197,6 +197,7 @@ exports.chatSocket = async (io, socket) => {
         socket.on('roomOut', async (data) => {
           try {
             const gSeq = data.gSeq;
+            const roomChat = groupChat.to(`room${gSeq}`);
 
             // 삭제할 gSeq 찾기
             const userToRemove = connectedUser.find(
@@ -210,6 +211,10 @@ exports.chatSocket = async (io, socket) => {
 
             console.log(`room${gSeq} leave!!!`);
             socket.leave(`room${gSeq}`);
+            roomChat.emit(
+              'msg',
+              `${roomInfo.uName}님이 모임을 탈퇴하셨습니다.`
+            );
           } catch (err) {
             console.error('roomOut error', err);
           }
