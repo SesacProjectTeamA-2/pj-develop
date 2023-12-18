@@ -74,6 +74,9 @@ export default function Login(props: any) {
         setIsAdmin(true);
     };
 
+    const [idValue, setIdValue] = useState('');
+    const [pwValue, setPwValue] = useState('');
+
     return (
         <div className="section login-section">
             <p
@@ -119,19 +122,36 @@ export default function Login(props: any) {
                         />
                     </form>
 
-                    <img
-                        src="asset/images/pebble.png"
-                        alt=""
-                        className="pebble-img"
-                    />
                     <div
                         className={`${
-                            isAdmin ? 'roll-out-right' : 'pebble-text'
+                            isAdmin
+                                ? 'admin-input-container admin-input-show'
+                                : 'admin-input-container'
+                        }`}
+                    >
+                        <input
+                            type="text"
+                            value={idValue}
+                            placeholder="관리자 ID"
+                            className="id-input"
+                        />
+                        <input
+                            type="text"
+                            value={pwValue}
+                            placeholder="관리자 PW"
+                            className="pw-input"
+                        />
+                    </div>
+
+                    <img
+                        src="asset/images/pebble.png"
+                        alt="admin"
+                        className={`${
+                            isAdmin ? 'roll-out-right' : 'pebble-img'
                         }`}
                         onClick={isAdminHandler}
-                    >
-                        Are you admin ?
-                    </div>
+                    />
+                    <div className="pebble-text">Are you admin ?</div>
                 </div>
             </div>
         </div>
