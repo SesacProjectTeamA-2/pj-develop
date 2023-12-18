@@ -18,6 +18,8 @@ exports.chatSocket = async (io, socket) => {
     groupChat.on('connection', async (socket) => {
       try {
         const userInfo = socket.userInfo;
+        // 모임별 안읽은 메세지 개수
+        const messageCount = [];
 
         // 중복된 uSeq를 가진 객체가 배열에 있는지 확인
         const isDuplicate = connectedUser.some(
@@ -26,7 +28,7 @@ exports.chatSocket = async (io, socket) => {
 
         // 중복이 아닌 경우에만 추가
         if (isDuplicate) {
-          console.log('이미 연결되어 있는 소켓이 있으므로 연결종료');
+          console.log('이미 연결되어 있는 소켓이 있음!!');
           // socket.disconnect(true);
         } else {
           connectedUser.push(userInfo);
@@ -40,7 +42,7 @@ exports.chatSocket = async (io, socket) => {
           socketId
         );
 
-        // 로그인시 각 방에 참여
+        // 로그인시 각 방에 참여 및 로그인 이후 메세지 개수
         socket.on('login', (data) => {
           try {
             userInfo.gSeq = data.gSeq;
@@ -74,7 +76,7 @@ exports.chatSocket = async (io, socket) => {
           try {
             console.log('userinfo.gSeq>>>>', userInfo.gSeq);
 
-            // 모임의 마지막 메세지 정보 송출
+            // 1. 모임의 마지막 메세지 정보 송출
             if (Array.isArray(userInfo.gSeq)) {
               // 아래와같이 사용할 경우, map이 끝날때까지 기다리지 않음 => map에 대한 동작을 변수로 할당해 promise.all() 사용해야한다.
               // userInfo.gSeq.map(async (info) => {
@@ -87,6 +89,9 @@ exports.chatSocket = async (io, socket) => {
                 const roomInfo = { gSeq: info, msg: JSON.parse(message) };
                 roomInfoArray.push(roomInfo);
               }
+
+              // 2. 안읽은 메세지 갯수
+
               socket.emit('roomInfo', roomInfoArray);
             } else {
               console.log(`gSeq is not Array!`);
