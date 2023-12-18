@@ -88,6 +88,7 @@ export default function Login(props: any) {
         console.log(pwValue);
 
         if (pwValue === '1234') {
+            props.setAdminUser(true);
             navigate('/management');
         } else {
             setIsPasswordIncorrect(true);

@@ -21,7 +21,7 @@ export default function ProfilePic(props: any) {
         <div>
             <label id="profilePic-label">
                 <img
-                    src={props.userImgSrc}
+                    src={props.userImgSrc || 'asset/images/emo2.gif'}
                     alt="profilePic"
                     id="profilePic-user"
                 />

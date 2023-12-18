@@ -105,9 +105,25 @@ export default function Header(props: any) {
         getJoinedGroup(); // uSeq 데이터 update
     }, []);
 
+    //] 로그아웃
     const logoutHandler = () => {
         // [추후] 로그아웃 모달창 처리
-        if (window.confirm('로그아웃하시겠습니까 ?')) {
+
+        if (props.adminUser) {
+            if (window.confirm('로그아웃하시겠습니까 ?')) {
+                // console.log('uSeqData ::::::', uSeqData);
+
+                //-- 채팅 종료
+                // props.socket?.emit('logout', uSeqData);
+                // props.socket.emit('logout', { uSeq: 8 });
+
+                props.setAdminUser(false);
+
+                nvg('/login');
+            } else {
+                return;
+            }
+        } else if (window.confirm('로그아웃하시겠습니까 ?')) {
             // console.log('uSeqData ::::::', uSeqData);
 
             //-- 채팅 종료
@@ -201,10 +217,16 @@ export default function Header(props: any) {
         setIsActive('group');
     };
 
+    const adminActiveHandler = () => {
+        setIsActive('admin');
+    };
+
     const [isAlarm, setIsAlarm] = useState<boolean>(false);
     const alarmHandler = () => {
         setIsAlarm(!isAlarm);
     };
+
+    console.log(props.adminUser);
 
     return (
         <>
@@ -275,6 +297,22 @@ export default function Header(props: any) {
                                                         Group
                                                     </Link>
                                                 </li>
+
+                                                {props.adminUser ? (
+                                                    <li
+                                                        onClick={
+                                                            adminActiveHandler
+                                                        }
+                                                    >
+                                                        <Link to="/management">
+                                                            <Button className="menu-button">
+                                                                Management
+                                                            </Button>
+                                                        </Link>
+                                                    </li>
+                                                ) : (
+                                                    ''
+                                                )}
                                             </div>
                                         ) : (
                                             <div className="menu-list-btn">
@@ -308,6 +346,23 @@ export default function Header(props: any) {
                                                         Group
                                                     </Link>
                                                 </li>
+
+                                                {props.adminUser ? (
+                                                    // === admin 경우 ===
+                                                    <li
+                                                        onClick={
+                                                            adminActiveHandler
+                                                        }
+                                                    >
+                                                        <Link to="/management">
+                                                            <Button className="menu-button">
+                                                                Management
+                                                            </Button>
+                                                        </Link>
+                                                    </li>
+                                                ) : (
+                                                    ''
+                                                )}
                                             </div>
                                         )}
                                     </ul>
@@ -330,33 +385,50 @@ export default function Header(props: any) {
                                         </Button>
                                     </Link> */}
                                 {/* </li> */}
-                                {/* [추후] 관리자만 보이는 버튼 */}
-                                {/* <Link to="/management/users">
-                                    <Button className="menu-button">
-                                        Management
-                                    </Button>
-                                </Link> */}
+
                                 {/* </ButtonGroup> */}
                                 {/* </ThemeProvider> */}
 
                                 <ul className="menu">
                                     {!isCookie ? (
-                                        <li>
-                                            {/* 비로그인 시 */}
-                                            <ThemeProvider theme={theme}>
-                                                {/* <Link to="/login">Login</Link> */}
+                                        props.adminUser ? (
+                                            // === admin 경우 ===
+                                            <li>
+                                                <ThemeProvider theme={theme}>
+                                                    {/* <Link to="/login">Login</Link> */}
 
-                                                <Link to="/login">
-                                                    <Button
-                                                        aria-label="outlined button group"
-                                                        variant="outlined"
-                                                        className="menu-button"
-                                                    >
-                                                        Login
-                                                    </Button>
-                                                </Link>
-                                            </ThemeProvider>
-                                        </li>
+                                                    <Link to="/login">
+                                                        <Button
+                                                            aria-label="outlined button group"
+                                                            variant="outlined"
+                                                            className="menu-button"
+                                                            onClick={
+                                                                logoutHandler
+                                                            }
+                                                        >
+                                                            Logout
+                                                        </Button>
+                                                    </Link>
+                                                </ThemeProvider>
+                                            </li>
+                                        ) : (
+                                            // === 비로그인 시 ===
+                                            <li>
+                                                <ThemeProvider theme={theme}>
+                                                    {/* <Link to="/login">Login</Link> */}
+
+                                                    <Link to="/login">
+                                                        <Button
+                                                            aria-label="outlined button group"
+                                                            variant="outlined"
+                                                            className="menu-button"
+                                                        >
+                                                            Login
+                                                        </Button>
+                                                    </Link>
+                                                </ThemeProvider>
+                                            </li>
+                                        )
                                     ) : (
                                         <>
                                             {!props.isIntro && (

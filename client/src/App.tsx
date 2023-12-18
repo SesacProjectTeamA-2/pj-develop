@@ -32,23 +32,9 @@ import BoardEdit from './pages/group/BoardEdit';
 import GroupMissionDetail from './pages/group/GroupMissionDetail';
 import MissionPost from './pages/group/MissionPost';
 import BoardMissionEdit from './pages/group/BoardMissionEdit';
-// import { getSocket } from './socket';
-// import { setSocket } from './global';
 
 function App() {
-    // useEffect(() => {
-    //     setSocket(getSocket);
-
-    //     // 클린업 로직
-    //     return () => {
-    //         const socket = getSocket();
-    //         if (socket) {
-    //             socket.close();
-    //         }
-    //     };
-    // }, []);
-
-    // 헤더 채팅 버튼 눌렀을 때 채팅창 보여주는 함수
+    // 채팅
     const [showChat, setShowChat] = useState<boolean>(false);
     const showChatting = (): void => {
         setShowChat(!showChat);
@@ -60,6 +46,9 @@ function App() {
     const [initialLogin, setInitialLogin] = useState<any>(false);
 
     const [socket, setSocket] = useState<any>();
+
+    // admin 인증
+    const [adminUser, setAdminUser] = useState(false);
 
     return (
         <div className="App">
@@ -74,6 +63,8 @@ function App() {
                 setIsJoinPage={setIsJoinPage}
                 socket={socket}
                 setSocket={setSocket}
+                adminUser={adminUser}
+                setAdminUser={setAdminUser}
             />
 
             <Routes>
@@ -86,7 +77,11 @@ function App() {
                 <Route
                     path="/login"
                     element={
-                        <Login setIsLogin={setIsLogin} isLogin={isLogin} />
+                        <Login
+                            setIsLogin={setIsLogin}
+                            isLogin={isLogin}
+                            setAdminUser={setAdminUser}
+                        />
                     }
                 />
 
