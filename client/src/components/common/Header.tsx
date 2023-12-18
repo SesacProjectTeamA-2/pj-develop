@@ -35,10 +35,7 @@ export default function Header(props: any) {
                 },
             })
             .then((res) => {
-                const { userImg, uSeq } = res.data; //null
-
-                setUSeqData(uSeq);
-
+                const { userImg } = res.data; //null
                 if (userImg !== null && userImg !== undefined) {
                     // user가 업로드한 값이 있을 때
                     setUserImgSrc(userImg);
@@ -85,20 +82,18 @@ export default function Header(props: any) {
             });
     };
 
+    useEffect(() => {
+        getJoinedGroup(); // uSeq 데이터 update
+    }, []);
+
     const logoutHandler = () => {
         // [추후] 로그아웃 모달창 처리
         if (window.confirm('로그아웃하시겠습니까 ?')) {
-            getJoinedGroup();
-
             // console.log('uSeqData ::::::', uSeqData);
-            // console.log('socket ::::::', socket);
 
             //-- 채팅 종료
-            //~ [추후] 올바른 데이터 전송
-            // socket.emit('logout', uSeqData);
+            props.socket?.emit('logout', uSeqData);
             // props.socket.emit('logout', { uSeq: 8 });
-            // uSeqData
-            // {uSeq : 8}
 
             cookie.remove('isUser', { path: '/' });
 
@@ -107,8 +102,6 @@ export default function Header(props: any) {
             return;
         }
     };
-
-    // console.log('uSeqData', uSeqData);
 
     //] 초대장 링크 입력 후 버튼 클릭 시 그 그룹으로 이동
     const [grpInput, setGrpInput] = useState<string>('');

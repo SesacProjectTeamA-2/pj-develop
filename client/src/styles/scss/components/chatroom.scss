@@ -169,12 +169,31 @@ $background: #f7f7f7;
     }
 }
 
+//=== 채팅방 ===
+
+.msg-container {
+    display: flex;
+    align-items: end;
+}
+
+.send-time {
+    font-size: 0.8rem;
+    padding: 0 0.4rem;
+    color: $text-3;
+    text-align: end;
+}
+
+.receive-time {
+    font-size: 0.8rem;
+    padding: 0 0.4rem;
+    color: $text-3;
+}
+
 .chat {
     position: relative;
 
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
 
     width: 100%;
     max-height: 60rem;
@@ -196,12 +215,33 @@ $background: #f7f7f7;
         box-sizing: border-box;
     }
 
+    .chat-bubble-send {
+        display: flex;
+        margin: 1rem 0;
+        align-items: flex-end;
+        justify-content: end;
+    }
+
+    .chat-bubble-receive {
+        display: flex;
+        flex-direction: column;
+        margin: 1rem 0;
+    }
+
+    .send-user {
+        display: flex;
+        margin: 0.3rem;
+        // color: $text-3;
+        color: #686868;
+    }
+
     .messages {
         padding: 1rem;
         background: $background;
         flex-shrink: 2;
         overflow-y: auto;
         height: 100%;
+        min-height: 28.7rem;
 
         box-shadow: inset 0 2rem 2rem -2rem rgba(black, 0.05),
             inset 0 -2rem 2rem -2rem rgba(black, 0.05);
@@ -219,7 +259,7 @@ $background: #f7f7f7;
         .message {
             box-sizing: border-box;
             padding: 0.5rem 1rem;
-            margin: 1rem;
+            // margin: 1rem;
             background: #fff;
             border-radius: 1.125rem 1.125rem 1.125rem 0;
             min-height: 2.25rem;
@@ -230,7 +270,7 @@ $background: #f7f7f7;
                 0rem 1rem 1rem -1rem rgba(black, 0.1);
 
             &.send-msg {
-                margin: 1rem 1rem 1rem auto;
+                // margin: 1rem 1rem 1rem auto;
                 border-radius: 1.125rem 1.125rem 0 1.125rem;
                 background: $text-1;
                 color: white;

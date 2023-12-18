@@ -361,17 +361,16 @@ export default function Intro(props: any) {
             <div className="empty-div"></div>
 
             <div className="char-img">
-                <img src="/asset/images/rab1.svg" alt="" />
-                <img src="/asset/images/rab2.svg" alt="" />
-                <img src="/asset/images/rab3.svg" alt="" />
+                <img src="/asset/images/emo1.gif" alt="" />
+                <img src="/asset/images/emo2.gif" alt="" />
+                <img src="/asset/images/emo3.gif" alt="" />
+                <img src="/asset/images/emo33.gif" alt="" />
             </div>
             <div className="intro-content">
-                <div className="start-group-title">
-                    캐릭터의 표정이 변해요 !
-                </div>
+                <div className="start-group-title">캐릭터의 표정이 변해요</div>
                 <br />
                 <div className="intro-content-sub-title">
-                    달성률에 따라 캐릭터가 웃을 수도, 울 수도 있어요 ~ 😆 🙂 😭
+                    달성률에 따라 다양한 표정을 확인할 수 있어요 !
                 </div>
             </div>
             <div className="custom-cursor "></div>
