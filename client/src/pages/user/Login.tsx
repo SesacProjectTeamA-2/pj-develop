@@ -32,6 +32,7 @@ export default function Login(props: any) {
 
     // 숨은 이스터 에그 효과
     const [isHingeAnimated, setIsHingeAnimated] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
 
     const toggleHingeAnimation = () => {
         setIsHingeAnimated(!isHingeAnimated);
@@ -67,6 +68,11 @@ export default function Login(props: any) {
             unmountHandler();
         };
     }, [navigate, props]);
+
+    //] Admin
+    const isAdminHandler = () => {
+        setIsAdmin(true);
+    };
 
     return (
         <div className="section login-section">
@@ -118,7 +124,14 @@ export default function Login(props: any) {
                         alt=""
                         className="pebble-img"
                     />
-                    <div className="pebble-text">Are you admin ?</div>
+                    <div
+                        className={`${
+                            isAdmin ? 'roll-out-right' : 'pebble-text'
+                        }`}
+                        onClick={isAdminHandler}
+                    >
+                        Are you admin ?
+                    </div>
                 </div>
             </div>
         </div>

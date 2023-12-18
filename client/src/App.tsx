@@ -132,7 +132,7 @@ function App() {
                     path="/group/create"
                     element={
                         <BasicLayout
-                            children={<GroupCreate />}
+                            children={<GroupCreate socket={socket} />}
                             showChat={showChat}
                             setShowChat={setShowChat}
                             socket={socket}

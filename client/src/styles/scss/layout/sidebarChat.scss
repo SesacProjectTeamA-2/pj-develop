@@ -4,92 +4,60 @@
     padding-top: 5rem;
 }
 
-.title-wrapper {
-    margin: 1rem;
-    display: flex;
-    justify-content: center;
-}
+// .title-wrapper {
+//     margin: 1rem;
+//     display: flex;
+//     justify-content: center;
+// }
 
-.group-list {
-    background-color: white;
-    padding: 1.4rem;
+// .my-chat div,
+// .other-chat div,
+// .secret-chat div {
+//     max-width: 70%;
+//     padding: 8px;
+//     border-radius: 8px;
+//     margin: 5px;
+//     word-wrap: break-word;
+//     transition: all 1s;
+// }
 
-    .group-name {
-        font-size: 1.2rem;
-        font-weight: bold;
-        padding-bottom: 0.8rem;
-        cursor: pointer;
-    }
-}
+// .secret-chat div {
+//     background-color: #ffcccb !important;
+//     color: #333;
+//     text-align: left;
+//     margin-right: auto;
+//     transition: all 1s;
+// }
 
-.chat-box {
-}
+// .my-chat {
+//     text-align: right;
+//     transition: all 1s;
+// }
 
-.chat-list {
-    background-color: rgb(30, 30, 30);
-    height: 70vh;
-    padding: 10px;
-    overflow-y: auto;
-    /* 화면 길어지면 스크롤 생김 */
-}
+// .my-chat div {
+//     background-color: rgb(247, 214, 53);
+//     margin-left: 0;
+//     padding: 1rem;
+//     border-radius: 0.4rem;
+//     display: inline-block;
+//     transition: all 1s;
+// }
 
-.chat-list div {
-    margin-top: 3px;
-}
+// .other-chat div {
+//     background-color: white;
+//     display: inline-block;
+//     padding: 0.4rem;
+//     border-radius: 0.4rem;
+//     transition: all 1s;
+// }
 
-.chat-list div div {
-    display: inline-block;
-    padding: 6px;
-}
-
-.my-chat div,
-.other-chat div,
-.secret-chat div {
-    max-width: 70%;
-    padding: 8px;
-    border-radius: 8px;
-    margin: 5px;
-    word-wrap: break-word;
-    transition: all 1s;
-}
-
-.secret-chat div {
-    background-color: #ffcccb !important;
-    color: #333;
-    text-align: left;
-    margin-right: auto;
-    transition: all 1s;
-}
-
-.my-chat {
-    text-align: right;
-    transition: all 1s;
-}
-
-.my-chat div {
-    background-color: rgb(247, 214, 53);
-    margin-left: 0;
-    padding: 1rem;
-    border-radius: 0.4rem;
-    display: inline-block;
-    transition: all 1s;
-}
-
-.other-chat div {
-    background-color: white;
-    display: inline-block;
-    padding: 0.4rem;
-    border-radius: 0.4rem;
-    transition: all 1s;
-}
-
-/* 채팅창 입장 안내 문구 */
-.notice {
-    text-align: center;
-    color: white;
-    font-size: 12px;
-    transition: all 1s;
-}
+// /* 채팅창 입장 안내 문구 */
+// .notice {
+//     text-align: center;
+//     color: white;
+//     font-size: 12px;
+//     transition: all 1s;
+// }
 
 select,
 input,
@@ -100,30 +68,21 @@ button {
     border-radius: 4px;
 }
 
-.input-container {
-    // border: 1px solid #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
+// .input-container {
+//     // border: 1px solid #ccc;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     flex-direction: column;
+// }
 
-#message {
-    width: 70%;
-    display: flex;
-    border: 1px solid #ccc;
-}
+// #message {
+//     width: 70%;
+//     display: flex;
+//     border: 1px solid #ccc;
+// }
 
-#send-btn {
-    background-color: rgb(247, 214, 53);
-    color: #333;
-    border: none;
-    // padding: 0.6rem 1rem;
-    width: 80%;
-    cursor: pointer;
-}
-
-#send-btn:hover {
-    box-shadow: 3px 3px 5px #888888; /* 그림자 설정: 수평 거리, 수직 거리, 흐림 정도, 색상 */
-    transition: 0.4s all;
-}
+// #send-btn:hover {
+//     box-shadow: 3px 3px 5px #888888; /* 그림자 설정: 수평 거리, 수직 거리, 흐림 정도, 색상 */
+//     transition: 0.4s all;
+// }

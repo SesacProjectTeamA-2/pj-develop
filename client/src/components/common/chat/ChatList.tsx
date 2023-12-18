@@ -64,47 +64,85 @@ export default function ChatList({
     };
 
     return (
-        <ul>
-            채팅방을 클릭해주세요
-            {madeGroupInfo?.map((group: any, idx: number) => {
-                return (
-                    <li
-                        className="group-list"
-                        onClick={() => enterChatRoom(group.gSeq, group.gName)}
-                    >
-                        <svg
-                            viewBox="0 0 512 512"
-                            fill="currentColor"
-                            height="1.5em"
-                            width="1.5em"
-                            onClick={() => {
-                                setShowChat(false);
-                            }}
+        <div className="chat-list-wrapper">
+            <div className="chat-list-close-icon-wrapper">
+                <svg
+                    viewBox="0 0 512 512"
+                    fill="currentColor"
+                    height="1.5em"
+                    width="1.5em"
+                    className="chat-list-close-icon"
+                    onClick={() => {
+                        setShowChat(false);
+                    }}
+                >
+                    <path d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z" />
+                </svg>
+            </div>
+            <ul>
+                {/* 채팅방을 클릭해주세요 */}
+
+                {madeGroupInfo?.map((group: any, idx: number) => {
+                    return (
+                        <li
+                            className="group-list"
+                            onClick={() =>
+                                enterChatRoom(group.gSeq, group.gName)
+                            }
                         >
-                            <path d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z" />
-                        </svg>
-                        <div>내가 모임장 !</div>
-                        <div>👑</div>
-                        <div className="group-name">
-                            {group.gSeq}번의 {group.gName}모임
-                        </div>
-                        <div>메세지 2개 도착</div>
-                    </li>
-                );
-            })}
-            {madeJoinInfo?.map((group: any, idx: number) => {
-                return (
-                    <li
-                        className="group-list"
-                        onClick={() => enterChatRoom(group.gSeq, group.gName)}
-                    >
-                        <div className="group-name">
-                            {group.gSeq}번의 {group.gName}모임
-                        </div>
-                        <div>메세지 4개 도착</div>
-                    </li>
-                );
-            })}
-        </ul>
+                            <div className="list-content-wrapper">
+                                <img
+                                    src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/thomas.jpg"
+                                    alt=""
+                                />
+                                <div>
+                                    <div>👑</div>
+                                    <div className="group-name">
+                                        {group.gName}
+                                    </div>
+                                    <span className="preview">
+                                        I was wondering...
+                                    </span>
+                                </div>
+
+                                <div
+                                    className="chat-list-count-wrapper"
+                                    // onClick={alarmHandler}
+                                >
+                                    {/* <p>1 : 02 PM</p> */}
+                                    <span className="chat-list-count">6</span>
+                                </div>
+                            </div>
+                        </li>
+                    );
+                })}
+                {madeJoinInfo?.map((group: any, idx: number) => {
+                    return (
+                        <li
+                            className="group-list"
+                            onClick={() =>
+                                enterChatRoom(group.gSeq, group.gName)
+                            }
+                        >
+                            <div className="list-content-wrapper">
+                                <img
+                                    src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/dog.png"
+                                    alt=""
+                                />
+                                <div className="group-name">{group.gName}</div>
+
+                                <div
+                                    className="chat-list-count-wrapper"
+                                    // onClick={alarmHandler}
+                                >
+                                    <p>12 : 02 PM</p>
+                                    <span className="chat-list-count">6</span>
+                                </div>
+                            </div>
+                        </li>
+                    );
+                })}
+            </ul>
+        </div>
     );
 }

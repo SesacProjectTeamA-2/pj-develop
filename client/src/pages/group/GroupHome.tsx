@@ -148,7 +148,7 @@ export default function GroupHome() {
         getGroup();
     }, []);
 
-    // 모임 가입하기
+    //] 모임 가입하기
     const postGroupJoin = async () => {
         const input = { gSeq };
         const res = await axios
@@ -160,6 +160,7 @@ export default function GroupHome() {
             .then((res) => {
                 console.log(res.data);
                 const { success, msg } = res.data;
+
                 if (!success) {
                     toast.error(msg, {
                         duration: 2000,
@@ -168,6 +169,18 @@ export default function GroupHome() {
                     toast.success(msg, {
                         duration: 2000,
                     });
+
+                    // // useEffect(() => {
+                    //~ 채팅방 입장
+                    //     // console.log('joinRoom nowGSeq :::::', nowGSeq);
+                    //         socket.emit('joinRoom', { gSeq: nowGSeq });
+                    //         // joinRoom 이벤트에 대한 리스너 추가
+                    //         socket.on('joinRoom', (data: any) => {
+                    //             console.log('joinRoom event received on client', data); // 서버에서 보낸 data
+                    //         });
+                    // setSuccessModalSwitch(true);
+                    //     // }, []);
+
                     window.location.reload();
                 }
             });

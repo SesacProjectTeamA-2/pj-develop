@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
@@ -14,7 +14,7 @@ import MissionAddModal from '../../components/common/modal/MissionAddModal';
 import { Divider, ListItem, ListItemText } from '@mui/material';
 import SuccessModal from 'src/components/common/modal/SuccessModal';
 
-export default function GroupCreate() {
+export default function GroupCreate(socket: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -99,11 +99,21 @@ export default function GroupCreate() {
         setAddModalSwitch(true);
     };
 
-    //] 그룹 생성 완료 모달창
+    //-- 그룹 생성 완료 모달창
     const [successModalSwitch, setSuccessModalSwitch] = useState(false);
 
+    //] 그룹 생성 성공 시, 채팅방 입장
     const successHandler = () => {
-        setSuccessModalSwitch(true);
+        // // useEffect(() => {
+        //~ 채팅방 입장
+        //     // console.log('joinRoom nowGSeq :::::', nowGSeq);
+        //         socket.emit('joinRoom', { gSeq: nowGSeq });
+        //         // joinRoom 이벤트에 대한 리스너 추가
+        //         socket.on('joinRoom', (data: any) => {
+        //             console.log('joinRoom event received on client', data); // 서버에서 보낸 data
+        //         });
+        // setSuccessModalSwitch(true);
+        //     // }, []);
     };
 
     //] 그룹 생성 요청
@@ -164,7 +174,6 @@ export default function GroupCreate() {
             toast.error('미션의 마감일을 설정해주세요 !', {
                 duration: 2000,
             });
-
             return;
         }
 
@@ -229,7 +238,7 @@ export default function GroupCreate() {
     // const formData = new FormData();
     // formData.append('apple', 'apple');
 
-    // 대표사진 업로드
+    //] 대표사진 업로드
     // const handlerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //     console.log('타겟', e.target.files);
     //     let image: any = null;

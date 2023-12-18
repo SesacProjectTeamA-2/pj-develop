@@ -129,6 +129,22 @@ body {
     margin: -1rem;
 }
 
+.roll-out-right {
+    -webkit-animation: roll-out-right 2s ease-in both;
+    animation: roll-out-right 2s ease-in both;
+}
+
+@keyframes roll-out-right {
+    0% {
+        transform: translateX(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(1000px) rotate(540deg);
+        opacity: 0;
+    }
+}
+
 .pebble-img:hover + .pebble-text {
     visibility: visible;
 }

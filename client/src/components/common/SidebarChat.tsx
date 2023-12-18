@@ -13,13 +13,8 @@ export default function SidebarChat({ socket, setShowChat, showChat }: any) {
 
     const [uName, setUName] = useState(''); // 닉네임
     const [nowGSeq, setNowGSeq] = useState(1); // 모임 번호
-    const [nowGName, setNowGName] = useState(''); // 모임 번호
+    const [nowGName, setNowGName] = useState(''); // 모임명
     const [isEnter, setIsEnter] = useState(false); // 입장/나가기
-
-    // const [chat, setChat] = useState<any>([]); // 받아올 채팅 1️⃣
-    // const [sendMsg, setSendMsg] = useState(''); // 입력한 채팅 2️⃣
-
-    // const socket = useSocket();
 
     //] 1. 사용자 데이터 가져오기
     const getUserData = async () => {
@@ -42,16 +37,14 @@ export default function SidebarChat({ socket, setShowChat, showChat }: any) {
     return (
         <div className="chat-container">
             {!isEnter ? (
-                <div>
-                    <ChatList
-                        isEnter={isEnter}
-                        setIsEnter={setIsEnter}
-                        setNowGSeq={setNowGSeq}
-                        setNowGName={setNowGName}
-                        setShowChat={setShowChat}
-                        showChat={showChat}
-                    />
-                </div>
+                <ChatList
+                    isEnter={isEnter}
+                    setIsEnter={setIsEnter}
+                    setNowGSeq={setNowGSeq}
+                    setNowGName={setNowGName}
+                    setShowChat={setShowChat}
+                    showChat={showChat}
+                />
             ) : (
                 <ChatRoom
                     isEnter={isEnter}
@@ -60,6 +53,7 @@ export default function SidebarChat({ socket, setShowChat, showChat }: any) {
                     // setSendMsg={setSendMsg}
                     nowGSeq={nowGSeq}
                     nowGName={nowGName}
+                    uName={uName}
                     socket={socket} // socket 인스턴스
                 />
             )}
