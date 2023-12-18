@@ -26,10 +26,13 @@ export default function ManagementLayout({ children, showChat }: any) {
                             >
                                 <Item
                                     style={{
-                                        paddingLeft: 0,
-                                        paddingRight: 0,
-                                        paddingTop: 0,
-                                        justifyContent: 'Center',
+                                        backgroundColor: '#615d58',
+                                        width: '100%',
+                                        height: '100%',
+                                        //     paddingLeft: 0,
+                                        //     paddingRight: 0,
+                                        paddingTop: '4rem',
+                                        //     justifyContent: 'Center',
                                     }}
                                 >
                                     <SidebarManagement />
@@ -45,10 +48,11 @@ export default function ManagementLayout({ children, showChat }: any) {
                                 {' '}
                                 <Item
                                     style={{
-                                        paddingLeft: 0,
-                                        paddingRight: 0,
-                                        paddingTop: 0,
-                                        justifyContent: 'Center',
+                                        padding: '7rem 3rem',
+                                        // paddingLeft: 0,
+                                        // paddingRight: 0,
+                                        // paddingTop: 0,
+                                        // justifyContent: 'Center',
                                     }}
                                 >
                                     {children}
@@ -80,10 +84,13 @@ export default function ManagementLayout({ children, showChat }: any) {
                             >
                                 <Item
                                     style={{
-                                        paddingLeft: 0,
-                                        paddingRight: 0,
-                                        paddingTop: 0,
-                                        justifyContent: 'Center',
+                                        backgroundColor: '#615d58',
+                                        width: '100%',
+                                        height: '100%',
+                                        //     paddingLeft: 0,
+                                        //     paddingRight: 0,
+                                        paddingTop: '4rem',
+                                        //     justifyContent: 'Center',
                                     }}
                                 >
                                     <SidebarManagement />{' '}
@@ -97,10 +104,11 @@ export default function ManagementLayout({ children, showChat }: any) {
                             >
                                 <Item
                                     style={{
-                                        paddingLeft: 0,
-                                        paddingRight: 0,
-                                        paddingTop: 0,
-                                        justifyContent: 'Center',
+                                        padding: '7rem 3rem',
+                                        // paddingLeft: 0,
+                                        // paddingRight: 0,
+                                        // paddingTop: 0,
+                                        // justifyContent: 'Center',
                                     }}
                                 >
                                     {' '}

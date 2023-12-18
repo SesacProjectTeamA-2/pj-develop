@@ -73,6 +73,7 @@ function App() {
                 isJoinPage={isJoinPage}
                 setIsJoinPage={setIsJoinPage}
                 socket={socket}
+                setSocket={setSocket}
             />
 
             <Routes>
@@ -305,7 +306,7 @@ function App() {
                     }
                 />
 
-                {/* 그룹 라우팅 끝 */}
+                {/* --- 그룹 라우팅 끝 --- */}
 
                 <Route
                     path="/mypage"

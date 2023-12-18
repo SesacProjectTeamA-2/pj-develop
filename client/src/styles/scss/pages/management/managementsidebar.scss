@@ -1,6 +1,14 @@
 @import '../../abstracts/variables';
 @import '~include-media/dist/include-media';
 
+.sidebar-container {
+    .menu {
+        display: flex;
+        flex-direction: column;
+        margin-top: 2rem;
+    }
+}
+
 .menu a {
     color: $color-white;
     font-family: Lato;
@@ -77,5 +85,110 @@
 .SMN_effect-42 {
     @include media('<900px') {
         display: flex;
+    }
+}
+
+//=== sidebarGroup 추가 ! ===
+
+.sidebar-container {
+    // background-color: #e0e0e0;
+    // border-right: 2px solid white;
+
+    // margin-top: 0rem;
+
+    display: flex;
+    gap: 10px;
+
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    justify-content: space-between;
+
+    .sidebar-list {
+        width: 100%;
+
+        height: fit-content;
+        .sidebar-theme-list {
+            display: flex;
+            flex-direction: column;
+            .theme-flex {
+                display: flex;
+                flex-direction: column;
+                @include media('<900px') {
+                    flex-direction: row;
+                    width: 100%;
+                }
+                .theme-title {
+                    width: 100%;
+                    padding: 10px 0;
+
+                    @include media('<900px') {
+                        width: 35vw;
+                    }
+
+                    display: flex;
+                    justify-content: center;
+                    color: white;
+                }
+
+                @include media('<900px') {
+                    .mission-res {
+                        width: 65vw;
+                    }
+                }
+
+                .mission-flex {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 100%;
+                }
+            }
+            .mission-title {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                color: white;
+                opacity: 50%;
+                padding: 7px 0;
+            }
+        }
+    }
+}
+
+@include media('<900px') {
+    .sidebar-theme {
+        margin: 7px 15px;
+    }
+}
+.sidebar-content {
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    .board-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+
+        @include media('<900px') {
+            width: 65vw;
+            flex-direction: row;
+            .sidebar-theme {
+                margin: 7px 15px;
+            }
+        }
+    }
+    .progress-mission {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        @include media('<900px') {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+        }
     }
 }

@@ -34,8 +34,8 @@ export default function GroupList() {
             setMadeGroup(data.groupInfo);
             setMadeNumGroup(data.groupUserCount);
 
-            console.log('gCategory>>>', data.gCategory);
-            console.log('setMadeNumGroup>>>', data.groupUserCount);
+            // console.log('gCategory>>>', data.gCategory);
+            // console.log('setMadeNumGroup>>>', data.groupUserCount);
         } catch (error) {
             console.error('Error while fetching data:', error);
         }

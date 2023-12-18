@@ -94,7 +94,7 @@ export default function MissionAddModal({
     let defaultDate = formatDate(futureDate);
     let today = formatDate(currentDate);
 
-    console.log('gDday', gDday);
+    // console.log('gDday', gDday);
 
     const [targetDate, setTargetDate] = useState(gDday);
 
@@ -108,7 +108,7 @@ export default function MissionAddModal({
         gMaxMem: groupDetail?.groupMaxMember,
     });
 
-    console.log('groupEditDday~~~~~~~~~~', groupEditDday);
+    // console.log('groupEditDday~~~~~~~~~~', groupEditDday);
 
     const { mTitle, mContent, mLevel } = missionInput;
 
@@ -168,7 +168,7 @@ export default function MissionAddModal({
         });
     };
 
-    console.log('missionList', missionList);
+    // console.log('missionList', missionList);
 
     interface EditMode {
         [key: number]: boolean;
@@ -184,10 +184,10 @@ export default function MissionAddModal({
 
         setMissionInput({ ...missionInput, [name]: value });
 
-        console.log('<<<<<<MissionInput>>>>>>>>>>>', missionInput);
+        //     console.log('<<<<<<MissionInput>>>>>>>>>>>', missionInput);
     };
 
-    console.log('editedContents', editedContents);
+    // console.log('editedContents', editedContents);
     if (action === '미션수정') {
         for (let i = 0; i < missionList.length; i++) {
             missionList[i].id = i + 1;
@@ -217,10 +217,10 @@ export default function MissionAddModal({
                 gDday: targetDate,
             });
 
-            console.log(
-                '<<<<<<input : 그룹 생성에서 기존 Input>>>>>>>>>>>',
-                input
-            );
+            // console.log(
+            //     '<<<<<<input : 그룹 생성에서 기존 Input>>>>>>>>>>>',
+            //     input
+            // );
         }
 
         //; 미션 수정 (PATCH, POST, DELETE)
@@ -242,7 +242,7 @@ export default function MissionAddModal({
                 deleteList: deleteList,
             };
 
-            console.log('버튼 눌렀을 경우의 data ===== ', data);
+            // console.log('버튼 눌렀을 경우의 data ===== ', data);
 
             const patchDdayHandler = async () => {
                 try {
@@ -312,7 +312,7 @@ export default function MissionAddModal({
             (mission: any) => mission.id === targetId
         );
 
-        console.log(targetId, editedMissionIndex);
+        // console.log(targetId, editedMissionIndex);
 
         if (editedMissionIndex !== -1) {
             // 수정할 미션을 찾았을 때, 해당 미션 정보 수정
@@ -386,8 +386,8 @@ export default function MissionAddModal({
         setMissionList(updatedMissionList);
     };
 
-    console.log('targetDate', targetDate);
-    console.log('dday', dday);
+    // console.log('targetDate', targetDate);
+    // console.log('dday', dday);
 
     const newDay = useDdayCount(targetDate);
 

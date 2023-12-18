@@ -37,6 +37,8 @@ export default function GroupCreate(socket: any) {
     const { gName, gDesc, gDday, gCategory, gCoverImg, gMaxMem, missionArray } =
         input;
 
+    const [gSeq, setGSeq] = useState(0);
+
     const onChange = (e: any) => {
         const { name, value } = e.target;
 
@@ -102,19 +104,27 @@ export default function GroupCreate(socket: any) {
     //-- 그룹 생성 완료 모달창
     const [successModalSwitch, setSuccessModalSwitch] = useState(false);
 
-    //] 그룹 생성 성공 시, 채팅방 입장
     const successHandler = () => {
-        // // useEffect(() => {
-        //~ 채팅방 입장
-        //     // console.log('joinRoom nowGSeq :::::', nowGSeq);
-        //         socket.emit('joinRoom', { gSeq: nowGSeq });
-        //         // joinRoom 이벤트에 대한 리스너 추가
-        //         socket.on('joinRoom', (data: any) => {
-        //             console.log('joinRoom event received on client', data); // 서버에서 보낸 data
-        //         });
-        // setSuccessModalSwitch(true);
-        //     // }, []);
+        setSuccessModalSwitch(true);
     };
+
+    //] 그룹 생성 성공 시, 채팅방 입장
+    useEffect(() => {
+        if (successModalSwitch) {
+            console.log('%%%%%', socket.socket);
+            console.log('joinRoom gSeq :::::', gSeq);
+            console.log('joinRoom에 전송할 데이터 >>>', {
+                gSeq: gSeq,
+                isSignup: 'true',
+            });
+
+            socket.socket?.emit('joinRoom', { gSeq: gSeq, isSignup: 'true' });
+            // joinRoom 이벤트에 대한 리스너 추가
+            socket.socket?.on('joinRoom 이벤트 성공 !!!', (data: any) => {
+                console.log('joinRoom event received on client', data); // 서버에서 보낸 data
+            });
+        }
+    }, [successModalSwitch]);
 
     //] 그룹 생성 요청
     const groupCreateHandler = async () => {
@@ -190,6 +200,7 @@ export default function GroupCreate(socket: any) {
                     toast.error(res.data.msg);
                     return;
                 } else if (input.gName) {
+                    setGSeq(res.data.gSeq);
                     successHandler();
                 }
             })
