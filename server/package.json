@@ -73,6 +73,7 @@
     "sequelize-cli": "^6.6.1",
     "socket.io": "^4.7.2",
     "socket.io-redis": "^6.1.1",
+    "sse": "^0.0.8",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "uuid": "^9.0.1"
