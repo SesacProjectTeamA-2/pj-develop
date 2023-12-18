@@ -52,7 +52,7 @@ exports.chatSocket = async (io, socket) => {
               data.gSeq.map((info) => {
                 const isExisting = groupChat.adapter.rooms.has(`room${info}`);
                 console.log(`room${info} 현재 생성되어 있음?`, isExisting);
-                // 1. 방에 참가 및 notice
+                // 방에 참가 및 notice
                 socket.join(`room${info}`);
                 groupChat.to(`room${info}`).emit('loginNotice', {
                   msg: `${uName}님이 로그인하셨어요`,
@@ -74,7 +74,7 @@ exports.chatSocket = async (io, socket) => {
         // 모임별 채팅에 대한 정보
         socket.on('roomInfo', async () => {
           try {
-            console.log('userinfo.gSeq>>>>', userInfo.gSeq);
+            console.log('userinfo.gSeq>>>>', userInfo);
 
             // 1. 모임의 마지막 메세지 정보 송출
             if (Array.isArray(userInfo.gSeq)) {
@@ -89,7 +89,7 @@ exports.chatSocket = async (io, socket) => {
                 const roomInfo = { gSeq: info, msg: JSON.parse(message) };
                 roomInfoArray.push(roomInfo);
               }
-
+              console.log('roomInfoArray>>>', roomInfoArray);
               // 2. 안읽은 메세지 갯수
 
               socket.emit('roomInfo', roomInfoArray);
@@ -115,7 +115,7 @@ exports.chatSocket = async (io, socket) => {
 
               // gSeq 배열 추가
               currentUserInfo.gSeq.push(data.gSeq);
-
+              console.log('모임가입 후 userInfo>>>>>>>', userInfo);
               // 해당 모임방에 참여한 사람들에게 알림 전송
               socket.join(`room${data.gSeq}`);
               groupChat.to(`room${data.gSeq}`).emit('loginNotice', {
@@ -177,7 +177,7 @@ exports.chatSocket = async (io, socket) => {
             const { uSeq, timeStamp, msg, gSeq, socketId } = data;
             const roomChat = groupChat.to(`room${gSeq}`);
             const result = JSON.stringify({ msg, timeStamp, uSeq });
-            console.log('json 형식이니? ', result);
+
             // 메세지 정보 redis에 저장
             await redisCli.lPush(
               `room${gSeq}`,
@@ -187,9 +187,31 @@ exports.chatSocket = async (io, socket) => {
             await redisCli.expire(`room${gSeq}`, 43200);
             roomChat.emit('msg', { uName, socketId, timeStamp, msg });
 
-            console.log('msg 전송 성공 !!!! ', data);
+            console.log('msg 전송 성공 !!!! ', result);
           } catch (err) {
             console.error('sendMsg error', err);
+          }
+        });
+
+        // 모임탈퇴, 추방시 모임채팅 out
+        socket.on('roomOut', async (data) => {
+          try {
+            const gSeq = data.gSeq;
+
+            // 삭제할 gSeq 찾기
+            const userToRemove = connectedUser.find(
+              (user) => user.userInfo.gSeq === gSeq
+            );
+
+            if (userToRemove) {
+              // 해당 user를 삭제
+              connectedUser.splice(connectedUser.indexOf(userToRemove), 1);
+            }
+
+            console.log(`room${gSeq} leave!!!`);
+            socket.leave(`room${gSeq}`);
+          } catch (err) {
+            console.error('roomOut error', err);
           }
         });
 
@@ -208,15 +230,17 @@ exports.chatSocket = async (io, socket) => {
             //   connectedUser.splice(userIndex, 1);
             // }
 
-            connectedUser = connectedUser.filter((user) => user.uSeq !== uSeq);
+            const loginUser = connectedUser.filter(
+              (user) => user.uSeq !== uSeq
+            );
             // connectedUser 배열에서 uSeq가 일치하는 객체를 모두 제거
-            for (let i = connectedUser.length - 1; i >= 0; i--) {
-              if (connectedUser[i].uSeq === uSeq) {
-                connectedUser.splice(i, 1);
+            for (let i = loginUser.length - 1; i >= 0; i--) {
+              if (loginUser[i].uSeq === uSeq) {
+                loginUser.splice(i, 1);
               }
             }
             socket.disconnect();
-            console.log('남은 유저', connectedUser);
+            console.log('남은 유저', loginUser);
           } catch (err) {
             console.log('logout err', err);
           }
