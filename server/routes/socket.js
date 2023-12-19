@@ -215,12 +215,9 @@ exports.chatSocket = async (io, socket) => {
               connectedUser.splice(connectedUser.indexOf(userToRemove), 1);
             }
 
+            roomChat.emit('msg', `${uName}님이 모임을 탈퇴하셨습니다.`);
             console.log(`room${gSeq} leave!!!`);
             socket.leave(`room${gSeq}`);
-            roomChat.emit(
-              'msg',
-              `${roomInfo.uName}님이 모임을 탈퇴하셨습니다.`
-            );
           } catch (err) {
             console.error('roomOut error', err);
           }

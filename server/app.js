@@ -88,6 +88,9 @@ chatSocket(io);
 // SSE 설정
 const SSE = require('sse');
 const sse = new SSE(server);
+// SSE 연결 요청
+const sseRouter = require('./routes/sse.js');
+app.get('/subscribe', sseRouter);
 
 /**
  * @path {GET} ${URL}:${PORT}/api
