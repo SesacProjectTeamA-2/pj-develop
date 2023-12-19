@@ -84,10 +84,16 @@ exports.chatSocket = async (io, socket) => {
               //   socket.emit('roomInfo', JSON.parse(message));});
 
               const roomInfoArray = [];
+
               for (const info of userInfo.gSeq) {
-                const message = await redisCli.lRange(`room${info}`, -1, -1);
-                const roomInfo = { gSeq: info, msg: JSON.parse(message) };
-                roomInfoArray.push(roomInfo);
+                const listLength = await redisCli.lLen(`room${gSeq}`);
+                if (listLength !== 0) {
+                  const message = await redisCli.lRange(`room${info}`, -1, -1);
+                  const roomInfo = { gSeq: info, msg: JSON.parse(message) };
+                  roomInfoArray.push(roomInfo);
+                } else {
+                  console.log(`room${gSeq}에 아직 메세지가 없음!`);
+                }
               }
               console.log('roomInfoArray>>>', roomInfoArray);
               // 2. 안읽은 메세지 갯수
@@ -201,7 +207,7 @@ exports.chatSocket = async (io, socket) => {
 
             // 삭제할 gSeq 찾기
             const userToRemove = connectedUser.find(
-              (user) => user.userInfo.gSeq === gSeq
+              (user) => user.gSeq === gSeq
             );
 
             if (userToRemove) {
