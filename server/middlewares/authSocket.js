@@ -25,17 +25,13 @@ const authSocketUtil = {
       // 토근 : undefined
       if (user.uSeq === undefined) return next('토큰 : undefined');
 
-      socket.uSeq = user.uSeq;
-      socket.uName = user.uName;
-      socket.loginTime = loginTime;
-
       const userInfo = {
         socketId: socket.id,
-        uSeq: socket.uSeq,
-        uName: socket.uName,
-        loginTime: socket.loginTime,
-        gSeq: [],
+        uSeq: user.uSeq,
+        uName: user.uName,
+        loginTime,
       };
+
       socket.userInfo = userInfo;
 
       next();

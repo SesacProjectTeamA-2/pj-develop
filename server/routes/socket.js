@@ -3,6 +3,7 @@
 // 미들웨어 설정
 const authSocketUtil = require('../middlewares/authSocket.js');
 const redisCli = require('../models/redis');
+const { connect } = require('./user.js');
 
 exports.chatSocket = async (io, socket) => {
   try {
@@ -26,13 +27,21 @@ exports.chatSocket = async (io, socket) => {
           (user) => user.uSeq === userInfo.uSeq
         );
 
-        // 중복이 아닌 경우에만 추가
+        // 중복이 아닌 경우에만 추가(최초로그인시간으로 저장됨)
         if (isDuplicate) {
-          console.log('이미 연결되어 있는 소켓이 있음!!');
-          // socket.disconnect(true);
+          console.log(
+            '이미 연결되어 있는 소켓이 있음!!',
+            console.log('현재 소켓아이디>>', socket.id)
+          );
         } else {
-          connectedUser.push(userInfo);
+          connectedUser.push({
+            uSeq: userInfo.uSeq,
+            uName: userInfo.uName,
+            loginTime: userInfo.loginTime,
+            gSeq: [],
+          });
         }
+
         const { uName, uSeq, loginTime, socketId } = userInfo;
 
         console.log('현재 접속중인 유저', connectedUser);
@@ -42,10 +51,22 @@ exports.chatSocket = async (io, socket) => {
           socketId
         );
 
+        // 접속된 유저의 정보꺼내기
+        // connectedUser 배열에서 userInfo의 uSeq와 동일한 키값을 가진 객체 찾기
+        const loginUser = connectedUser.find(
+          (user) => user.uSeq === userInfo.uSeq
+        );
+        if (loginUser) {
+          console.log('로그인 유저 정보 : ', loginUser);
+        } else {
+          // 해당하는 객체를 찾지 못한 경우
+          console.log('User not found');
+        }
+
         // 로그인시 각 방에 참여 및 로그인 이후 메세지 개수
         socket.on('login', (data) => {
           try {
-            userInfo.gSeq = data.gSeq;
+            loginUser.gSeq = data.gSeq;
             console.log(userInfo);
 
             if (Array.isArray(data.gSeq)) {
@@ -74,10 +95,10 @@ exports.chatSocket = async (io, socket) => {
         // 모임별 채팅에 대한 정보
         socket.on('roomInfo', async () => {
           try {
-            console.log('userinfo.gSeq>>>>', userInfo);
+            console.log('userinfo.gSeq>>>>', loginUser);
 
             // 1. 모임의 마지막 메세지 정보 송출
-            if (Array.isArray(userInfo.gSeq)) {
+            if (Array.isArray(loginUser.gSeq)) {
               // 아래와같이 사용할 경우, map이 끝날때까지 기다리지 않음 => map에 대한 동작을 변수로 할당해 promise.all() 사용해야한다.
               // userInfo.gSeq.map(async (info) => {
               //   const message = await redisCli.lRange(`room${info}`, -1, -1);
@@ -85,7 +106,7 @@ exports.chatSocket = async (io, socket) => {
 
               const roomInfoArray = [];
 
-              for (const info of userInfo.gSeq) {
+              for (const info of loginUser.gSeq) {
                 const listLength = await redisCli.lLen(`room${gSeq}`);
                 if (listLength !== 0) {
                   const message = await redisCli.lRange(`room${info}`, -1, -1);
@@ -111,17 +132,17 @@ exports.chatSocket = async (io, socket) => {
         // 모임별 채팅방 입장시
         socket.on('joinRoom', async (data) => {
           try {
-            console.log(socketId);
+            console.log('joinroom data>>>>>>>>>', data);
             // 1. 모임가입/ 모임생성시 : 방참여/ gSeq 추가
             if (data.isSignup === 'true') {
               // connectedUser에서 해당 userInfo 찾기
-              const currentUserInfo = connectedUser.find(
-                (user) => user.uSeq === userInfo.uSeq
-              );
-
+              // const index = connectedUser.findIndex(
+              //   (user) => user.uSeq === userInfo.uSeq
+              // );
               // gSeq 배열 추가
-              currentUserInfo.gSeq.push(data.gSeq);
-              console.log('모임가입 후 userInfo>>>>>>>', userInfo);
+              loginUser.gSeq.push(data.gSeq);
+              // connectedUser[index] = userInfo;
+              console.log('모임가입 후 userInfo>>>>>>>', loginUser);
               // 해당 모임방에 참여한 사람들에게 알림 전송
               socket.join(`room${data.gSeq}`);
               groupChat.to(`room${data.gSeq}`).emit('loginNotice', {
@@ -154,7 +175,7 @@ exports.chatSocket = async (io, socket) => {
                   .map((message) => JSON.parse(message))
                   .filter(
                     (parsedMessage) =>
-                      new Date(parsedMessage.timeStamp) >= loginTime
+                      new Date(parsedMessage.timeStamp) >= loginUser.loginTime
                   );
                 console.log('파싱된 메세지', parsedMessages);
 
@@ -205,17 +226,16 @@ exports.chatSocket = async (io, socket) => {
             const gSeq = data.gSeq;
             const roomChat = groupChat.to(`room${gSeq}`);
 
-            // 삭제할 gSeq 찾기
-            const userToRemove = connectedUser.find(
-              (user) => user.gSeq === gSeq
+            // loginUser의 gSeq 배열에서 data.gSeq와 동일한 값을 제외한 새로운 배열 생성
+            loginUser.gSeq = loginUser.gSeq.filter(
+              (gSeqValue) => gSeqValue !== data.gSeq
             );
+            console.log(loginUser);
+            console.log(groupChat.adapter.rooms);
 
-            if (userToRemove) {
-              // 해당 user를 삭제
-              connectedUser.splice(connectedUser.indexOf(userToRemove), 1);
-            }
-
-            roomChat.emit('msg', `${uName}님이 모임을 탈퇴하셨습니다.`);
+            roomChat.emit('msg', {
+              msg: `${uName}님이 모임을 탈퇴하셨습니다.`,
+            });
             console.log(`room${gSeq} leave!!!`);
             socket.leave(`room${gSeq}`);
           } catch (err) {
@@ -248,7 +268,8 @@ exports.chatSocket = async (io, socket) => {
               }
             }
             socket.disconnect();
-            console.log('남은 유저', loginUser);
+
+            console.log('남은 유저', connectedUser);
           } catch (err) {
             console.log('logout err', err);
           }
@@ -258,6 +279,7 @@ exports.chatSocket = async (io, socket) => {
         socket.on('disconnect', () => {
           console.log(`Socket ${socketId} disconnected.`);
           console.log('현재 접속되어 있는 유저', connectedUser);
+          console.log('현재 접속되어 있는 유저', groupChat.adapter.rooms);
           // 각 모임방에 notice
         });
       } catch (err) {
