@@ -16,6 +16,7 @@ export default function WarningModal({
     action,
     gbSeq,
     mSeq,
+    socket,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
@@ -23,6 +24,8 @@ export default function WarningModal({
     const { gSeq } = useParams();
 
     const [groupName, setGroupName] = useState<GroupMissionsType[]>([]);
+
+    console.log('warningModal socket >>>', socket);
 
     const getGroup = async () => {
         const res = await axios
@@ -41,6 +44,7 @@ export default function WarningModal({
     }, []);
 
     const nvg = useNavigate();
+
     const logoutHandler = () => {
         cookie.remove('isUser');
         cookie.remove('token');
@@ -48,6 +52,9 @@ export default function WarningModal({
         window.location.reload();
     };
 
+    const [leaveGroupSuccess, setLeaveGroupSuccess] = useState(false);
+
+    //=== 모달창 '확인' 버튼 클릭 시 ===
     const doneHandler = () => {
         if (action === '회원 탈퇴') {
             alert(`Motimate ${action}하셨습니다 !`);
@@ -93,16 +100,16 @@ export default function WarningModal({
                     )
                     .then((res) => {
                         console.log(res.data);
-                        // toast.success(
-                        //     `${groupName} 모임을 ${action}하셨습니다.`
-                        // );
-                        nvg('/group');
+
+                        //++ 모임 채팅 OUT
+                        setLeaveGroupSuccess(true);
+
+                        // [TEST]용 주석 처리
+                        // nvg('/group');
                     });
             };
             quitGroupHandler();
         } else if (action === '게시글을 삭제') {
-            // nvg(-1);
-
             const boardDeleteHandler = async (gbSeq: number) => {
                 const res = await axios
                     .delete(
@@ -125,7 +132,25 @@ export default function WarningModal({
         }
     };
 
-    // 모달창 닫기
+    //++ 모임 채팅 OUT
+    useEffect(() => {
+        if (leaveGroupSuccess) {
+            console.log('모임 탈퇴 시 roomOut에 전송할 데이터 >>>', {
+                gSeq: Number(gSeq),
+            });
+
+            socket?.emit('roomOut', {
+                gSeq: Number(gSeq),
+            });
+
+            // 서버에서 보낸 data
+            socket?.on('msg', (data: any) => {
+                console.log('roomOut event received on client', data);
+            });
+        }
+    }, [leaveGroupSuccess]);
+
+    //] 모달창 닫기
     const closeModalHandler = () => {
         setWarningModalSwitch(false);
     };

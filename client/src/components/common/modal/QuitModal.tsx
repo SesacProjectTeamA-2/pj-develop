@@ -14,14 +14,22 @@ export default function QuitModal({
     warningModalSwitch,
     setWarningModalSwitch,
     action,
+    socket,
+    uSeqData,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
 
     const nvg = useNavigate();
+
+    // 로그아웃
     const logoutHandler = () => {
+        //-- 채팅 종료
+        socket?.emit('logout', uSeqData);
+
         cookie.remove('isUser');
         cookie.remove('token');
+
         nvg('/');
         window.location.reload();
     };

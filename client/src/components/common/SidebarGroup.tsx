@@ -9,7 +9,11 @@ import SideBarGroupMember from './SidebarGroupMember';
 
 import '../../styles/scss/layout/sidebarGroup.scss';
 
-export default function SideBarGroup({ isShrinkView, setIsShrinkView }: any) {
+export default function SideBarGroup({
+    isShrinkView,
+    setIsShrinkView,
+    socket,
+}: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -443,6 +447,7 @@ export default function SideBarGroup({ isShrinkView, setIsShrinkView }: any) {
                                     }
                                     menu={menu}
                                     setMenu={setMenu}
+                                    socket={socket}
                                 />
                             )}
                         </ul>

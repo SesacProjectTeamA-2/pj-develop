@@ -226,7 +226,7 @@ export default function Header(props: any) {
         setIsAlarm(!isAlarm);
     };
 
-    console.log(props.adminUser);
+    console.log('adminUser', props.adminUser);
 
     return (
         <>

@@ -15,7 +15,7 @@ import Quit from '../../components/myPage/Quit';
 import SetMainList from '../../components/myPage/SetMainList';
 import PsnCoverImg from '../../components/myPage/PsnCoverImg';
 
-export default function MyPage() {
+export default function MyPage({ socket }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
 
@@ -242,6 +242,29 @@ export default function MyPage() {
         }
     };
 
+    // ] 회원 탈퇴(Quit) 시, uSeq 데이터 전송
+    const [uSeqData, setUSeqData] = useState({ uSeq: 0 });
+
+    const getJoinedGroup = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/group/joined`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                const { uSeq } = res.data;
+
+                setUSeqData({
+                    uSeq,
+                });
+            });
+    };
+
+    useEffect(() => {
+        getJoinedGroup(); // uSeq 데이터 update
+    }, []);
+
     return (
         <div className="section">
             {/* 로그인 안 했을 때: 로그인 버튼 보임 + 채팅 버튼 안 보임 <br></br>
@@ -299,7 +322,7 @@ export default function MyPage() {
                     <h3 className="myPage-p title4">회원탈퇴</h3>
                 </div>
                 <div className="myPage-div-five-two">
-                    <Quit />
+                    <Quit uSeqData={uSeqData} socket={socket} />
                 </div>
             </div>
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import WarningModal from '../common/modal/WarningModal';
 import QuitModal from '../common/modal/QuitModal';
 
-export default function Quit() {
+export default function Quit({ socket, uSeqData }: any) {
     const [warningModalSwitch, setWarningModalSwitch] = useState(false);
 
     const warningModalSwitchHandler = () => {
@@ -29,6 +29,8 @@ export default function Quit() {
                 setWarningModalSwitch={setWarningModalSwitch}
                 warningModalSwitchHandler={warningModalSwitchHandler}
                 action={'회원 탈퇴'}
+                socket={socket}
+                uSeqData={uSeqData}
             />
         </div>
     );

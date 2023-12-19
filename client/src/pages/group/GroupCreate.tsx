@@ -119,10 +119,11 @@ export default function GroupCreate(socket: any) {
             });
 
             socket.socket?.emit('joinRoom', { gSeq: gSeq, isSignup: 'true' });
-            // joinRoom 이벤트에 대한 리스너 추가
-            socket.socket?.on('joinRoom 이벤트 성공 !!!', (data: any) => {
-                console.log('joinRoom event received on client', data); // 서버에서 보낸 data
-            });
+
+            // 서버에서 보낸 data
+            socket.socket?.on('loginNotice', (data: any) => {
+                console.log('joinRoom event received on client', data);
+            }); // {msg: '테스트1님이 모임에 참여하셨어요!'}
         }
     }, [successModalSwitch]);
 
