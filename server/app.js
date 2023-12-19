@@ -85,6 +85,10 @@ app.set('io', io);
 const { chatSocket } = require('./routes/socket.js');
 chatSocket(io);
 
+// SSE 설정
+const SSE = require('sse');
+const sse = new SSE(server);
+
 /**
  * @path {GET} ${URL}:${PORT}/api
  * @description 모든 api는 indexRouter를 거쳐가도록 설정
