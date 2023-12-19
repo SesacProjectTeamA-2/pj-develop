@@ -79,7 +79,7 @@ const IO = require('socket.io');
 const io = IO(server, options);
 
 // 전역변수 설정
-app.set('io', io);
+// app.set('io', io);
 
 // 라우터
 const { chatSocket } = require('./routes/socket.js');
@@ -88,6 +88,11 @@ chatSocket(io);
 // SSE 설정
 const SSE = require('sse');
 const sse = new SSE(server);
+
+// SSE 전역변수 설정
+// const alarm = require('./controller/Calarm.js');
+// app.set('sse', sse);
+// app.get('/subscribe', alarm);
 
 /**
  * @path {GET} ${URL}:${PORT}/api
