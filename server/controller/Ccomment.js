@@ -12,6 +12,7 @@ const {
 const jwt = require('../modules/jwt');
 const authUtil = require('../middlewares/auth');
 const { token } = require('morgan');
+const redisCli = require(`../models/redis`);
 
 // 댓글 생성 처리
 // /comment/create/:gbSeq
@@ -88,6 +89,22 @@ exports.createComment = async (req, res) => {
       gbcContent: gbcContent,
       guSeq: guSeq,
     });
+
+    // redis에 캐시로 저장(알림 - hash)
+    // (hash) 받는사람 : 게시글 작성자(gbSeq - uSeq)
+    // (field) comment
+    // (value) gbSeq, uName, date
+    const commentTime = new Date();
+    const receiver = groupBoard.uSeq;
+    await redisCli.lPush(
+      `user${receiver}`,
+      JSON.stringify({
+        type: 'comment',
+        gbSeq,
+        uName,
+        commentTime,
+      })
+    );
 
     // 정상 처리
     res.status(200).send({
