@@ -18,7 +18,7 @@ import MemberList from '../../components/group/home/MemberList';
 
 import { GroupDetailType, RootStateType } from '../../../src/types/types'; // Redux 스토어 전체 타입을 가져옵니다.
 
-export default function GroupHome() {
+export default function GroupHome({ socket }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -170,21 +170,34 @@ export default function GroupHome() {
                         duration: 2000,
                     });
 
-                    // // useEffect(() => {
-                    //~ 채팅방 입장
-                    //     // console.log('joinRoom nowGSeq :::::', nowGSeq);
-                    //         socket.emit('joinRoom', { gSeq: nowGSeq });
-                    //         // joinRoom 이벤트에 대한 리스너 추가
-                    //         socket.on('joinRoom', (data: any) => {
-                    //             console.log('joinRoom event received on client', data); // 서버에서 보낸 data
-                    //         });
-                    // setSuccessModalSwitch(true);
-                    //     // }, []);
-
+                    setJoinSuccess(true);
                     window.location.reload();
                 }
             });
     };
+
+    //] 가입 성공 시, 채팅방 입장
+    const [joinSuccess, setJoinSuccess] = useState(false);
+
+    useEffect(() => {
+        if (joinSuccess) {
+            console.log('joinRoom gSeq :::::', gSeq);
+            console.log('joinRoom에 전송할 데이터 >>>', {
+                gSeq: Number(gSeq),
+                isSignup: 'true',
+            });
+
+            socket?.emit('joinRoom', {
+                gSeq: gSeq,
+                isSignup: 'true',
+            });
+
+            // 서버에서 보낸 data
+            socket?.on('loginNotice', (data: any) => {
+                console.log('joinRoom event received on client', data);
+            }); // {msg: '테스트1님이 모임에 참여하셨어요!'}
+        }
+    }, [joinSuccess]);
 
     const [gCategory, setGCategory] = useState('');
 

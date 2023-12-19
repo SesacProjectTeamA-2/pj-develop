@@ -34,18 +34,34 @@ import MissionPost from './pages/group/MissionPost';
 import BoardMissionEdit from './pages/group/BoardMissionEdit';
 
 function App() {
-    // 채팅
+    // socket 전역으로 관리
+    const [socket, setSocket] = useState<any>();
+
     const [showChat, setShowChat] = useState<boolean>(false);
+
+    //-- Header 채팅 아이콘 클릭 시 실행하는 함수
     const showChatting = (): void => {
-        setShowChat(!showChat);
+        setShowChat(!showChat); // 채팅 사이드바 유무
     };
+
+    //++ Header 채팅 아이콘 클릭 시, socket roomInfo 이벤트
+    // 모임별 채팅 최신 정보 (최신 메세지, 안읽은 메세지)
+
+    useEffect(() => {
+        if (showChat) {
+            socket?.emit('roomInfo');
+
+            // 서버에서 보낸 data
+            socket?.on('roomInfo', (data: any) => {
+                console.log('joinRoom event received on client', data);
+            }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
+        }
+    }, [showChat]);
 
     const [isIntro, setIsIntro] = useState<boolean>(false);
     const [isLogin, setIsLogin] = useState<boolean>(false);
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
     const [initialLogin, setInitialLogin] = useState<any>(false);
-
-    const [socket, setSocket] = useState<any>();
 
     // admin 인증
     const [adminUser, setAdminUser] = useState(false);
@@ -141,7 +157,7 @@ function App() {
                     path="/group/home/:gSeq"
                     element={
                         <GroupLayout
-                            children={<GroupHome />}
+                            children={<GroupHome socket={socket} />}
                             showChat={showChat}
                             setShowChat={setShowChat}
                             socket={socket}
@@ -307,7 +323,7 @@ function App() {
                     path="/mypage"
                     element={
                         <BasicLayout
-                            children={<MyPage />}
+                            children={<MyPage socket={socket} />}
                             showChat={showChat}
                             setShowChat={setShowChat}
                             socket={socket}

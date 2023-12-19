@@ -10,6 +10,7 @@ export default function SideBarGroupMember({
     warningModalSwitchHandler,
     menu,
     setMenu,
+    socket,
 }: any) {
     return (
         <>
@@ -47,6 +48,7 @@ export default function SideBarGroupMember({
                 warningModalSwitch={warningModalSwitch}
                 setWarningModalSwitch={setWarningModalSwitch}
                 action={menu}
+                socket={socket}
             />
         </>
     );

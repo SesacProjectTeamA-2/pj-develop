@@ -91,6 +91,7 @@ export default function GroupLayout({
                                 <SideBarGroup
                                     isShrinkView={isShrinkView}
                                     setIsShrinkView={setIsShrinkView}
+                                    socket={socket}
                                 />
                             </Item>
                         </Grid>
