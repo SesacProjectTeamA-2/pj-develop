@@ -91,8 +91,7 @@ const sse = new SSE(server);
 
 // SSE 전역변수 설정
 // const alarm = require('./controller/Calarm.js');
-// app.set('sse', sse);
-// app.get('/subscribe', alarm);
+app.set('sse', sse);
 
 /**
  * @path {GET} ${URL}:${PORT}/api
