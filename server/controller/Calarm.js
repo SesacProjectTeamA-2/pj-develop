@@ -1,5 +1,7 @@
-const redisCli = require('../models/redis');
+const redisCli = require('../models/redis').redis_Cli;
 const jwt = require('../modules/jwt');
+// Redis subscribe 객체
+const sub = require('../models/redis').sub;
 
 exports.alarm = async (req, res) => {
   try {
@@ -38,13 +40,13 @@ exports.alarm = async (req, res) => {
     // 서버로부터 데이터가 오면(messaging) - 10초마다 데이터를 체크하되, 이벤트가 발생할때만 응답전송
     sse.on('messaging', async (req, res) => {
       // 1. redis
-
-      // const
+      const newAlarm = await sub.subscribe('comment_alarm');
+      console.log('newAlarm', newAlarm);
 
       // SSE 데이터 전송
       setInterval(() => {
         const data = `data: ${new Date()}\n\n`;
-        res.write('event: alarm\n' + 'data: allAlarm\n\n');
+        res.write('event: alarm\n' + 'data: ' + newAlarm + '\n\n');
       }, 10000);
 
       sse.on('disconnect', () => {

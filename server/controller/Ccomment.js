@@ -105,6 +105,16 @@ exports.createComment = async (req, res) => {
         commentTime,
       })
     );
+    // redis pub 처리
+    await redisCli.publish(
+      'comment-alarm',
+      JSON.stringify({
+        type: 'comment',
+        gbSeq,
+        uName,
+        commentTime,
+      })
+    );
 
     // 정상 처리
     res.status(200).send({

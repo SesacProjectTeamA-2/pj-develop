@@ -162,6 +162,6 @@ router.patch(
   controller.userCoverImg
 );
 
-router.post('/logout', authUtil, controller.logout);
+router.post('/logout', controller.logout);
 
 module.exports = router;

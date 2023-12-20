@@ -665,11 +665,7 @@ exports.userCoverImg = async (req, res) => {
 // 로그아웃
 exports.logout = async (req, res) => {
   // 클라이언트에 저장된 쿠키 삭제
-  res.clearCookie('token', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'None',
-  });
+  res.clearCookie('token');
 
   res.send({ success: true, message: 'Logged out successfully' });
 };

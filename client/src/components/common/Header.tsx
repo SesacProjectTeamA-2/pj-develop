@@ -105,6 +105,8 @@ export default function Header(props: any) {
         getJoinedGroup(); // uSeq 데이터 update
     }, []);
 
+    const [logoutConfirm, setLogoutConfirm] = useState(false);
+
     //] 로그아웃
     const logoutHandler = () => {
         // [추후] 로그아웃 모달창 처리
@@ -130,13 +132,32 @@ export default function Header(props: any) {
             props.socket?.emit('logout', uSeqData);
             // props.socket.emit('logout', { uSeq: 8 });
 
-            cookie.remove('isUser', { path: '/' });
-
-            nvg('/');
+            setLogoutConfirm(true);
         } else {
             return;
         }
     };
+
+    const postLogOut = async () => {
+        await axios
+            .post(`${process.env.REACT_APP_DB_HOST}/user/logout`)
+            .then((res) => {
+                console.log(res.data);
+
+                cookie.remove('isUser', { path: '/' });
+
+                nvg('/');
+            })
+            .catch((err) => {
+                console.log('error 발생: ', err);
+            });
+    };
+
+    useEffect(() => {
+        if (logoutConfirm) {
+            postLogOut();
+        }
+    }, [logoutConfirm]);
 
     //] 초대장 링크 입력 후 버튼 클릭 시 그 그룹으로 이동
     const [grpInput, setGrpInput] = useState<string>('');
