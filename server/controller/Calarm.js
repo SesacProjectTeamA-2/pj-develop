@@ -42,7 +42,9 @@ exports.alarm = async (req, res) => {
       // SSE 데이터 전송
       setInterval(() => {
         const data = `data: ${new Date()}\n\n`;
-        res.write(data);
+        res.write(
+          'event: alarm\n' + 'data: {"message" : "hello ' + value + '"}\n\n'
+        );
       }, 3000);
 
       sse.on('disconnect', () => {
