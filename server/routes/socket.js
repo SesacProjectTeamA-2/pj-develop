@@ -107,13 +107,13 @@ exports.chatSocket = async (io, socket) => {
               const roomInfoArray = [];
 
               for (const info of loginUser.gSeq) {
-                const listLength = await redisCli.lLen(`room${gSeq}`);
+                const listLength = await redisCli.lLen(`room${info}`);
                 if (listLength !== 0) {
                   const message = await redisCli.lRange(`room${info}`, -1, -1);
                   const roomInfo = { gSeq: info, msg: JSON.parse(message) };
                   roomInfoArray.push(roomInfo);
                 } else {
-                  console.log(`room${gSeq}에 아직 메세지가 없음!`);
+                  console.log(`room${info}에 아직 메세지가 없음!`);
                 }
               }
               console.log('roomInfoArray>>>', roomInfoArray);
@@ -140,7 +140,7 @@ exports.chatSocket = async (io, socket) => {
               //   (user) => user.uSeq === userInfo.uSeq
               // );
               // gSeq 배열 추가
-              loginUser.gSeq.push(data.gSeq);
+              loginUser.gSeq.push(Number(data.gSeq));
               // connectedUser[index] = userInfo;
               console.log('모임가입 후 userInfo>>>>>>>', loginUser);
               // 해당 모임방에 참여한 사람들에게 알림 전송
