@@ -83,15 +83,33 @@ export default function Groups() {
                         }}
                     />
                     <div className="search-btns">
-                        <button className="btn-sm" onClick={searchHandler}>
-                            {search ? '취소' : '검색'}
-                        </button>
-                        <button className="btn-sm" onClick={searchAllHandler}>
-                            {searchAll ? '전체' : '전체'}
-                        </button>
+                        {searchAll ? (
+                            <button
+                                className="btn-sm"
+                                onClick={searchAllHandler}
+                            >
+                                {searchAll ? '취소' : '전체'}
+                            </button>
+                        ) : (
+                            <>
+                                <button
+                                    className="btn-sm"
+                                    onClick={searchHandler}
+                                >
+                                    {search ? '취소' : '검색'}
+                                </button>{' '}
+                                <button
+                                    className="btn-sm"
+                                    onClick={searchAllHandler}
+                                >
+                                    {searchAll ? '취소' : '전체'}
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
 
+                {/* 관심분야 검색 */}
                 <div className="groups-interested">
                     {/* <InterestedList
                         selectedArr={selectedArr}
@@ -104,11 +122,7 @@ export default function Groups() {
                         searchInput={searchInput}
                         selectedArr={selectedArr}
                     />
-                ) : (
-                    ''
-                )}
-
-                {search ? (
+                ) : search ? (
                     <GroupSearch
                         searchInput={searchInput}
                         selectedArr={selectedArr}

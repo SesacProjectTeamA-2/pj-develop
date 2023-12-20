@@ -14,14 +14,12 @@ export default function SwiperTest({
     color2,
     madeNumGroup,
 }: any) {
-    // const [gCategory, setGCategory] = useState<any>([]);
     let categories: any = [];
 
     for (let i = 0; i < groupArray.length; i++) {
         switch (groupArray[i].gCategory) {
             case 'ex':
                 categories.push('🏃🏻‍♂️');
-
                 break;
             case 're':
                 categories.push('📚');
@@ -139,12 +137,6 @@ export default function SwiperTest({
                                             }}
                                         >
                                             <div className="title">
-                                                {/* [추후] 카테고리별 icon */}
-                                                {/* <i
-                                                    className="fa fa-paper-plane"
-                                                    aria-hidden="true"
-                                                ></i> */}
-
                                                 <h1> {categories[idx]}</h1>
                                                 <h2> {groupInfo.gName}</h2>
                                             </div>
