@@ -25,28 +25,25 @@ exports.alarm = async (req, res) => {
     }
 
     // 기존 알람 load (connection)
-    sse.on('connection', async () => {
+    sse.on('connection', async (req, res) => {
       console.log('SSE 연결 완료!');
 
-      // 1. redis
       const alarmCount = await redisCli.lLen(`user${uSeq}`);
-      const data = await redisCli.lRange(`user${uSeq}`, 0, -1);
-      const allAlarm = data.map((alarm) => JSON.parse(alarm));
 
-      //   const
-      // 2. mysql
+      res.write({ alarmCount });
     });
 
     // 서버로부터 데이터가 오면(messaging)
-    sse.on('messaging', () => {
+    sse.on('messaging', async (req, res) => {
       // 1. redis
-      //
+      const data = await redisCli.lRange(`user${uSeq}`, 0, -1);
+      const allAlarm = data.map((alarm) => JSON.parse(alarm));
 
       // SSE 데이터 전송
       setInterval(() => {
         const data = `data: ${new Date()}\n\n`;
         res.write(data);
-      }, 10000);
+      }, 3000);
 
       sse.on('disconnect', () => {
         console.log('SSE 연결 해제!');
