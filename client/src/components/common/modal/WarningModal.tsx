@@ -105,7 +105,7 @@ export default function WarningModal({
                         setLeaveGroupSuccess(true);
 
                         // [TEST]용 주석 처리
-                        // nvg('/group');
+                        nvg('/group');
                     });
             };
             quitGroupHandler();

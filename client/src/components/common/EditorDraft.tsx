@@ -1,20 +1,3 @@
-// import React from 'react';
-// import ReactDOM from 'react-dom';
-// import { Editor, EditorState } from 'draft-js';
-// import 'draft-js/dist/Draft.css';
-
-// export default function EditorDraft() {
-//     const [editorState, setEditorState] = React.useState(() =>
-//         EditorState.createEmpty()
-//     );
-
-//     return (
-//         <div>
-//             <Editor editorState={editorState} onChange={setEditorState} />
-//         </div>
-//     );
-// }
-
 import { convertToRaw, EditorState, AtomicBlockUtils } from 'draft-js';
 // 이미지를 표시하기 위해 이미지를 로드하는 데 사용되는 Entity 타입인 ‘atomic’을 지원해야 합니다.
 // https://colinch4.github.io/2023-11-24/11-09-13-449385-draftjs%EC%97%90%EC%84%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B6%94%EA%B0%80-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/
@@ -23,6 +6,12 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 import { Fragment } from 'react';
+
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// import { Editor, EditorState } from 'draft-js';
+// import 'draft-js/dist/Draft.css';
+
 export default function Index() {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const [text, setText] = useState();
@@ -38,6 +27,42 @@ export default function Index() {
         setText(text);
     };
 
+    //) MyPage.tsx
+
+    // const handlerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const formData = new FormData(); // 사진 담을 formData 객체 생성
+
+    //     if (e.target.files && e.target.files[0]) {
+    //         formData.append('image', e.target.files[0]);
+    //         sendImg(formData);
+    //     }
+    // };
+
+    // const sendImg = (formData: any): void => {
+    //     const cookie = new Cookies();
+    //     const uToken = cookie.get('isUser'); // 토큰 값
+
+    //     try {
+    //         axios
+    //             .patch(
+    //                 `${process.env.REACT_APP_DB_HOST}/user/mypage/userImg`,
+    //                 formData,
+    //                 {
+    //                     headers: {
+    //                         'Content-Type': 'multipart/form-data',
+    //                         Authorization: `Bearer ${uToken}`,
+    //                     },
+    //                 }
+    //             )
+    //             .then((res) => {
+    //                 console.log('post', res.data);
+    //                 getUserData(); // 이거 해야 바로 수정된 프로필 사진으로 동기화 : 하지만 저장되지 않은 다른 값들은 초기화 돼서 옴 ㅜ
+    //             });
+    //     } catch (err) {
+    //         console.log(err);
+    //     }
+    // };
+
     const uploadCallback = (file: any) => {
         console.log('이미지 업로드 !', file);
 
@@ -51,23 +76,35 @@ export default function Index() {
         // });
 
         return new Promise((resolve, reject) => {
-            if (file) {
-                let reader = new FileReader();
-                reader.onload = (e: any) => {
-                    resolve({ data: { link: e.target.result } });
-                };
-                reader.readAsDataURL(file);
-            }
+            // if (file) {
+            //     let reader = new FileReader();
+            //     reader.onload = (e: any) => {
+            //         resolve({ data: { link: e.target.result } });
+            //     };
+            //     reader.readAsDataURL(file);
+            // }
+
+            //-- if you want to use a file server to keep files then you might want to upload image on server and then simply put the link
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Replace 'your-upload-api-url' with your actual server API endpoint for image upload
+            fetch('your-upload-api-url', {
+                method: 'POST',
+                body: formData,
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    const { link } = data;
+                    console.log('Received image link from server:', link);
+                    resolve({ data: { link } });
+                })
+                .catch((error) => {
+                    console.error('Error uploading image:', error);
+                    reject(error);
+                });
         });
-
-        //-- if you want to use a file server to keep files then you might want to upload image on server and then simply put the link
-
-        //    const data = new formdata();
-        //    data.append("storyimage", file)
-        //    axios.post(upload file api call, data).then(responseimage => {
-        //         resolve({ data: { link: path to image on server } });
-        //    })
-        // }
     };
 
     const handleImageUpload = (e: any) => {
@@ -104,8 +141,8 @@ export default function Index() {
     return (
         <>
             {/*<div>{draftToHtml(convertToRaw(editorState.getCurrentContent()))}</div>*/}
-            {<div style={{ height: '40px', overflow: 'auto' }}>{text}</div>}
-            <input type="file" accept="image/*" onChange={handleImageUpload} />
+            {/* {<div style={{ height: '40px', overflow: 'auto' }}>{text}</div>} */}
+            {/* <input type="file" accept="image/*" onChange={handleImageUpload} /> */}
             <Editor
                 toolbarClassName="toolbarClassName"
                 wrapperClassName="wrapperClassName"
@@ -121,7 +158,6 @@ export default function Index() {
                 //===
                 toolbar={{
                     // options: ['image'],
-
                     image: {
                         uploadenabled: true,
                         uploadCallback: uploadCallback,
@@ -174,3 +210,15 @@ export default function Index() {
         </>
     );
 }
+
+// export default function EditorDraft() {
+//     const [editorState, setEditorState] = React.useState(() =>
+//         EditorState.createEmpty()
+//     );
+
+//     return (
+//         <div>
+//             <Editor editorState={editorState} onChange={setEditorState} />
+//         </div>
+//     );
+// }

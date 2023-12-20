@@ -192,6 +192,8 @@ export default function BoardPost() {
                 <div>
                     <EditorDraft />
 
+
+{/* === Quill Editor 삭제 예정 */}
                     {/* <Editor
                         value={board.gbContent}
                         onChange={handleEditorChange}
