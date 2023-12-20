@@ -84,6 +84,7 @@ exports.getKakao = async (req, res) => {
 
       res.cookie('token', jwtToken.token, {
         httpOnly: true,
+
         secure: true,
         sameSite: 'None',
       });
@@ -193,9 +194,10 @@ exports.getLoginNaverRedirect = async (req, res) => {
           userName: userName,
           userEmail: userEmail,
         });
-
+        console.log('jwtToken>>>>>>>>>>>>', jwtToken.token);
         res.cookie('token', jwtToken.token, {
           httpOnly: true,
+
           secure: true,
           sameSite: 'None',
         });
@@ -294,6 +296,7 @@ exports.getLoginGoogleRedirect = async (req, res) => {
         });
         res.cookie('token', jwtToken.token, {
           httpOnly: true,
+
           secure: true,
           sameSite: 'None',
         });
@@ -365,6 +368,7 @@ exports.getLoginTest = async (req, res) => {
 
       res.cookie('token', jwtToken.token, {
         httpOnly: true,
+
         secure: true,
         sameSite: 'None',
       });
@@ -443,6 +447,7 @@ exports.postRegister = async (req, res) => {
     });
     res.cookie('token', jwtToken.token, {
       httpOnly: true,
+
       secure: true,
       sameSite: 'None',
     });
@@ -665,9 +670,40 @@ exports.userCoverImg = async (req, res) => {
 // 로그아웃
 exports.logout = async (req, res) => {
   // 클라이언트에 저장된 쿠키 삭제
-  res.clearCookie('token');
 
+  let token = req.headers.authorization.split(' ')[1];
+
+  if (!token) {
+    res.send({
+      success: false,
+      msg: '토큰 X',
+    });
+  }
+
+  // console.log(res.clearCookie());
+  // res.cookie('token', jwtToken.token, {
+  //   httpOnly: true,
+  //
+  //   // secure: false,
+  //   // sameSite: 'None',
+  // });
+  res.cookie('token', token, {
+    maxAge: 0,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+  });
+  // res.clearCookie('token', token, {
+  //   httpOnly: true,
+  //   secure: true,
+  //   sameSite: 'None',
+  // });
+  console.log('>>>>>>>>>>>>>>>>>>>', token);
   res.send({ success: true, message: 'Logged out successfully' });
+
+  //   .send({ success: true, message: 'Logged out successfully' });
+
+  // res.cookie('token', 'tobi', {});
 };
 
 // 회원탈퇴

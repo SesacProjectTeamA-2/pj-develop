@@ -140,7 +140,11 @@ export default function Header(props: any) {
 
     const postLogOut = async () => {
         await axios
-            .post(`${process.env.REACT_APP_DB_HOST}/user/logout`)
+            .get(`${process.env.REACT_APP_DB_HOST}/user/logout`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
             .then((res) => {
                 console.log(res.data);
 
