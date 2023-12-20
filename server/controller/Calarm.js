@@ -29,23 +29,23 @@ exports.alarm = async (req, res) => {
       console.log('SSE 연결 완료!');
 
       const alarmCount = await redisCli.lLen(`user${uSeq}`);
-
-      res.write({ alarmCount });
-    });
-
-    // 서버로부터 데이터가 오면(messaging)
-    sse.on('messaging', async (req, res) => {
-      // 1. redis
       const data = await redisCli.lRange(`user${uSeq}`, 0, -1);
       const allAlarm = data.map((alarm) => JSON.parse(alarm));
+
+      res.write({ alarmCount, allAlarm });
+    });
+
+    // 서버로부터 데이터가 오면(messaging) - 10초마다 데이터를 체크하되, 이벤트가 발생할때만 응답전송
+    sse.on('messaging', async (req, res) => {
+      // 1. redis
+
+      // const
 
       // SSE 데이터 전송
       setInterval(() => {
         const data = `data: ${new Date()}\n\n`;
-        res.write(
-          'event: alarm\n' + 'data: {"message" : "hello ' + value + '"}\n\n'
-        );
-      }, 3000);
+        res.write('event: alarm\n' + 'data: allAlarm\n\n');
+      }, 10000);
 
       sse.on('disconnect', () => {
         console.log('SSE 연결 해제!');
