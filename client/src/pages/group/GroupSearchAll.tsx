@@ -16,6 +16,7 @@ export default function GroupSearchAll({
 
     const [allGroupList, setAllGroupList] = useState<any>([]);
 
+    //-- 움직이는 효과
     useEffect(() => {
         const cards = document.querySelectorAll('.glow-card-container');
 
@@ -30,6 +31,10 @@ export default function GroupSearchAll({
 
             card.addEventListener('mouseout', function () {
                 overlay.style.filter = 'opacity(0)';
+
+                (
+                    card as HTMLElement
+                ).style.transform = `perspective(350px) rotateX(0deg) rotateY(0deg)`;
             });
 
             card.addEventListener('mousemove', function (e: any) {
@@ -48,6 +53,7 @@ export default function GroupSearchAll({
         });
     }, []);
 
+    //-- 전체 검색
     useEffect(() => {
         const getSearchGroupList = async () => {
             const res = await axios.get(
@@ -63,6 +69,37 @@ export default function GroupSearchAll({
         getSearchGroupList();
     }, [searchInput, selectedArr]);
 
+    let categories: any = [];
+
+    for (let i = 0; i < allGroupList.length; i++) {
+        switch (allGroupList[i].gCategory) {
+            case 'ex':
+                categories.push('🏃🏻‍♂️');
+                break;
+            case 're':
+                categories.push('📚');
+                break;
+            case 'lan':
+                categories.push('🔠');
+                break;
+            case 'cert':
+                categories.push('🪪');
+                break;
+            case 'st':
+                categories.push('✍🏻');
+                break;
+            case 'eco':
+                categories.push('💵');
+                break;
+            case 'it':
+                categories.push('🌐');
+                break;
+            case 'etc':
+                categories.push('👥');
+                break;
+        }
+    }
+
     return (
         <div>
             <div className="title3" style={{ marginBottom: '2rem' }}>
@@ -72,26 +109,31 @@ export default function GroupSearchAll({
             <div className="search-group-grid">
                 {!allGroupList || allGroupList?.length === 0
                     ? '생성된 모임이 없습니다.'
-                    : allGroupList?.map((searchGroup: GroupStateType) => (
-                          <div
-                              key={searchGroup.gSeq}
-                              className="glow-card-container"
-                          >
-                              {/* === 새로 추가한 코드 === */}
-                              <Link to={`/group/home/${searchGroup.gSeq}`}>
-                                  <div className="glow-card-overlay"></div>
-                                  <div className="glow-card">
-                                      <div className="title-card">
-                                          {searchGroup.gName}
-                                      </div>
-                                      <div className="title6">
-                                          {searchGroup.gDday}
-                                      </div>
-                                  </div>
-                              </Link>
+                    : allGroupList?.map(
+                          (searchGroup: GroupStateType, idx: number) => (
+                              <div
+                                  key={searchGroup.gSeq}
+                                  className="glow-card-container"
+                              >
+                                  {/* === 새로 추가한 코드 === */}
+                                  <Link to={`/group/home/${searchGroup.gSeq}`}>
+                                      <div className="glow-card-overlay"></div>
+                                      <ul className="glow-card">
+                                          <li>
+                                              <h1> {categories[idx]}</h1>
+                                          </li>
 
-                              {/* === 기존 코드 === */}
-                              {/* <div className="title-card">
+                                          <li className="title-card">
+                                              {searchGroup.gName}
+                                          </li>
+                                          <li className="title6">
+                                              {searchGroup.gDday}
+                                          </li>
+                                      </ul>
+                                  </Link>
+
+                                  {/* === 기존 코드 === */}
+                                  {/* <div className="title-card">
                             {searchGroup.gName}
                         </div>
                         <br />
@@ -108,8 +150,9 @@ export default function GroupSearchAll({
                         <div className="title6">
                             {searchGroup.gDday}
                         </div> */}
-                          </div>
-                      ))}
+                              </div>
+                          )
+                      )}
             </div>
         </div>
     );
