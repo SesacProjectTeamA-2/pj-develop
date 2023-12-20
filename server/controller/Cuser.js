@@ -662,6 +662,18 @@ exports.userCoverImg = async (req, res) => {
   }
 };
 
+// 로그아웃
+exports.logout = async (req, res) => {
+  // 클라이언트에 저장된 쿠키 삭제
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+  });
+
+  res.send({ success: true, message: 'Logged out successfully' });
+};
+
 // 회원탈퇴
 exports.delUser = async (req, res) => {
   try {
