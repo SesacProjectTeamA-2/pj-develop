@@ -210,3 +210,9 @@ img {
 // hover 시, 글자간격 커지는 효과 없애고 싶으면
 // className="link-none"
 // 추가할 것 !
+
+.too-many-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

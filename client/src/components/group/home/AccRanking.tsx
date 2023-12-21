@@ -20,7 +20,7 @@ export default function AccRanking({
                         return (
                             <li>
                                 <div className="ranking-list-acc">
-                                    <div className="ranking">{idx + 1}</div>
+                                    <div className="title4">{idx + 1}</div>
                                     <img
                                         src={
                                             total.uImg ||

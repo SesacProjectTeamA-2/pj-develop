@@ -129,7 +129,7 @@
     border-radius: 10px;
     width: 100%;
     margin-top: 20px;
-    padding: 20px 40px;
+    padding: 20px 25px;
     box-sizing: border-box;
     white-space: pre-line; // textarea 에서 작성한 그대로 저장
     overflow-wrap: break-word; // 글씨 화면 넘김 방지
@@ -289,6 +289,7 @@
 .ranking-list-acc {
     display: flex;
     padding: 0.2rem 0;
+    justify-content: space-between;
 }
 
 .name {
@@ -300,8 +301,8 @@
 }
 
 .acc-name {
-    width: 80%;
-    margin-left: 1rem;
+    // width: 80%;
+    // margin-left: 0.5rem;
 }
 
 .ranking-list-acc img {

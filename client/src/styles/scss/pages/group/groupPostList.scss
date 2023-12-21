@@ -76,3 +76,58 @@
 .cursor {
     cursor: pointer;
 }
+
+.moon-icon {
+    position: absolute;
+    border: 0;
+    background-color: #f9ca24;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    opacity: 1;
+    outline: 0;
+    transition: 0.4s;
+
+    right: -2%;
+    bottom: -50%;
+    // z-index: 10;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.moon-icon.md {
+    opacity: 1;
+    transform: translateY(0); /* 스크롤 시 위로 이동하는 효과 */
+
+    right: -5%;
+    top: -20%;
+    // bottom: -50%;
+}
+
+.moon-icon.show {
+    opacity: 1; /* 스크롤 시 나타나도록 설정 */
+    transform: translateY(0); /* 스크롤 시 위로 이동하는 효과 */
+
+    right: -10%;
+    top: -30%;
+    // bottom: -50%;
+}
+
+// .plus-fixed {
+//     bottom: 20%;
+//     right: 13%;
+//     bottom: 15%;
+//     z-index: 10;
+//     width: 100px;
+//     height: 100px;
+//     cursor: pointer;
+//     border-radius: 50%;
+
+//     @include media('<800px') {
+//         right: 10%;
+//         bottom: 20%;
+//         @include box(70px);
+//     }
+// }
