@@ -32,6 +32,7 @@ export default function GroupCreate(socket: any) {
         gMaxMem: 1,
         missionArray: [],
     });
+
     console.log('missionList CREATE', missionList);
 
     const { gName, gDesc, gDday, gCategory, gCoverImg, gMaxMem, missionArray } =
@@ -111,7 +112,6 @@ export default function GroupCreate(socket: any) {
     //] 그룹 생성 성공 시, 채팅방 입장
     useEffect(() => {
         if (successModalSwitch) {
-            console.log('%%%%%', socket.socket);
             console.log('joinRoom gSeq :::::', gSeq);
             console.log('joinRoom에 전송할 데이터 >>>', {
                 gSeq: gSeq,

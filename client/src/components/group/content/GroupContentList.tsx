@@ -154,9 +154,12 @@ export default function GroupContent({ action }: any) {
                                                           }}
                                                       >
                                                           <div
-                                                              className="title4 cursor"
+                                                              className="title4 cursor too-many-text"
                                                               dangerouslySetInnerHTML={{
                                                                   __html: free.gbTitle,
+                                                              }}
+                                                              style={{
+                                                                  width: '30vw',
                                                               }}
                                                           />
 
@@ -187,9 +190,12 @@ export default function GroupContent({ action }: any) {
                                                   </div>
                                               </div>
                                               <div
-                                                  className="post-list-main cursor"
+                                                  className="post-list-main cursor too-many-text"
                                                   dangerouslySetInnerHTML={{
                                                       __html: free.gbContent,
+                                                  }}
+                                                  style={{
+                                                      width: '45vw',
                                                   }}
                                               />
 

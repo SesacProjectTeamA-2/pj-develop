@@ -123,6 +123,10 @@ export default function MissionAddModal({
                 mission.mStar = '⭐️⭐️';
                 break;
             }
+            case '1': {
+                mission.mStar = '⭐️';
+                break;
+            }
             case 1: {
                 mission.mStar = '⭐️';
                 break;
@@ -232,17 +236,17 @@ export default function MissionAddModal({
                 gDday: targetDate,
             });
 
-            setData({
-                missionArray: [...missionList],
-                deleteList: [...deleteList],
-            });
-
             data = {
                 missionArray: missionList,
                 deleteList: deleteList,
             };
 
-            // console.log('버튼 눌렀을 경우의 data ===== ', data);
+            setData({
+                missionArray: [...missionList],
+                deleteList: [...deleteList],
+            });
+
+            console.log('버튼 눌렀을 경우의 data ===== ', data);
 
             const patchDdayHandler = async () => {
                 try {
@@ -361,9 +365,9 @@ export default function MissionAddModal({
         setMissionInputs(updatedMissionInputs);
     }, [dday]);
 
-    //  수정 시 onChange Event
+    //]  수정 시 onChange Event
+    //-- 1. missionId에 해당하는 미션 제목 new Title로 변경
     const handleMissionTitleChange = (missionId: any, newContent: any) => {
-        // missionId에 해당하는 미션 제목 new Title로 변경
         const updatedMissionList = missionList.map((mission: any) => {
             if (mission.id === missionId) {
                 return { ...mission, mTitle: newContent };
@@ -374,8 +378,20 @@ export default function MissionAddModal({
         setMissionList(updatedMissionList);
     };
 
+    //-- 2. missionId에 해당하는 난이도 변경
+    const handleMissionLevelChange = (missionId: any, newContent: any) => {
+        const updatedMissionList = missionList.map((mission: any) => {
+            if (mission.id === missionId) {
+                return { ...mission, mLevel: newContent };
+            } else {
+                return mission;
+            }
+        });
+        setMissionList(updatedMissionList);
+    };
+
+    //-- 3. missionId에 해당하는 미션 내용 newContent로 변경
     const handleMissionContentChange = (missionId: any, newContent: any) => {
-        // missionId에 해당하는 미션 내용 newContent로 변경
         const updatedMissionList = missionList.map((mission: any) => {
             if (mission.id === missionId) {
                 return { ...mission, mContent: newContent };
@@ -424,8 +440,8 @@ export default function MissionAddModal({
     return (
         <div className="modal-mission-add-container">
             <Modal
-                className="modal-style"
-                overlayClassName="overlay"
+                className="modal-style-mission-add"
+                overlayClassName="overlay-mission-add"
                 isOpen={addModalSwitch}
                 onRequestClose={() => setAddModalSwitch(false)}
                 ariaHideApp={false}
@@ -634,30 +650,91 @@ export default function MissionAddModal({
                                                                         mission.mLevel
                                                                     }
                                                                 </h3>
-                                                                {/* 제목 */}
-                                                                <TextField
-                                                                    label={`미션 ${mission.id} 제목`}
-                                                                    variant="standard"
-                                                                    name={`mTitle-${mission.id}`}
-                                                                    fullWidth
-                                                                    value={
-                                                                        mission.mTitle
-                                                                    }
-                                                                    onChange={(
-                                                                        e
-                                                                    ) =>
-                                                                        handleMissionTitleChange(
-                                                                            mission.id,
-                                                                            e
-                                                                                .target
-                                                                                .value
-                                                                        )
-                                                                    }
+
+                                                                {/* 제목 + 난이도 */}
+                                                                <div
                                                                     style={{
-                                                                        marginBottom:
-                                                                            '0.4rem',
+                                                                        display:
+                                                                            'flex',
+                                                                        gap: '1rem',
                                                                     }}
-                                                                />
+                                                                >
+                                                                    {/* 제목 */}
+                                                                    <TextField
+                                                                        label={`미션 ${mission.id} 제목`}
+                                                                        variant="standard"
+                                                                        name={`mTitle-${mission.id}`}
+                                                                        fullWidth
+                                                                        value={
+                                                                            mission.mTitle
+                                                                        }
+                                                                        onChange={(
+                                                                            e
+                                                                        ) =>
+                                                                            handleMissionTitleChange(
+                                                                                mission.id,
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            )
+                                                                        }
+                                                                        style={{
+                                                                            marginBottom:
+                                                                                '0.4rem',
+                                                                        }}
+                                                                    />
+
+                                                                    {/* 난이도 */}
+                                                                    <FormControl>
+                                                                        <InputLabel
+                                                                            variant="standard"
+                                                                            htmlFor="uncontrolled-native"
+                                                                        >
+                                                                            난이도
+                                                                        </InputLabel>
+                                                                        <NativeSelect
+                                                                            inputProps={{
+                                                                                name: 'mLevel',
+                                                                                id: 'uncontrolled-native',
+                                                                            }}
+                                                                            onChange={(
+                                                                                e
+                                                                            ) =>
+                                                                                handleMissionLevelChange(
+                                                                                    mission.id,
+                                                                                    e
+                                                                                        .target
+                                                                                        .value
+                                                                                )
+                                                                            }
+                                                                            value={
+                                                                                mission.mLevel
+                                                                            }
+                                                                        >
+                                                                            <option
+                                                                                value={
+                                                                                    1
+                                                                                }
+                                                                            >
+                                                                                ⭐️
+                                                                            </option>
+                                                                            <option
+                                                                                value={
+                                                                                    3
+                                                                                }
+                                                                            >
+                                                                                ⭐️⭐️
+                                                                            </option>
+                                                                            <option
+                                                                                value={
+                                                                                    5
+                                                                                }
+                                                                            >
+                                                                                ⭐️⭐️⭐️
+                                                                            </option>
+                                                                        </NativeSelect>
+                                                                    </FormControl>
+                                                                </div>
 
                                                                 {/* 내용 */}
                                                                 <TextField
@@ -759,27 +836,91 @@ export default function MissionAddModal({
                                                                 난이도{' '}
                                                                 {mission.mLevel}
                                                             </h3>
-                                                            {/* 제목 */}
-                                                            <TextField
-                                                                label={`미션 ${mission.id} 제목`}
-                                                                variant="standard"
-                                                                name={`mTitle-${mission.id}`}
-                                                                fullWidth
-                                                                value={
-                                                                    mission.mTitle
-                                                                }
-                                                                onChange={(e) =>
-                                                                    handleMissionTitleChange(
-                                                                        mission.id,
-                                                                        e.target
-                                                                            .value
-                                                                    )
-                                                                }
+
+                                                            {/* 제목 + 난이도 */}
+                                                            <div
                                                                 style={{
-                                                                    marginBottom:
-                                                                        '0.4rem',
+                                                                    display:
+                                                                        'flex',
+                                                                    gap: '1rem',
                                                                 }}
-                                                            />
+                                                            >
+                                                                {/* 제목 */}
+                                                                <TextField
+                                                                    label={`미션 ${mission.id} 제목`}
+                                                                    variant="standard"
+                                                                    name={`mTitle-${mission.id}`}
+                                                                    fullWidth
+                                                                    value={
+                                                                        mission.mTitle
+                                                                    }
+                                                                    onChange={(
+                                                                        e
+                                                                    ) =>
+                                                                        handleMissionTitleChange(
+                                                                            mission.id,
+                                                                            e
+                                                                                .target
+                                                                                .value
+                                                                        )
+                                                                    }
+                                                                    style={{
+                                                                        marginBottom:
+                                                                            '0.4rem',
+                                                                    }}
+                                                                />
+
+                                                                {/* 난이도 */}
+                                                                <FormControl>
+                                                                    <InputLabel
+                                                                        variant="standard"
+                                                                        htmlFor="uncontrolled-native"
+                                                                    >
+                                                                        난이도
+                                                                    </InputLabel>
+                                                                    <NativeSelect
+                                                                        inputProps={{
+                                                                            name: 'mLevel',
+                                                                            id: 'uncontrolled-native',
+                                                                        }}
+                                                                        onChange={(
+                                                                            e
+                                                                        ) =>
+                                                                            handleMissionLevelChange(
+                                                                                mission.id,
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            )
+                                                                        }
+                                                                        value={
+                                                                            mission.mLevel
+                                                                        }
+                                                                    >
+                                                                        <option
+                                                                            value={
+                                                                                1
+                                                                            }
+                                                                        >
+                                                                            ⭐️
+                                                                        </option>
+                                                                        <option
+                                                                            value={
+                                                                                3
+                                                                            }
+                                                                        >
+                                                                            ⭐️⭐️
+                                                                        </option>
+                                                                        <option
+                                                                            value={
+                                                                                5
+                                                                            }
+                                                                        >
+                                                                            ⭐️⭐️⭐️
+                                                                        </option>
+                                                                    </NativeSelect>
+                                                                </FormControl>
+                                                            </div>
 
                                                             {/* 내용 */}
                                                             <TextField
