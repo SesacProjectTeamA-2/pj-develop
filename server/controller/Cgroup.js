@@ -1094,7 +1094,7 @@ exports.blackUser = async (req, res) => {
       const user = await jwt.verify(token);
       const uSeq = user.uSeq;
 
-      const guSeq = req.params;
+      const guSeq = req.params.guSeq;
       const { guBanReason, gSeq } = req.body;
       // 모임장 여부
       const result = await GroupUser.findOne({
@@ -1120,7 +1120,7 @@ exports.blackUser = async (req, res) => {
           JSON.stringify({
             type: 'groupAlarm',
             gSeq,
-            uName,
+            guBanReason,
             blackTime,
           })
         );
