@@ -84,9 +84,9 @@ exports.getKakao = async (req, res) => {
 
       res.cookie('token', jwtToken.token, {
         httpOnly: true,
-
-        secure: true,
-        sameSite: 'None',
+        path: '/',
+        // secure: true,
+        // sameSite: 'None',
       });
 
       // ****************** 토큰을 들고 메인 페이지로 렌더링해야함
@@ -197,9 +197,9 @@ exports.getLoginNaverRedirect = async (req, res) => {
         console.log('jwtToken>>>>>>>>>>>>', jwtToken.token);
         res.cookie('token', jwtToken.token, {
           httpOnly: true,
-
-          secure: true,
-          sameSite: 'None',
+          path: '/',
+          // secure: true,
+          // sameSite: 'None',
         });
 
         // ****************** 토큰을 들고 메인 페이지로 렌더링해야함
@@ -296,9 +296,9 @@ exports.getLoginGoogleRedirect = async (req, res) => {
         });
         res.cookie('token', jwtToken.token, {
           httpOnly: true,
-
-          secure: true,
-          sameSite: 'None',
+          path: '/',
+          // secure: true,
+          // sameSite: 'None',
         });
 
         let redirectUrl = `${serverUrl}:${frontPort}/main`;
@@ -368,9 +368,9 @@ exports.getLoginTest = async (req, res) => {
 
       res.cookie('token', jwtToken.token, {
         httpOnly: true,
-
-        secure: true,
-        sameSite: 'None',
+        path: '/',
+        // secure: true,
+        // sameSite: 'None',
       });
 
       // ****************** 토큰을 들고 메인 페이지로 렌더링해야함
@@ -447,9 +447,9 @@ exports.postRegister = async (req, res) => {
     });
     res.cookie('token', jwtToken.token, {
       httpOnly: true,
-
-      secure: true,
-      sameSite: 'None',
+      path: '/',
+      // secure: true,
+      // sameSite: 'None',
     });
 
     res.status(200).send({
@@ -687,18 +687,22 @@ exports.logout = async (req, res) => {
   //   // secure: false,
   //   // sameSite: 'None',
   // });
-  res.cookie('token', token, {
+  res.cookie('token', '', {
     maxAge: 0,
     httpOnly: true,
-    secure: true,
-    sameSite: 'None',
+    path: '/',
+    // secure: true,
+    // sameSite: 'None',
   });
-  // res.clearCookie('token', token, {
+  // res.clearCookie('token', {
   //   httpOnly: true,
-  //   secure: true,
-  //   sameSite: 'None',
+  //   path: '/',
+  //   // secure: true,
+  //   // sameSite: 'None',
   // });
+  res.setHeader('Set-Cookie', 'token=1; Max-Age=0');
   console.log('>>>>>>>>>>>>>>>>>>>', token);
+  // res.lend(alarm.gSeg)
   res.send({ success: true, message: 'Logged out successfully' });
 
   //   .send({ success: true, message: 'Logged out successfully' });

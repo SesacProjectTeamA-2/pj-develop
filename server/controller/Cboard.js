@@ -534,6 +534,39 @@ exports.createBoard = async (req, res) => {
   }
 };
 
+exports.boardImg = async (req, res) => {
+  try {
+    // 로그인된 상태
+    if (req.headers.authorization) {
+      let token = req.headers.authorization.split(' ')[1];
+      const user = await jwt.verify(token);
+      if (req.file.location) {
+        const imageUrl = req.file.location; // 업로드된 이미지의 S3 URL
+        console.log(imageUrl);
+        // await GroupBoard.update(
+        //   {
+        //     gbImg: imageUrl,
+        //   },
+        //   {
+        //     // where: { uSeq: user.uSeq },
+        //   }
+        // );
+        res.send({ result: true, message: '이미지 업로드 성공' });
+      } else {
+        res.send({ result: false, message: '이미지가 첨부되지 않았습니다' });
+      }
+    } else {
+      res.send({ result: false, message: '로그인 해주세요!' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.send({
+      msg: err.message,
+      OK: false,
+    });
+  }
+};
+
 // 게시글 수정 시 변경 여부 확인용
 const hasChanged = (beforeEdit, afterEdit) =>
   beforeEdit.gbTitle !== afterEdit.gbTitle ||

@@ -34,7 +34,7 @@ exports.alarm = async (req, res) => {
       const data = await redisCli.lRange(`user${uSeq}`, 0, -1);
       const allAlarm = data.map((alarm) => JSON.parse(alarm));
 
-      res.write({ alarmCount, allAlarm });
+      res.write(JSON.stringify({ alarmCount, allAlarm }));
     });
 
     // 서버로부터 데이터가 오면(messaging) - 10초마다 데이터를 체크하되, 이벤트가 발생할때만 응답전송
@@ -48,10 +48,12 @@ exports.alarm = async (req, res) => {
         const data = `data: ${new Date()}\n\n`;
         res.write('event: alarm\n' + 'data: ' + newAlarm + '\n\n');
       }, 10000);
-
-      sse.on('disconnect', () => {
-        console.log('SSE 연결 해제!');
-      });
     });
-  } catch (err) {}
+
+    sse.on('disconnect', () => {
+      console.log('SSE 연결 해제!');
+    });
+  } catch (err) {
+    console.error('SSE server error!!', err);
+  }
 };
