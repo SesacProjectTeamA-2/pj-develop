@@ -70,7 +70,7 @@ exports.delAlarm = async (req, res) => {
       });
       return;
     }
-    const value = req.commentInfo;
+    const value = req.body.commentInfo;
     console.log('댓글 정보', value);
     const result = await redisCli.lRem(`user${uSeq}`, 0, JSON.stringify(value));
     console.log('redis 데이터 삭제 완료', result);
