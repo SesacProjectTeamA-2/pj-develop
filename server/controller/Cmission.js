@@ -316,7 +316,7 @@ exports.editMission = async (req, res) => {
 
               // mSeq 완료한 guSeq 추출하여, 2점 증가
               for (seq of seqs) {
-                score.currentScore(seq.guSeq, missionInfo.mSeq, editPlus);
+                score.currentScore(seq.guSeq, missionInfo.mSeq, 'editPlus');
               }
 
               console.log('모임원 현재 점수 증가');
@@ -328,7 +328,7 @@ exports.editMission = async (req, res) => {
 
               // mSeq 완료한 guSeq 추출하여, 2점 감소
               for (seq of seqs) {
-                score.currentScore(seq.guSeq, missionInfo.mSeq, editMinus);
+                score.currentScore(seq.guSeq, missionInfo.mSeq, 'editMinus');
               }
               console.log('모임원 현재 점수 감소');
             }
@@ -374,7 +374,7 @@ exports.editMission = async (req, res) => {
               console.log('모임 점수 수정 완료');
 
               for (seq of seqs) {
-                score.currentScore(seq.guSeq, missionInfo.mSeq, editMinus);
+                score.currentScore(seq.guSeq, list.mSeq, 'editMinus');
               }
               console.log('모임원 현재 점수 수정 완료');
             }
