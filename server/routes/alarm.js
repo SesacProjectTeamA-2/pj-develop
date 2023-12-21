@@ -5,4 +5,6 @@ const authUtil = require('../middlewares/auth').checkToken;
 
 router.get('/alarm', authUtil, controller.alarm);
 
+router.delete('/alarm', authUtil, controller.delAlarm);
+
 module.exports = router;
