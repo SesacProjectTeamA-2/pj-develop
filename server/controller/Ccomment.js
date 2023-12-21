@@ -12,7 +12,7 @@ const {
 const jwt = require('../modules/jwt');
 const authUtil = require('../middlewares/auth');
 const { token } = require('morgan');
-const redisCli = require(`../models/redis`);
+const redisCli = require(`../models/redis`).redis_Cli;
 
 // 댓글 생성 처리
 // /comment/create/:gbSeq
@@ -105,6 +105,16 @@ exports.createComment = async (req, res) => {
         commentTime,
       })
     );
+
+    // 만료시간 조회
+    const expirationTime = await redisCli.ttl(`user${receiver}`);
+    // 유효시간 7일
+    if (expirationTime > 0) {
+      console.log('이미 만료시간 설정되어 있음!');
+    } else {
+      await redisCli.expire(`user${receiver}`, 604800);
+    }
+
     // redis pub 처리
     await redisCli.publish(
       'comment-alarm',

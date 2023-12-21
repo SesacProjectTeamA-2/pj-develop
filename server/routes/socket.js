@@ -53,7 +53,6 @@ exports.chatSocket = async (io, socket) => {
         );
         userSocketMap[uSeq] = socketId;
 
-
         // 접속된 유저의 정보꺼내기
         // connectedUser 배열에서 userInfo의 uSeq와 동일한 키값을 가진 객체 찾기
         const loginUser = connectedUser.find(
@@ -205,41 +204,45 @@ exports.chatSocket = async (io, socket) => {
             // 자료구조 : lists (데이터를 순서대로 저장)
             // 추가 / 삭제 / 조회하는 것은 O(1)의 속도
             // 닉네임(socketId)/시간/룸/targetSeq 가 0 일경우에는 전체
-            const { uSeq, timeStamp, msg, gSeq, socketId, targetSeq } = data;
+            const { uSeq, timeStamp, msg, gSeq, targetSeq } = data;
             const roomChat = groupChat.to(`room${gSeq}`);
             const result = JSON.stringify({ msg, timeStamp, uSeq });
 
             // 메세지 정보 redis에 저장
             await redisCli.lPush(
               `room${gSeq}`,
-              JSON.stringify({ msg, timeStamp, uSeq })
+              JSON.stringify({ msg, timeStamp, uSeq, gSeq })
             );
+
+            // 만료시간 조회
+            const expirationTime = await redisCli.ttl(`user${receiver}`);
             // 메세지 유효시간 : 12시간
-            await redisCli.expire(`room${gSeq}`, 43200);
-            roomChat.emit('msg', { uName, socketId, timeStamp, msg });
+            if (expirationTime > 0) {
+              console.log('이미 만료시간 설정되어 있음!');
+            } else {
+              await redisCli.expire(`room${gSeq}`, 43200);
+            }
 
+            roomChat.emit('msg', { uName, uSeq, timeStamp, msg });
 
-  // 귓속말인 경우(자료구조: 리스트로 저장)
-    if (targetSeq !== 0) {
-      const targetId = userSocketMap[targetSeq]
+            // 귓속말인 경우(자료구조: 리스트로 저장)
+            // if (targetSeq !== 0) {
+            //   const targetId = userSocketMap[targetSeq]
 
-        io.to(targetId).emit('whisper', {
-          uName,
-          uSeq,
-          timeStamp,
-          msg,
-        });
-        console.log('Whisper sent successfully to', targetSeq);
+            //     io.to(targetId).emit('whisper', {
+            //       uName,
+            //       uSeq,
+            //       timeStamp,
+            //       msg,
+            //     });
+            //     console.log('Whisper sent successfully to', targetSeq);
 
-        await redisCli.hSet(``)
+            //     await redisCli.hSet(``)
 
-      } else {
-        console.log('Target user is not online or does not exist');
-      }
-    }
-
-
-
+            //   } else {
+            //     console.log('Target user is not online or does not exist');
+            //   }
+            // }
 
             console.log('msg 전송 성공 !!!! ', result);
           } catch (err) {
