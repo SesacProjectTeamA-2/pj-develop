@@ -38,11 +38,20 @@ exports.alarm = async (req, res) => {
       res.write('event: connect\n' + JSON.stringify({ alarmCount, allAlarm }));
 
       // redis에 댓글추가시 메세지 전송됨.
-      const newAlarm = await sub.subscribe('comment_alarm');
+      const newAlarm = await sub.subscribe('comment-alarm');
       console.log('newAlarm', newAlarm);
 
+      // 모임 추방시 메세지 전송.
+      const blackAlarm = await sub.subscribe('group-alarm');
+
       // SSE 데이터 전송
-      res.write('event: alarm\n' + `data:${newAlarm}\n\n`);
+      if (newAlarm) {
+        res.write('event: alarm\n' + `data:${newAlarm}\n\n`);
+      }
+
+      if (blackAlarm) {
+        res.write('event: alarm\n' + `data:${blackAlarm}\n\n`);
+      }
     });
   } catch (err) {
     console.error('SSE server error!!', err);
@@ -70,12 +79,20 @@ exports.delAlarm = async (req, res) => {
       });
       return;
     }
-    const value = req.commentInfo;
+    const value = req.body.commentInfo;
     console.log('댓글 정보', value);
     const result = await redisCli.lRem(`user${uSeq}`, 0, JSON.stringify(value));
     console.log('redis 데이터 삭제 완료', result);
 
-    res.send({ isSuccess: true, gbSeq: value.gbSeq });
+    // 해당 페이지 이동위한 gbSeq
+    if (value.gbSeq) {
+      res.send({ isSuccess: true, gbSeq: value.gbSeq });
+    } else {
+      res.send({
+        isSuccess: true,
+      });
+    }
+
     // 2. 모두 읽음기능?
   } catch (err) {
     console.error('알람삭제 서버 error', err);

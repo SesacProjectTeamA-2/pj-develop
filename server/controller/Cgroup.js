@@ -15,6 +15,7 @@ const sequelize = require('sequelize');
 const jwt = require('../modules/jwt');
 const ranking = require('../modules/rankSystem');
 const { v4: uuidv4 } = require('uuid'); // 모임 링크 생성
+const redisCli = require('../models/redis').redis_Cli;
 
 // 디데이 계산함수.
 function calculateDDay(targetDate) {
@@ -1083,5 +1084,73 @@ exports.patchLeader = async (req, res) => {
       success: false,
       msg: '서버 에러',
     });
+  }
+};
+
+exports.blackUser = async (req, res) => {
+  try {
+    if (req.headers.authorization) {
+      const token = req.headers.authorization.split(' ')[1];
+      const user = await jwt.verify(token);
+      const uSeq = user.uSeq;
+
+      const guSeq = req.params;
+      const { guBanReason, gSeq } = req.body;
+      // 모임장 여부
+      const result = await GroupUser.findOne({
+        where: { uSeq, gSeq },
+        attributes: ['guIsLeader'],
+      });
+      if (result.guIsLeader === 'y') {
+        // DB update
+        await GroupUser.update(
+          {
+            guBanReason,
+            guIsLeader: 'y',
+          },
+          { where: { guSeq } }
+        );
+
+        // redis 연동
+        const blackUser = await GroupUser.findOne({ where: { guSeq } });
+        const blackTime = new Date();
+        const receiver = blackUser.uSeq;
+        await redisCli.lPush(
+          `user${receiver}`,
+          JSON.stringify({
+            type: 'groupAlarm',
+            gSeq,
+            uName,
+            blackTime,
+          })
+        );
+
+        // 만료시간 조회
+        const expirationTime = await redisCli.ttl(`user${receiver}`);
+        // 유효시간 7일
+        if (expirationTime > 0) {
+          console.log('이미 만료시간 설정되어 있음!');
+        } else {
+          await redisCli.expire(`user${receiver}`, 604800);
+        }
+
+        // redis pub 처리
+        await redisCli.publish(
+          'group-alarm',
+          JSON.stringify({
+            type: 'groupAlarm',
+            gSeq,
+            uName,
+            blackTime,
+          })
+        );
+      } else {
+        res.send({ result: false, message: '권한이 없어요!' });
+      }
+    } else {
+      res.send({ result: false, message: '로그인 해주세요!' });
+    }
+  } catch (err) {
+    console.error('유저 블랙 서버 error!!', err);
   }
 };
