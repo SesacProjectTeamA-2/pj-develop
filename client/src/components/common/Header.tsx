@@ -4,6 +4,7 @@ import { Cookies } from 'react-cookie';
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import { io } from 'socket.io-client';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 import { grey } from '@mui/material/colors';
 import { Button, ButtonGroup, Divider } from '@mui/material';
@@ -18,6 +19,22 @@ export default function Header(props: any) {
 
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
+
+    const [isActive, setIsActive] = useState('main');
+
+    const mainActiveHandler = () => {
+        setIsActive('main');
+    };
+
+    const groupActiveHandler = () => {
+        setIsActive('group');
+    };
+
+    const adminActiveHandler = () => {
+        setIsActive('admin');
+    };
+
+    console.log('adminUser', props.adminUser);
 
     //++ 연결 끊어졌을 경우, socket 연결 요청 (재연결)
     useEffect(() => {
@@ -37,13 +54,11 @@ export default function Header(props: any) {
         }
     }, []);
 
-    //-- 채팅
-    // const socket = useSocket();
     const nvg = useNavigate();
 
     const [uSeqData, setUSeqData] = useState({ uSeq: 0 });
 
-    //-- 프로필 사진 가져오기
+    //] 프로필 사진 가져오기
     const [userImgSrc, setUserImgSrc] = useState<any>('/asset/images/user.svg'); // 문자열 변수
 
     const getUserData = async () => {
@@ -192,6 +207,85 @@ export default function Header(props: any) {
             });
     };
 
+    //] 알람 SSE
+
+    const [isAlarm, setIsAlarm] = useState<boolean>(false);
+    const alarmHandler = () => {
+        setIsAlarm(!isAlarm);
+    };
+
+    const getNoti = () => {
+        const eventSource = new EventSourcePolyfill(
+            `${process.env.REACT_APP_DB_HOST}/alarm`,
+            {
+                headers: {
+                    Authorization: uToken,
+                },
+            }
+        );
+
+        // const eventSource = new EventSource(
+        //     `${process.env.REACT_APP_DB_HOST}/alarm`,
+        //     {
+        //         headers: {
+        //             Authorization: `Bearer ${uToken}`,
+        //         },
+        //     }
+        // );
+
+        //-- 연결 시 할 일
+        eventSource.onopen = async () => {
+            console.log('EventSource connection opened.');
+
+            // 기존 알람 데이터 받아오기
+            try {
+                const res = await fetch(
+                    `${process.env.REACT_APP_DB_HOST}/alarm`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            Authorization: `Bearer ${uToken}`,
+                        },
+                    }
+                );
+
+                const data = await res.json();
+                console.log('Initial alarm data:', data);
+                // 여기서 기존 알람 데이터를 처리하거나 상태 업데이트 등을 수행할 수 있습니다.
+            } catch (error) {
+                console.error('Error fetching initial alarm data:', error);
+            }
+        };
+
+        eventSource.onmessage = async (e) => {
+            const res = await e.data;
+            const parsedData = JSON.parse(res);
+
+            //-- 받아오는 data로 할 일
+
+            console.log(parsedData);
+        };
+
+        eventSource.onerror = (e: any) => {
+            //-- 종료 또는 에러 발생 시 할 일
+            eventSource.close();
+
+            if (e.error) {
+                //-- 에러 발생 시 할 일
+                console.error('EventSource error:', e.error);
+            }
+
+            if (e.target.readyState === EventSource.CLOSED) {
+                //-- 종료 시 할 일
+                console.log('EventSource connection closed.');
+            }
+        };
+    };
+
+    if (isAlarm) {
+        getNoti();
+    }
+
     //_ [ START ] 반응형 CSS
     const theme = createTheme({
         palette: {
@@ -231,27 +325,6 @@ export default function Header(props: any) {
     //     };
     // }, []); // 빈 배열을 전달하여 마운트 및 언마운트 시에만 실행되도록 함
     //_ [ END ]
-
-    const [isActive, setIsActive] = useState('main');
-
-    const mainActiveHandler = () => {
-        setIsActive('main');
-    };
-
-    const groupActiveHandler = () => {
-        setIsActive('group');
-    };
-
-    const adminActiveHandler = () => {
-        setIsActive('admin');
-    };
-
-    const [isAlarm, setIsAlarm] = useState<boolean>(false);
-    const alarmHandler = () => {
-        setIsAlarm(!isAlarm);
-    };
-
-    console.log('adminUser', props.adminUser);
 
     return (
         <>

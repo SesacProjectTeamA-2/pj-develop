@@ -80,6 +80,8 @@ export default function GroupContent({ action }: any) {
                 },
             })
             .then((res) => {
+                console.log('게시글 조회 ::::', res.data);
+
                 setFreeList(res.data.groupInfo);
             });
 
@@ -92,16 +94,6 @@ export default function GroupContent({ action }: any) {
 
     // console.log('---------', freeList);
     // console.log('>>>>>>>>>>', commentCount);
-
-    //     {
-    //   "gbSeq": 1,
-    //   "gbTitle": "게시글 제목입니다",
-    //   "gbContent": "게시글 내용입니다",
-    //   "gbIsDone": "y",
-    //   "gbCategory": "notice",
-    //   "createdAt": "2023-10-28",
-    //   "updatedAt": "2023-10-28"
-    // }
 
     // //] 2. 미션게시글
     const [missionList, setMissionList] = useState([]);
@@ -138,6 +130,7 @@ export default function GroupContent({ action }: any) {
                                       {/* [ START ] */}
                                       <Link
                                           to={`/board/${gSeq}/free/${free.gbSeq}`}
+                                          className="link-none"
                                       >
                                           <div className="post-list-content">
                                               <div className="post-list-header">
@@ -145,20 +138,51 @@ export default function GroupContent({ action }: any) {
                                                       <img
                                                           className="profile-img"
                                                           src={
-                                                              userImgSrc ||
+                                                              free.tb_groupUser
+                                                                  .tb_user
+                                                                  .uImg ||
                                                               '/asset/images/user.svg'
                                                           }
                                                           alt="profile"
                                                       />
 
                                                       <div
-                                                          className="title4 cursor"
-                                                          dangerouslySetInnerHTML={{
-                                                              __html: free.gbTitle,
+                                                          style={{
+                                                              display: 'flex',
+                                                              flexDirection:
+                                                                  'column',
                                                           }}
-                                                      />
+                                                      >
+                                                          <div
+                                                              className="title4 cursor"
+                                                              dangerouslySetInnerHTML={{
+                                                                  __html: free.gbTitle,
+                                                              }}
+                                                          />
+
+                                                          <div
+                                                              style={{
+                                                                  fontSize:
+                                                                      '0.8rem',
+                                                                  color: '#818181',
+                                                              }}
+                                                          >
+                                                              {
+                                                                  free
+                                                                      .tb_groupUser
+                                                                      .tb_user
+                                                                      .uName
+                                                              }
+                                                          </div>
+                                                      </div>
                                                   </div>
-                                                  <div className="post-list-date">
+                                                  <div
+                                                      className="post-list-date"
+                                                      style={{
+                                                          fontSize: '0.8rem',
+                                                          color: '#a1a1a1',
+                                                      }}
+                                                  >
                                                       {free.createdAt}
                                                   </div>
                                               </div>

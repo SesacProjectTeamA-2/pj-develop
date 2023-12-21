@@ -69,3 +69,13 @@
     width: 100%;
     margin-bottom: 5%;
 }
+
+.character-label {
+    position: relative;
+}
+
+.char-check-icon {
+    position: absolute;
+    bottom: 2rem;
+    left: 1rem;
+}

@@ -100,6 +100,7 @@ any) {
                           return (
                               <Link
                                   to={`/board/${gSeq}/mission/${mSeq}/${mission.gbSeq}`}
+                                  className="link-none"
                               >
                                   {/* [ START ] */}
                                   <li>

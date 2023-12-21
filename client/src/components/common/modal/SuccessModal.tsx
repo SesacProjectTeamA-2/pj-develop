@@ -22,15 +22,11 @@ export default function SuccessModal({
 }: // choiceModalSwitchHandler,
 any) {
     //=== 성공 모달창 ===
-    //] 1. 모임 생성
-
-    //] 2. 모임 수정 완료
-
-    //] 3. 마이페이지 수정 완료
-
-    //] 4. 게시글 작성 완료
-
-    //] 5. 모임장 위임 완료
+    // 1. 모임 생성
+    // 2. 모임 수정 완료
+    // 3. 마이페이지 수정 완료
+    // 4. 게시글 작성 완료
+    // 5. 모임장 위임 완료
 
     const nvg = useNavigate();
 

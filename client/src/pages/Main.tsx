@@ -284,11 +284,17 @@ export default function Main({
 
     // let charNum = selectedCharacter?.slice(-5, -4); // 2
     let charNum = selectedCharacter?.slice(-5); // 2.svg
+    // .jpeg
+
+    let originChar = selectedCharacter?.slice(1, 17); // asset/images/emo
+
+    console.log('originChar ::::::::', originChar);
 
     console.log('charNum', charNum);
 
     let totalRates = 0;
     let totalPercent = 0;
+    let newChar = '';
 
     for (let i = 0; i < doneRates?.length; i++) {
         totalRates += doneRates[i];
@@ -297,10 +303,12 @@ export default function Main({
 
     if (totalPercent > 70) {
         // charNum = '1';
-        charNum = '1.gif';
+        // charNum = '1.gif';
+        newChar = originChar + '1.gif';
     } else if (totalPercent < 30) {
         // charNum = '3';
-        charNum = '3.gif';
+        // charNum = '3.gif';
+        newChar = originChar + '3.gif';
     }
 
     // let newChar =
@@ -308,11 +316,10 @@ export default function Main({
     //     (charNum ?? '') +
     //     selectedCharacter?.slice(-4);
 
-    let newChar =
-        selectedCharacter?.slice(0, 17) +
-        (charNum ?? '') +
-        selectedCharacter?.slice(-4);
-    //++ edit
+    // let newChar =
+    //     selectedCharacter?.slice(0, 17) +
+    //     (charNum ?? '') +
+    //     selectedCharacter?.slice(-4);
 
     console.log('newChar ::: ', newChar);
     // console.log('totalRates', totalRates);
@@ -401,7 +408,7 @@ export default function Main({
                                 >
                                     <img
                                         src={selectedCharacter}
-                                        alt="동물 이미지"
+                                        alt="캐릭터"
                                         className="my-progress-img"
                                     />
                                 </div>

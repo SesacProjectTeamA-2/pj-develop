@@ -27,20 +27,20 @@ interface Column {
 }
 
 const columns: Column[] = [
-    { id: 'id', label: 'No.', minWidth: 50 },
-    { id: 'title', label: '제목', minWidth: 150, align: 'center' },
-    { id: 'content', label: '내용', minWidth: 200, align: 'center' },
+    { id: 'id', label: 'No.', minWidth: 10 },
+    { id: 'title', label: '제목', minWidth: 50, align: 'center' },
+    { id: 'content', label: '내용', minWidth: 100, align: 'center' },
     {
         id: 'writer',
         label: '작성자',
-        minWidth: 80,
+        minWidth: 30,
         align: 'center',
         format: (value: number) => value.toLocaleString('en-US'),
     },
     {
         id: 'date',
         label: '작성날짜',
-        minWidth: 80,
+        minWidth: 30,
         align: 'center',
         format: (value: number) => value.toLocaleString('en-US'),
     },

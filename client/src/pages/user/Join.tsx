@@ -129,6 +129,7 @@ export default function Join(props: any) {
                 >
                     캐릭터를 선택해주세요.
                 </h3>
+
                 <CharacterList
                     selectedCharacter={selectedCharacter}
                     setSelectedCharacter={setSelectedCharacter}

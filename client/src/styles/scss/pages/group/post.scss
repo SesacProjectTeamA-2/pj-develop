@@ -17,14 +17,19 @@
         align-items: flex-start;
         margin: 0;
     }
+
     .select-box {
         display: flex;
         gap: 1rem;
         align-items: center;
+
+        select {
+            padding: 0.4rem;
+        }
     }
 
     .post-title {
-        margin-left: 2rem;
+        margin-left: 1rem;
         gap: 1rem;
         display: flex;
         align-items: center;
@@ -37,7 +42,7 @@
         }
     }
 
-    input {
+    .input-board-post {
         width: 25vw;
         @include media('<800px') {
             width: 50vw;
@@ -46,7 +51,7 @@
 }
 
 .post-mission-header {
-    flex-direction: column;
+    // flex-direction: column;
     display: flex;
     justify-content: space-between;
     // gap: 1rem;

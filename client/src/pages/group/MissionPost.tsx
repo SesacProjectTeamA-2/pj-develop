@@ -9,9 +9,18 @@ import { Link, useParams } from 'react-router-dom';
 import '../../styles/scss/pages/group/post.scss';
 
 import GroupHeader from '../../components/group/content/GroupHeader';
-import Editor from './Editor';
+import EditorDraft from '../../components/common/EditorDraft';
+// import Editor from './Editor';
 import { GroupDetailType, MissionType } from 'src/types/types';
 import SuccessModal from 'src/components/common/modal/SuccessModal';
+import {
+    Box,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+} from '@mui/material';
 
 export default function MissionPost() {
     const cookie = new Cookies();
@@ -69,7 +78,7 @@ export default function MissionPost() {
     };
 
     //] select 태그 state관리
-    const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+    const handleSelect = (e: any) => {
         const selectedValue = e.target.value;
         setSelected(selectedValue);
 
@@ -144,7 +153,7 @@ export default function MissionPost() {
             {/* <GroupHeader title={postMenu} groupName={''} /> */}
             <div className="post-container">
                 <div className="noti-content post-mission-header title5">
-                    <div className="mission-type">
+                    {/* <div className="mission-type">
                         <div style={{ width: '7rem' }}>어떤 미션인가요 ?</div>
                         <div className="select-box">
                             <div>
@@ -167,9 +176,32 @@ export default function MissionPost() {
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div className="post-mission-title">
+                    <FormControl
+                        variant="standard"
+                        sx={{ m: 1, minWidth: 120 }}
+                    >
+                        <InputLabel id="demo-simple-select-filled-label">
+                            Mission
+                        </InputLabel>
+                        <Select
+                            labelId="demo-simple-select-filled-label"
+                            id="demo-simple-select-filled"
+                            onChange={handleSelect}
+                            value={selected}
+                        >
+                            {missionList?.map((mission: any, idx: number) => {
+                                return (
+                                    <MenuItem value={mission.mSeq} key={idx}>
+                                        {mission.mTitle}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </FormControl>
+
+                    {/* <div className="post-mission-title">
                         <div>제목</div>
                         <input
                             className="mission-input"
@@ -179,12 +211,31 @@ export default function MissionPost() {
                             name="gbTitle"
                             required
                         />
-                    </div>
+                    </div> */}
+
+                    <Box
+                        component="form"
+                        sx={{
+                            '& > :not(style)': { m: 1, width: '30ch' },
+                        }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <TextField
+                            id="standard-basic"
+                            label="제목"
+                            variant="standard"
+                            onChange={getValue}
+                            name="gbTitle"
+                            required
+                            // className="input-board-post"
+                        />
+                    </Box>
                 </div>
                 <div>
-                    <Editor
+                    <EditorDraft
                         value={board.gbContent}
-                        onChange={handleEditorChange}
+                        handleEditorChange={handleEditorChange}
                     />
                 </div>
             </div>

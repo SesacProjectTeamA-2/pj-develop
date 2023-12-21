@@ -9,11 +9,18 @@ import { Link, useParams } from 'react-router-dom';
 import '../../styles/scss/pages/group/post.scss';
 
 import GroupHeader from '../../components/group/content/GroupHeader';
-import Editor from './Editor';
-import EditorTest from './EditorTest';
+
 import { GroupDetailType, MissionType } from 'src/types/types';
 import SuccessModal from 'src/components/common/modal/SuccessModal';
 import EditorDraft from 'src/components/common/EditorDraft';
+import {
+    Box,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+} from '@mui/material';
 
 export default function BoardPost() {
     const cookie = new Cookies();
@@ -24,20 +31,22 @@ export default function BoardPost() {
     const [missionList, setMissionList] = useState<any>();
 
     const getGroup = async () => {
-        const res = await axios.get(
-            `${process.env.REACT_APP_DB_HOST}/group/detail/${gSeq}`,
-            {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/group/detail/${gSeq}`, {
                 headers: {
                     Authorization: `Bearer ${uToken}`,
                 },
-            }
-        );
+            })
+            .then((res) => {
+                setIsLeader(res.data.isLeader);
 
-        setMissionList(res.data.groupMission);
+                setMissionList(res.data.groupMission);
 
-        setMissionSelected(
-            String(res.data.groupMission[Number(mSeq) - 1]?.mSeq)
-        );
+                setMissionSelected(
+                    String(res.data.groupMission[Number(mSeq) - 1]?.mSeq)
+                );
+            })
+            .catch((err) => console.log(err));
     };
 
     useEffect(() => {
@@ -59,6 +68,7 @@ export default function BoardPost() {
         mSeq: null,
     });
 
+    const [isLeader, setIsLeader] = useState(false);
     const [missionSelected, setMissionSelected] = useState('');
     const [selected, setSelected] = useState<any>(gCategory);
 
@@ -77,7 +87,7 @@ export default function BoardPost() {
     };
 
     //] select 태그 state관리
-    const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
+    const handleSelect = (e: any) => {
         const selectedValue = e.target.value;
         setSelected(selectedValue);
 
@@ -105,7 +115,7 @@ export default function BoardPost() {
     };
 
     //gbContent관리
-    const handleEditorChange = (value: string) => {
+    const handleEditorChange = (value: any) => {
         setBoard({
             ...board,
             gbContent: value, // 에디터의 내용을 업데이트
@@ -150,6 +160,9 @@ export default function BoardPost() {
                 console.log('boardPostHandler');
 
                 successHandler();
+            })
+            .catch((err) => {
+                console.log(err);
             });
     };
 
@@ -171,14 +184,43 @@ export default function BoardPost() {
         <div className="section section-group">
             <div className="post-container">
                 <div className="noti-content post-header title5">
-                    <div className="select-box">
-                        <div>종류</div>
+                    {/* <div className="select-box">
+                        <div className="title8">종류</div>
                         <select onChange={handleSelect} value={selected}>
                             <option value="notice">공지사항</option>
                             <option value="free">자유/질문</option>
                         </select>
-                    </div>
-                    <div className="post-title">
+                    </div> */}
+
+                    <FormControl
+                        variant="standard"
+                        sx={{ m: 1, minWidth: 120 }}
+                    >
+                        <InputLabel id="demo-simple-select-filled-label">
+                            종류
+                        </InputLabel>
+                        <Select
+                            labelId="demo-simple-select-filled-label"
+                            id="demo-simple-select-filled"
+                            onChange={handleSelect}
+                            value={selected}
+                        >
+                            {/* <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem> */}
+
+                            {/* 리더인 경우에만 공지사항 작성가능 */}
+                            {isLeader ? (
+                                <MenuItem value="notice">공지사항</MenuItem>
+                            ) : (
+                                ''
+                            )}
+
+                            <MenuItem value="free">자유/질문</MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    {/* <div className="post-title">
                         <div>제목</div>
                         <input
                             type="text"
@@ -186,14 +228,36 @@ export default function BoardPost() {
                             onChange={getValue}
                             name="gbTitle"
                             required
+                            className="input-board-post"
                         />
-                    </div>
+                    </div> */}
+
+                    <Box
+                        component="form"
+                        sx={{
+                            '& > :not(style)': { m: 1, width: '30ch' },
+                        }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <TextField
+                            id="standard-basic"
+                            label="제목"
+                            variant="standard"
+                            onChange={getValue}
+                            name="gbTitle"
+                            required
+                            // className="input-board-post"
+                        />
+                    </Box>
                 </div>
                 <div>
-                    <EditorDraft />
+                    <EditorDraft
+                        value={board.gbContent}
+                        handleEditorChange={handleEditorChange}
+                    />
 
-
-{/* === Quill Editor 삭제 예정 */}
+                    {/* === Quill Editor 삭제 예정 */}
                     {/* <Editor
                         value={board.gbContent}
                         onChange={handleEditorChange}

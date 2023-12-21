@@ -252,6 +252,7 @@ export default function GroupPostDetail() {
                             <div className="writer-menu-content">
                                 <Link
                                     to={`/board/${gSeq}/edit/${gCategory}/${gbSeq}`}
+                                    className="link-none"
                                 >
                                     <div>수정</div>
                                 </Link>

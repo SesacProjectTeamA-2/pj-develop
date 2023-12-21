@@ -6,13 +6,14 @@ import { Cookies } from 'react-cookie';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 
-import Editor from './Editor';
+// import Editor from './Editor';
 
 import GroupHeader from '../../components/group/content/GroupHeader';
 import { MissionType } from 'src/types/types';
 import { Input } from '@mui/material';
 import SuccessModal from 'src/components/common/modal/SuccessModal';
 import WarningModal from 'src/components/common/modal/WarningModal';
+import EditorDraft from 'src/components/common/EditorDraft';
 
 export default function BoardEdit() {
     const cookie = new Cookies();
@@ -30,7 +31,6 @@ export default function BoardEdit() {
     };
 
     //] 게시글 상세조회
-
     const getBoardNoti = async () => {
         const res = await axios
             .get(
@@ -42,11 +42,7 @@ export default function BoardEdit() {
                 }
             )
             .then((res) => {
-                console.log('getBoardNoti=======', res.data);
-                // console.log(
-                //     'userInfo',
-                //     res.data.groupInfo.tb_groupUser.tb_user
-                // );
+                console.log('getBoardNoti', res.data);
 
                 setFreeList(res.data.groupInfo);
 
@@ -74,7 +70,7 @@ export default function BoardEdit() {
 
     // const [selected, setSelected] = useState<string>('');
 
-    //gbTitle state 관리
+    //-- gbTitle state 관리
     const getValue = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
@@ -83,11 +79,10 @@ export default function BoardEdit() {
             [name]: value,
         });
 
-        // console.log(board);
         // console.log(name, value);
     };
 
-    //gbContent관리
+    //-- gbContent관리
     const handleEditorChange = (value: string) => {
         setBoard({
             ...board,
@@ -162,13 +157,19 @@ export default function BoardEdit() {
                             name="gbTitle"
                             required
                             value={board.gbTitle}
+                            className="input-board-edit"
                         />
                     </div>
                 </div>
                 <div>
-                    <Editor
+                    {/* <Editor
                         value={board.gbContent}
                         onChange={handleEditorChange}
+                    /> */}
+
+                    <EditorDraft
+                        value={board.gbContent}
+                        handleEditorChange={handleEditorChange}
                     />
                 </div>
             </div>
