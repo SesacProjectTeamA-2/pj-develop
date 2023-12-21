@@ -1,7 +1,12 @@
-import { convertToRaw, EditorState, AtomicBlockUtils } from 'draft-js';
+import {
+    convertToRaw,
+    EditorState,
+    AtomicBlockUtils,
+    ContentState,
+} from 'draft-js';
 // 이미지를 표시하기 위해 이미지를 로드하는 데 사용되는 Entity 타입인 ‘atomic’을 지원해야 합니다.
 // https://colinch4.github.io/2023-11-24/11-09-13-449385-draftjs%EC%97%90%EC%84%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B6%94%EA%B0%80-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
@@ -12,9 +17,26 @@ import { Fragment } from 'react';
 // import { Editor, EditorState } from 'draft-js';
 // import 'draft-js/dist/Draft.css';
 
-export default function Index() {
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
-    const [text, setText] = useState();
+export default function EditorDraft({ value, handleEditorChange }: any) {
+    // value를 사용하여 초기 EditorState를 생성
+    const contentState = ContentState.createFromText(value);
+    const initialEditorState = EditorState.createWithContent(contentState);
+    const [editorState, setEditorState] = useState(initialEditorState);
+
+    //) 초기 값 = 빈 값
+    // const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+    const [text, setText] = useState(value);
+
+    useEffect(() => {
+        setText(value);
+        const newContentState = ContentState.createFromText(value);
+        const newEditorState = EditorState.createWithContent(newContentState);
+        setEditorState(newEditorState);
+    }, [value]);
+
+    // console.log('value ::::::', value);
+    // console.log('text ::::::', text);
 
     const onEditorStateChange = function (editorState: any) {
         setEditorState(editorState);
@@ -23,8 +45,16 @@ export default function Index() {
       acc = acc + item.text;
       return acc;
     }, "");*/
+        // const text = blocks.map(block => block.text).join('\n');
+
         let text = editorState.getCurrentContent().getPlainText('\u0001');
+
+        // setText(text);
+        // setText(value);
+
         setText(text);
+
+        handleEditorChange(text);
     };
 
     //) MyPage.tsx
@@ -107,36 +137,36 @@ export default function Index() {
         });
     };
 
-    const handleImageUpload = (e: any) => {
-        e.preventDefault();
-        const file = e.target.files[0];
-        const reader = new FileReader();
+    // const handleImageUpload = (e: any) => {
+    //     e.preventDefault();
+    //     const file = e.target.files[0];
+    //     const reader = new FileReader();
 
-        reader.onload = (e: any) => {
-            const contentState = editorState.getCurrentContent();
+    //     reader.onload = (e: any) => {
+    //         const contentState = editorState.getCurrentContent();
 
-            const contentStateWithEntity = contentState.createEntity(
-                'atomic',
-                'IMMUTABLE',
-                { src: e.target.result }
-            );
+    //         const contentStateWithEntity = contentState.createEntity(
+    //             'atomic',
+    //             'IMMUTABLE',
+    //             { src: e.target.result }
+    //         );
 
-            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-            const newEditorState = EditorState.set(editorState, {
-                currentContent: contentStateWithEntity,
-            });
+    //         const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    //         const newEditorState = EditorState.set(editorState, {
+    //             currentContent: contentStateWithEntity,
+    //         });
 
-            setEditorState(
-                AtomicBlockUtils.insertAtomicBlock(
-                    newEditorState,
-                    entityKey,
-                    ' '
-                )
-            );
-        };
+    //         setEditorState(
+    //             AtomicBlockUtils.insertAtomicBlock(
+    //                 newEditorState,
+    //                 entityKey,
+    //                 ' '
+    //             )
+    //         );
+    //     };
 
-        reader.readAsDataURL(file);
-    };
+    //     reader.readAsDataURL(file);
+    // };
 
     return (
         <>

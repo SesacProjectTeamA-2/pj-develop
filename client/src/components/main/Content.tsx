@@ -353,7 +353,7 @@ export default function Content({ setLoginData, loginData }: any) {
                             >
                                 <img
                                     src={selectedCharacter}
-                                    alt="동물 이미지"
+                                    alt="캐릭터"
                                     className="my-progress-img"
                                 />
                             </div>

@@ -23,8 +23,8 @@ export default function Nickname(props: any): JSX.Element {
         console.log('display', visibilityMode, curPath);
     }, [curPath]);
 
-    if (props.input?.length > 10) {
-        toast.error('10자 이내로 입력해주세요.', {
+    if (props.input.length > 20) {
+        toast.error('20자 이내로 입력해주세요.', {
             duration: 2000,
         });
 

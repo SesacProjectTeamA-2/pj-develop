@@ -252,6 +252,7 @@ export default function GroupMissionDetail() {
                             <div className="writer-menu-content">
                                 <Link
                                     to={`/board/${gSeq}/edit/mission/${mSeq}/${gbSeq}`}
+                                    className="link-none"
                                 >
                                     <div>수정</div>
                                 </Link>

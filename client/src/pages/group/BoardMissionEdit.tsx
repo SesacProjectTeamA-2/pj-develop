@@ -9,6 +9,7 @@ import Editor from './Editor';
 import GroupHeader from '../../components/group/content/GroupHeader';
 import { MissionType } from 'src/types/types';
 import SuccessModal from 'src/components/common/modal/SuccessModal';
+import EditorDraft from 'src/components/common/EditorDraft';
 
 export default function BoardMissionEdit() {
     const cookie = new Cookies();
@@ -170,14 +171,20 @@ export default function BoardMissionEdit() {
                             name="gbTitle"
                             required
                             value={board.gbTitle}
+                            className="input-board-edit"
                         />
                     </div>
                 </div>
                 <div>
-                    <Editor
+                    <EditorDraft
+                        value={board.gbContent}
+                        handleEditorChange={handleEditorChange}
+                    />
+
+                    {/* <Editor
                         value={board.gbContent}
                         onChange={handleEditorChange}
-                    />
+                    /> */}
                 </div>
             </div>
 

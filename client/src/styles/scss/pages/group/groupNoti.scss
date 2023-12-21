@@ -1,6 +1,11 @@
 @import '../../abstracts/variables';
 @import '~include-media/dist/include-media';
 
+// .MuiTableCell-head {
+//     padding: 0;
+//     width: 0;
+// }
+
 .section-group {
     padding: 0;
     width: 100%;
@@ -61,6 +66,7 @@
     margin: 1rem;
     border-radius: 10px;
     height: 50vh;
+    height: 100%;
 }
 
 .noti-header {
