@@ -130,9 +130,9 @@ export default function GroupContent({ action }: any) {
                 <>
                     {/* 1. 자유게시글 */}
 
-                    {freeList.length <= 0
+                    {freeList?.length <= 0
                         ? '작성된 게시물이 없습니다.'
-                        : freeList.map((free: any, idx: number) => {
+                        : freeList?.map((free: any, idx: number) => {
                               return (
                                   <li key={idx}>
                                       {/* [ START ] */}
