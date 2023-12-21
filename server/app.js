@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 // NODE.ENV가 지정되어 있지 않으면 development 모드로 실행
 process.env.NODE_ENV =
@@ -98,6 +100,7 @@ app.set('sse', sse);
  * @description 모든 api는 indexRouter를 거쳐가도록 설정
  */
 const indexRouter = require('./routes');
+
 app.use('/api', indexRouter);
 
 // 에러 처리

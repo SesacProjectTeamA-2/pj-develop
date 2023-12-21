@@ -84,8 +84,9 @@ exports.getKakao = async (req, res) => {
 
       res.cookie('token', jwtToken.token, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'None',
+        path: '/',
+        // secure: true,
+        // sameSite: 'None',
       });
 
       // ****************** 토큰을 들고 메인 페이지로 렌더링해야함
@@ -193,11 +194,12 @@ exports.getLoginNaverRedirect = async (req, res) => {
           userName: userName,
           userEmail: userEmail,
         });
-
+        console.log('jwtToken>>>>>>>>>>>>', jwtToken.token);
         res.cookie('token', jwtToken.token, {
           httpOnly: true,
-          secure: true,
-          sameSite: 'None',
+          path: '/',
+          // secure: true,
+          // sameSite: 'None',
         });
 
         // ****************** 토큰을 들고 메인 페이지로 렌더링해야함
@@ -294,8 +296,9 @@ exports.getLoginGoogleRedirect = async (req, res) => {
         });
         res.cookie('token', jwtToken.token, {
           httpOnly: true,
-          secure: true,
-          sameSite: 'None',
+          path: '/',
+          // secure: true,
+          // sameSite: 'None',
         });
 
         let redirectUrl = `${serverUrl}:${frontPort}/main`;
@@ -365,8 +368,9 @@ exports.getLoginTest = async (req, res) => {
 
       res.cookie('token', jwtToken.token, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'None',
+        path: '/',
+        // secure: true,
+        // sameSite: 'None',
       });
 
       // ****************** 토큰을 들고 메인 페이지로 렌더링해야함
@@ -443,8 +447,9 @@ exports.postRegister = async (req, res) => {
     });
     res.cookie('token', jwtToken.token, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'None',
+      path: '/',
+      // secure: true,
+      // sameSite: 'None',
     });
 
     res.status(200).send({
@@ -665,13 +670,44 @@ exports.userCoverImg = async (req, res) => {
 // 로그아웃
 exports.logout = async (req, res) => {
   // 클라이언트에 저장된 쿠키 삭제
-  res.clearCookie('token', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'None',
-  });
 
+  let token = req.headers.authorization.split(' ')[1];
+
+  if (!token) {
+    res.send({
+      success: false,
+      msg: '토큰 X',
+    });
+  }
+
+  // console.log(res.clearCookie());
+  // res.cookie('token', jwtToken.token, {
+  //   httpOnly: true,
+  //
+  //   // secure: false,
+  //   // sameSite: 'None',
+  // });
+  res.cookie('token', '', {
+    maxAge: 0,
+    httpOnly: true,
+    path: '/',
+    // secure: true,
+    // sameSite: 'None',
+  });
+  // res.clearCookie('token', {
+  //   httpOnly: true,
+  //   path: '/',
+  //   // secure: true,
+  //   // sameSite: 'None',
+  // });
+  res.setHeader('Set-Cookie', 'token=1; Max-Age=0');
+  console.log('>>>>>>>>>>>>>>>>>>>', token);
+  // res.lend(alarm.gSeg)
   res.send({ success: true, message: 'Logged out successfully' });
+
+  //   .send({ success: true, message: 'Logged out successfully' });
+
+  // res.cookie('token', 'tobi', {});
 };
 
 // 회원탈퇴

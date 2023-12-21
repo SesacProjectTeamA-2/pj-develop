@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controller/Cboard');
+const upload = require('../middlewares/imgUpload').upload;
 
 const authUtil = require('../middlewares/auth').checkToken;
 
@@ -190,6 +191,9 @@ router.get('/create', authUtil, controller.getCreateBoard);
  *                 $ref: '#/components/schemas/postBoardResult'
  */
 router.post('/create', authUtil, controller.createBoard);
+
+// 게시판 이미지 업로드 처리
+router.post('/create/img', upload.single('image'), controller.boardImg);
 
 // 게시글 수정 페이지 렌더링
 // /board/edit/:gbSeq

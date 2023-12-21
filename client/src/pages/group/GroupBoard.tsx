@@ -73,6 +73,7 @@ export default function GroupBoard() {
                         className="plus-fixed"
                         alt="plus-fixed"
                     />
+                    s
                 </Link>
             </div>
         </div>

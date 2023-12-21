@@ -8,12 +8,21 @@ const redisClient = redis.createClient({
   url: `redis://${process.env.REDIS_USERNAME}:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`,
   legacyMode: true, // v4버전은 promise 객체기반이므로, 옛날문법과의 호환성을 위해 설정.
 });
-
 redisClient.connect().then();
-const redisCli = redisClient.v4;
+const redis_Cli = redisClient.v4;
 
-redisClient.on('connect', () => {
+// subscriber 객체 생성
+const subscriber = redisClient.duplicate();
+subscriber.connect().then();
+const sub = subscriber.v4;
+
+const redisCli = { redis_Cli, sub };
+
+redisClient.on('connect', async () => {
   console.info('Redis connected!');
+  // await subscriber.connect();
+
+  // await subscriber.subscribe('', ()=> {})
 });
 
 redisClient.on('error', (err) => {

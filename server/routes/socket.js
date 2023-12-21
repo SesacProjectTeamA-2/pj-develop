@@ -2,7 +2,7 @@
 // const io = req.app.get('io'); // 전역변수로 등록해논 io객체를 가져옴
 // 미들웨어 설정
 const authSocketUtil = require('../middlewares/authSocket.js');
-const redisCli = require('../models/redis');
+const redisCli = require('../models/redis').redis_Cli;
 const { connect } = require('./user.js');
 
 exports.chatSocket = async (io, socket) => {
