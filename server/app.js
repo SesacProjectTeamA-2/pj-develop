@@ -65,11 +65,13 @@ const options = {
       `${process.env.SERVER_DEV_URL}:${process.env.SERVER_DEV_PORT}`, // 로컬
       `${process.env.SERVER_PROD_DOMAIN}:${process.env.SERVER_PROD_PORT}`, // 배포
     ],
+
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
     // credentials : true
     // 쿠키, 인증헤더, TLS client certificates 를 일컫는다.
     // client 와 server 가 쿠키 값을 공유하겠다는 말
     // client server 모두 credentials 사용한다는 속성 설정해줘야 한다.
+    allowedHeaders: ['Content-Type', 'Authorization'],
   },
   path: '/socket.io',
   reconnection: true,
