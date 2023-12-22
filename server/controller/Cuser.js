@@ -9,7 +9,7 @@ const config = require(__dirname + '/../config/config.js')[
 const { serverUrl, serverPort, frontPort, naverClientId, naverClientSecret } =
   config; // 서버 설정
 
-const { User } = require('../models');
+const { User, GroupUser } = require('../models');
 const { Op, where } = require('sequelize');
 
 // 로그인 된 사용자인지 아닌지 판별하려면 불러와야함
@@ -73,6 +73,11 @@ exports.getKakao = async (req, res) => {
       },
     });
 
+    const userGroups = await GroupUser.findAll({
+      where: { uSeq: alreadyUser.uSeq },
+      attribute: ['gSeq'],
+    });
+    const result = userGroups.map((user) => user.gSeq);
     // db에 값 있으면 이미 회원가입 한 유저
     if (alreadyUser) {
       // 해당 3개의 값 가지는 토큰 생성
@@ -80,6 +85,7 @@ exports.getKakao = async (req, res) => {
         uSeq: alreadyUser.uSeq,
         userName: userName,
         userEmail: userEmail,
+        gSeq: result,
       });
 
       res.cookie('token', jwtToken.token, {
@@ -186,6 +192,11 @@ exports.getLoginNaverRedirect = async (req, res) => {
         },
       });
 
+      const userGroups = await GroupUser.findAll({
+        where: { uSeq: alreadyUser.uSeq },
+        attribute: ['gSeq'],
+      });
+      const result = userGroups.map((user) => user.gSeq);
       // db에 값 있으면 이미 회원가입 한 유저
       if (alreadyUser) {
         // 해당 3개의 값 가지는 토큰 생성
@@ -193,6 +204,7 @@ exports.getLoginNaverRedirect = async (req, res) => {
           uSeq: alreadyUser.uSeq,
           userName: userName,
           userEmail: userEmail,
+          gSeq: result,
         });
         console.log('jwtToken>>>>>>>>>>>>', jwtToken.token);
         res.cookie('token', jwtToken.token, {
@@ -287,12 +299,19 @@ exports.getLoginGoogleRedirect = async (req, res) => {
       });
 
       // 3) 회원
+      const userGroups = await GroupUser.findAll({
+        where: { uSeq: alreadyUser.uSeq },
+        attribute: ['gSeq'],
+      });
+      const result = userGroups.map((user) => user.gSeq);
+      // db에 값 있으면 이미 회원가입 한 유저
       if (alreadyUser) {
         // 해당 3개의 값 가지는 토큰 생성
         const jwtToken = await jwt.sign({
           uSeq: alreadyUser.uSeq,
-          userName: name,
-          userEmail: email,
+          userName: userName,
+          userEmail: userEmail,
+          gSeq: result,
         });
         res.cookie('token', jwtToken.token, {
           httpOnly: true,
@@ -359,11 +378,18 @@ exports.getLoginTest = async (req, res) => {
     if (selectOneTestEmail) {
       const { uSeq, uEmail, uName, uImg } = selectOneTestEmail;
 
+      const userGroups = await GroupUser.findAll({
+        where: { uSeq },
+        attribute: ['gSeq'],
+      });
+      const result = userGroups.map((user) => user.gSeq);
+
       // 해당 3개의 값 가지는 토큰 생성
       const jwtToken = await jwt.sign({
         uSeq,
         userName: uName,
         userEmail: uEmail,
+        gSeq: result,
       });
 
       res.cookie('token', jwtToken.token, {

@@ -9,7 +9,6 @@ const authSocketUtil = {
   checkToken: async (socket, next) => {
     try {
       var token = socket.handshake.headers.authorization.split(' ')[1];
-      let loginTime = new Date();
       // 토큰 없음
       if (!token) return next('토큰 없음');
 
@@ -26,10 +25,10 @@ const authSocketUtil = {
       if (user.uSeq === undefined) return next('토큰 : undefined');
 
       const userInfo = {
-        socketId: socket.id,
         uSeq: user.uSeq,
         uName: user.uName,
-        loginTime,
+        socketId: socket.id,
+        gSeq: user.gSeq,
       };
 
       socket.userInfo = userInfo;

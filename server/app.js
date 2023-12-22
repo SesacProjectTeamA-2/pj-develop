@@ -92,6 +92,7 @@ chatSocket(io);
 // SSE 설정
 const SSE = require('sse');
 const sse = new SSE(server);
+server.keepAliveTimeout = 120000; // disconnect 전 서버 대기 시간 : 2분
 
 // SSE 전역변수 설정
 // const alarm = require('./controller/Calarm.js');

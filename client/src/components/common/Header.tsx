@@ -226,14 +226,22 @@ export default function Header(props: any) {
     };
 
     const getNoti = () => {
-        // const eventSource = new EventSourcePolyfill(
-        //     `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
-        //     {
-        //         headers: {
-        //             Authorization: `Bearer ${uToken}`,
-        //         },
-        //     }
-        // );
+
+        const eventSource = new EventSourcePolyfill(
+            `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
+            {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            }
+        );
+
+        eventSource.addEventListener('connected', (e: any) => {
+            const { data: receivedSections } = e;
+
+            console.log(e);
+        });
+
 
         // //-- 연결 시 할 일
         // eventSource.onopen = async () => {
