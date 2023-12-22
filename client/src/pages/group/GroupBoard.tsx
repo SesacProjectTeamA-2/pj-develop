@@ -37,51 +37,76 @@ export default function GroupBoard() {
     const [gName, setGName] = useState('');
 
     //] post 버튼 스크롤에 따라 효과
-
-    //~ [추후] 수정 !
     useEffect(() => {
-        document.addEventListener('scroll', function () {
+        function handleScroll() {
             var moonIcon = document.querySelector('.moon-icon');
             var scrollPosition = window.scrollY;
             var documentHeight =
                 document.documentElement.scrollHeight - window.innerHeight;
             var scrollRatio = scrollPosition / documentHeight;
 
-            // 비율에 따라서 달이 나타나거나 사라지도록 설정
-            if (scrollRatio < 0.6) {
+            // 부모 요소의 높이에 따라 달이 나타나거나 사라지도록 설정
+            // if (scrollRatio < 0.8) {
+            //     moonIcon?.classList.remove('show-md');
+            //     moonIcon?.classList.add('show');
+            // } else if (scrollRatio < 0.9) {
+            //     moonIcon?.classList.remove('show');
+            //     moonIcon?.classList.add('show-md');
+            // } else {
+            //     moonIcon?.classList.remove('show');
+            //     moonIcon?.classList.remove('show-md');
+            // }
+
+            if (scrollRatio < 0.8) {
+                moonIcon?.classList.remove('show-md');
                 moonIcon?.classList.add('show');
-            } else if (scrollRatio < 0.8) {
+                moonIcon?.classList.remove('hide');
+            } else if (scrollRatio < 0.9) {
                 moonIcon?.classList.remove('show');
                 moonIcon?.classList.add('show-md');
+                moonIcon?.classList.remove('hide');
             } else {
                 moonIcon?.classList.remove('show');
+                moonIcon?.classList.remove('show-md');
+                moonIcon?.classList.add('hide');
             }
-        });
-    });
+        }
+
+        document.addEventListener('scroll', handleScroll);
+
+        return () => {
+            // Cleanup: Remove the scroll event listener when the component is unmounted
+            document.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     return (
         <div className="section section-group">
-            <GroupHeader title={'자유/질문'} groupName={gName} />
-            <GroupContent action={'자유/질문'} />
-            <div className="plus-fixed-wrapper">
+            <div className="moon-wrapper">
+                <GroupHeader title={'자유/질문'} groupName={gName} />
+                <GroupContent action={'자유/질문'} />
+                {/* <div className="plus-fixed-wrapper">
                 <span className="plus-text">
                     자유/질문
                     <br />
                     작성하기 !
                 </span>
+            </div> */}
 
-                <Link to={`/board/create/${gSeq}/free`}>
-                    {/* <img
+                <div className="moon-icon-wrapper">
+                    <Link to={`/board/create/${gSeq}/free`}>
+                        {/* <img
                         src="/asset/icons/plus.svg"
                         className="plus-fixed"
                         alt="plus-fixed"
                     /> */}
-                    {/* <Fab color="secondary" aria-label="edit">
+                        {/* <Fab color="secondary" aria-label="edit">
                         <EditIcon />
                     </Fab> */}
 
-                    <div className="moon-icon"></div>
-                </Link>
+                        <div className="moon-icon"></div>
+                    </Link>
+                </div>
             </div>
         </div>
     );
