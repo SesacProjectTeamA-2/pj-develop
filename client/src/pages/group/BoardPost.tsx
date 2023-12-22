@@ -210,10 +210,14 @@ export default function BoardPost() {
                             </MenuItem> */}
 
                             {/* 리더인 경우에만 공지사항 작성가능 */}
-                            {isLeader ? (
+                            {/* {isLeader ? (
                                 <MenuItem value="notice">공지사항</MenuItem>
                             ) : (
                                 ''
+                            )} */}
+
+                            {isLeader && (
+                                <MenuItem value="notice">공지사항</MenuItem>
                             )}
 
                             <MenuItem value="free">자유/질문</MenuItem>
@@ -253,7 +257,7 @@ export default function BoardPost() {
                 </div>
                 <div>
                     <EditorDraft
-                        value=""
+                        value="" // edit 에서는 기존 내용 넣어줌
                         handleEditorChange={handleEditorChange}
                     />
 
