@@ -234,7 +234,7 @@ export default function MissionPost() {
                 </div>
                 <div>
                     <EditorDraft
-                        value={board.gbContent}
+                        value="" // edit 에서는 기존 내용 넣어줌
                         handleEditorChange={handleEditorChange}
                     />
                 </div>

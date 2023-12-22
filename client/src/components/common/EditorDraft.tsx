@@ -18,7 +18,6 @@ import { Fragment } from 'react';
 // import 'draft-js/dist/Draft.css';
 
 export default function EditorDraft({ value, handleEditorChange }: any) {
-    console.log('------------------ value : ', value);
     // value를 사용하여 초기 EditorState를 생성
     const contentState = ContentState.createFromText(value);
     const initialEditorState = EditorState.createWithContent(contentState);
@@ -33,20 +32,20 @@ export default function EditorDraft({ value, handleEditorChange }: any) {
         const newEditorState = EditorState.createWithContent(newContentState);
         setEditorState(newEditorState);
     }, [value]);
-    // console.log('value ::::::', value);
-    // console.log('text ::::::', text);
 
     const onEditorStateChange = function (editorState: any) {
         setEditorState(editorState);
+
+        const text = editorState.getCurrentContent().getPlainText('\u0001');
+
+        handleEditorChange(text);
+
         //     const { blocks } = convertToRaw(editorState.getCurrentContent());
         //     /*let text = blocks.reduce((acc, item) => {
         //   acc = acc + item.text;
         //   return acc;
         // }, "");*/
         //     // const text = blocks.map(block => block.text).join('\n');
-        const text = editorState.getCurrentContent().getPlainText('\u0001');
-
-        handleEditorChange(text);
     };
 
     //) MyPage.tsx
