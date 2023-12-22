@@ -17,7 +17,7 @@ import { useParams } from 'react-router-dom';
 export default function GroupLayout({
     children,
     showChat,
-    setShowChat,
+    showChatting,
     socket,
 }: any) {
     const cookie = new Cookies();
@@ -126,7 +126,7 @@ export default function GroupLayout({
                                 {showChat ? (
                                     <SidebarChat
                                         showChat={showChat}
-                                        setShowChat={setShowChat}
+                                        showChatting={showChatting}
                                         socket={socket}
                                     />
                                 ) : null}

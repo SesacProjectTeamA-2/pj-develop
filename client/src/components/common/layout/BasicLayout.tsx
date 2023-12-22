@@ -13,7 +13,8 @@ import Footer from '../Footer';
 export default function BasicLayout({
     children,
     showChat,
-    setShowChat,
+    // setShowChat,
+    showChatting,
     socket,
 }: any) {
     return (
@@ -62,7 +63,8 @@ export default function BasicLayout({
                             >
                                 {showChat ? (
                                     <SidebarChat
-                                        setShowChat={setShowChat}
+                                        // setShowChat={setShowChat}
+                                        showChatting={showChatting}
                                         showChat={showChat}
                                         socket={socket}
                                     />

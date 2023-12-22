@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
 import { io, Socket } from 'socket.io-client';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 import Content from '../components/main/Content';
 import MainMission from 'src/components/main/MainMission';
@@ -19,6 +20,7 @@ export default function Main({
     initialLogin,
     setInitialLogin,
     setSocket,
+    setSse,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -64,7 +66,8 @@ export default function Main({
         if (uToken) {
             myCookie.set('isUser', uToken);
 
-            //] 최초 로그인 시, socket 연결 요청
+            //] 최초 로그인 시,
+            //; 1. socket 연결 요청
             newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
                 path: '/socket.io',
                 reconnection: true,
@@ -78,7 +81,39 @@ export default function Main({
 
             setSocket(newSocket);
 
-            // console.log(':::::::::::: 최초 로그인 시, socket 연결 요청');
+            //; 2. sse 연결 요청
+            const eventSource = new EventSourcePolyfill(
+                `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${uToken}`,
+                    },
+                    heartbeatTimeout: 120000,
+                }
+            );
+
+            setSse(eventSource);
+
+            eventSource.addEventListener('open', (event) => {
+                console.log(event);
+                console.log('EventSource connection opened.');
+            });
+
+            eventSource.addEventListener('connect', (e: any) => {
+                const { data: receivedSections } = e;
+
+                console.log(e);
+            });
+
+            // eventSource.addEventListener('connection', (event) => {
+            //     console.log(event);
+
+            //     // const eventData = JSON.parse(event.data);
+            //     // console.log('Received event data:', eventData);
+            //     // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
+            // });
+
+            // console.log(':::::::::::: 최초 로그인 시");
         }
     }, []);
 

@@ -7,7 +7,7 @@ import {
 // 이미지를 표시하기 위해 이미지를 로드하는 데 사용되는 Entity 타입인 ‘atomic’을 지원해야 합니다.
 // https://colinch4.github.io/2023-11-24/11-09-13-449385-draftjs%EC%97%90%EC%84%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B6%94%EA%B0%80-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/
 import { useEffect, useState } from 'react';
-import { Editor } from 'react-draft-wysiwyg';
+import { Editor, SyntheticKeyboardEvent } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 import { Fragment } from 'react';
@@ -26,35 +26,26 @@ export default function EditorDraft({ value, handleEditorChange }: any) {
     //) 초기 값 = 빈 값
     // const [editorState, setEditorState] = useState(EditorState.createEmpty());
 
-    const [text, setText] = useState(value);
-
     useEffect(() => {
-        setText(value);
+        if (value == '') return;
         const newContentState = ContentState.createFromText(value);
         const newEditorState = EditorState.createWithContent(newContentState);
         setEditorState(newEditorState);
     }, [value]);
 
-    // console.log('value ::::::', value);
-    // console.log('text ::::::', text);
-
     const onEditorStateChange = function (editorState: any) {
         setEditorState(editorState);
-        const { blocks } = convertToRaw(editorState.getCurrentContent());
-        /*let text = blocks.reduce((acc, item) => {
-      acc = acc + item.text;
-      return acc;
-    }, "");*/
-        // const text = blocks.map(block => block.text).join('\n');
 
-        let text = editorState.getCurrentContent().getPlainText('\u0001');
-
-        // setText(text);
-        // setText(value);
-
-        setText(text);
+        const text = editorState.getCurrentContent().getPlainText('\u0001');
 
         handleEditorChange(text);
+
+        //     const { blocks } = convertToRaw(editorState.getCurrentContent());
+        //     /*let text = blocks.reduce((acc, item) => {
+        //   acc = acc + item.text;
+        //   return acc;
+        // }, "");*/
+        //     // const text = blocks.map(block => block.text).join('\n');
     };
 
     //) MyPage.tsx

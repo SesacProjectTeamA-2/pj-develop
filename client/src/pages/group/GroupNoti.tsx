@@ -122,6 +122,37 @@ export default function GroupNoti() {
         getBoardNoti();
     }, []);
 
+    //] post 버튼 스크롤에 따라 효과
+    useEffect(() => {
+        function handleScroll() {
+            var moonIcon = document.querySelector('.moon-icon');
+            var scrollPosition = window.scrollY;
+            var documentHeight =
+                document.documentElement.scrollHeight - window.innerHeight;
+            var scrollRatio = scrollPosition / documentHeight;
+
+            if (scrollRatio < 0.8) {
+                moonIcon?.classList.remove('show-md');
+                moonIcon?.classList.add('show');
+                moonIcon?.classList.remove('hide');
+            } else if (scrollRatio < 0.9) {
+                moonIcon?.classList.remove('show');
+                moonIcon?.classList.add('show-md');
+                moonIcon?.classList.remove('hide');
+            } else {
+                moonIcon?.classList.remove('show');
+                moonIcon?.classList.remove('show-md');
+                moonIcon?.classList.add('hide');
+            }
+        }
+
+        document.addEventListener('scroll', handleScroll);
+
+        return () => {
+            document.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     const [noticeList, setNoticeList] = useState<any>([]);
 
     console.log('noticeList', noticeList);
@@ -169,11 +200,14 @@ export default function GroupNoti() {
 
     return (
         <div className="section section-group">
-            <GroupHeader title={'공지사항'} groupName={gName} />
-            <p className="noti-info">공지사항은 모임장만 작성 가능합니다.</p>
+            <div className="moon-wrapper">
+                <GroupHeader title={'공지사항'} groupName={gName} />
+                <p className="noti-info">
+                    공지사항은 모임장만 작성 가능합니다.
+                </p>
 
-            {/* html tag 처리 */}
-            {/* noticeList.map((notice:any)=>{
+                {/* html tag 처리 */}
+                {/* noticeList.map((notice:any)=>{
                 return(
                     <div key={notice.gbSeq}>
                         <div dangerouslySetInnerHTML={{__html:notice.gbContent}}/>
@@ -181,83 +215,100 @@ export default function GroupNoti() {
                     </div>
                 )
             }) */}
-            <div className="noti-container">
-                <Paper sx={{ width: '100%' }}>
-                    <TableContainer sx={{ maxHeight: 440 }}>
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    {columns.map((column) => (
-                                        <TableCell
-                                            key={column.id}
-                                            align={column.align}
-                                            style={{
-                                                minWidth: column.minWidth,
-                                            }}
-                                        >
-                                            {column.label}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-
-                            <TableBody style={{ cursor: 'pointer' }}>
-                                {rows
-                                    ?.slice(
-                                        page * rowsPerPage,
-                                        page * rowsPerPage + rowsPerPage
-                                    )
-                                    .map((row: any, idx: number) => {
-                                        return (
-                                            <TableRow
-                                                hover
-                                                role="checkbox"
-                                                tabIndex={-1}
-                                                key={row.title}
+                <div className="noti-container">
+                    <Paper sx={{ width: '100%' }}>
+                        <TableContainer sx={{ maxHeight: 440 }}>
+                            <Table stickyHeader aria-label="sticky table">
+                                <TableHead>
+                                    <TableRow>
+                                        {columns.map((column) => (
+                                            <TableCell
+                                                key={column.id}
+                                                align={column.align}
+                                                style={{
+                                                    minWidth: column.minWidth,
+                                                }}
                                             >
-                                                {columns?.map((column) => {
-                                                    const value =
-                                                        row[column.id];
-                                                    return (
-                                                        <TableCell
-                                                            key={column.id}
-                                                            align={column.align}
-                                                        >
-                                                            <Link
-                                                                // to={`/board/${gSeq}/notice/${gbSeq}`}
-                                                                to={`/board/${gSeq}/notice/${gbSeqList[idx]}`}
-                                                            >
-                                                                {column.format &&
-                                                                typeof value ===
-                                                                    'number'
-                                                                    ? column.format(
-                                                                          value
-                                                                      )
-                                                                    : value}
-                                                            </Link>
-                                                        </TableCell>
-                                                    );
-                                                })}
-                                            </TableRow>
-                                        );
-                                    })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[10, 25, 100]}
-                        component="div"
-                        count={rows?.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </Paper>
-            </div>
+                                                {column.label}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                </TableHead>
 
-            {isLeader ? (
-                <div className="plus-fixed-wrapper">
+                                <TableBody style={{ cursor: 'pointer' }}>
+                                    {rows
+                                        ?.slice(
+                                            page * rowsPerPage,
+                                            page * rowsPerPage + rowsPerPage
+                                        )
+                                        .map((row: any, idx: number) => {
+                                            return (
+                                                <TableRow
+                                                    hover
+                                                    role="checkbox"
+                                                    tabIndex={-1}
+                                                    key={row.title}
+                                                >
+                                                    {columns?.map((column) => {
+                                                        const value =
+                                                            row[column.id];
+                                                        return (
+                                                            <TableCell
+                                                                key={column.id}
+                                                                align={
+                                                                    column.align
+                                                                }
+                                                            >
+                                                                <Link
+                                                                    // to={`/board/${gSeq}/notice/${gbSeq}`}
+                                                                    to={`/board/${gSeq}/notice/${gbSeqList[idx]}`}
+                                                                >
+                                                                    {column.format &&
+                                                                    typeof value ===
+                                                                        'number'
+                                                                        ? column.format(
+                                                                              value
+                                                                          )
+                                                                        : value}
+                                                                </Link>
+                                                            </TableCell>
+                                                        );
+                                                    })}
+                                                </TableRow>
+                                            );
+                                        })}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[10, 25, 100]}
+                            component="div"
+                            count={rows?.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </Paper>
+                </div>
+
+                {isLeader ? (
+                    <div className="moon-icon-wrapper">
+                        <Link to={`/board/create/${gSeq}/${gCategory}`}>
+                            <div
+                                className={
+                                    isLeader
+                                        ? 'moon-icon moon-leader'
+                                        : 'moon-icon moon-member'
+                                }
+                                style={{
+                                    background:
+                                        'linear-gradient(-45deg, #a9a378, #ffd100)',
+                                }}
+                            ></div>
+                        </Link>
+
+                        {/* <div className="plus-fixed-wrapper">
                     <span className="plus-text">
                         공지사항 <br />
                         작성하기 !
@@ -269,10 +320,12 @@ export default function GroupNoti() {
                             alt="plus-fixed"
                         />
                     </Link>
-                </div>
-            ) : (
-                ''
-            )}
+                </div> */}
+                    </div>
+                ) : (
+                    ''
+                )}
+            </div>
         </div>
     );
 }

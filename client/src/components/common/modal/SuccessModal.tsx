@@ -27,6 +27,7 @@ any) {
     // 3. 마이페이지 수정 완료
     // 4. 게시글 작성 완료
     // 5. 모임장 위임 완료
+    // 6. 회원가입 완료
 
     const nvg = useNavigate();
 
@@ -68,6 +69,10 @@ any) {
         if (action === '게시글을 수정') {
             nvg(-1);
         }
+
+        if (action === '환영') {
+            nvg('/login');
+        }
     };
 
     return (
@@ -93,7 +98,14 @@ any) {
                                 ? `${groupName} ${action}했습니다 !`
                                 : action === '자유/질문을 작성'
                                 ? `자유/질문 게시글을 작성했습니다 !`
+                                : action === '환영'
+                                ? '회원가입 완료 !'
                                 : `${action}했습니다 !`}
+                        </div>
+                        <div style={{ fontSize: '1.4rem', paddingTop: '3rem' }}>
+                            {action === '환영'
+                                ? '로그인하여 모임에 참여해보세요 👋🏻'
+                                : ''}
                         </div>
                     </div>
 

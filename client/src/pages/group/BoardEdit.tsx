@@ -6,8 +6,6 @@ import { Cookies } from 'react-cookie';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 
-// import Editor from './Editor';
-
 import GroupHeader from '../../components/group/content/GroupHeader';
 import { MissionType } from 'src/types/types';
 import { Input } from '@mui/material';
@@ -25,6 +23,13 @@ export default function BoardEdit() {
 
     //] 게시글 수정 완료 모달창
     const [successModalSwitch, setSuccessModalSwitch] = useState(false);
+
+    const [initContent, setInitContent] = useState('');
+    // <참고> 초기 에디터 내용 변하지 않아야 함
+    //  <EditorDraft
+    //     value={initContent}
+    //     handleEditorChange={handleEditorChange}
+    // />
 
     const successHandler = () => {
         setSuccessModalSwitch(true);
@@ -52,6 +57,7 @@ export default function BoardEdit() {
                     gbTitle,
                     gbContent,
                 });
+                setInitContent(gbContent); // 에디터 기존 내용 업데이트
             });
     };
 
@@ -168,7 +174,7 @@ export default function BoardEdit() {
                     /> */}
 
                     <EditorDraft
-                        value={board.gbContent}
+                        value={initContent}
                         handleEditorChange={handleEditorChange}
                     />
                 </div>

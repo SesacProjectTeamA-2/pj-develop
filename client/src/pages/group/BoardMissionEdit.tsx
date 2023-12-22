@@ -29,6 +29,13 @@ export default function BoardMissionEdit() {
 
     const [missionList, setMissionList] = useState<any>([]);
 
+    const [initContent, setInitContent] = useState('');
+    // <참고> 초기 에디터 내용 변하지 않아야 함
+    //  <EditorDraft
+    //     value={initContent}
+    //     handleEditorChange={handleEditorChange}
+    // />
+
     //] 게시글 수정 완료 모달창
     const [successModalSwitch, setSuccessModalSwitch] = useState(false);
 
@@ -77,6 +84,8 @@ export default function BoardMissionEdit() {
                     gbTitle,
                     gbContent,
                 });
+
+                setInitContent(gbContent); // 에디터 기존 내용 업데이트
             });
     };
 
@@ -112,7 +121,7 @@ export default function BoardMissionEdit() {
         // console.log(name, value);
     };
 
-    //gbContent관리
+    //-- gbContent관리
     const handleEditorChange = (value: string) => {
         setBoard({
             ...board,
@@ -177,7 +186,8 @@ export default function BoardMissionEdit() {
                 </div>
                 <div>
                     <EditorDraft
-                        value={board.gbContent}
+                        value={initContent}
+                        // value={board.gbContent} // 이렇게 하면 값이 지속적으로 변경되어, 커서 리렌더링 되는 문제 발생
                         handleEditorChange={handleEditorChange}
                     />
 

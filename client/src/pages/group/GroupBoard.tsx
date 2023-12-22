@@ -27,6 +27,7 @@ export default function GroupBoard() {
                 console.log(res.data);
 
                 setGName(res.data.groupName);
+                setIsLeader(res.data.isLeader);
             });
     };
 
@@ -35,6 +36,7 @@ export default function GroupBoard() {
     }, []);
 
     const [gName, setGName] = useState('');
+    const [isLeader, setIsLeader] = useState(false);
 
     //] post 버튼 스크롤에 따라 효과
     useEffect(() => {
@@ -44,18 +46,6 @@ export default function GroupBoard() {
             var documentHeight =
                 document.documentElement.scrollHeight - window.innerHeight;
             var scrollRatio = scrollPosition / documentHeight;
-
-            // 부모 요소의 높이에 따라 달이 나타나거나 사라지도록 설정
-            // if (scrollRatio < 0.8) {
-            //     moonIcon?.classList.remove('show-md');
-            //     moonIcon?.classList.add('show');
-            // } else if (scrollRatio < 0.9) {
-            //     moonIcon?.classList.remove('show');
-            //     moonIcon?.classList.add('show-md');
-            // } else {
-            //     moonIcon?.classList.remove('show');
-            //     moonIcon?.classList.remove('show-md');
-            // }
 
             if (scrollRatio < 0.8) {
                 moonIcon?.classList.remove('show-md');
@@ -75,7 +65,6 @@ export default function GroupBoard() {
         document.addEventListener('scroll', handleScroll);
 
         return () => {
-            // Cleanup: Remove the scroll event listener when the component is unmounted
             document.removeEventListener('scroll', handleScroll);
         };
     }, []);
@@ -104,7 +93,24 @@ export default function GroupBoard() {
                         <EditIcon />
                     </Fab> */}
 
-                        <div className="moon-icon"></div>
+                        <div
+                            className={
+                                isLeader
+                                    ? 'moon-icon moon-leader'
+                                    : 'moon-icon moon-member'
+                            }
+                            style={
+                                isLeader
+                                    ? {
+                                          background:
+                                              'linear-gradient(-45deg, #a9a378, #ffd100)',
+                                      }
+                                    : {
+                                          background:
+                                              'linear-gradient(8deg, #bdb1b1, #ffc1c7)',
+                                      }
+                            }
+                        ></div>
                     </Link>
                 </div>
             </div>
