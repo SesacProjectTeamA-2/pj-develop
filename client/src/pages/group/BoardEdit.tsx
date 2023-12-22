@@ -25,6 +25,7 @@ export default function BoardEdit() {
 
     //] 게시글 수정 완료 모달창
     const [successModalSwitch, setSuccessModalSwitch] = useState(false);
+    const [initContent, setInitContent] = useState('');
 
     const successHandler = () => {
         setSuccessModalSwitch(true);
@@ -52,6 +53,7 @@ export default function BoardEdit() {
                     gbTitle,
                     gbContent,
                 });
+                setInitContent(gbContent);
             });
     };
 
@@ -168,7 +170,7 @@ export default function BoardEdit() {
                     /> */}
 
                     <EditorDraft
-                        value={board.gbContent}
+                        value={initContent}
                         handleEditorChange={handleEditorChange}
                     />
                 </div>

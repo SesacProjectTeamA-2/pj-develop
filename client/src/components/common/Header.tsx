@@ -15,7 +15,8 @@ import Alarm from './Alarm';
 export default function Header(props: any) {
     const [isCookie, setIsCookie] = useState(false); // 쿠키 유무
 
-    console.log('^^^^ socket 연결 여부  ^^^^', props.socket);
+    console.log('socket 연결 여부  >>>>>> ', props.socket);
+    console.log('sse 연결 여부 ------> ', props.sse);
 
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
@@ -126,6 +127,7 @@ export default function Header(props: any) {
     const logoutHandler = () => {
         // [추후] 로그아웃 모달창 처리
 
+        //; 1. 관리자
         if (props.adminUser) {
             if (window.confirm('로그아웃하시겠습니까 ?')) {
                 // console.log('uSeqData ::::::', uSeqData);
@@ -140,13 +142,23 @@ export default function Header(props: any) {
             } else {
                 return;
             }
+            //; 2. 유저
         } else if (window.confirm('로그아웃하시겠습니까 ?')) {
             // console.log('uSeqData ::::::', uSeqData);
 
-            //-- 채팅 종료
+            //-- 1) 채팅 종료
             props.socket?.emit('logout', uSeqData);
             // props.socket.emit('logout', { uSeq: 8 });
 
+            localStorage.setItem('showChat', JSON.stringify(false));
+
+            //-- 2) 실시간 알람 종료
+            props.sse?.addEventListener('close', (event: any) => {
+                console.log('logout >>> 실시간 알람 종료');
+                // props.sse.close();
+            });
+
+            // logout 확정
             setLogoutConfirm(true);
         } else {
             return;
@@ -207,28 +219,21 @@ export default function Header(props: any) {
             });
     };
 
-    //] 알람 SSE
-
+    //++ 알람 SSE
     const [isAlarm, setIsAlarm] = useState<boolean>(false);
     const alarmHandler = () => {
         setIsAlarm(!isAlarm);
     };
 
     const getNoti = () => {
-        const eventSource = new EventSourcePolyfill(
-            `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
-            {
-                headers: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            }
-        );
-
-        eventSource.addEventListener('connect', (e: any) => {
-            const { data: receivedSections } = e;
-
-            console.log(e);
-        });
+        // const eventSource = new EventSourcePolyfill(
+        //     `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
+        //     {
+        //         headers: {
+        //             Authorization: `Bearer ${uToken}`,
+        //         },
+        //     }
+        // );
 
         // //-- 연결 시 할 일
         // eventSource.onopen = async () => {
@@ -254,19 +259,6 @@ export default function Header(props: any) {
         //     }
         // };
 
-        eventSource.addEventListener('open', (event) => {
-            console.log(event);
-            console.log('EventSource connection opened.');
-        });
-
-        eventSource.addEventListener('connection', (event) => {
-            console.log(event);
-
-            // const eventData = JSON.parse(event.data);
-            // console.log('Received event data:', eventData);
-            // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
-        });
-
         // 서버로부터 연결 이벤트를 수신할 때의 처리
         // eventSource.addEventListener('connection', (event: any) => {
         //     console.log('e', event);
@@ -286,7 +278,7 @@ export default function Header(props: any) {
         // };
 
         // 서버로부터 이벤트를 수신할 때의 처리
-        eventSource.onmessage = (event: any) => {
+        props.sse.onmessage = (event: any) => {
             console.log('e', event);
 
             const eventData = JSON.parse(event.data);
@@ -294,7 +286,7 @@ export default function Header(props: any) {
             // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
         };
 
-        eventSource.onerror = (e: any) => {
+        props.sse.onerror = (e: any) => {
             console.log('e', e);
 
             //-- 종료 또는 에러 발생 시 할 일

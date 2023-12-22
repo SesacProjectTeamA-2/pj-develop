@@ -20,7 +20,10 @@ export default function ChatRoom({
 
     // console.log('socket:::::', socket);
 
-    // const [chat, setChat] = useState<any>([]); // 받아올 채팅 1️
+    // 받아올 채팅 1️
+    const [allMsg, setAllMsg] = useState<any>([]);
+
+    const [loginUser, setLoginUser] = useState<any>([]);
 
     // 서버에 전송할 데이터 2
     const [msgData, setMsgData] = useState<any>({
@@ -124,6 +127,24 @@ export default function ChatRoom({
         // joinRoom 이벤트에 대한 리스너 추가
         socket?.on('joinRoom', (data: any) => {
             console.log('joinRoom event received on client', data); // 서버에서 보낸 data
+            setLoginUser(data.loginUser);
+            console.log('>>>>>>>>>>>>', data.allMsg);
+
+            if (typeof data.allMsg !== 'string') {
+                const formattedData = data.allMsg?.map((msg: any) => ({
+                    gSeq: msg.gSeq,
+                    msg: msg.msg,
+                    timeStamp: new Date(msg.timeStamp).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        // hour12: false,
+                    }),
+                    uSeq: msg.uSeq,
+                    // uName
+                }));
+
+                setAllMsg(formattedData);
+            }
         });
 
         // --컴포넌트가 언마운트될 때 리스너 해제
@@ -157,6 +178,24 @@ export default function ChatRoom({
             msg,
         }));
     };
+
+    //] 상대방이 문자 전송할 경우 (실시간 업데이트)
+    // useEffect(() => {
+    //     //-- 서버에서 데이터 받아오기
+    //     socket?.on('msg', (data: any) => {
+    //         console.log('MSG event received on client', data); // 서버에서 보낸 data
+
+    //         // setSendMsg((prevData: any) => ({
+    //         //     ...prevData,
+    //         //     timeStamp: data.timeStamp,
+    //         //     msg: data.msg,
+    //         // }));
+    //     });
+
+    //     //-- 말풍선 추가
+    //     // console.log('#######', sendMsg);
+    //     addMessageBubble(sendMsg);
+    // }, []);
 
     //] 말풍선을 화면에 추가하는 함수
     const addMessageBubble = (data: any) => {
@@ -204,6 +243,7 @@ export default function ChatRoom({
                     // 오전 8:12
                     hour: '2-digit',
                     minute: '2-digit',
+                    // hour12: false,
                 }),
             },
         }));
@@ -266,6 +306,7 @@ export default function ChatRoom({
     // }, [socket]);
 
     console.log(msgData);
+    console.log('::::::', allMsg);
 
     return (
         <main className="chat-box">
@@ -400,24 +441,35 @@ export default function ChatRoom({
                             hour12: false,
                         })} */}
                     </div>
-                    <div className="chat-bubble-send">
-                        {/* <div className="send-user">나</div> */}
+
+                    {/* ### 예시 보내는 문자 ### */}
+                    {/* <div className="chat-bubble-send">
+                      
                         <div className="msg-container">
                             <div className="send-time">오전 09:05</div>
                             <div className="message send-msg">
                                 Hey, man! What's up, Mr Stark? 👋
                             </div>
                         </div>
-                    </div>
-                    <div className="chat-bubble-receive">
-                        <div className="send-user">임의 유저</div>
-                        <div className="msg-container">
-                            <div className="message re-msg">
-                                Kid, where'd you come from?
+                    </div> */}
+
+                    {/* ----- 받은 문자 ----- */}
+                    {allMsg?.map((chat: any) => {
+                        return (
+                            <div className="chat-bubble-receive">
+                                <div className="send-user">{chat.uName}</div>
+                                <div className="msg-container">
+                                    <div className="message re-msg">
+                                        {chat.msg}
+                                    </div>
+                                    <div className="receive-time">
+                                        {chat.timeStamp}
+                                    </div>
+                                </div>
                             </div>
-                            <div className="receive-time">오전 09:06</div>
-                        </div>
-                    </div>
+                        );
+                    })}
+
                     {/* <div className="message send-msg">Field trip! 🤣</div> */}
                     {/* <div className="message send-msg">
                         Uh, what is this guy's problem, Mr. Stark? 🤔
