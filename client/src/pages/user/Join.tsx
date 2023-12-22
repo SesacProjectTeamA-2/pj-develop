@@ -9,6 +9,7 @@ import Nickname from '../../components/common/Nickname';
 import CharacterList from '../../components/common/CharacterList';
 import InterestedList from '../../components/common/InterestedList';
 import { Divider } from '@mui/material';
+import SuccessModal from 'src/components/common/modal/SuccessModal';
 
 export default function Join(props: any) {
     const cookie = new Cookies();
@@ -90,10 +91,19 @@ export default function Join(props: any) {
             })
             .then((res) => {
                 console.log('회원가입 데이터', res.data);
-                alert(
-                    'Motimates의 회원이 되신 것을 환영합니다 ! \n로그인하여 모임에 참여해보세요 👋🏻'
-                );
+                // alert(
+                //     'Motimates의 회원이 되신 것을 환영합니다 ! \n로그인하여 모임에 참여해보세요 👋🏻'
+                // );
+
+                successHandler();
             });
+    };
+
+    //] 게시물 작성 완료 모달창
+    const [successModalSwitch, setSuccessModalSwitch] = useState(false);
+
+    const successHandler = () => {
+        setSuccessModalSwitch(true);
     };
 
     return (
@@ -138,17 +148,23 @@ export default function Join(props: any) {
             </div>
             {/* </form> */}
 
-            <Link to="/login">
-                <div className="btn-fixed-wrapper">
-                    <button
-                        id="join-btn"
-                        className="btn-fixed"
-                        onClick={() => register()}
-                    >
-                        시작하기
-                    </button>
-                </div>
-            </Link>
+            {/* <Link to="/login"> */}
+            <div className="btn-fixed-wrapper">
+                <button
+                    id="join-btn"
+                    className="btn-fixed"
+                    onClick={() => register()}
+                >
+                    시작하기
+                </button>
+            </div>
+            {/* </Link> */}
+
+            <SuccessModal
+                successModalSwitch={successModalSwitch}
+                setSuccessModalSwitch={setSuccessModalSwitch}
+                action={'환영'}
+            />
         </div>
     );
 }
