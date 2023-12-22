@@ -5,8 +5,8 @@ const sub = require('../models/redis').sub;
 
 exports.alarm = async (req, res) => {
   try {
-    const sse = req.app.get('sse');
-
+    // const sse = req.app.get('sse');
+    // console.log(sse.server);
     if (req.headers.authorization) {
       const token = req.headers.authorization.split(' ')[1];
       const user = await jwt.verify(token);
@@ -20,34 +20,64 @@ exports.alarm = async (req, res) => {
         return;
       }
 
-      // 기존 알람 load (connection)
-      sse.on('connection', async (client) => {
-        console.log('SSE 연결 완료!');
+      const alarmCount = await redisCli.lLen(`user${uSeq}`);
+      const data = await redisCli.lRange(`user${uSeq}`, 0, -1);
+      const allAlarm = data.map((alarm) => JSON.parse(alarm));
 
-        const alarmCount = await redisCli.lLen(`user${uSeq}`);
-        const data = await redisCli.lRange(`user${uSeq}`, 0, -1);
-        const allAlarm = data.map((alarm) => JSON.parse(alarm));
-
-        // 처음 연결시 보낼 알림목록 및 숫자
-        client.write(
-          'event: connect\n' + `data:${{ alarmCount, allAlarm }}\n\n`
-        );
-
-        // redis에 댓글추가시 메세지 전송됨.
-        await sub.subscribe('comment-alarm', (message) => {
-          client.write('event: commentAlarm\n' + `data:${message}\n\n`);
-        });
-
-        // 모임 추방시 메세지 전송.
-        await sub.subscribe('group-alarm', (message) => {
-          client.write('event: groupAlarm\n' + `data:${message}\n\n`);
-        });
-      });
+      // 처음 연결시 보낼 알림목록 및 숫자
+      res.send({ isSuccess: 'alarm list', alarmCount, allAlarm });
     } else {
       console.log('토큰이 없음!');
     }
   } catch (err) {
     console.error('SSE server error!!', err);
+  }
+};
+
+exports.alarming = async (req, res) => {
+  try {
+    if (req.headers.authorization) {
+      const token = req.headers.authorization.split(' ')[1];
+      const user = await jwt.verify(token);
+      const uSeq = user.uSeq;
+
+      if (!uSeq) {
+        res.send({
+          success: false,
+          msg: '로그인X or 비정상적인 접근',
+        });
+        return;
+      }
+
+      res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        Connection: 'keep-alive',
+        'Access-Control-Allow-Origin': '*', // CORS 설정을 추가
+      });
+
+      // console.log(sse.on);
+      // 기존 알람 load (connection)
+      // sse.on('connection', async (client) => {
+      res.write(`data: ${JSON.stringify('SSE연결완료')}\n\n`);
+
+      // redis에 댓글추가시 메세지 전송됨.
+      await sub.subscribe('comment-alarm', (message) => {
+        res.write('event: commentAlarm\n' + `data:${message}\n\n`);
+      });
+
+      // 모임 추방시 메세지 전송.
+      await sub.subscribe('group-alarm', (message) => {
+        res.write('event: groupAlarm\n' + `data:${message}\n\n`);
+      });
+      // });
+
+      req.on('close', () => {
+        console.log('SSE server close');
+      });
+    }
+  } catch (err) {
+    console.error('SSE 서버 연결 err', err);
   }
 };
 
@@ -72,6 +102,7 @@ exports.delAlarm = async (req, res) => {
       });
       return;
     }
+
     const value = req.body.commentInfo;
     console.log('댓글 정보', value);
     const result = await redisCli.lRem(`user${uSeq}`, 0, JSON.stringify(value));
