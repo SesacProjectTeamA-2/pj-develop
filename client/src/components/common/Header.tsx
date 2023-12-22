@@ -224,7 +224,7 @@ export default function Header(props: any) {
             }
         );
 
-        eventSource.addEventListener('connect', (e: any) => {
+        eventSource.addEventListener('connected', (e: any) => {
             const { data: receivedSections } = e;
 
             console.log(e);

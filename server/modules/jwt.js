@@ -12,6 +12,7 @@ module.exports = {
       uName: user.userName,
       uEmail: user.userEmail,
       uSeq: user.uSeq,
+      gSeq: user.gSeq,
     };
     const result = {
       //sign메소드를 통해 access token 발급

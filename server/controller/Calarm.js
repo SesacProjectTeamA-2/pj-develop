@@ -59,7 +59,9 @@ exports.alarming = async (req, res) => {
       // console.log(sse.on);
       // 기존 알람 load (connection)
       // sse.on('connection', async (client) => {
-      res.write(`data: ${JSON.stringify('SSE연결완료')}\n\n`);
+      res.write(
+        'event: connected\n' + `data: ${JSON.stringify('SSE연결완료')}\n\n`
+      );
 
       // redis에 댓글추가시 메세지 전송됨.
       await sub.subscribe('comment-alarm', (message) => {
