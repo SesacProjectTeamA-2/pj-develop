@@ -216,7 +216,7 @@ export default function Header(props: any) {
 
     const getNoti = () => {
         const eventSource = new EventSourcePolyfill(
-            `${process.env.REACT_APP_DB_HOST}/subscribe/alarm`,
+            `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
             {
                 headers: {
                     Authorization: `Bearer ${uToken}`,
@@ -254,7 +254,7 @@ export default function Header(props: any) {
         //     }
         // };
 
-        eventSource.addEventListener('alarm', (event) => {
+        eventSource.addEventListener('open', (event) => {
             console.log(event);
             console.log('EventSource connection opened.');
         });

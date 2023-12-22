@@ -24,7 +24,6 @@ const authUtil = {
         return res.send({ error: '유효하지 않는 토큰' });
       if (user.uSeq === undefined)
         return res.send({ error: '토근 : undefined' });
-      req.uSeq = user.uSeq;
       next();
     } catch {
       return res.send({ error: '토큰 확인 중 서버 에러' });
