@@ -253,7 +253,7 @@ export default function BoardPost() {
                 </div>
                 <div>
                     <EditorDraft
-                        value={board.gbContent}
+                        value=""
                         handleEditorChange={handleEditorChange}
                     />
 

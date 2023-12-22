@@ -7,7 +7,7 @@ import ChatRoom from './chat/ChatRoom';
 import ChatList from './chat/ChatList';
 // import useSocket from 'src/hooks/useSocket';
 
-export default function SidebarChat({ socket, setShowChat, showChat }: any) {
+export default function SidebarChat({ socket, showChatting, showChat }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -42,15 +42,13 @@ export default function SidebarChat({ socket, setShowChat, showChat }: any) {
                     setIsEnter={setIsEnter}
                     setNowGSeq={setNowGSeq}
                     setNowGName={setNowGName}
-                    setShowChat={setShowChat}
+                    showChatting={showChatting}
                     showChat={showChat}
                 />
             ) : (
                 <ChatRoom
                     isEnter={isEnter}
                     setIsEnter={setIsEnter}
-                    // sendMsg={sendMsg}
-                    // setSendMsg={setSendMsg}
                     nowGSeq={nowGSeq}
                     nowGName={nowGName}
                     uName={uName}
