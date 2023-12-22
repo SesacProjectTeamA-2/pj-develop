@@ -54,7 +54,7 @@ export default function Alarm({ alarmHandler }: any) {
                         <div className="circle"></div>
 
                         <span className="time">Yesterday</span>
-                        <button>읽음 표시</button>
+                        <button>읽음</button>
                         <p>
                             <b>Luke Wayne</b> followed you.
                         </p>
@@ -63,7 +63,7 @@ export default function Alarm({ alarmHandler }: any) {
                         <div className="circle"></div>
 
                         <span className="time">Yesterday</span>
-                        <button>읽음 표시</button>
+                        <button>읽음</button>
                         <p>
                             <b>Luke Wayne</b> followed you.
                         </p>
@@ -72,7 +72,7 @@ export default function Alarm({ alarmHandler }: any) {
                         <div className="circle"></div>
 
                         <span className="time">Yesterday</span>
-                        <button>읽음 표시</button>
+                        <button>읽음</button>
                         <p>
                             <b>Luke Wayne</b> followed you.
                         </p>

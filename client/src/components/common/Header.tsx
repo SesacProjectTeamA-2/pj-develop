@@ -216,59 +216,89 @@ export default function Header(props: any) {
 
     const getNoti = () => {
         const eventSource = new EventSourcePolyfill(
-            `${process.env.REACT_APP_DB_HOST}/alarm`,
+            `${process.env.REACT_APP_DB_HOST}/subscribe/alarm`,
             {
                 headers: {
-                    Authorization: uToken,
+                    Authorization: `Bearer ${uToken}`,
                 },
             }
         );
 
-        // const eventSource = new EventSource(
-        //     `${process.env.REACT_APP_DB_HOST}/alarm`,
-        //     {
-        //         headers: {
-        //             Authorization: `Bearer ${uToken}`,
-        //         },
+        eventSource.addEventListener('connect', (e: any) => {
+            const { data: receivedSections } = e;
+
+            console.log(e);
+        });
+
+        // //-- 연결 시 할 일
+        // eventSource.onopen = async () => {
+        //     console.log('EventSource connection opened.');
+
+        //     // 기존 알람 데이터 받아오기
+        //     try {
+        //         const res = await fetch(
+        //             `${process.env.REACT_APP_DB_HOST}/subscribe/alarm`,
+        //             {
+        //                 method: 'GET',
+        //                 headers: {
+        //                     Authorization: `Bearer ${uToken}`,
+        //                 },
+        //             }
+        //         );
+
+        //         const data = await res.json();
+        //         console.log('Initial alarm data:', data);
+        //         // 여기서 기존 알람 데이터를 처리하거나 상태 업데이트 등을 수행할 수 있습니다.
+        //     } catch (error) {
+        //         console.error('Error fetching initial alarm data:', error);
         //     }
-        // );
+        // };
 
-        //-- 연결 시 할 일
-        eventSource.onopen = async () => {
+        eventSource.addEventListener('alarm', (event) => {
+            console.log(event);
             console.log('EventSource connection opened.');
+        });
 
-            // 기존 알람 데이터 받아오기
-            try {
-                const res = await fetch(
-                    `${process.env.REACT_APP_DB_HOST}/alarm`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            Authorization: `Bearer ${uToken}`,
-                        },
-                    }
-                );
+        eventSource.addEventListener('connection', (event) => {
+            console.log(event);
 
-                const data = await res.json();
-                console.log('Initial alarm data:', data);
-                // 여기서 기존 알람 데이터를 처리하거나 상태 업데이트 등을 수행할 수 있습니다.
-            } catch (error) {
-                console.error('Error fetching initial alarm data:', error);
-            }
-        };
+            // const eventData = JSON.parse(event.data);
+            // console.log('Received event data:', eventData);
+            // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
+        });
 
-        eventSource.onmessage = async (e) => {
-            const res = await e.data;
-            const parsedData = JSON.parse(res);
+        // 서버로부터 연결 이벤트를 수신할 때의 처리
+        // eventSource.addEventListener('connection', (event: any) => {
+        //     console.log('e', event);
 
-            //-- 받아오는 data로 할 일
+        //     const eventData = JSON.parse(event.data);
+        //     console.log('Received connect event:', eventData);
+        //     // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
+        // });
 
-            console.log(parsedData);
+        // eventSource.onmessage = async (e) => {
+        //     const res = await e.data;
+        //     const parsedData = JSON.parse(res);
+
+        //     //-- 받아오는 data로 할 일
+
+        //     console.log(parsedData);
+        // };
+
+        // 서버로부터 이벤트를 수신할 때의 처리
+        eventSource.onmessage = (event: any) => {
+            console.log('e', event);
+
+            const eventData = JSON.parse(event.data);
+            console.log('Received event data:', eventData);
+            // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
         };
 
         eventSource.onerror = (e: any) => {
+            console.log('e', e);
+
             //-- 종료 또는 에러 발생 시 할 일
-            eventSource.close();
+            // eventSource.close();
 
             if (e.error) {
                 //-- 에러 발생 시 할 일
@@ -282,9 +312,12 @@ export default function Header(props: any) {
         };
     };
 
-    if (isAlarm) {
-        getNoti();
-    }
+    //-- 컴포넌트가 마운트될 때 EventSource 생성
+    useEffect(() => {
+        if (isAlarm) {
+            getNoti();
+        }
+    }, [isAlarm]);
 
     //_ [ START ] 반응형 CSS
     const theme = createTheme({
