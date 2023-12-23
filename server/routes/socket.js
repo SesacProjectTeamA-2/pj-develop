@@ -30,34 +30,28 @@ exports.chatSocket = async (io, socket) => {
         console.log('userSocketMap', userSocketMap);
 
         // redis에 사용자 정보 캐시로 저장 (hash)
-        // 만료시간 설정
-        const expirationTime = await redisCli.ttl(`${socketId}`);
-        if (expirationTime > 0) {
-          console.log('이미 만료시간 설정되어 있음!');
-        } else {
-          await redisCli.expire(`${socketId}`, 86400); // 24시간
-        }
+
         // 이미 로그인되어 있는 경우에는 update하지 않음.
-        const isConnected = await redisCli.hGet(`${socketId}`, 'uSeq');
+        const isConnected = await redisCli.hGet(`socket${uSeq}`, 'uName');
         if (!isConnected) {
-          await redisCli.hSet(`${socketId}`, 'uSeq', uSeq);
-          await redisCli.hSet(`${socketId}`, 'uName', uName);
+          await redisCli.hSet(`socket${uSeq}`, 'uSeq', uSeq);
+          await redisCli.hSet(`socket${uSeq}`, 'gSeq', JSON.stringify(gSeq));
+          await redisCli.hSet(`socket${uSeq}`, 'uName', uName);
           await redisCli.hSetNX(
-            `${socketId}`,
+            `socket${uSeq}`,
             'loginTime',
             new Date().toString()
           );
           await redisCli.hSet(`${socketId}`, 'gSeq', JSON.stringify(gSeq));
         }
+        // 만료시간 설정
+        await redisCli.expire(`socket${uSeq}`, 86400); // 24시간
 
         // 방참가하기
         if (Array.isArray(gSeq)) {
           gSeq.map((info) => {
-            const isExisting = groupChat.sockets.adapter.rooms.has(
-              `room${info}`
-            );
-            console.log(`room${info} 현재 생성되어 있음?`, isExisting);
             socket.join(`room${info}`);
+            console.log(groupChat.adapter.rooms);
           });
         } else {
           console.log(`gSeq is not Array!`);
@@ -73,9 +67,7 @@ exports.chatSocket = async (io, socket) => {
           try {
             if (Array.isArray(data.gSeq)) {
               data.gSeq.map((info) => {
-                const isExisting = groupChat.sockets.adapter.rooms.has(
-                  `room${info}`
-                );
+                const isExisting = groupChat.adapter.rooms.has(`room${info}`);
                 console.log(`room${info} 현재 생성되어 있음?`, isExisting);
                 // 방에 참가 및 notice
                 socket.to(`room${info}`).emit('loginNotice', {
@@ -137,16 +129,14 @@ exports.chatSocket = async (io, socket) => {
           try {
             console.log('joinroom data>>>>>>>>>', data);
 
-            console.log(
-              groupChat.sockets.adapter.rooms.get(`room${data.gSeq}`)
-            );
+            console.log(groupChat.adapter.rooms.get(`room${data.gSeq}`));
             // 1. 모임가입/ 모임생성시 : 방참여/ gSeq 추가
             if (data.isSignup === 'true') {
               // gSeq 배열 추가
               userInfo.gSeq.push(...Number(data.gSeq));
               // 캐시 update
               await redisCli.hSet(
-                `user${uSeq}`,
+                `socket${uSeq}`,
                 'gSeq',
                 JSON.stringify(userInfo.gSeq)
               );
@@ -160,30 +150,29 @@ exports.chatSocket = async (io, socket) => {
             } else {
               // 2. 이미 가입되어 있는 경우 채팅방 입장.
               const gSeq = data.gSeq;
-              console.log('rooms목록: ', groupChat.sockets.adapter.rooms);
+              console.log('rooms목록: ', groupChat.adapter.rooms);
               // 룸에 접속중인 소켓 로드 (접속중인 소켓 없을 때는 빈 배열 반환)
-              const result = groupChat.sockets.adapter.rooms.get(`room${gSeq}`);
+              const result = groupChat.adapter.rooms.get(`room${gSeq}`);
               console.log(result);
               const socketsInRoom = Array.from(
-                groupChat.sockets.adapter.rooms.get(`room${gSeq}`) || []
+                groupChat.adapter.rooms.get(`room${gSeq}`) || []
               );
 
               let userDatas = [];
-              for (let id of socketsInRoom) {
-                userDatas.push(await redisCli.hGetAll(`${id}`));
-              }
+              // for (let id of socketsInRoom) {
+              //   userDatas.push(await redisCli.hGetAll(`${id}`));
+              // }
 
-              // // 일치하는 uSeq 찾기.
-              // const uSeqs = socketsInRoom.map((socketId) =>
-              //   Object.keys(userSocketMap).find(
-              //     (uSeq) => userSocketMap[uSeq] === socketId
-              //   )
-              // );
-              // // room에 참가하고 있는 소켓의 정보를 담은 배열
-              // let userDatas = [];
-              // uSeqs.forEach(async (uSeq) =>
-              //   userDatas.push(await redisCli.hGetAll(`user${uSeq}`))
-              // );
+              // 일치하는 uSeq 찾기.
+              const uSeqs = socketsInRoom.map((socketId) =>
+                Object.keys(userSocketMap).find(
+                  (uSeq) => userSocketMap[uSeq] === socketId
+                )
+              );
+              // room에 참가하고 있는 소켓의 정보를 담은 배열
+              uSeqs.forEach(async (uSeq) =>
+                userDatas.push(await redisCli.hGetAll(`socket${uSeq}`))
+              );
 
               const uNameInRoom = userDatas.map((user) => user.uName);
 
@@ -279,11 +268,11 @@ exports.chatSocket = async (io, socket) => {
           try {
             const gSeq = data.gSeq;
 
-            console.log(groupChat.sockets.adapter.rooms);
+            console.log(groupChat.adapter.rooms);
             userInfo.gSeq = userInfo.gSeq.filter((seq) => seq !== gSeq);
 
             await redisCli.hSet(
-              `${socketId}`,
+              `socket${uSeq}`,
               'gSeq',
               JSON.stringify(userInfo.gSeq)
             );
@@ -304,10 +293,8 @@ exports.chatSocket = async (io, socket) => {
             console.log('User logged out:', socketId);
 
             // 유저 캐시 삭제
-            // const fieldsToDelete = ['uName', 'loginTime', 'gSeq', 'socketId'];
-            // for (const field of fieldsToDelete) {
-            await redisCli.Del(`${socketId}`);
-            // }
+
+            await redisCli.del(`socket${uSeq}`, field);
 
             // userSocketMap 객체에서 특정 uSeq 키값을 삭제
             delete userSocketMap[uSeq];
