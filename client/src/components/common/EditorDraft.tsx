@@ -7,15 +7,20 @@ import {
 // 이미지를 표시하기 위해 이미지를 로드하는 데 사용되는 Entity 타입인 ‘atomic’을 지원해야 합니다.
 // https://colinch4.github.io/2023-11-24/11-09-13-449385-draftjs%EC%97%90%EC%84%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B6%94%EA%B0%80-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/
 import { useEffect, useState } from 'react';
+// import Editor from '@draft-js-plugins/editor';
 import { Editor, SyntheticKeyboardEvent } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 import { Fragment } from 'react';
+import { Cookies } from 'react-cookie';
+import axios from 'axios';
+import createImagePlugin from '@draft-js-plugins/image';
 
-// import React from 'react';
-// import ReactDOM from 'react-dom';
 // import { Editor, EditorState } from 'draft-js';
-// import 'draft-js/dist/Draft.css';
+import 'draft-js/dist/Draft.css';
+import '../../styles/scss/components/editor.scss';
+
+const imagePlugin = createImagePlugin();
 
 export default function EditorDraft({ value, handleEditorChange }: any) {
     // value를 사용하여 초기 EditorState를 생성
@@ -39,137 +44,152 @@ export default function EditorDraft({ value, handleEditorChange }: any) {
         const text = editorState.getCurrentContent().getPlainText('\u0001');
 
         handleEditorChange(text);
-
-        //     const { blocks } = convertToRaw(editorState.getCurrentContent());
-        //     /*let text = blocks.reduce((acc, item) => {
-        //   acc = acc + item.text;
-        //   return acc;
-        // }, "");*/
-        //     // const text = blocks.map(block => block.text).join('\n');
     };
 
-    //) MyPage.tsx
+    const cookie = new Cookies();
+    const uToken = cookie.get('isUser');
 
-    // const handlerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // const uploadCallback = (e: React.ChangeEvent<HTMLInputElement>) => {
     //     const formData = new FormData(); // 사진 담을 formData 객체 생성
 
-    //     if (e.target.files && e.target.files[0]) {
+    //     if (e.target && e.target.files && e.target.files[0]) {
     //         formData.append('image', e.target.files[0]);
     //         sendImg(formData);
     //     }
     // };
 
-    // const sendImg = (formData: any): void => {
+    // const sendImg = async (formData: any) => {
     //     const cookie = new Cookies();
-    //     const uToken = cookie.get('isUser'); // 토큰 값
+    //     const uToken = cookie.get('isUser');
 
     //     try {
-    //         axios
-    //             .patch(
-    //                 `${process.env.REACT_APP_DB_HOST}/user/mypage/userImg`,
-    //                 formData,
-    //                 {
-    //                     headers: {
-    //                         'Content-Type': 'multipart/form-data',
-    //                         Authorization: `Bearer ${uToken}`,
-    //                     },
-    //                 }
-    //             )
-    //             .then((res) => {
-    //                 console.log('post', res.data);
-    //                 getUserData(); // 이거 해야 바로 수정된 프로필 사진으로 동기화 : 하지만 저장되지 않은 다른 값들은 초기화 돼서 옴 ㅜ
-    //             });
+    //         const res = await axios.post(
+    //             `${process.env.REACT_APP_DB_HOST}/board/create/img`,
+    //             formData,
+    //             {
+    //                 headers: {
+    //                     'Content-Type': 'multipart/form-data',
+    //                     Authorization: `Bearer ${uToken}`,
+    //                 },
+    //             }
+    //         );
+
+    //         if (res !== undefined && res.data !== undefined) {
+    //             console.log('post', res.data);
+    //         } else {
+    //             console.log('post 요청에 대한 응답이 없습니다.');
+    //         }
     //     } catch (err) {
-    //         console.log(err);
+    //         console.log('error 발생: ', err);
     //     }
     // };
 
-    const uploadCallback = (file: any) => {
-        console.log('이미지 업로드 !', file);
+    /////////////////////////
 
-        // return new Promise((resolve, reject) => {
-        //     // Simulating image upload to a server
-        //     setTimeout(() => {
-        //         const uploadedImageURL =
-        //             'https://example.com/uploaded-image.jpg';
-        //         resolve({ data: { link: uploadedImageURL } });
-        //     }, 2000);
-        // });
-
-        return new Promise((resolve, reject) => {
-            // if (file) {
-            //     let reader = new FileReader();
-            //     reader.onload = (e: any) => {
-            //         resolve({ data: { link: e.target.result } });
-            //     };
-            //     reader.readAsDataURL(file);
-            // }
-
-            //-- if you want to use a file server to keep files then you might want to upload image on server and then simply put the link
-
+    // 이미지 업로드 요청 함수
+    const sendImg = async (imageFile: any) => {
+        try {
             const formData = new FormData();
-            formData.append('file', file);
+            formData.append('image', imageFile);
 
-            // Replace 'your-upload-api-url' with your actual server API endpoint for image upload
-            fetch('your-upload-api-url', {
-                method: 'POST',
-                body: formData,
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    const { link } = data;
-                    console.log('Received image link from server:', link);
-                    resolve({ data: { link } });
-                })
-                .catch((error) => {
-                    console.error('Error uploading image:', error);
-                    reject(error);
-                });
-        });
+            const response = await axios.post(
+                `${process.env.REACT_APP_DB_HOST}/board/create/img`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${uToken}`, // 예시: 서버로 전달할 인증 토큰
+                    },
+                }
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error('이미지 업로드 오류:', error);
+            throw error;
+        }
     };
 
-    // const handleImageUpload = (e: any) => {
-    //     e.preventDefault();
-    //     const file = e.target.files[0];
-    //     const reader = new FileReader();
+    // 이미지 업로드 이벤트 핸들러
+    const uploadCallback = async (e: any) => {
+        try {
+            // e.preventDefault();
 
-    //     reader.onload = (e: any) => {
-    //         const contentState = editorState.getCurrentContent();
+            console.log(e);
 
-    //         const contentStateWithEntity = contentState.createEntity(
-    //             'atomic',
-    //             'IMMUTABLE',
-    //             { src: e.target.result }
-    //         );
+            // // e.target이 정의되었는지 확인
+            // if (!e.target) {
+            //     console.log('이벤트 타겟이 정의되지 않았습니다.');
+            //     return;
+            // }
 
-    //         const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    //         const newEditorState = EditorState.set(editorState, {
-    //             currentContent: contentStateWithEntity,
-    //         });
+            // const imageFile = e.target.files && e.target.files[0];
 
-    //         setEditorState(
-    //             AtomicBlockUtils.insertAtomicBlock(
-    //                 newEditorState,
-    //                 entityKey,
-    //                 ' '
-    //             )
-    //         );
-    //     };
+            // e가 이미지 파일 정보를 직접 포함하고 있습니다.
+            const imageFile = e;
 
-    //     reader.readAsDataURL(file);
-    // };
+            if (!imageFile) {
+                console.log('이미지가 선택되지 않았습니다.');
+                return;
+            }
+
+            // 이미지 업로드 요청
+            const { result, message, imageUrl } = await sendImg(imageFile);
+
+            if (result) {
+                console.log('이미지 업로드 성공');
+                console.log('이미지 URL:', imageUrl);
+
+                // 여기에서 imageUrl을 사용하여 필요한 작업 수행
+            } else {
+                console.log('이미지 업로드 실패:', message);
+            }
+        } catch (error) {
+            console.error('이미지 업로드 오류:', error);
+        }
+    };
+
+    const handleImageUpload = (e: any) => {
+        e.preventDefault();
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            const contentState = editorState.getCurrentContent();
+            const contentStateWithEntity = contentState.createEntity(
+                'atomic',
+                'IMMUTABLE',
+                { src: e && e.target && e.target.result }
+            );
+
+            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+            const newEditorState = EditorState.set(editorState, {
+                currentContent: contentStateWithEntity,
+            });
+
+            setEditorState(
+                AtomicBlockUtils.insertAtomicBlock(
+                    newEditorState,
+                    entityKey,
+                    ' '
+                )
+            );
+        };
+
+        reader.readAsDataURL(file);
+    };
 
     return (
         <>
             {/*<div>{draftToHtml(convertToRaw(editorState.getCurrentContent()))}</div>*/}
-            {/* {<div style={{ height: '40px', overflow: 'auto' }}>{text}</div>} */}
-            {/* <input type="file" accept="image/*" onChange={handleImageUpload} /> */}
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
             <Editor
                 toolbarClassName="toolbarClassName"
                 wrapperClassName="wrapperClassName"
                 editorClassName="editorClassName"
                 editorState={editorState}
                 onEditorStateChange={onEditorStateChange}
+                // plugins={[imagePlugin]}
                 // toolbar={{
                 //     image: {
                 //         uploadCallback: uploadCallback,
@@ -180,7 +200,8 @@ export default function EditorDraft({ value, handleEditorChange }: any) {
                 toolbar={{
                     // options: ['image'],
                     image: {
-                        uploadenabled: true,
+                        urlEnabled: true,
+                        uploadEnabled: true,
                         uploadCallback: uploadCallback,
                         previewimage: true,
                         inputaccept:
