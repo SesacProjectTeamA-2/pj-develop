@@ -7,6 +7,7 @@ const boardRouter = require('./board');
 const commentRouter = require('./comment');
 const missionRouter = require('./mission');
 const alarmRouter = require('./alarm');
+const adminRouter = require('./admin');
 
 // index 라우터에는 각각의 라우터에 대한 태그와 설명을 작성
 /**
@@ -48,6 +49,8 @@ router.use('/comment', commentRouter); // 게시글
  */
 router.use('/mission', missionRouter); // 미션
 
-router.use('/subscribe', alarmRouter);
+router.use('/subscribe', alarmRouter); // 알림
+
+router.use('/admin', adminRouter); // 관리자 페이지
 
 module.exports = router;

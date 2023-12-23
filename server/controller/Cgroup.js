@@ -108,12 +108,16 @@ exports.getJoined = async (req, res) => {
 
     const groups = groupUserList.map((list) => list.gSeq);
 
+    const maxMember = await Group.findOne();
+
     const guNumber = await GroupUser.count({
       where: { gSeq: { [Op.in]: groups } },
-      group: ['gSeq'],
       attributes: ['gSeq'],
-      include: [{ model: Group }],
+      include: [{ model: Group, attributes: ['gMaxMem'] }],
+      group: ['gSeq'],
     });
+
+    console.log('>>>>>>>>>>>>>>>>', guNumber);
 
     // 참여중인 모임이 없으면
     if (!groupUserList || groupUserList.length === 0) {
@@ -191,6 +195,7 @@ exports.getMade = async (req, res) => {
       include: [{ model: Group }],
     });
 
+    console.log(guNumber);
     if (!groupList || groupList.length === 0) {
       res.status(200).send({
         success: true,
