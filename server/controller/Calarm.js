@@ -73,10 +73,6 @@ exports.alarming = async (req, res) => {
         res.write('event: groupAlarm\n' + `data:${message}\n\n`);
       });
       // });
-
-      req.on('close', () => {
-        console.log('SSE server close');
-      });
     }
   } catch (err) {
     console.error('SSE 서버 연결 err', err);
