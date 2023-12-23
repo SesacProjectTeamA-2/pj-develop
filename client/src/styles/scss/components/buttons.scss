@@ -42,6 +42,7 @@ button {
     width: 59rem;
 }
 
+// [임시]
 .btn-fixed {
     background-color: $color-primary;
     color: $color-white;
@@ -65,6 +66,224 @@ button {
         left: 50%;
     }
 }
+
+// //--- 둥둥 띄워져 있는 효과 ---
+// .btn-fixed-floating {
+//     background-color: $color-primary;
+//     color: $color-white;
+//     border: 0;
+//     border-radius: 10px;
+//     font-size: 1.1rem;
+//     font-weight: bold;
+//     display: flex;
+//     align-items: center;
+//     height: 2.8rem;
+//     width: 28rem;
+//     z-index: 10;
+//     justify-content: center;
+//     margin: auto;
+//     animation: bounce 2s ease-in-out forwards;
+//     animation-iteration-count: infinite;
+//     // box-shadow: 0px 1.7px 2.2px rgba(0, 0, 0, 0.02),
+//     //     0px 4px 5.3px rgba(0, 0, 0, 0.028), 0px 7.5px 10px rgba(0, 0, 0, 0.035),
+//     //     0px 13.4px 17.9px rgba(0, 0, 0, 0.042),
+//     //     0px 25.1px 33.4px rgba(0, 0, 0, 0.05), 0px 60px 80px rgba(0, 0, 0, 0.07);
+
+//     box-shadow: 2px 3px 3px 1px rgba(0, 0, 0, 0.2);
+
+//     @include media('<550px') {
+//         width: 70%;
+//         font-size: 16px;
+//         padding: 15px 5px;
+//         left: 50%;
+//     }
+// }
+// @keyframes bounce {
+//     0% {
+//         transform: translateY(0px);
+//     }
+//     50% {
+//         transform: translateY(15px);
+//     }
+// }
+
+// @keyframes bounce-shadow {
+//     0% {
+//         width: 1%;
+//         height: 2px;
+//         opacity: 0.1;
+//     }
+//     50% {
+//         width: 80%;
+//         height: 6px;
+//         opacity: 0.3;
+//     }
+//     100% {
+//         width: 1%;
+//         height: 0px;
+//         opacity: 0;
+//     }
+// }
+
+//-- 좌우 효과 ---
+.btn-fixed-rl {
+    padding: 0;
+    // margin: 0;
+    border: 0;
+    border-radius: 10px;
+
+    font-weight: bold;
+    width: 30rem;
+    z-index: 10;
+    justify-content: center;
+    margin: auto;
+    background-color: inherit;
+    box-shadow: 0 0 0;
+    // box-shadow: 0px 1.7px 2.2px rgba(0, 0, 0, 0.02),
+    //     0px 4px 5.3px rgba(0, 0, 0, 0.028), 0px 7.5px 10px rgba(0, 0, 0, 0.035),
+    //     0px 13.4px 17.9px rgba(0, 0, 0, 0.042),
+    //     0px 25.1px 33.4px rgba(0, 0, 0, 0.05), 0px 60px 80px rgba(0, 0, 0, 0.07);
+    // color: crimson;
+
+    @include media('<550px') {
+        width: 100%;
+        font-size: 10px !important;
+        padding: 15px 5px;
+        left: 50%;
+        // font-family: 'Chewy', cursive;
+    }
+}
+
+.shadow:before,
+.shadow:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 100px;
+    background: red;
+    z-index: -1;
+    background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    opacity: 0.4;
+    transform: rotateX(0);
+    transform-origin: center 30px;
+    filter: blur(1px);
+    animation: shadowLeft 2s ease-in-out alternate infinite;
+    transition: all 1s cubic-bezier(0.875, -0.555, 0.19, 1.64);
+}
+
+@keyframes shadowLeft {
+    to {
+        opacity: 0.1;
+        filter: blur(5px);
+    }
+}
+
+.shadow:after {
+    background: linear-gradient(
+        to left,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0) 100%
+    );
+    opacity: 0.1;
+    filter: blur(5px);
+    animation: shadowRight 2s ease-in-out alternate infinite;
+}
+
+@keyframes shadowRight {
+    to {
+        opacity: 0.4;
+        filter: blur(1px);
+    }
+}
+
+.btn-fixed-rl:focus .shadow:before,
+.btn-fixed-rl:focus .shadow:after {
+    transform: rotateX(180deg);
+}
+
+.vert {
+    transform: translateY(-20px);
+    animation: vert 1s ease-in-out alternate infinite;
+}
+
+@keyframes vert {
+    to {
+        transform: translateY(-25px);
+    }
+}
+
+.floating {
+    background-color: transparent;
+    -webkit-perspective: 800;
+    -webkit-transform-style: preserve-3d;
+    transform: rotateY(-3deg) skewY(-3deg);
+    animation: swing 2s cubic-bezier(0.42, 0, 0.58, 1) alternate infinite;
+}
+
+@keyframes swing {
+    to {
+        transform: rotateY(3deg) skewY(3deg);
+    }
+}
+
+.floating span {
+    display: block;
+    padding: 10px 0;
+    border-radius: 100px;
+    // font-size: 30px;
+    font-size: 1.2rem;
+    background: rgb(255, 255, 255);
+    transition: all 1s cubic-bezier(0.875, -0.555, 0.19, 1.64);
+    transform: translateY(-3px) translateZ(5px) rotateX(0);
+    width: 100%;
+
+    @include media('<550px') {
+    }
+}
+
+span.back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #aaa;
+    transform: translateY(3px) translateZ(-5px) rotateX(-180deg);
+}
+
+span {
+    display: block;
+}
+
+.btn-fixed-rl:hover .front {
+    transform: translateY(3px) translateZ(-5px) rotateX(180deg);
+    background: #aaa;
+}
+
+.btn-fixed-rl:hover .back {
+    transform: translateY(-3px) translateZ(5px) rotateX(0);
+    background: #fff;
+}
+
+// .btn-fixed-floating-shadow {
+//     display: block;
+//     width: 20%;
+//     height: 0px;
+//     position: absolute;
+//     bottom: -26px;
+//     left: 0;
+//     right: 0;
+//     margin: auto;
+//     background: #a3a3a3;
+//     border-radius: 50%;
+//     animation: bounce-shadow 2s ease-in-out forwards;
+//     animation-iteration-count: infinite;
+// }
 
 .plus-fixed {
     bottom: 20%;
