@@ -129,9 +129,23 @@ export default function GroupList() {
             {/* <div className="btn-fixed-wrapper"> */}
             {/* <Link to="/group/create"> */}
             <div className="btn-fixed-wrapper">
-                <button className="btn-fixed" onClick={createHandler}>
+                {/* <button className="btn-fixed" onClick={createHandler}> */}
+                {/* <button className="btn-fixed-floating" onClick={createHandler}>
                     내가 모임 만들기 !
+                </button> */}
+                <button className="btn-fixed-rl" onClick={createHandler}>
+                    <span className="shadow">
+                        <span className="vert">
+                            <span className="floating">
+                                <span className="front">
+                                    원하는 모임이 없나요 ?
+                                </span>
+                                <span className="back">직접 만들어요 !</span>
+                            </span>
+                        </span>
+                    </span>
                 </button>
+                {/* <span className="btn-fixed-floating-shadow"></span> */}
             </div>
             {/* </Link> */}
             {/* </div> */}

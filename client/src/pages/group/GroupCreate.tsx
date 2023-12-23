@@ -444,11 +444,30 @@ export default function GroupCreate(socket: any) {
             />
             <div className="btn-fixed-wrapper">
                 <button
-                    className="btn-fixed"
+                    className="btn-fixed-rl"
                     onClick={() => groupCreateHandler()}
                 >
-                    시작하기 !
+                    <span className="shadow">
+                        <span className="vert">
+                            <span className="floating">
+                                <span className="front">준비되셨나요 ?</span>
+                                <span className="back">시작하기 !</span>
+                            </span>
+                        </span>
+                    </span>
                 </button>
+                {/* <button className="btn-fixed-rl" onClick={createHandler}>
+                    <span className="shadow">
+                        <span className="vert">
+                            <span className="floating">
+                                <span className="front">
+                                    원하는 모임이 없나요 ?
+                                </span>
+                                <span className="back">직접 만들어요 !</span>
+                            </span>
+                        </span>
+                    </span>
+                </button> */}
             </div>
         </div>
     );
