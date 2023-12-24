@@ -3,7 +3,7 @@ const jwt = require('../modules/jwt');
 // Redis subscribe 객체
 const sub = require('../models/redis').sub;
 
-exports.alarm = async (req, res) => {
+exports.alarming = async (req, res) => {
   try {
     // const sse = req.app.get('sse');
     // console.log(sse.server);
@@ -25,30 +25,6 @@ exports.alarm = async (req, res) => {
       const allAlarm = data.map((alarm) => JSON.parse(alarm));
 
       // 처음 연결시 보낼 알림목록 및 숫자
-      res.send({ isSuccess: 'alarm list', alarmCount, allAlarm });
-    } else {
-      console.log('토큰이 없음!');
-    }
-  } catch (err) {
-    console.error('SSE server error!!', err);
-  }
-};
-
-exports.alarming = async (req, res) => {
-  try {
-    if (req.headers.authorization) {
-      const token = req.headers.authorization.split(' ')[1];
-      const user = await jwt.verify(token);
-      const uSeq = user.uSeq;
-
-      if (!uSeq) {
-        res.send({
-          success: false,
-          msg: '로그인X or 비정상적인 접근',
-        });
-        return;
-      }
-
       res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -63,16 +39,26 @@ exports.alarming = async (req, res) => {
         'event: connected\n' + `data: ${JSON.stringify('SSE연결완료')}\n\n`
       );
 
+      res.write('event: alarmCount\n' + `data: ${alarmCount}`);
+
       // redis에 댓글추가시 메세지 전송됨.
       await sub.subscribe('comment-alarm', (message) => {
         res.write('event: commentAlarm\n' + `data:${message}\n\n`);
+        res.write(
+          'event: alarmCount\n' + `data: ${parseInt(alarmCount) + 1}\n\n`
+        );
       });
 
       // 모임 추방시 메세지 전송.
       await sub.subscribe('group-alarm', (message) => {
         res.write('event: groupAlarm\n' + `data:${message}\n\n`);
+        res.write(
+          'event: alarmCount\n' + `data: ${parseInt(alarmCount) + 1}\n\n`
+        );
       });
       // });
+    } else {
+      console.log('토큰이 없음!');
     }
   } catch (err) {
     console.error('SSE 서버 연결 err', err);
