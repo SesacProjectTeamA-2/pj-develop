@@ -35,9 +35,7 @@ exports.alarming = async (req, res) => {
       // console.log(sse.on);
       // 기존 알람 load (connection)
       // sse.on('connection', async (client) => {
-      res.write(
-        'event: connected\n' + `data: ${JSON.stringify('SSE연결완료')}\n\n`
-      );
+      res.write('event: connected\n' + `data: SSE연결완료\n\n`);
 
       res.write('event: alarmCount\n' + `data: ${alarmCount}`);
 
