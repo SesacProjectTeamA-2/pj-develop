@@ -238,32 +238,32 @@ export default function Header(props: any) {
         eventSource.addEventListener('connected', (e: any) => {
             const { data: receivedSections } = e;
 
-            console.log(e);
+            console.log('connected ::::', e);
         });
 
         // //-- 연결 시 할 일
-        // eventSource.onopen = async () => {
-        //     console.log('EventSource connection opened.');
+        eventSource.onopen = async () => {
+            console.log('EventSource connection opened. onopen ::::');
 
-        //     // 기존 알람 데이터 받아오기
-        //     try {
-        //         const res = await fetch(
-        //             `${process.env.REACT_APP_DB_HOST}/subscribe/alarm`,
-        //             {
-        //                 method: 'GET',
-        //                 headers: {
-        //                     Authorization: `Bearer ${uToken}`,
-        //                 },
-        //             }
-        //         );
+            //     // 기존 알람 데이터 받아오기
+            //     try {
+            //         const res = await fetch(
+            //             `${process.env.REACT_APP_DB_HOST}/subscribe/alarm`,
+            //             {
+            //                 method: 'GET',
+            //                 headers: {
+            //                     Authorization: `Bearer ${uToken}`,
+            //                 },
+            //             }
+            //         );
 
-        //         const data = await res.json();
-        //         console.log('Initial alarm data:', data);
-        //         // 여기서 기존 알람 데이터를 처리하거나 상태 업데이트 등을 수행할 수 있습니다.
-        //     } catch (error) {
-        //         console.error('Error fetching initial alarm data:', error);
-        //     }
-        // };
+            //         const data = await res.json();
+            //         console.log('Initial alarm data:', data);
+            //         // 여기서 기존 알람 데이터를 처리하거나 상태 업데이트 등을 수행할 수 있습니다.
+            //     } catch (error) {
+            //         console.error('Error fetching initial alarm data:', error);
+            //     }
+        };
 
         // 서버로부터 연결 이벤트를 수신할 때의 처리
         // eventSource.addEventListener('connection', (event: any) => {
@@ -274,40 +274,43 @@ export default function Header(props: any) {
         //     // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
         // });
 
-        // eventSource.onmessage = async (e) => {
-        //     const res = await e.data;
-        //     const parsedData = JSON.parse(res);
+        eventSource.onmessage = async (e) => {
+            console.log('onmessage ::::::', e);
+            const res = await e.data;
+            const parsedData = JSON.parse(res);
+            //-- 받아오는 data로 할 일
+            console.log(parsedData);
+        };
 
-        //     //-- 받아오는 data로 할 일
+        // // 서버로부터 이벤트를 수신할 때의 처리
+        // props.sse.onmessage = (event: any) => {
+        //     console.log('e', event);
 
-        //     console.log(parsedData);
+        //     const eventData = JSON.parse(event.data);
+        //     console.log('Received event data:', eventData);
+        //     // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
         // };
 
-        // 서버로부터 이벤트를 수신할 때의 처리
-        props.sse.onmessage = (event: any) => {
-            console.log('e', event);
+        if (props.sse) {
+            props.sse.onerror = (e: any) => {
+                console.log('e', e);
 
-            const eventData = JSON.parse(event.data);
-            console.log('Received event data:', eventData);
-            // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
-        };
+                //-- 종료 또는 에러 발생 시 할 일
+                // eventSource.close();
 
-        props.sse.onerror = (e: any) => {
-            console.log('e', e);
+                if (e.error) {
+                    //-- 에러 발생 시 할 일
+                    console.error('EventSource error:', e.error);
+                }
 
-            //-- 종료 또는 에러 발생 시 할 일
-            // eventSource.close();
-
-            if (e.error) {
-                //-- 에러 발생 시 할 일
-                console.error('EventSource error:', e.error);
-            }
-
-            if (e.target.readyState === EventSource.CLOSED) {
-                //-- 종료 시 할 일
-                console.log('EventSource connection closed.');
-            }
-        };
+                if (e.target.readyState === EventSource.CLOSED) {
+                    //-- 종료 시 할 일
+                    console.log('EventSource connection closed.');
+                }
+            };
+        } else {
+            console.error('props.sse is undefined');
+        }
     };
 
     //-- 컴포넌트가 마운트될 때 EventSource 생성

@@ -72,6 +72,7 @@ export default function BoardEdit() {
         gbSeq: Number(gbSeq),
         gbTitle: '',
         gbContent: '',
+        imgUrl: '',
     });
 
     // const [selected, setSelected] = useState<string>('');
@@ -95,6 +96,14 @@ export default function BoardEdit() {
             gbContent: value, // 에디터의 내용을 업데이트
         });
         // console.log(board);
+    };
+
+    //-- 게시글 이미지 첨부
+    const handleEditorImgUrl = (url: any) => {
+        setBoard({
+            ...board,
+            imgUrl: url,
+        });
     };
 
     let replaced_str = board.gbContent.replace('<p>', '');
@@ -147,8 +156,6 @@ export default function BoardEdit() {
         setPostMenu('자유/질문');
     }
 
-    console.log('oooo', postMenu);
-
     return (
         <div className="section section-group">
             <GroupHeader title={postMenu} groupName={''} />
@@ -168,14 +175,10 @@ export default function BoardEdit() {
                     </div>
                 </div>
                 <div>
-                    {/* <Editor
-                        value={board.gbContent}
-                        onChange={handleEditorChange}
-                    /> */}
-
                     <EditorDraft
                         value={initContent}
                         handleEditorChange={handleEditorChange}
+                        handleEditorImgUrl={handleEditorImgUrl}
                     />
                 </div>
             </div>

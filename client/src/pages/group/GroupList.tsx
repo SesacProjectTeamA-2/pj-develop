@@ -17,6 +17,7 @@ export default function GroupList() {
     const [madeGroup, setMadeGroup] = useState([]);
     const [madeNumGroup, setMadeNumGroup] = useState([]);
     const [joinGroup, setJoinGroup] = useState([]);
+    const [joinNumGroup, setJoinNumGroup] = useState([]);
 
     //] 생성한 모임
     const getMadeGroup = async () => {
@@ -31,7 +32,11 @@ export default function GroupList() {
             );
             const data = response.data;
 
-            setMadeGroup(data.groupInfo);
+            console.log('생성한 모임', data);
+
+            // setMadeGroup(data.groupInfo);
+            setMadeGroup(data);
+
             setMadeNumGroup(data.groupUserCount);
 
             // console.log('gCategory>>>', data.gCategory);
@@ -57,8 +62,10 @@ export default function GroupList() {
                 }
             );
             const data = response.data;
-            // console.log('참여한 모임', data);
-            setJoinGroup(data.groupInfo);
+            console.log('참여한 모임', data);
+            // setJoinGroup(data.groupInfo);
+            setJoinGroup(data);
+            setJoinNumGroup(data.groupUserCount);
         } catch (error) {
             console.error('Error while fetching data:', error);
         }
@@ -85,6 +92,7 @@ export default function GroupList() {
                     {madeGroup?.length > 0 ? (
                         <SwiperComponent
                             groupArray={madeGroup}
+                            madeNumGroup={madeNumGroup}
                             color1="#ff9400"
                             color2="#ffde04"
                         />
@@ -101,7 +109,7 @@ export default function GroupList() {
                     <SwiperComponent
                         groupArray={joinGroup}
                         // setGroupArray={setJoinGroup}
-                        // madeNumGroup={madeNumGroup}
+                        joinNumGroup={joinNumGroup}
                         color1="#ffbccd"
                         color2="#ff7575"
                     />

@@ -13,11 +13,12 @@ export default function SwiperTest({
     color1,
     color2,
     madeNumGroup,
+    joinNumGroup,
 }: any) {
     let categories: any = [];
 
-    for (let i = 0; i < groupArray.length; i++) {
-        switch (groupArray[i].gCategory) {
+    for (let i = 0; i < groupArray.groupInfo.length; i++) {
+        switch (groupArray.groupInfo[i].gCategory) {
             case 'ex':
                 categories.push('🏃🏻‍♂️');
                 break;
@@ -115,7 +116,7 @@ export default function SwiperTest({
                     },
                 }}
             >
-                {groupArray?.map((groupInfo: any, idx: number) => {
+                {groupArray?.map((data: any, idx: number) => {
                     return (
                         <>
                             <SwiperSlide
@@ -126,7 +127,7 @@ export default function SwiperTest({
                                 }}
                             >
                                 <Link
-                                    to={`/group/home/${groupInfo.gSeq}`}
+                                    to={`/group/home/${data.groupInfo.gSeq}`}
                                     className="link-none"
                                 >
                                     <div className="swiper-group-wrapper">
@@ -138,15 +139,13 @@ export default function SwiperTest({
                                         >
                                             <div className="title">
                                                 <h1> {categories[idx]}</h1>
-                                                <h2> {groupInfo.gName}</h2>
+                                                <h2> {data.groupInfo.gName}</h2>
                                             </div>
                                             <div className="price">
                                                 <h4>
                                                     {/* <sup>$</sup> */}
                                                     {/* [추후] 디데이 형식으로 수정 */}
-                                                    {groupInfo.gDday}
-
-                                                    {/* [추후] 관심분야 */}
+                                                    {data.groupInfo.gDday}
                                                 </h4>
                                             </div>
                                             <div className="option">
@@ -158,7 +157,7 @@ export default function SwiperTest({
                                                         ></i>
                                                         참석인원 수
                                                         {/* {madeNumGroup.count}/ */}
-                                                        {groupInfo.gMaxMem}
+                                                        {data.groupInfo.gMaxMem}
                                                     </li>
                                                     <li>
                                                         {/* <div

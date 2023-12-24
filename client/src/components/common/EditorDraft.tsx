@@ -22,7 +22,11 @@ import '../../styles/scss/components/editor.scss';
 
 const imagePlugin = createImagePlugin();
 
-export default function EditorDraft({ value, handleEditorChange }: any) {
+export default function EditorDraft({
+    value,
+    handleEditorChange,
+    handleEditorImgUrl,
+}: any) {
     // value를 사용하여 초기 EditorState를 생성
     const contentState = ContentState.createFromText(value);
     const initialEditorState = EditorState.createWithContent(contentState);
@@ -140,8 +144,9 @@ export default function EditorDraft({ value, handleEditorChange }: any) {
                 console.log('이미지 업로드 성공');
                 console.log(result);
                 console.log('이미지 URL:', imageUrl);
+                handleEditorImgUrl(imageUrl);
 
-                // imageUrl을 사용하여 필요한 작업 수행
+                //-- imageUrl을 사용하여 필요한 작업 수행
 
                 const file = imageFile;
                 const reader = new FileReader();
@@ -336,15 +341,3 @@ export default function EditorDraft({ value, handleEditorChange }: any) {
         </>
     );
 }
-
-// export default function EditorDraft() {
-//     const [editorState, setEditorState] = React.useState(() =>
-//         EditorState.createEmpty()
-//     );
-
-//     return (
-//         <div>
-//             <Editor editorState={editorState} onChange={setEditorState} />
-//         </div>
-//     );
-// }

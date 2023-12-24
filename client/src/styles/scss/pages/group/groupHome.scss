@@ -328,7 +328,8 @@
     position: sticky;
     bottom: 4%;
     z-index: 10;
-    width: 70%;
+    // width: 70%;
+    width: 35vw;
     margin: 0 auto 3rem auto;
 
     @include media('<900px') {
