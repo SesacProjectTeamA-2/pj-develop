@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import emailjs from '@emailjs/browser';
 
 import '../../styles/scss/layout/footer.scss';
 
@@ -32,7 +33,7 @@ export default function Footer() {
 
                     <p>
                         <div className="team-title">Renewal</div>
-                        <div>
+                        <div className="renewal-footer-text-wrapper">
                             <a
                                 href="https://github.com/loveflora"
                                 className="link-none profile-hover"
@@ -42,17 +43,17 @@ export default function Footer() {
                                 <span>| </span>
                                 <span>김세화 (Project Leader)</span>
                             </a>
-                        </div>
-                        <div>
-                            <a
-                                href="https://github.com/chitty12"
-                                className="link-none profile-hover"
-                                target="_blank"
-                            >
-                                <span> Back </span>
-                                <span>| </span>
-                                <span>최태영</span>
-                            </a>
+                            <div>
+                                <a
+                                    href="https://github.com/chitty12"
+                                    className="link-none profile-hover"
+                                    target="_blank"
+                                >
+                                    <span> Back </span>
+                                    <span>| </span>
+                                    <span>최태영</span>
+                                </a>
+                            </div>
                         </div>
                     </p>
 
@@ -118,38 +119,54 @@ export default function Footer() {
                         <p>아래로 연락주세요 !</p>
                     </div>
 
-                    <br />
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        height="1.5em"
-                        width="1.5em"
-                    >
-                        <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6m-2 0l-8 5-8-5h16m0 12H4V8l8 5 8-5v10z" />
-                    </svg>
+                    <div className="contact-footer-text-wrapper">
+                        <a
+                            href="mailto:love7620640@naver.com"
+                            className="dev-contact"
+                        >
+                            <div className="dev-contact">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    height="1.5em"
+                                    width="1.5em"
+                                >
+                                    <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6m-2 0l-8 5-8-5h16m0 12H4V8l8 5 8-5v10z" />
+                                </svg>
+                                <span> Front </span>
+                                {/* <span>| </span> */}
+                                <span>김세화</span>
+                            </div>
+                        </a>
 
-                    <br />
-
-                    <div>
-                        <span> Front </span>
-                        <span>| </span>
-                        <span>김세화</span>
+                        <a
+                            href="mailto:cty12angel@naver.com"
+                            className="dev-contact"
+                        >
+                            <div className="dev-contact">
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                    height="1.5em"
+                                    width="1.5em"
+                                >
+                                    <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6m-2 0l-8 5-8-5h16m0 12H4V8l8 5 8-5v10z" />
+                                </svg>
+                                <span> Back </span>
+                                {/* <span>| </span> */}
+                                <span>최태영</span>
+                            </div>
+                        </a>
                     </div>
 
-                    <div>
-                        <span> Back </span>
-                        <span>| </span>
-                        <span>최태영</span>
-                    </div>
+                    {/* <input /> */}
 
-                    <input />
-
-                    <button>Contact</button>
+                    {/* <button>Contact</button> */}
 
                     <div className="frame">
                         <input type="checkbox" id="cb" />
                         <label htmlFor="cb" className="button">
-                            Click !
+                            Click
                         </label>
                         <label htmlFor="cb" className="button reset">
                             Reset

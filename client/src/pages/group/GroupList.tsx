@@ -6,7 +6,6 @@ import axios from 'axios';
 import { Cookies } from 'react-cookie';
 
 import SwiperComponent from '../../components/group/SwiperComponent';
-import SwiperTest from 'src/components/group/SwiperTest';
 
 export default function GroupList() {
     const nvg = useNavigate();
@@ -34,8 +33,8 @@ export default function GroupList() {
 
             console.log('생성한 모임', data);
 
-            // setMadeGroup(data.groupInfo);
-            setMadeGroup(data);
+            setMadeGroup(data.groupInfo);
+            // setMadeGroup(data);
 
             setMadeNumGroup(data.groupUserCount);
 
@@ -63,8 +62,8 @@ export default function GroupList() {
             );
             const data = response.data;
             console.log('참여한 모임', data);
-            // setJoinGroup(data.groupInfo);
-            setJoinGroup(data);
+            setJoinGroup(data.groupInfo);
+            // setJoinGroup(data);
             setJoinNumGroup(data.groupUserCount);
         } catch (error) {
             console.error('Error while fetching data:', error);
@@ -92,7 +91,7 @@ export default function GroupList() {
                     {madeGroup?.length > 0 ? (
                         <SwiperComponent
                             groupArray={madeGroup}
-                            madeNumGroup={madeNumGroup}
+                            memberCount={madeNumGroup}
                             color1="#ff9400"
                             color2="#ffde04"
                         />
@@ -109,7 +108,7 @@ export default function GroupList() {
                     <SwiperComponent
                         groupArray={joinGroup}
                         // setGroupArray={setJoinGroup}
-                        joinNumGroup={joinNumGroup}
+                        memberCount={joinNumGroup}
                         color1="#ffbccd"
                         color2="#ff7575"
                     />

@@ -88,10 +88,10 @@ body {
 @keyframes move-spot {
     0%,
     100% {
-        transform: rotate(-15deg);
+        transform: rotate(-10deg);
     }
     50% {
-        transform: rotate(15deg);
+        transform: rotate(10deg);
     }
 }
 
@@ -107,8 +107,19 @@ body {
     display: grid;
     place-items: center;
 }
+
+.renewal-footer-text-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    a {
+        display: flex;
+        // flex-direction: column;
+    }
+}
+
 .text-big h1 {
-    font-size: 14em;
+    font-size: 12em;
     font-weight: 800;
     color: $color-footer-black;
     text-shadow: -20px 20px 30px rgba(0, 0, 0, 0.8);
@@ -151,10 +162,10 @@ body {
 
     // 공통 제목
     .social-links h2 {
-        padding-bottom: 15px;
+        // padding-bottom: 15px;
         font-size: 20px;
         font-weight: 600;
-        margin-top: 4rem;
+        margin-top: 2rem;
     }
 
     // 로고 참고 스타일링
@@ -212,9 +223,10 @@ body {
     .email-wrapper {
         width: 90%;
 
-        input {
-            width: 60%;
-        }
+        // // email input 입력
+        // input {
+        //     width: 60%;
+        // }
 
         button {
             display: flex;
@@ -288,23 +300,47 @@ a {
 
 //-- 메일 전송
 
+.contact-footer-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    padding: 0.7rem 0 0 2rem;
+    // gap: 1rem;
+
+    div {
+        display: flex;
+        gap: 0.4rem;
+        cursor: pointer;
+    }
+}
+
+.dev-contact {
+    cursor: pointer;
+}
+
+.dev-contact:hover {
+    transition: 0.3s all;
+    color: white;
+    cursor: pointer;
+}
+
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:700,300);
 
 .frame {
     position: absolute;
-    top: 40%;
-    left: 90%;
+    top: 100%;
+    left: 87.5%;
     width: 400px;
     height: 400px;
-    margin-top: -200px;
-    margin-left: -200px;
+    margin-top: -180px;
+    margin-left: -250px;
     border-radius: 2px;
     // box-shadow: 1px 2px 10px 0px rgba(0, 0, 0, 0.3);
     // background: $color-footer-dark;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow: hidden;
-    transform: scale(0.4); /* 크기를 50%로 축소 */
+    // overflow: hidden;
+    transform: scale(0.5); /* 크기를 50%로 축소 */
 
     .circle,
     .circle-outer {
@@ -353,28 +389,32 @@ a {
 
     .button {
         position: absolute;
-        z-index: 10;
-        width: 200px;
-        height: 40px;
-        top: 290px;
-        left: 100px;
-        background: #ecf0f1;
-        color: #2c3e50;
+        z-index: 20;
+        width: 160px;
+        // height: 30px;
+        top: -15px;
+        left: 90px;
+        // background: #ecf0f1;
         text-align: center;
-        line-height: 40px;
+        // line-height: 40px;
         border-radius: 20px;
         font-weight: 600;
         text-transform: uppercase;
-        font-size: 15px;
+        font-size: 22px;
         cursor: pointer;
+        padding: 10px 30px;
+        background-color: #919191;
+        border-radius: 500px;
+        letter-spacing: 2px;
+        color: #333333;
     }
     .button.reset {
         opacity: 0;
         z-index: 5;
     }
     .button:hover {
-        background: $color-footer-hover;
-        color: #fff;
+        background: #fff;
+        color: $color-footer-hover;
     }
 
     #cb:checked ~ .button {

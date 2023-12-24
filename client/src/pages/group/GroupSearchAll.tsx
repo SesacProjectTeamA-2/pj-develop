@@ -9,7 +9,7 @@ import { Paper } from '@mui/material';
 export default function GroupSearchAll({
     searchInput,
     selectedArr,
-    categoryQuery,
+    memberCount,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -70,8 +70,9 @@ export default function GroupSearchAll({
     }, [searchInput, selectedArr]);
 
     let categories: any = [];
+    let countArray: any = [];
 
-    for (let i = 0; i < allGroupList.length; i++) {
+    for (let i = 0; i < allGroupList?.length; i++) {
         switch (allGroupList[i].gCategory) {
             case 'ex':
                 categories.push('🏃🏻‍♂️');
@@ -99,6 +100,11 @@ export default function GroupSearchAll({
                 break;
         }
     }
+
+    // 현재 참석 멤버수
+    // for (let i = 0; i < memberCount.length; i++) {
+    //     countArray.push(memberCount[i].count);
+    // }
 
     return (
         <div>

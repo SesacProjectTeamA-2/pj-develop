@@ -58,7 +58,7 @@ export default function MainMission() {
                                             padding: '1rem',
                                         }}
                                     >
-                                        <div className="title5">
+                                        {/* <div className="title5">
                                             <span
                                                 style={{
                                                     color: '#ed8d8d',
@@ -68,6 +68,20 @@ export default function MainMission() {
                                                 모임명
                                             </span>
                                             {info.gName}
+                                        </div> */}
+                                        <div>
+                                            <div className="group-name-computer">
+                                                <div>
+                                                    <h1 className="glowFlicker">
+                                                        {info.gName}
+                                                    </h1>
+                                                </div>
+                                            </div>
+                                            {/* <img
+                                                src="asset/images/computer.png"
+                                                alt="컴퓨터"
+                                                className="com-img"
+                                            /> */}
                                         </div>
                                         {info.tb_missions?.map((item: any) => (
                                             <div>
@@ -75,12 +89,13 @@ export default function MainMission() {
                                                     to={`/board/create/${info.gSeq}/mission/${item.mSeq}`}
                                                     className="mission-grid"
                                                 >
-                                                    <button className="btn-sm button mission-btn-to-group">
+                                                    <button className="learn-more">
                                                         {item.mTitle}
                                                     </button>
                                                 </Link>
                                             </div>
                                         ))}
+                                        <br />
                                     </div>
                                 );
                             })}
