@@ -12,13 +12,14 @@ export default function SwiperTest({
     groupArray,
     color1,
     color2,
-    madeNumGroup,
-    joinNumGroup,
+    memberCount,
 }: any) {
     let categories: any = [];
+    let countArray: any = [];
 
-    for (let i = 0; i < groupArray.groupInfo.length; i++) {
-        switch (groupArray.groupInfo[i].gCategory) {
+    // 카테고리
+    for (let i = 0; i < groupArray.length; i++) {
+        switch (groupArray[i].gCategory) {
             case 'ex':
                 categories.push('🏃🏻‍♂️');
                 break;
@@ -47,6 +48,12 @@ export default function SwiperTest({
     }
 
     // console.log(categories);
+
+    // 현재 참석 멤버수
+    for (let i = 0; i < memberCount.length; i++) {
+        countArray.push(memberCount[i].count);
+    }
+    // console.log(countArray);
 
     return (
         <div className="swiper-button-container">
@@ -119,6 +126,8 @@ export default function SwiperTest({
                 {groupArray?.map((data: any, idx: number) => {
                     return (
                         <>
+                            {/* 기존 코드 */}
+
                             <SwiperSlide
                                 data-hash="slide1"
                                 style={{
@@ -127,7 +136,7 @@ export default function SwiperTest({
                                 }}
                             >
                                 <Link
-                                    to={`/group/home/${data.groupInfo.gSeq}`}
+                                    to={`/group/home/${data.gSeq}`}
                                     className="link-none"
                                 >
                                     <div className="swiper-group-wrapper">
@@ -139,15 +148,16 @@ export default function SwiperTest({
                                         >
                                             <div className="title">
                                                 <h1> {categories[idx]}</h1>
-                                                <h2> {data.groupInfo.gName}</h2>
+                                                <h2> {data.gName}</h2>
                                             </div>
                                             <div className="price">
                                                 <h4>
                                                     {/* <sup>$</sup> */}
                                                     {/* [추후] 디데이 형식으로 수정 */}
-                                                    {data.groupInfo.gDday}
+                                                    {data.gDday}
                                                 </h4>
                                             </div>
+
                                             <div className="option">
                                                 <ul>
                                                     <li>
@@ -155,9 +165,9 @@ export default function SwiperTest({
                                                             className="fa fa-check"
                                                             aria-hidden="true"
                                                         ></i>
-                                                        참석인원 수
-                                                        {/* {madeNumGroup.count}/ */}
-                                                        {data.groupInfo.gMaxMem}
+                                                        참석인원
+                                                        {countArray[idx]}/
+                                                        {data.gMaxMem}
                                                     </li>
                                                     <li>
                                                         {/* <div
@@ -172,7 +182,13 @@ export default function SwiperTest({
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <button>자세히</button>
+
+                                            {data.gMaxMem - countArray[idx] >
+                                            0 ? (
+                                                <button>참석 가능</button>
+                                            ) : (
+                                                <button>마감</button>
+                                            )}
                                         </div>
                                     </div>
                                 </Link>
@@ -188,6 +204,7 @@ export default function SwiperTest({
                     </div>
                 </SwiperSlide> */}
             </Swiper>
+
             <div className="swiper-button-next">
                 <img src="/asset/icons/right.svg" alt="swiper-button-right" />
             </div>
