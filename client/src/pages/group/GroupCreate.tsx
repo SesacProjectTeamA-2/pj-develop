@@ -298,7 +298,7 @@ export default function GroupCreate(socket: any) {
                             name="gName"
                             value={input.gName}
                             inputProps={{ maxLength: 16 }} //최대 글자 수 16으로 제한
-                            required
+                            // required
                         />
                         {/* <TextField
                             id="standard-basic"
@@ -456,18 +456,6 @@ export default function GroupCreate(socket: any) {
                         </span>
                     </span>
                 </button>
-                {/* <button className="btn-fixed-rl" onClick={createHandler}>
-                    <span className="shadow">
-                        <span className="vert">
-                            <span className="floating">
-                                <span className="front">
-                                    원하는 모임이 없나요 ?
-                                </span>
-                                <span className="back">직접 만들어요 !</span>
-                            </span>
-                        </span>
-                    </span>
-                </button> */}
             </div>
         </div>
     );

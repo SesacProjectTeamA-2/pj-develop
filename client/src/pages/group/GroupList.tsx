@@ -140,7 +140,7 @@ export default function GroupList() {
                                 <span className="front">
                                     원하는 모임이 없나요 ?
                                 </span>
-                                <span className="back">직접 만들어요 !</span>
+                                <span className="back">직접 만들러 가요 !</span>
                             </span>
                         </span>
                     </span>

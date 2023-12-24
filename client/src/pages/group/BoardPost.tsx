@@ -250,7 +250,7 @@ export default function BoardPost() {
                             variant="standard"
                             onChange={getValue}
                             name="gbTitle"
-                            required
+                            // required
                             // className="input-board-post"
                         />
                     </Box>

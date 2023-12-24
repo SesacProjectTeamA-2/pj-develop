@@ -226,7 +226,6 @@ export default function Header(props: any) {
     };
 
     const getNoti = () => {
-
         const eventSource = new EventSourcePolyfill(
             `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
             {
@@ -241,7 +240,6 @@ export default function Header(props: any) {
 
             console.log(e);
         });
-
 
         // //-- 연결 시 할 일
         // eventSource.onopen = async () => {

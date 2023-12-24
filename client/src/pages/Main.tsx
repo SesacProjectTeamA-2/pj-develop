@@ -364,6 +364,23 @@ export default function Main({
         setSelectedCharacter(newChar);
     }, [totalPercent]);
 
+    // 랜덤 색상을 선택하는 함수
+    const getRandomColor = () => {
+        const colors = [
+            '#ff6d59',
+            '#ffcc77',
+            '#83cb77',
+            '#ffa7cf',
+            '#7fbeeb',
+            '#fba261',
+            '#b78be3',
+            '#c4c4c4',
+        ];
+
+        const randomIndex = Math.floor(Math.random() * colors.length);
+        return colors[randomIndex];
+    };
+
     return (
         <div className="section-main">
             {/* <Content setLoginData={setLoginData} loginData={loginData} /> */}
@@ -430,6 +447,7 @@ export default function Main({
                                                                 doneRates[idx]
                                                             }
                                                             bg={'#f3f3f3'}
+                                                            barColor={getRandomColor()}
                                                         />
                                                     </div>
                                                 </div>

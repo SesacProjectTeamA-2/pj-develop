@@ -274,6 +274,7 @@ export default function GroupHome({ socket }: any) {
                     groupMember={groupDetail.groupMember}
                     nowScoreRanking={nowScoreRanking}
                     userImgSrc={userImgSrc}
+                    isLeader={isLeader}
                 />
                 <AccRanking
                     totalRanking={totalRanking}
@@ -295,9 +296,26 @@ export default function GroupHome({ socket }: any) {
             ) : groupDetail.groupMaxMember !== null &&
               groupDetail.memberArray.length + 1 <
                   groupDetail.groupMaxMember ? (
-                <div className="btn-fixed-wrapper">
-                    <button className="btn-fixed" onClick={postGroupJoin}>
+                <div className="btn-fixed-wrapper-join">
+                    {/* <button className="btn-fixed" onClick={postGroupJoin}>
                         가입하기
+                    </button> */}
+                    <button
+                        className="btn-fixed-rl-join "
+                        onClick={postGroupJoin}
+                    >
+                        <span className="shadow">
+                            <span className="vert">
+                                <span className="floating">
+                                    <span className="front">
+                                        관심 있으신가요 ?
+                                    </span>
+                                    <span className="back">
+                                        가입하러 가기 !
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
                     </button>
                 </div>
             ) : (

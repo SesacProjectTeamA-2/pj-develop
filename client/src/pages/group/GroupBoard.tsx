@@ -16,6 +16,8 @@ export default function GroupBoard() {
 
     const { gSeq, gCategory } = useParams();
 
+    console.log('gSeq', gSeq);
+
     const getGroup = async () => {
         const res = await axios
             .get(`${process.env.REACT_APP_DB_HOST}/group/detail/${gSeq}`, {

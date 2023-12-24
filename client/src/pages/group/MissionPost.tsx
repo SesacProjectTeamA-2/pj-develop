@@ -227,7 +227,7 @@ export default function MissionPost() {
                             variant="standard"
                             onChange={getValue}
                             name="gbTitle"
-                            required
+                            // required
                             // className="input-board-post"
                         />
                     </Box>

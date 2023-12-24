@@ -23,8 +23,15 @@ export default function Alarm({ alarmHandler }: any) {
                     {/* map 돌리기 ! */}
                     <div className="notification">
                         <div className="circle"></div>
-                        <span className="time">9:24 AM</span>
-                        <button>읽음</button>
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <span className="time">9:24 AM</span>
+                            <button>읽음</button>
+                        </div>
 
                         {/* hover 시, 읽음 표시 */}
                         {/* <svg
