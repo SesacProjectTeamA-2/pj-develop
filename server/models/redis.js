@@ -27,6 +27,14 @@ redisClient.on('connect', async () => {
 
 redisClient.on('error', (err) => {
   console.error('Redis Client Error', err);
+
+  if (err.code === 'EAI_AGAIN') {
+    setTimeout(() => {
+      redisClient.connect();
+    }, 1000);
+  } else if (err.name === 'ConnectionTimeoutError') {
+    redisClient.connect();
+  }
 });
 
 module.exports = redisCli;
