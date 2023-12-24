@@ -98,11 +98,11 @@ export default function EditorDraft({ value, handleEditorChange }: any) {
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${uToken}`, // 예시: 서버로 전달할 인증 토큰
+                        Authorization: `Bearer ${uToken}`,
                     },
                 }
             );
-
+            console.log(response.data);
             return response.data;
         } catch (error) {
             console.error('이미지 업로드 오류:', error);
@@ -138,9 +138,93 @@ export default function EditorDraft({ value, handleEditorChange }: any) {
 
             if (result) {
                 console.log('이미지 업로드 성공');
+                console.log(result);
                 console.log('이미지 URL:', imageUrl);
 
-                // 여기에서 imageUrl을 사용하여 필요한 작업 수행
+                // imageUrl을 사용하여 필요한 작업 수행
+
+                const file = imageFile;
+                const reader = new FileReader();
+
+                // Atomic Block 추가 (이미지 미리보기)
+
+                reader.onload = () => {
+                    // const imageContent = `
+                    // <img src="${reader.result}" alt="uploaded image" />`;
+
+                    const contentState = editorState.getCurrentContent();
+
+                    const contentStateWithEntity = contentState.createEntity(
+                        'atomic',
+                        'IMMUTABLE',
+                        // { src: reader.result }
+                        { src: imageUrl } // 이미지 URL을 포함하는 엔터티 생성
+                        // { src: e && e.target && e.target.result }
+                    );
+
+                    const entityKey =
+                        contentStateWithEntity.getLastCreatedEntityKey();
+                    const newEditorState = EditorState.set(editorState, {
+                        currentContent: contentStateWithEntity,
+                    });
+
+                    setEditorState(
+                        AtomicBlockUtils.insertAtomicBlock(
+                            newEditorState,
+                            entityKey,
+                            ' '
+                        )
+                    );
+                };
+
+                reader.readAsDataURL(file);
+
+                // const imageContent = `
+                // <img src="${imageUrl}" alt="uploaded image" />`;
+
+                // // 에디터의 내용 갱신
+                // const updatedText = editorState
+                //     .getCurrentContent()
+                //     .getPlainText('\u0001');
+                // handleEditorChange(updatedText);
+
+                // const updatedContent = ContentState.createFromText(
+                //     `${updatedText}\n${imageContent}`
+                // );
+                // const updatedEditorState =
+                //     EditorState.createWithContent(updatedContent);
+
+                // 업로드된 이미지 미리 보기를 추가
+                return { data: { link: imageUrl, preview: imageUrl } };
+                // return { data: { link: imageUrl, preview: reader.result} } };
+
+                // e.preventDefault();
+                // const file = e.target.files[0];
+                // const reader = new FileReader();
+
+                // reader.onload = (e) => {
+                //     const contentState = editorState.getCurrentContent();
+                //     const contentStateWithEntity = contentState.createEntity(
+                //         'atomic',
+                //         'IMMUTABLE',
+                //         { src: e && e.target && e.target.result }
+                //     );
+
+                //     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+                //     const newEditorState = EditorState.set(editorState, {
+                //         currentContent: contentStateWithEntity,
+                //     });
+
+                //     setEditorState(
+                //         AtomicBlockUtils.insertAtomicBlock(
+                //             newEditorState,
+                //             entityKey,
+                //             ' '
+                //         )
+                //     );
+                // };
+
+                // reader.readAsDataURL(file);
             } else {
                 console.log('이미지 업로드 실패:', message);
             }
@@ -182,7 +266,7 @@ export default function EditorDraft({ value, handleEditorChange }: any) {
     return (
         <>
             {/*<div>{draftToHtml(convertToRaw(editorState.getCurrentContent()))}</div>*/}
-            <input type="file" accept="image/*" onChange={handleImageUpload} />
+            {/* <input type="file" accept="image/*" onChange={handleImageUpload} /> */}
             <Editor
                 toolbarClassName="toolbarClassName"
                 wrapperClassName="wrapperClassName"
@@ -204,8 +288,8 @@ export default function EditorDraft({ value, handleEditorChange }: any) {
                         uploadEnabled: true,
                         uploadCallback: uploadCallback,
                         previewimage: true,
-                        inputaccept:
-                            'image/gif,image/jpeg,image/jpg,image/png,image/svg',
+                        inputaccept: 'image/*',
+                        // 'image/gif,image/jpeg,image/jpg,image/png,image/svg',
                         alt: { present: false, mandatory: false },
                         defaultsize: {
                             height: 'auto',

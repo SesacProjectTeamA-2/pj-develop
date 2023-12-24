@@ -83,3 +83,110 @@
     width: 100%;
     padding: 6rem 0 3rem 0;
 }
+
+//=== 명언 스타일링 ===
+.console-box {
+    background: #222;
+    font-family: helvetica;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 26vh;
+    // width: 70vw;
+
+    .blue {
+        color: #53d9d1;
+    }
+    .pink {
+        color: #f27b9b;
+    }
+    .orange {
+        color: #eb7132;
+    }
+
+    .console {
+        border: 1px solid #444;
+        border-radius: 3px;
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 0 15px 0px rgba(0, 0, 0, 0.75);
+        .top {
+            background: #333;
+            color: rgb(184, 184, 184);
+            text-align: center;
+            font-size: 12px;
+            padding: 5px;
+
+            .options {
+                font-size: 16px;
+                float: left;
+            }
+        }
+        .text {
+            font-family: courier;
+            color: #fff;
+            font-size: 14px;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+.typewriter {
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 0.15em solid #eb7132;
+    // width: fit-content;
+    // animation: typing 2s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+.typewriter.animation {
+    width: fit-content;
+    animation: typing1 1.2s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+/* The typing effect for the second animation */
+@keyframes typing1 {
+    from {
+        width: 0;
+    }
+    to {
+        width: var(--animation-duration);
+        // width: 40%;
+    }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+    from,
+    to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: orange;
+    }
+}
+
+// // /* The typing effect */
+// @keyframes typing {
+//     from {
+//         width: 0;
+//     }
+//     to {
+//         width: 60%;
+//     }
+// }
+
+.input-text {
+    background: #fff;
+    overflow: hidden;
+    width: 440px;
+    margin: 0 auto;
+    margin-top: 10rem;
+    padding: 0.75rem 1rem;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.1);
+}

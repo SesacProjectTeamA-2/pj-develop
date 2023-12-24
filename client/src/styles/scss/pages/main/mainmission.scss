@@ -3,7 +3,7 @@
 @import '../../abstracts/utils';
 
 .main-mission-div {
-    background-color: $color-white;
+    background-color: white;
     height: 65%;
     padding: 1rem 1rem;
 
@@ -13,6 +13,7 @@
         border-radius: 15px;
         box-shadow: 0px 5px 3px rgba(0, 0, 0, 0.1);
         width: 35vw;
+        background: linear-gradient(-45deg, #ffd006, #ffb9b9);
     }
 }
 

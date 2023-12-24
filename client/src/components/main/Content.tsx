@@ -286,6 +286,23 @@ export default function Content({ setLoginData, loginData }: any) {
     // console.log('gSeqList::::::', gSeqList);
     // console.log('loginData::::::', loginData);
 
+    // 랜덤 색상을 선택하는 함수
+    const getRandomColor = () => {
+        const colors = [
+            '#ff6d59',
+            '#ffcc77',
+            '#83cb77',
+            '#ff7373',
+            '#7fbeeb',
+            '#f399ca',
+            '#b78be3',
+            '#c4c4c4',
+        ];
+
+        const randomIndex = Math.floor(Math.random() * colors.length);
+        return colors[randomIndex];
+    };
+
     return (
         <div
             style={{ display: 'flex', justifyContent: 'center', width: '100%' }}
@@ -341,6 +358,7 @@ export default function Content({ setLoginData, loginData }: any) {
                                                 <Progressbar
                                                     score={doneRates[idx]}
                                                     bg={'#f3f3f3'}
+                                                    barColor={getRandomColor()}
                                                 />
                                             </div>
                                         </div>
