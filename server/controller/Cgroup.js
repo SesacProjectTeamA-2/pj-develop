@@ -193,7 +193,6 @@ exports.getMade = async (req, res) => {
       include: [{ model: Group }],
     });
 
-    console.log(guNumber);
     if (!groupList || groupList.length === 0) {
       res.status(200).send({
         success: true,

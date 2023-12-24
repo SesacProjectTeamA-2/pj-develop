@@ -379,11 +379,8 @@ exports.getGroupMissionDetail = async (req, res) => {
         msg: '게시글을 찾을 수 없습니다.',
       });
     }
-  } catch {
-    res.send({
-      success: false,
-      msg: 'gSeq 혹은 mSeq를 찾을 수 없습니다.',
-    });
+  } catch (err) {
+    console.error('board 조회 error', err);
   }
 };
 
