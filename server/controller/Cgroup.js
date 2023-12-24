@@ -117,8 +117,6 @@ exports.getJoined = async (req, res) => {
       group: ['gSeq'],
     });
 
-    console.log('>>>>>>>>>>>>>>>>', guNumber);
-
     // 참여중인 모임이 없으면
     if (!groupUserList || groupUserList.length === 0) {
       res.status(200).send({

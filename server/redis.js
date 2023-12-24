@@ -6,6 +6,7 @@ dotenv.config({ path: __dirname + '/config/.env' });
 const redisClient = redis.createClient({
   url: `redis://${process.env.REDIS_USERNAME}:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}/0`,
   legacyMode: true, // v4버전은 promise 객체기반이므로, 옛날문법과의 호환성을 위해 설정.
+  connect_timeout: 5000,
 });
 
 redisClient.connect().then(); // connect to redis v4 (async)

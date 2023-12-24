@@ -157,7 +157,7 @@ exports.chatSocket = async (io, socket) => {
               const socketsInRoom = Array.from(
                 groupChat.adapter.rooms.get(`room${gSeq}`) || []
               );
-
+              console.log(socketsInRoom);
               let userDatas = [];
               // for (let id of socketsInRoom) {
               //   userDatas.push(await redisCli.hGetAll(`${id}`));
@@ -169,11 +169,15 @@ exports.chatSocket = async (io, socket) => {
                   (uSeq) => userSocketMap[uSeq] === socketId
                 )
               );
-              // room에 참가하고 있는 소켓의 정보를 담은 배열
-              uSeqs.forEach(async (uSeq) =>
-                userDatas.push(await redisCli.hGetAll(`socket${uSeq}`))
+              console.log(uSeqs);
+              // room에 참가하고 있는 소켓의 정보를 담은 배열(forEach의 경우에는 배열의 모든 값에 대해 await 해주지않음!)
+              const userDatasPromises = uSeqs.map(
+                async (uSeq) => await redisCli.hGetAll(`socket${uSeq}`)
               );
 
+              userDatas = await Promise.all(userDatasPromises);
+
+              console.log(userDatas);
               const uNameInRoom = userDatas.map((user) => user.uName);
 
               console.log(`room${gSeq}에 접속된 아이디 목록`, uNameInRoom);
