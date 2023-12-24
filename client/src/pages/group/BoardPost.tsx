@@ -66,6 +66,7 @@ export default function BoardPost() {
         gbContent: '',
         gbCategory: gCategory,
         mSeq: null,
+        imgUrl: '',
     });
 
     const [isLeader, setIsLeader] = useState(false);
@@ -114,13 +115,21 @@ export default function BoardPost() {
         // console.log('setSelected 후', board);
     };
 
-    //gbContent관리
+    //-- gbContent관리
     const handleEditorChange = (value: any) => {
         setBoard({
             ...board,
             gbContent: value, // 에디터의 내용을 업데이트
         });
         // console.log(board);
+    };
+
+    //-- 게시글 이미지 첨부
+    const handleEditorImgUrl = (url: any) => {
+        setBoard({
+            ...board,
+            imgUrl: url,
+        });
     };
 
     //] 게시물 작성 완료 모달창
@@ -259,17 +268,8 @@ export default function BoardPost() {
                     <EditorDraft
                         value="" // edit 에서는 기존 내용 넣어줌
                         handleEditorChange={handleEditorChange}
+                        handleEditorImgUrl={handleEditorImgUrl}
                     />
-
-                    {/* === Quill Editor 삭제 예정 */}
-                    {/* <Editor
-                        value={board.gbContent}
-                        onChange={handleEditorChange}
-                    /> */}
-                    {/* <EditorTest
-                    // value={board.gbContent}
-                    // onChange={handleEditorChange}
-                    /> */}
                 </div>
             </div>
             <div>

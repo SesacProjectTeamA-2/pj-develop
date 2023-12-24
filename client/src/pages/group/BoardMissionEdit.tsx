@@ -106,9 +106,10 @@ export default function BoardMissionEdit() {
         gbSeq: Number(gbSeq),
         gbTitle: '',
         gbContent: '',
+        imgUrl: '',
     });
 
-    //gbTitle state 관리
+    //-- gbTitle state 관리
     const getValue = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
@@ -128,6 +129,14 @@ export default function BoardMissionEdit() {
             gbContent: value, // 에디터의 내용을 업데이트
         });
         // console.log(board);
+    };
+
+    //-- 게시글 이미지 첨부
+    const handleEditorImgUrl = (url: any) => {
+        setBoard({
+            ...board,
+            imgUrl: url,
+        });
     };
 
     let replaced_str = board.gbContent.replace('<p>', '');
@@ -189,12 +198,8 @@ export default function BoardMissionEdit() {
                         value={initContent}
                         // value={board.gbContent} // 이렇게 하면 값이 지속적으로 변경되어, 커서 리렌더링 되는 문제 발생
                         handleEditorChange={handleEditorChange}
+                        handleEditorImgUrl={handleEditorImgUrl}
                     />
-
-                    {/* <Editor
-                        value={board.gbContent}
-                        onChange={handleEditorChange}
-                    /> */}
                 </div>
             </div>
 

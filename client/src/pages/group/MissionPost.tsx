@@ -60,6 +60,7 @@ export default function MissionPost() {
         gbContent: '',
         gbCategory: 'mission',
         mSeq: Number(mSeq),
+        imgUrl: '',
     });
 
     const [missionSelected, setMissionSelected] = useState('');
@@ -90,11 +91,19 @@ export default function MissionPost() {
         console.log('Selected:', e.target.value);
     };
 
-    //gbContent관리
+    //-- gbContent관리
     const handleEditorChange = (value: string) => {
         setBoard({
             ...board,
             gbContent: value, // 에디터의 내용을 업데이트
+        });
+    };
+
+    //-- 게시글 이미지 첨부
+    const handleEditorImgUrl = (url: any) => {
+        setBoard({
+            ...board,
+            imgUrl: url,
         });
     };
 
@@ -236,6 +245,7 @@ export default function MissionPost() {
                     <EditorDraft
                         value="" // edit 에서는 기존 내용 넣어줌
                         handleEditorChange={handleEditorChange}
+                        handleEditorImgUrl={handleEditorImgUrl}
                     />
                 </div>
             </div>
