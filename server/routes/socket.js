@@ -226,7 +226,7 @@ exports.chatSocket = async (io, socket) => {
             // 메세지 정보 redis에 저장
             await redisCli.lPush(
               `room${gSeq}`,
-              JSON.stringify({ msg, timeStamp, uSeq, gSeq })
+              JSON.stringify({ msg, timeStamp, uSeq, gSeq, uName })
             );
 
             // 만료시간 조회
