@@ -43,7 +43,7 @@ exports.chatSocket = async (io, socket) => {
             'loginTime',
             new Date().toString()
           );
-          await redisCli.hSet(`${socketId}`, 'gSeq', JSON.stringify(gSeq));
+          await redisCli.hSet(`socket${uSeq}`, 'gSeq', JSON.stringify(gSeq));
         }
         // 만료시간 설정
         await redisCli.expire(`socket${uSeq}`, 86400); // 24시간
@@ -62,8 +62,7 @@ exports.chatSocket = async (io, socket) => {
         // 최초 로그인시간 정보 입력
         const loginTime = await redisCli.hGet(`socket${uSeq}`, 'loginTime');
         userInfo.loginTime = new Date(loginTime);
-        console.log(loginTime);
-        console.log(userInfo.loginTime);
+
         // 로그인시 각 방에 참여 및 로그인 이후 메세지 개수
         socket.on('login', async (data) => {
           try {
@@ -136,6 +135,7 @@ exports.chatSocket = async (io, socket) => {
             if (data.isSignup === 'true') {
               // gSeq 배열 추가
               userInfo.gSeq.push(...Number(data.gSeq));
+              console.log(userInfo.gSeq);
               // 캐시 update
               await redisCli.hSet(
                 `socket${uSeq}`,
