@@ -298,7 +298,7 @@ exports.chatSocket = async (io, socket) => {
 
             // 유저 캐시 삭제
 
-            await redisCli.del(`socket${uSeq}`, field);
+            await redisCli.del(`socket${uSeq}`);
 
             // userSocketMap 객체에서 특정 uSeq 키값을 삭제
             delete userSocketMap[uSeq];

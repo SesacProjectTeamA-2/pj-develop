@@ -27,11 +27,15 @@ redisClient.on('error', (err) => {
   console.error('Redis Client Error', err);
 
   if (err.code === 'EAI_AGAIN') {
+    redisClient.quit();
     setTimeout(() => {
-      // redisClient.connect();
-    }, 1000);
+      redisClient.connect();
+    }, 3000);
   } else if (err.name === 'ConnectionTimeoutError') {
-    // redisClient.connect();
+    redisClient.quit();
+    setTimeout(() => {
+      redisClient.connect();
+    }, 3000);
   }
 });
 
