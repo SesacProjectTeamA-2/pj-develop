@@ -35,6 +35,15 @@ exports.allUsers = async (req, res) => {
   }
 };
 
+exports.editUsers = async (req, res) => {
+  try {
+    const uSeq = req.params.uSeq;
+    const {} = req.body;
+  } catch (err) {
+    console.error('editUsers error', err);
+  }
+};
+
 exports.allGroup = async (req, res) => {
   try {
     const groupArray = await Group.findAll();
