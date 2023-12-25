@@ -284,7 +284,7 @@ exports.chatSocket = async (io, socket) => {
               JSON.stringify(userInfo.gSeq)
             );
 
-            groupChat.to(`room${gSeq}`).emit('msg', {
+            socket.to(`room${gSeq}`).emit('msg', {
               msg: `${uName}님이 모임을 탈퇴하셨습니다.`,
             });
             console.log(`room${gSeq} leave!!!`);
