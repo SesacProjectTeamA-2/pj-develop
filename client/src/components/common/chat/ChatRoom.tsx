@@ -32,6 +32,7 @@ export default function ChatRoom({
         msg: '',
         gSeq: nowGSeq,
         socketId: socket?.id,
+        uName: uName,
     });
 
     // 내가 전송한 채팅 3
@@ -41,6 +42,8 @@ export default function ChatRoom({
         uName: uName,
         socketId: socket?.id,
     });
+
+    console.log('uName:::::', uName);
 
     // 입력창 값
     const [inputValue, setInputValue] = useState('');
@@ -255,6 +258,8 @@ export default function ChatRoom({
     useEffect(() => {
         if (isSent) {
             console.log('Sent !!!!!!', isSent);
+            console.log('sendMsg !!!!!!', sendMsg);
+            console.log('msgData !!!!!!', msgData);
 
             // 서버에 데이터 전송
             socket?.emit('sendMsg', msgData);
@@ -271,7 +276,6 @@ export default function ChatRoom({
             });
 
             //-- 말풍선 추가
-            // console.log('#######', sendMsg);
             addMessageBubble(sendMsg);
         }
     }, [isSent]);

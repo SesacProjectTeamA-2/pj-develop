@@ -171,10 +171,10 @@ input {
     position: sticky;
     bottom: 4%;
     z-index: 10;
-    width: 70%;
+    width: 60%;
     margin: auto;
 
     @include media('<900px') {
-        width: 65%;
+        width: 55%;
     }
 }

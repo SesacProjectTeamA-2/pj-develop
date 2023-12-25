@@ -90,11 +90,11 @@
     color: $color-white;
     border: none;
     padding: 0.8rem;
-    margin: 20px 0;
-    font-size: 1.4rem;
-    width: 54vw;
+    margin: 20px 0 50px 0;
+    font-size: 1.2rem;
+    width: 50vw;
     @include media('<800px') {
-        width: 65vw;
+        width: 30vw;
     }
     @include media('<500px') {
         width: 17rem;

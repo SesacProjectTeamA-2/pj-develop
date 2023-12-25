@@ -360,7 +360,7 @@ export default function GroupEdit() {
                                     style={{
                                         background:
                                             selectedInterestId === interest.id
-                                                ? '#ED8D8D'
+                                                ? '#94897c'
                                                 : 'white',
                                         color:
                                             selectedInterestId === interest.id
@@ -368,7 +368,7 @@ export default function GroupEdit() {
                                                 : 'gray',
                                         border:
                                             selectedInterestId === interest.id
-                                                ? '1px solid #ED8D8D'
+                                                ? '1px solid #94897c'
                                                 : ' #acacac',
                                     }}
                                 >

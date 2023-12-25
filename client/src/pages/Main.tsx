@@ -409,7 +409,7 @@ export default function Main({
                             <div
                                 className="title4"
                                 style={{ marginBottom: '10px' }}
-                                color="#ed8d8d"
+                                color="#94897c"
                             >
                                 My 달성률{' '}
                             </div>

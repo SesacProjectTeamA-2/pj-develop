@@ -117,7 +117,7 @@ export default function ModalMemberList({
                                                       '모임장 권한 넘기기' &&
                                                   selectedMemberId ===
                                                       member.uSeq
-                                                ? '#ed8d8d'
+                                                ? '#94897c'
                                                 : 'white',
 
                                         color:
