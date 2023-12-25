@@ -117,7 +117,7 @@ export default function MissionCancelModal({
                                                 backgroundColor:
                                                     selectedMissionId ===
                                                     mission.id
-                                                        ? '#ed8d8d'
+                                                        ? '#94897c'
                                                         : '#acacac',
                                             }}
                                         >

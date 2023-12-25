@@ -85,7 +85,8 @@ export default function SideBarGroup({
     };
 
     const openToggleHandler = () => {
-        setIsOpen(!setIsOpen);
+        setIsOpen(!isOpen);
+        console.log(isOpen);
     };
 
     const menuBarTrue = () => {
@@ -345,32 +346,38 @@ export default function SideBarGroup({
                                         </svg>
                                     </a>
 
-                                    <ul className="progress-mission">
-                                        {groupMissions.map(
-                                            (mission: any, idx: number) => {
-                                                return (
-                                                    <li
-                                                        key={idx}
-                                                        className="mission-active-list"
-                                                        // style={{
-                                                        //     fontWeight: 'bold',
-                                                        // }}
-                                                    >
-                                                        <Link
-                                                            to={`/board/${gSeq}/mission/${mission.mSeq}`}
+                                    {isOpen ? (
+                                        <ul className="progress-mission">
+                                            {groupMissions.map(
+                                                (mission: any, idx: number) => {
+                                                    return (
+                                                        <li
+                                                            key={idx}
+                                                            className="mission-active-list"
+                                                            // style={{
+                                                            //     fontWeight: 'bold',
+                                                            // }}
                                                         >
-                                                            <div
-                                                                key={idx}
-                                                                className=""
+                                                            <Link
+                                                                to={`/board/${gSeq}/mission/${mission.mSeq}`}
                                                             >
-                                                                {mission.mTitle}
-                                                            </div>
-                                                        </Link>
-                                                    </li>
-                                                );
-                                            }
-                                        )}
-                                    </ul>
+                                                                <div
+                                                                    key={idx}
+                                                                    className=""
+                                                                >
+                                                                    {
+                                                                        mission.mTitle
+                                                                    }
+                                                                </div>
+                                                            </Link>
+                                                        </li>
+                                                    );
+                                                }
+                                            )}
+                                        </ul>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
                             </li>
 

@@ -5,7 +5,7 @@ export default function GroupFilterTag() {
         const selectedBtn: HTMLElement = e.target as HTMLElement;
 
         if (selectedBtn) {
-            selectedBtn.style.background = '#ED8D8D';
+            selectedBtn.style.background = '#94897c';
             selectedBtn.style.color = '#fff';
             console.log(selectedBtn);
         }

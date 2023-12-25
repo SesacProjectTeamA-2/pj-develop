@@ -404,6 +404,9 @@ export default function GroupPostDetail() {
 
                                                   {isEditing ? (
                                                       <TextField
+                                                          style={{
+                                                              width: '100%',
+                                                          }}
                                                           value={
                                                               commentEditInputs[
                                                                   idx

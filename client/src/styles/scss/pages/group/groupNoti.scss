@@ -15,11 +15,11 @@
     justify-content: flex-start;
 }
 .noti-info {
-    padding: 1rem;
+    padding: 1rem 0 1rem 5rem;
     font-size: 1rem;
     display: flex;
     align-items: center;
-    font-weight: bold;
+    // font-weight: bold;
 }
 
 .noti-table {
@@ -47,8 +47,8 @@
     align-items: center;
     width: 100%;
     height: 4rem;
-    padding: 0.5rem 1rem;
-    background-color: $color-gray6;
+    padding: 0.5rem 0 0 5rem;
+    // background-color: white;
     box-sizing: border-box;
 
     @include media('<800px') {
@@ -63,7 +63,7 @@
 .noti-container {
     width: 90%;
     height: fit-content;
-    margin: 1rem;
+    margin: 1rem 5rem;
     border-radius: 10px;
     height: 50vh;
     height: 100%;
@@ -72,10 +72,10 @@
 .noti-header {
     display: flex;
     align-items: center;
-    padding: 1rem 1.5rem;
+    padding: 1rem 3rem;
     font-weight: bold;
     font-size: 1rem;
-    background-color: $color-gray5;
+    background-color: #fdfdfd;
     border-radius: 10px 10px 0 0;
 }
 

@@ -57,11 +57,11 @@ export default function InterestedItem({
                                 className="tag-btn"
                                 style={{
                                     background: isSelected
-                                        ? '#ED8D8D'
+                                        ? '#94897c'
                                         : 'white',
                                     color: isSelected ? 'white' : 'gray',
                                     border: isSelected
-                                        ? '1px solid #ED8D8D'
+                                        ? '1px solid #94897c'
                                         : ' #acacac',
                                 }}
                             >

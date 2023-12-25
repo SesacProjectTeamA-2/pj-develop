@@ -160,7 +160,10 @@ export default function GroupMissionDone() {
             <GroupHeader title={'완료된 미션'} groupName={groupMission.gName} />
             <div className="noti-container">
                 <div className="noti-header mission-done-header">
-                    <div className="noti-container">
+                    <div
+                        className="noti-container-done"
+                        style={{ width: '100%' }}
+                    >
                         <Paper sx={{ width: '100%' }}>
                             <TableContainer sx={{ maxHeight: 440 }}>
                                 <Table stickyHeader aria-label="sticky table">

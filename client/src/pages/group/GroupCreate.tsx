@@ -116,6 +116,7 @@ export default function GroupCreate(socket: any) {
             console.log('joinRoom에 전송할 데이터 >>>', {
                 gSeq: gSeq,
                 isSignup: 'true',
+                uName: '', // name 추가
             });
 
             socket.socket?.emit('joinRoom', { gSeq: gSeq, isSignup: 'true' });
@@ -329,7 +330,7 @@ export default function GroupCreate(socket: any) {
                                     style={{
                                         background:
                                             selectedInterestId === interest.id
-                                                ? '#ED8D8D'
+                                                ? '#94897c'
                                                 : 'white',
                                         color:
                                             selectedInterestId === interest.id
@@ -337,7 +338,7 @@ export default function GroupCreate(socket: any) {
                                                 : 'gray',
                                         border:
                                             selectedInterestId === interest.id
-                                                ? '1px solid #ED8D8D'
+                                                ? '1px solid #94897c'
                                                 : ' #acacac',
                                     }}
                                 >

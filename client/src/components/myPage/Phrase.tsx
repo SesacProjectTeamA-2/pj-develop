@@ -33,7 +33,7 @@ export default function Phrase(props: any): JSX.Element {
                     style={{
                         background:
                             props.phraseModeBtnVal === 'recommend'
-                                ? ' #ed8d8d'
+                                ? ' #94897c'
                                 : '#d9d9d9',
                         color: 'white',
                     }}
@@ -54,7 +54,7 @@ export default function Phrase(props: any): JSX.Element {
                     style={{
                         background:
                             props.phraseModeBtnVal === 'self'
-                                ? ' #ed8d8d'
+                                ? ' #94897c'
                                 : '#d9d9d9',
                         color: 'white',
                     }}
