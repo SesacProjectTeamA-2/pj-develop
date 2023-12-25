@@ -34,6 +34,7 @@ exports.chatSocket = async (io, socket) => {
         // 이미 로그인되어 있는 경우에는 update하지 않음.
         const isConnected = await redisCli.hGet(`socket${uSeq}`, 'uName');
         if (!isConnected) {
+          console.log('이미 로그인되어 있지 않음');
           await redisCli.hSet(`socket${uSeq}`, 'uSeq', uSeq);
           await redisCli.hSet(`socket${uSeq}`, 'gSeq', JSON.stringify(gSeq));
           await redisCli.hSet(`socket${uSeq}`, 'uName', uName);
@@ -59,9 +60,10 @@ exports.chatSocket = async (io, socket) => {
         }
 
         // 최초 로그인시간 정보 입력
-        const loginTime = await redisCli.hGet(`${socketId}`, 'loginTime');
-        userInfo[loginTime] = new Date(loginTime);
-
+        const loginTime = await redisCli.hGet(`socket${uSeq}`, 'loginTime');
+        userInfo.loginTime = new Date(loginTime);
+        console.log(loginTime);
+        console.log(userInfo.loginTime);
         // 로그인시 각 방에 참여 및 로그인 이후 메세지 개수
         socket.on('login', async (data) => {
           try {
@@ -189,6 +191,7 @@ exports.chatSocket = async (io, socket) => {
                 const messages = await redisCli.lRange(`room${gSeq}`, 0, -1);
                 // 가져온 메시지를 파싱
                 console.log(messages);
+                console.log(userInfo.loginTime);
                 const parsedMessages = messages
                   .map((message) => JSON.parse(message))
                   .filter(
@@ -238,7 +241,7 @@ exports.chatSocket = async (io, socket) => {
               await redisCli.expire(`room${gSeq}`, 43200);
             }
 
-            groupChat
+            socket
               .to(`room${gSeq}`)
               .emit('msg', { uName, uSeq, timeStamp, msg });
 
