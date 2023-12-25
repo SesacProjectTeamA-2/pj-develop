@@ -51,6 +51,10 @@ components:
           type: string
           description: 카테고리/notice=공지,free=자유,mission=미션
           example: notice
+        gbImg:
+          type: string
+          description: 게시글 이미지 경로
+          example:
         createdAt:
           type: string
           format: date-time

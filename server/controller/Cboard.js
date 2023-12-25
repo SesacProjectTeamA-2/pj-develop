@@ -483,7 +483,7 @@ exports.createBoard = async (req, res) => {
         gbTitle: req.body.gbTitle,
         gbContent: req.body.gbContent,
         gbCategory: req.body.gbCategory,
-        gbImg: imageUrl,
+        gbImg,
         mSeq: req.body.mSeq,
         gSeq: req.body.gSeq,
         uSeq: uSeq,
@@ -505,6 +505,7 @@ exports.createBoard = async (req, res) => {
         gbTitle: req.body.gbTitle,
         gbContent: req.body.gbContent,
         gbCategory: req.body.gbCategory,
+        gbImg,
         gSeq: req.body.gSeq,
         uSeq: uSeq,
         guSeq: guSeq,
@@ -659,11 +660,12 @@ exports.editBoard = async (req, res) => {
       });
       return;
     }
-    const { gbTitle, gbContent } = req.body;
+    const { gbTitle, gbContent, imageUrl } = req.body;
 
     let result = await GroupBoard.update(
       {
         gbTitle: gbTitle,
+        gbImg: imageUrl,
         gbContent: gbContent,
       },
       {
