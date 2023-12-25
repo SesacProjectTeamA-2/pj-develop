@@ -61,9 +61,16 @@ exports.getGroups = async (req, res) => {
       },
     });
 
+    const guNumber = await GroupUser.count({
+      attributes: ['gSeq'],
+      include: [{ model: Group }],
+      group: ['gSeq'],
+    });
+
     if (selectGroups.count > 0) {
       res.send({
         count: selectGroups.count,
+        groupMember: guNumber,
         groupArray: selectGroups.rows,
       });
     } else {
