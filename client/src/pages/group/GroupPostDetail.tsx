@@ -281,6 +281,9 @@ export default function GroupPostDetail() {
                             __html: freeList?.gbContent,
                         }}
                     />
+                    {freeList?.gbImg && (
+                        <img src={freeList?.gbImg} alt="이미지" />
+                    )}
 
                     {/* 댓글 수, 반응 수 */}
                     <GroupContentFooter
