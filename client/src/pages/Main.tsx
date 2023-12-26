@@ -94,15 +94,39 @@ export default function Main({
 
             setSse(eventSource);
 
-            eventSource.addEventListener('open', (event) => {
-                console.log(event);
-                console.log('EventSource connection opened.');
+            //-- 연결
+            eventSource.addEventListener('connected', (e: any) => {
+                console.log('프론트 측 connect', e);
             });
 
-            eventSource.addEventListener('connect', (e: any) => {
-                const { data: receivedSections } = e;
+            //-- 미확인 알람 전체 리스트
+            eventSource.addEventListener('alarmList', (event: any) => {
+                console.log('alarmList ::::', event);
+                // console.log('alarmList event.data ::::', event.data);
 
-                console.log(e);
+                // const eventData = JSON.parse(event.data);
+
+                // console.log('eventData ::::', eventData);
+            });
+
+            //-- 미확인 알람 카운트
+            eventSource.addEventListener('alarmCount', (event: any) => {
+                console.log('alarmCount ::::', event);
+                // console.log('alarmList event.data ::::', event.data);
+
+                // const eventData = JSON.parse(event.data);
+
+                // console.log('eventData ::::', eventData);
+            });
+
+            //-- 메세지
+            eventSource.addEventListener('commentAlarm', (event: any) => {
+                console.log('commentAlarm ::::', event);
+                console.log('commentAlarm event.data ::::', event.data);
+
+                const eventData = JSON.parse(event.data);
+
+                console.log('eventData ::::', eventData);
             });
 
             // eventSource.addEventListener('connection', (event) => {
