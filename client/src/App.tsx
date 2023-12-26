@@ -82,6 +82,7 @@ function App() {
         <div className="App">
             <Header
                 showChatting={showChatting}
+                setShowChat={setShowChat}
                 showChat={showChat}
                 isIntro={isIntro}
                 setIsIntro={setIsIntro}

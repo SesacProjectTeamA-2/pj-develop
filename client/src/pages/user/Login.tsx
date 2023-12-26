@@ -95,6 +95,17 @@ export default function Login(props: any) {
         }
     };
 
+    //-- key down event 입력 시
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.nativeEvent.isComposing) {
+            return;
+        }
+
+        if (event.key === 'Enter') {
+            checkAdminHandler();
+        }
+    };
+
     return (
         <div className="section login-section">
             <p
@@ -156,6 +167,7 @@ export default function Login(props: any) {
                                 variant="filled"
                                 value={pwValue}
                                 onChange={pwOnChange}
+                                onKeyDown={handleKeyDown}
                             />
                             <p>ADMIN PW : 1234</p>
                             {isPasswordIncorrect ? (
