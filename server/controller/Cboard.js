@@ -441,8 +441,8 @@ exports.createBoard = async (req, res) => {
     // 클라이언트에서 요청 보낼때 body로 mSeq, gSeq, gbCategory, imageUrl  값 넣어서 보내주기
     const gSeq = req.body.gSeq;
     const gbCategory = req.body.gbCategory;
-    const gbImg = req.body.imageUrl;
-
+    const gbImg = req.body.imgUrl;
+    console.log('gbImg', req.body);
     if (!token) {
       res.send({
         success: false,
