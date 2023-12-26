@@ -35,10 +35,15 @@ exports.allUsers = async (req, res) => {
   }
 };
 
-exports.editUsers = async (req, res) => {
+exports.delUsers = async (req, res) => {
   try {
     const uSeq = req.params.uSeq;
-    const {} = req.body;
+
+    await User.destroy({
+      where: { uSeq },
+    });
+
+    res.send({ isSuccess: 'true' });
   } catch (err) {
     console.error('editUsers error', err);
   }
@@ -65,5 +70,15 @@ exports.allGroup = async (req, res) => {
     });
   } catch (err) {
     console.error('allGroup error', err);
+  }
+};
+
+exports.delGroup = async (req, res) => {
+  try {
+    const gSeq = req.params.gSeq;
+    await Group.destroy({ where: { gSeq } });
+    res.send({ isSuccess: 'true' });
+  } catch (err) {
+    console.error('delGroup error', err);
   }
 };
