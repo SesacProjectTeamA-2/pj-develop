@@ -40,6 +40,7 @@ exports.alarming = async (req, res) => {
 
       // redis에 댓글추가시 메세지 전송 + count 1.
       await sub.subscribe('comment-alarm', (message) => {
+        console.log('message', message);
         res.write('event: commentAlarm\n' + `data:${message}\n\n`);
         res.write(
           'event: alarmCount\n' + `data: ${parseInt(alarmCount) + 1}\n\n`
@@ -48,6 +49,7 @@ exports.alarming = async (req, res) => {
 
       // 모임 추방시 메세지 전송 + count 1.
       await sub.subscribe('group-alarm', (message) => {
+        console.log('message', message);
         res.write('event: groupAlarm\n' + `data:${message}\n\n`);
         res.write(
           'event: alarmCount\n' + `data: ${parseInt(alarmCount) + 1}\n\n`
