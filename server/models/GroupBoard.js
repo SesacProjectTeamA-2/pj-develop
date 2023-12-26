@@ -19,12 +19,6 @@ const GroupBoard = (Sequelize, DataTypes) => {
         allowNull: false,
         comment: '게시글 내용',
       },
-      gbImg: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        comment: '게시판 업로드 이미지 : null일경우, 이미지 첨부 x',
-      },
-
       gbIsDone: {
         type: DataTypes.STRING(1),
         allowNull: false,

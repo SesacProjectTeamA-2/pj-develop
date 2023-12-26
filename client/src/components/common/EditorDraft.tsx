@@ -45,8 +45,10 @@ export default function EditorDraft({
     const onEditorStateChange = function (editorState: any) {
         setEditorState(editorState);
 
-        const text = editorState.getCurrentContent().getPlainText('\u0001');
-
+        // const text = editorState.getCurrentContent().getPlainText('\u0001');
+        const text = draftToHtml(
+            convertToRaw(editorState.getCurrentContent().getPlainText('\u0001'))
+        );
         handleEditorChange(text);
     };
 

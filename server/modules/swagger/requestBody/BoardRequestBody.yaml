@@ -24,10 +24,6 @@ components: # 컴포넌트 선언
           type: string
           description: 게시글 내용
           example: 내용입니다
-        imageUrl:
-          type: string
-          description: 게시글 이미지 경로
-          example:
         gbCategory:
           type: string
           description: 게시글 카테고리
@@ -50,10 +46,6 @@ components: # 컴포넌트 선언
           type: string
           description: 게시글 제목
           example: 제목입니다
-        imageUrl:
-          type: string
-          description: 게시글 이미지 경로
-          example:
         gbContent:
           type: string
           description: 게시글 내용
