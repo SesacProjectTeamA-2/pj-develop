@@ -25,6 +25,8 @@ export default function ChatRoom({
 
     const [loginUser, setLoginUser] = useState<any>([]);
 
+    const [loginUName, setLoginUName] = useState<any>([]);
+
     // 서버에 전송할 데이터 2
     const [msgData, setMsgData] = useState<any>({
         uSeq: 0,
@@ -42,8 +44,6 @@ export default function ChatRoom({
         uName: uName,
         socketId: socket?.id,
     });
-
-    console.log('uName:::::', uName);
 
     // 입력창 값
     const [inputValue, setInputValue] = useState('');
@@ -133,8 +133,54 @@ export default function ChatRoom({
 
             console.log('data.allMsg >>>>>>', data.allMsg);
 
-            // if (typeof data.allMsg !== 'string') {
-            if (data.allMsg.length > 0) {
+            // 메세지 없을 경우 : '모임방 메세지 없음 !'
+            if (typeof data.allMsg !== 'string') {
+                const formattedData = data.allMsg?.map((msg: any) => ({
+                    gSeq: msg.gSeq,
+                    msg: msg.msg,
+                    timeStamp: new Date(msg.timeStamp).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        // hour12: false,
+                    }),
+                    uSeq: msg.uSeq,
+                    // uName
+                }));
+
+                setAllMsg(formattedData);
+            }
+
+            if (data.loginUser?.length > 0) {
+                setLoginUser(data.loginUser);
+            }
+        });
+
+        // --컴포넌트가 언마운트될 때 리스너 해제
+        // return () => {
+        //     socket.off('joinRoom');
+        // };
+
+        //   socketInstances[id].on('alert', (message: string) => {
+        //     const welcomeChat: ChatMsg = {
+        //       username: '알림',
+        //       message: message,
+        //     };
+        //     setChat((prevChat) => [...prevChat, welcomeChat]);
+        //  }
+    }, []);
+
+    //; allMsg, data.loginUser 변경될 때마다
+    // let loginUName: any = []; // 로그인한 uName
+    useEffect(() => {
+        // joinRoom 이벤트에 대한 리스너 추가
+        socket?.on('joinRoom', (data: any) => {
+            console.log('joinRoom event received on client', data); // 서버에서 보낸 data
+
+            console.log('data.allMsg >>>>>>', data.allMsg);
+
+            // [참고] 변경이전
+            // if (data.allMsg?.length > 0) {
+            if (typeof data.allMsg !== 'string') {
                 const formattedData = data.allMsg?.map((msg: any) => ({
                     gSeq: msg.gSeq,
                     msg: msg.msg,
@@ -151,25 +197,20 @@ export default function ChatRoom({
             }
 
             if (data.loginUser.length > 0) {
-                setLoginUser(data.loginUser);
+                // setLoginUser(data.loginUser);
+
+                let updatedLoginUName = [];
+                for (let i = 0; i < data.loginUser.length; i++) {
+                    updatedLoginUName.push(data.loginUser[i]?.uName);
+                }
+                setLoginUName(updatedLoginUName);
             }
         });
 
-        console.log('loginUser >>>>>>', loginUser);
+        console.log('allMsg >>>>>>', allMsg);
 
-        // --컴포넌트가 언마운트될 때 리스너 해제
-        // return () => {
-        //     socket.off('joinRoom');
-        // };
-
-        //   socketInstances[id].on('alert', (message: string) => {
-        //     const welcomeChat: ChatMsg = {
-        //       username: '알림',
-        //       message: message,
-        //     };
-        //     setChat((prevChat) => [...prevChat, welcomeChat]);
-        //  }
-    }, []);
+        console.log('loginUName >>>>>>', loginUName);
+    }, [loginUser, allMsg]);
 
     //] 메세지 입력
     const handleChangeMsg = (msg: string) => {
@@ -330,6 +371,8 @@ export default function ChatRoom({
     console.log(msgData);
     console.log('::::::', allMsg);
 
+    console.log('외부 loginUName ::::: ', loginUName);
+
     return (
         <main className="chat-box">
             {/* <button id="send-btn" type="button" onClick={leaveHandler}>
@@ -380,13 +423,19 @@ export default function ChatRoom({
                             </div>
                         </div>
 
-                        {/* [추후] 소켓 통신 유무를 통한 온라인 구분 */}
-                        {/* 온라인 / 오프라인 */}
-                        <div className="badge"></div>
+                        {/* 소켓 통신 유무를 통한 온/오프라인 구분 */}
+                        {isLeader ? (
+                            <div className="badge"></div>
+                        ) : loginUName.includes(
+                              groupDetail.leaderInfo.uName
+                          ) ? (
+                            <div className="badge"></div>
+                        ) : (
+                            <div className="badge-off"></div>
+                        )}
                     </div>
 
                     {/* --- MEMBER --- */}
-
                     {groupDetail.memberArray?.map((member: any) => {
                         return (
                             <div className="contact">
@@ -401,9 +450,12 @@ export default function ChatRoom({
                                 </div>
                                 <div className="name"> {member.uName}</div>
 
-                                {/* [추후] 소켓 통신 유무를 통한 온라인 구분 */}
-                                {/* 온라인 / 오프라인 */}
-                                <div className="badge"></div>
+                                {/* 소켓 통신 유무를 통한 온/오프라인 구분 */}
+                                {loginUName.includes(member.uName) ? (
+                                    <div className="badge"></div>
+                                ) : (
+                                    <div className="badge-off"></div>
+                                )}
                             </div>
                         );
                     })}
