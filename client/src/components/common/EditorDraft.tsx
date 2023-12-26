@@ -40,6 +40,7 @@ export default function EditorDraft({
 
     useEffect(() => {
         if (value == '') return;
+
         const newContentState = ContentState.createFromText(value);
         const newEditorState = EditorState.createWithContent(newContentState);
         setEditorState(newEditorState);
@@ -119,19 +120,7 @@ export default function EditorDraft({
 
     // 이미지 업로드 이벤트 핸들러
     const uploadCallback = async (e: any) => {
-        // e.preventDefault();
-
         try {
-            console.log(e);
-
-            // // e.target이 정의되었는지 확인
-            // if (!e.target) {
-            //     console.log('이벤트 타겟이 정의되지 않았습니다.');
-            //     return;
-            // }
-
-            // const imageFile = e.target.files && e.target.files[0];
-
             // e가 이미지 파일 정보를 직접 포함하고 있습니다.
             const imageFile = e;
 
@@ -146,130 +135,123 @@ export default function EditorDraft({
             if (result) {
                 console.log('이미지 업로드 성공');
                 console.log(result);
-                console.log('이미지 URL:', imageUrl);
-                handleEditorImgUrl(imageUrl);
 
-                //-- imageUrl을 사용하여 필요한 작업 수행
+                //     // handleEditorImgUrl(imageUrl);
 
-                // const file = imageFile;
-                // const reader = new FileReader();
+                //     //-- imageUrl을 사용하여 필요한 작업 수행
 
-                // Atomic Block 추가 (이미지 미리보기)
+                //     // Atomic Block 추가 (이미지 미리보기)
 
-                // reader.onload = () => {
-                // const imageContent = `
-                // <img src="${reader.result}" alt="uploaded image" />`;
-
-                const contentState = editorState.getCurrentContent();
-
-                const contentStateWithEntity = contentState.createEntity(
-                    'atomic',
-                    'IMMUTABLE',
-                    { src: imageUrl } // 이미지 URL을 포함하는 엔터티 생성
-                );
-
-                const entityKey =
-                    contentStateWithEntity.getLastCreatedEntityKey();
-
-                if (entityKey) {
-                    const newEditorState = EditorState.set(editorState, {
-                        currentContent: contentStateWithEntity,
-                    });
-
-                    setEditorState(
-                        AtomicBlockUtils.insertAtomicBlock(
-                            newEditorState,
-                            entityKey,
-                            ' '
-                        )
-                    );
-                    // }
-                }
-
-                // 업로드된 이미지 미리 보기를 추가
-                return { data: { link: imageUrl, preview: imageUrl } };
-
-                // reader.readAsDataURL(file);
-
-                // const imageContent = `
-                // <img src="${imageUrl}" alt="uploaded image" />`;
-
-                // // 에디터의 내용 갱신
-                // const updatedText = editorState
-                //     .getCurrentContent()
-                //     .getPlainText('\u0001');
-                // handleEditorChange(updatedText);
-
-                // const updatedContent = ContentState.createFromText(
-                //     `${updatedText}\n${imageContent}`
-                // );
-                // const updatedEditorState =
-                //     EditorState.createWithContent(updatedContent);
-
-                // e.preventDefault();
-                // const file = e.target.files[0];
-                // const reader = new FileReader();
-
-                // reader.onload = (e) => {
                 //     const contentState = editorState.getCurrentContent();
+
                 //     const contentStateWithEntity = contentState.createEntity(
                 //         'atomic',
                 //         'IMMUTABLE',
-                //         { src: e && e.target && e.target.result }
+                //         { src: imageUrl } // 이미지 URL을 포함하는 엔터티 생성
                 //     );
 
-                //     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-                //     const newEditorState = EditorState.set(editorState, {
-                //         currentContent: contentStateWithEntity,
-                //     });
+                //     const entityKey =
+                //         contentStateWithEntity.getLastCreatedEntityKey();
 
-                //     setEditorState(
-                //         AtomicBlockUtils.insertAtomicBlock(
-                //             newEditorState,
-                //             entityKey,
-                //             ' '
-                //         )
-                //     );
-                // };
+                //     if (entityKey) {
+                //         const newEditorState = EditorState.set(editorState, {
+                //             currentContent: contentStateWithEntity,
+                //         });
 
-                // reader.readAsDataURL(file);
-            } else {
-                console.log('이미지 업로드 실패:', message);
+                //         setEditorState(
+                //             AtomicBlockUtils.insertAtomicBlock(
+                //                 newEditorState,
+                //                 entityKey,
+                //                 ' '
+                //             )
+                //         );
+                //     }
             }
+
+            // 업로드된 이미지 미리 보기를 추가
+            return { data: { link: imageUrl, preview: imageUrl } };
+
+            // reader.readAsDataURL(file);
+
+            // const imageContent = `
+            // <img src="${imageUrl}" alt="uploaded image" />`;
+
+            // // 에디터의 내용 갱신
+            // const updatedText = editorState
+            //     .getCurrentContent()
+            //     .getPlainText('\u0001');
+            // handleEditorChange(updatedText);
+
+            // const updatedContent = ContentState.createFromText(
+            //     `${updatedText}\n${imageContent}`
+            // );
+            // const updatedEditorState =
+            //     EditorState.createWithContent(updatedContent);
+
+            // e.preventDefault();
+            // const file = e.target.files[0];
+            // const reader = new FileReader();
+
+            // reader.onload = (e) => {
+            //     const contentState = editorState.getCurrentContent();
+            //     const contentStateWithEntity = contentState.createEntity(
+            //         'atomic',
+            //         'IMMUTABLE',
+            //         { src: e && e.target && e.target.result }
+            //     );
+
+            //     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+            //     const newEditorState = EditorState.set(editorState, {
+            //         currentContent: contentStateWithEntity,
+            //     });
+
+            //     setEditorState(
+            //         AtomicBlockUtils.insertAtomicBlock(
+            //             newEditorState,
+            //             entityKey,
+            //             ' '
+            //         )
+            // );
+            // };
+
+            // reader.readAsDataURL(file);
+            // } else {
+            //     console.log('이미지 업로드 실패:', message);
+            // }
         } catch (error) {
             console.error('이미지 업로드 오류:', error);
         }
     };
 
-    const handleImageUpload = (e: any) => {
-        e.preventDefault();
-        const file = e.target.files[0];
-        const reader = new FileReader();
+    // const handleImageUpload = (e: any) => {
+    //     e.preventDefault();
+    //     const file = e.target.files[0];
+    //     const reader = new FileReader();
 
-        reader.onload = (e) => {
-            const contentState = editorState.getCurrentContent();
-            const contentStateWithEntity = contentState.createEntity(
-                'atomic',
-                'IMMUTABLE',
-                { src: e && e.target && e.target.result }
-            );
+    //     reader.onload = (e) => {
+    //         const contentState = editorState.getCurrentContent();
+    //         const contentStateWithEntity = contentState.createEntity(
+    //             'atomic',
+    //             'IMMUTABLE',
+    //             { src: e && e.target && e.target.result }
+    //         );
 
-            const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-            const newEditorState = EditorState.set(editorState, {
-                currentContent: contentStateWithEntity,
-            });
+    //         const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    //         const newEditorState = EditorState.set(editorState, {
+    //             currentContent: contentStateWithEntity,
+    //         });
 
-            setEditorState(
-                AtomicBlockUtils.insertAtomicBlock(
-                    newEditorState,
-                    entityKey,
-                    ' '
-                )
-            );
-        };
+    //         setEditorState(
+    //             AtomicBlockUtils.insertAtomicBlock(
+    //                 newEditorState,
+    //                 entityKey,
+    //                 ' '
+    //             )
+    //         );
+    //     };
 
-        reader.readAsDataURL(file);
-    };
+    //     reader.readAsDataURL(file);
+    // };
 
     // const editorToHtml = draftToHtml(
     //     convertToRaw(editorState.getCurrentContent())

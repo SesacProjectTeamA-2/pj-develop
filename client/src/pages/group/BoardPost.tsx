@@ -77,15 +77,12 @@ export default function BoardPost() {
 
     console.log('missionSelected', missionSelected);
 
-    //gbTitle state 관리
-    const getValue = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-
-        setBoard({
-            ...board,
-            [name]: value,
-        });
-    };
+    // const setValue = (name: string, value: string) => {
+    //     setBoard((prevBoard: any) => ({
+    //         ...prevBoard,
+    //         [name]: value,
+    //     }));
+    // };
 
     //] select 태그 state관리
     const handleSelect = (e: any) => {
@@ -115,7 +112,17 @@ export default function BoardPost() {
         // console.log('setSelected 후', board);
     };
 
-    //-- gbContent관리
+    //-- gbTitle 관리
+    const getValue = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+
+        setBoard({
+            ...board,
+            [name]: value,
+        });
+    };
+
+    //-- gbContent 관리
     const handleEditorChange = (value: any) => {
         setBoard({
             ...board,
@@ -258,6 +265,9 @@ export default function BoardPost() {
                             label="제목"
                             variant="standard"
                             onChange={getValue}
+                            // onChange={(e) =>
+                            //     setValue('gbTitle', e.target.value)
+                            // }
                             name="gbTitle"
                             // required
                             // className="input-board-post"
