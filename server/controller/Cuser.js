@@ -73,13 +73,13 @@ exports.getKakao = async (req, res) => {
       },
     });
 
-    const userGroups = await GroupUser.findAll({
-      where: { uSeq: alreadyUser.uSeq },
-      attribute: ['gSeq'],
-    });
-    const result = userGroups.map((user) => user.gSeq);
-    // db에 값 있으면 이미 회원가입 한 유저
     if (alreadyUser) {
+      const userGroups = await GroupUser.findAll({
+        where: { uSeq: alreadyUser.uSeq },
+        attribute: ['gSeq'],
+      });
+      const result = userGroups.map((user) => user.gSeq);
+      // db에 값 있으면 이미 회원가입 한 유저
       // 해당 3개의 값 가지는 토큰 생성
       const jwtToken = await jwt.sign({
         uSeq: alreadyUser.uSeq,
@@ -191,15 +191,16 @@ exports.getLoginNaverRedirect = async (req, res) => {
           uEmail: userEmail,
         },
       });
+      console.log('>>>>>>>>>>>>>>>>', alreadyUser);
 
-      const userGroups = await GroupUser.findAll({
-        where: { uSeq: alreadyUser.uSeq },
-        attribute: ['gSeq'],
-      });
-      const result = userGroups.map((user) => user.gSeq);
       // db에 값 있으면 이미 회원가입 한 유저
       if (alreadyUser) {
         // 해당 3개의 값 가지는 토큰 생성
+        const userGroups = await GroupUser.findAll({
+          where: { uSeq: alreadyUser.uSeq },
+          attribute: ['gSeq'],
+        });
+        const result = userGroups.map((user) => user.gSeq);
         const jwtToken = await jwt.sign({
           uSeq: alreadyUser.uSeq,
           userName: userName,
@@ -299,14 +300,14 @@ exports.getLoginGoogleRedirect = async (req, res) => {
       });
 
       // 3) 회원
-      const userGroups = await GroupUser.findAll({
-        where: { uSeq: alreadyUser.uSeq },
-        attribute: ['gSeq'],
-      });
-      const result = userGroups.map((user) => user.gSeq);
       // db에 값 있으면 이미 회원가입 한 유저
       if (alreadyUser) {
         // 해당 3개의 값 가지는 토큰 생성
+        const userGroups = await GroupUser.findAll({
+          where: { uSeq: alreadyUser.uSeq },
+          attribute: ['gSeq'],
+        });
+        const result = userGroups.map((user) => user.gSeq);
         const jwtToken = await jwt.sign({
           uSeq: alreadyUser.uSeq,
           userName: userName,
