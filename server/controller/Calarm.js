@@ -20,11 +20,6 @@ exports.alarming = async (req, res) => {
         return;
       }
 
-      const alarmCount = await redisCli.lLen(`user${uSeq}`);
-      const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
-
-      console.log(allAlarm);
-      // 처음 연결시 보낼 알림목록 및 숫자
       res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -32,11 +27,17 @@ exports.alarming = async (req, res) => {
         'Access-Control-Allow-Origin': '*', // CORS 설정을 추가
       });
 
+      const alarmCount = await redisCli.lLen(`user${uSeq}`);
+      const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
+
+      console.log(allAlarm);
+      // 처음 연결시 보낼 알림목록 및 숫자
+
       // 기존 알람 load (connection)
       // sse.on('connection', async (client) => {
-      res.write('event: connected\n' + `data: SSE연결완료\n\n`);
-      res.write('event: alarmCount\n' + `data: ${alarmCount}\n\n`);
-      res.write('event: alarmList\n' + `data: ${allAlarm}\n\n`);
+      res.write('event: connected\n' + `data: ${alarmCount}\n\n`);
+
+      res.write('event: allAlarm\n' + `data: ${allAlarm}\n\n`);
 
       // redis에 댓글추가시 메세지 전송 + count 1.
       await sub.subscribe('comment-alarm', (message) => {
