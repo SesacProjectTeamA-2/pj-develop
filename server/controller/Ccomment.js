@@ -96,7 +96,7 @@ exports.createComment = async (req, res) => {
     // (value) gbSeq, uName, date
     const commentTime = new Date();
     const receiver = groupBoard.uSeq;
-    await redisCli.lPush(
+    const result = await redisCli.lPush(
       `user${receiver}`,
       JSON.stringify({
         type: 'comment',
@@ -105,7 +105,7 @@ exports.createComment = async (req, res) => {
         commentTime,
       })
     );
-
+    console.log(result);
     // 만료시간 조회
     const expirationTime = await redisCli.ttl(`user${receiver}`);
     // 유효시간 7일
@@ -116,7 +116,7 @@ exports.createComment = async (req, res) => {
     }
 
     // redis pub 처리
-    await redisCli.publish(
+    const result2 = await redisCli.publish(
       'comment-alarm',
       JSON.stringify({
         type: 'comment',
@@ -125,7 +125,7 @@ exports.createComment = async (req, res) => {
         commentTime,
       })
     );
-
+    console.log(result2);
     // 정상 처리
     res.status(200).send({
       success: true,

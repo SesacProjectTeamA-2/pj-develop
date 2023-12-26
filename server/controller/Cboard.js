@@ -503,7 +503,6 @@ exports.createBoard = async (req, res) => {
         gbTitle: req.body.gbTitle,
         gbContent: req.body.gbContent,
         gbCategory: req.body.gbCategory,
-        gbImg,
         gSeq: req.body.gSeq,
         uSeq: uSeq,
         guSeq: guSeq,
