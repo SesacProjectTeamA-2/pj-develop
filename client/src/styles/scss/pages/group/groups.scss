@@ -126,10 +126,10 @@
 
     //~ [추후] 다시 설정 !
     .title-card {
-        white-space: nowrap;
+        // white-space: nowrap;
         // overflow: hidden;
         //     text-overflow: ellipsis;
-        overflow: unset !important;
+        // overflow: unset !important;
         text-overflow: unset !important;
     }
 }

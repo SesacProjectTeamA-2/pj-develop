@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
 
-// import { socket } from '../SidebarChat';
 import '../../../styles/scss/components/chatlist.scss';
 
 export default function ChatList({

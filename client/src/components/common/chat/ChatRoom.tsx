@@ -280,6 +280,17 @@ export default function ChatRoom({
         }
     }, [isSent]);
 
+    //-- key down event 입력 시
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.nativeEvent.isComposing) {
+            return;
+        }
+
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    };
+
     //] 방 나가기
     const leaveHandler = () => {
         setIsSent(false);
@@ -500,6 +511,7 @@ export default function ChatRoom({
                         type="text"
                         value={inputValue}
                         placeholder="Type your message here!"
+                        onKeyDown={handleKeyDown}
                         onChange={(e) => handleChangeMsg(e.target.value)}
                     />
                     <img

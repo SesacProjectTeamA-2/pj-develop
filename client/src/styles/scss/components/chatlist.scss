@@ -36,6 +36,28 @@
     li {
         border: 1px solid var(--light);
     }
+
+    // @include media('<900px') {
+    //     width: 100%;
+    //     font-size: 10px;
+    //     padding: 15px 5px;
+    //     left: 50%;
+    // }
+
+    @media (min-width: 800px) and (max-width: 900px) {
+        width: 30vw;
+        right: 18rem;
+    }
+
+    @media (min-width: 900px) and (max-width: 1400px) {
+        width: 30vw;
+        right: 100%;
+    }
+
+    @media (min-width: 1400px) {
+        width: 25vw;
+        right: 65%;
+    }
 }
 
 .chat-list-close-icon-wrapper {

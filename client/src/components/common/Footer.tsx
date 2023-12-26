@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import emailjs from '@emailjs/browser';
 
 import '../../styles/scss/layout/footer.scss';
 

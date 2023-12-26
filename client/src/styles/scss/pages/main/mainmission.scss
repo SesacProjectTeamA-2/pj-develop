@@ -40,7 +40,7 @@
     &::after {
         content: '';
         width: 100%;
-        height: 20vh;
+        height: 15vh;
         position: fixed;
         top: 0;
         background: url(https://becky.dev/assets/images/whitenoise-e05ce92bb85e9688f3fd742c6e4eb6bf.png);
@@ -54,7 +54,7 @@
         border: 10px solid #707070;
         width: 100%;
         text-align: center;
-        height: 20vh;
+        height: 15vh;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -82,7 +82,7 @@
         &::before {
             content: '';
             width: 100%;
-            height: 20vh;
+            height: 15vh;
             position: absolute;
             background-image: linear-gradient(
                 0deg,
