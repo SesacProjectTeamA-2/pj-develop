@@ -441,7 +441,6 @@ exports.createBoard = async (req, res) => {
     // 클라이언트에서 요청 보낼때 body로 mSeq, gSeq, gbCategory, imageUrl  값 넣어서 보내주기
     const gSeq = req.body.gSeq;
     const gbCategory = req.body.gbCategory;
-    const gbImg = req.body.imgUrl;
     console.log('gbImg', req.body);
     if (!token) {
       res.send({
@@ -483,7 +482,6 @@ exports.createBoard = async (req, res) => {
         gbTitle: req.body.gbTitle,
         gbContent: req.body.gbContent,
         gbCategory: req.body.gbCategory,
-        gbImg,
         mSeq: req.body.mSeq,
         gSeq: req.body.gSeq,
         uSeq: uSeq,
@@ -660,12 +658,11 @@ exports.editBoard = async (req, res) => {
       });
       return;
     }
-    const { gbTitle, gbContent, imageUrl } = req.body;
+    const { gbTitle, gbContent } = req.body;
 
     let result = await GroupBoard.update(
       {
         gbTitle: gbTitle,
-        gbImg: imageUrl,
         gbContent: gbContent,
       },
       {

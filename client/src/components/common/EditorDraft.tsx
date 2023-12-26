@@ -49,11 +49,13 @@ export default function EditorDraft({
         setEditorState(editorState);
         const contentState = editorState.getCurrentContent();
 
+
         // Draft.js editorState를 HTML 문자열로 변환
         const htmlContent = draftToHtml(convertToRaw(contentState));
 
         // const text = editorState.getCurrentContent().getPlainText('\u0001');
         handleEditorChange(htmlContent);
+
     };
 
     // const uploadCallback = (e: React.ChangeEvent<HTMLInputElement>) => {
