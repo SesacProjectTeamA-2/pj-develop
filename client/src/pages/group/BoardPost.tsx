@@ -66,7 +66,7 @@ export default function BoardPost() {
         gbContent: '',
         gbCategory: gCategory,
         mSeq: null,
-        imgUrl: '',
+        imageUrl: '',
     });
 
     const [isLeader, setIsLeader] = useState(false);
@@ -128,7 +128,7 @@ export default function BoardPost() {
     const handleEditorImgUrl = (url: any) => {
         setBoard({
             ...board,
-            imgUrl: url,
+            imageUrl: url,
         });
     };
 
@@ -175,7 +175,7 @@ export default function BoardPost() {
             });
     };
 
-    console.log(board);
+    console.log('서버에 전송할 데이터 board ::::', board);
 
     const [postMenu, setPostMenu] = useState(gCategory);
 
