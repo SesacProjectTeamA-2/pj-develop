@@ -100,7 +100,7 @@ export default function Main({
             });
 
             //-- 미확인 알람 전체 리스트
-            eventSource.addEventListener('alarmList', (event: any) => {
+            eventSource.addEventListener('allAlarm', (event: any) => {
                 console.log('alarmList ::::', event);
                 // console.log('alarmList event.data ::::', event.data);
 

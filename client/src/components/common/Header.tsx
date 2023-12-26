@@ -57,26 +57,26 @@ export default function Header(props: any) {
     }, []);
 
     //-- 2. sse
-    useEffect(() => {
-        if (!props.sse) {
-            const eventSource = new EventSourcePolyfill(
-                `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${uToken}`,
-                    },
-                    heartbeatTimeout: 120000,
-                }
-            );
+    // useEffect(() => {
+    //     if (!props.sse) {
+    //         const eventSource = new EventSourcePolyfill(
+    //             `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${uToken}`,
+    //                 },
+    //                 heartbeatTimeout: 120000,
+    //             }
+    //         );
 
-            props.setSse(eventSource);
+    //         props.setSse(eventSource);
 
-            //-- 연결
-            eventSource.addEventListener('connected', (e: any) => {
-                console.log('sse connected :::', e);
-            });
-        }
-    }, []);
+    //         //-- 연결
+    //         eventSource.addEventListener('connected', (e: any) => {
+    //             console.log('sse connected :::', e);
+    //         });
+    //     }
+    // }, []);
 
     const nvg = useNavigate();
 
