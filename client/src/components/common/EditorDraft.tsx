@@ -27,6 +27,9 @@ export default function EditorDraft({
     handleEditorChange,
     handleEditorImgUrl,
 }: any) {
+    const cookie = new Cookies();
+    const uToken = cookie.get('isUser');
+
     // value를 사용하여 초기 EditorState를 생성
     const contentState = ContentState.createFromText(value);
     const initialEditorState = EditorState.createWithContent(contentState);
@@ -44,16 +47,16 @@ export default function EditorDraft({
 
     const onEditorStateChange = function (editorState: any) {
         setEditorState(editorState);
+        const contentState = editorState.getCurrentContent();
+
+
+        // Draft.js editorState를 HTML 문자열로 변환
+        const htmlContent = draftToHtml(convertToRaw(contentState));
 
         // const text = editorState.getCurrentContent().getPlainText('\u0001');
-        const text = draftToHtml(
-            convertToRaw(editorState.getCurrentContent().getPlainText('\u0001'))
-        );
-        handleEditorChange(text);
-    };
+        handleEditorChange(htmlContent);
 
-    const cookie = new Cookies();
-    const uToken = cookie.get('isUser');
+    };
 
     // const uploadCallback = (e: React.ChangeEvent<HTMLInputElement>) => {
     //     const formData = new FormData(); // 사진 담을 formData 객체 생성
@@ -118,9 +121,9 @@ export default function EditorDraft({
 
     // 이미지 업로드 이벤트 핸들러
     const uploadCallback = async (e: any) => {
-        try {
-            // e.preventDefault();
+        // e.preventDefault();
 
+        try {
             console.log(e);
 
             // // e.target이 정의되었는지 확인
@@ -150,27 +153,27 @@ export default function EditorDraft({
 
                 //-- imageUrl을 사용하여 필요한 작업 수행
 
-                const file = imageFile;
-                const reader = new FileReader();
+                // const file = imageFile;
+                // const reader = new FileReader();
 
                 // Atomic Block 추가 (이미지 미리보기)
 
-                reader.onload = () => {
-                    // const imageContent = `
-                    // <img src="${reader.result}" alt="uploaded image" />`;
+                // reader.onload = () => {
+                // const imageContent = `
+                // <img src="${reader.result}" alt="uploaded image" />`;
 
-                    const contentState = editorState.getCurrentContent();
+                const contentState = editorState.getCurrentContent();
 
-                    const contentStateWithEntity = contentState.createEntity(
-                        'atomic',
-                        'IMMUTABLE',
-                        // { src: reader.result }
-                        { src: imageUrl } // 이미지 URL을 포함하는 엔터티 생성
-                        // { src: e && e.target && e.target.result }
-                    );
+                const contentStateWithEntity = contentState.createEntity(
+                    'atomic',
+                    'IMMUTABLE',
+                    { src: imageUrl } // 이미지 URL을 포함하는 엔터티 생성
+                );
 
-                    const entityKey =
-                        contentStateWithEntity.getLastCreatedEntityKey();
+                const entityKey =
+                    contentStateWithEntity.getLastCreatedEntityKey();
+
+                if (entityKey) {
                     const newEditorState = EditorState.set(editorState, {
                         currentContent: contentStateWithEntity,
                     });
@@ -182,9 +185,13 @@ export default function EditorDraft({
                             ' '
                         )
                     );
-                };
+                    // }
+                }
 
-                reader.readAsDataURL(file);
+                // 업로드된 이미지 미리 보기를 추가
+                return { data: { link: imageUrl, preview: imageUrl } };
+
+                // reader.readAsDataURL(file);
 
                 // const imageContent = `
                 // <img src="${imageUrl}" alt="uploaded image" />`;
@@ -200,10 +207,6 @@ export default function EditorDraft({
                 // );
                 // const updatedEditorState =
                 //     EditorState.createWithContent(updatedContent);
-
-                // 업로드된 이미지 미리 보기를 추가
-                return { data: { link: imageUrl, preview: imageUrl } };
-                // return { data: { link: imageUrl, preview: reader.result} } };
 
                 // e.preventDefault();
                 // const file = e.target.files[0];
@@ -269,6 +272,10 @@ export default function EditorDraft({
 
         reader.readAsDataURL(file);
     };
+
+    // const editorToHtml = draftToHtml(
+    //     convertToRaw(editorState.getCurrentContent())
+    // );
 
     return (
         <>
