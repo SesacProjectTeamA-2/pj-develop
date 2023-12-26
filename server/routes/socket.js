@@ -225,7 +225,7 @@ exports.chatSocket = async (io, socket) => {
             // 닉네임(socketId)/시간/룸/targetSeq 가 0 일경우에는 전체
             const { uSeq, uName, timeStamp, msg, gSeq, targetSeq } = data;
             const result = JSON.stringify({ msg, timeStamp, uSeq });
-
+            console.log(uName);
             // 메세지 정보 redis에 저장
             await redisCli.lPush(
               `room${gSeq}`,

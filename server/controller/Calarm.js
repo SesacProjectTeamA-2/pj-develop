@@ -35,8 +35,8 @@ exports.alarming = async (req, res) => {
       // 기존 알람 load (connection)
       // sse.on('connection', async (client) => {
       res.write('event: connected\n' + `data: SSE연결완료\n\n`);
-      res.write('event: alarmCount\n' + `data: ${alarmCount}`);
-      res.write('event: alarmList\n' + `data: ${allAlarm}`);
+      res.write('event: alarmCount\n' + `data: ${alarmCount}\n\n`);
+      res.write('event: alarmList\n' + `data: ${allAlarm}\n\n`);
 
       // redis에 댓글추가시 메세지 전송 + count 1.
       await sub.subscribe('comment-alarm', (message) => {
