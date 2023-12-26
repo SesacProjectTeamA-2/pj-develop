@@ -93,6 +93,7 @@ function App() {
                 socket={socket}
                 setSocket={setSocket}
                 sse={sse}
+                setSse={setSse}
                 adminUser={adminUser}
                 setAdminUser={setAdminUser}
             />

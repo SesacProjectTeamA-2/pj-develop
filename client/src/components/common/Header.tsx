@@ -37,7 +37,8 @@ export default function Header(props: any) {
 
     console.log('adminUser', props.adminUser);
 
-    //++ 연결 끊어졌을 경우, socket 연결 요청 (재연결)
+    //++ 연결 끊어졌을 경우, 재연결
+    //-- 1. socket
     useEffect(() => {
         if (!props.socket) {
             const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
@@ -52,6 +53,28 @@ export default function Header(props: any) {
             });
 
             props.setSocket(newSocket);
+        }
+    }, []);
+
+    //-- 2. sse
+    useEffect(() => {
+        if (!props.sse) {
+            const eventSource = new EventSourcePolyfill(
+                `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${uToken}`,
+                    },
+                    heartbeatTimeout: 120000,
+                }
+            );
+
+            props.setSse(eventSource);
+
+            //-- 연결
+            eventSource.addEventListener('connected', (e: any) => {
+                console.log('sse connected :::', e);
+            });
         }
     }, []);
 
@@ -240,35 +263,36 @@ export default function Header(props: any) {
             }
         );
 
-        eventSource.addEventListener('connected', (e: any) => {
-            const { data: receivedSections } = e;
+        // //-- 연결
+        // eventSource.addEventListener('connected', (e: any) => {
+        //     const { data: receivedSections } = e;
 
-            console.log('connected ::::', e);
-        });
+        //     console.log('connected ::::', e);
+        // });
 
         // //-- 연결 시 할 일
-        eventSource.onopen = async () => {
-            console.log('EventSource connection opened. onopen ::::');
+        // eventSource.onopen = async () => {
+        //     console.log('EventSource connection opened. onopen ::::');
 
-            //     // 기존 알람 데이터 받아오기
-            //     try {
-            //         const res = await fetch(
-            //             `${process.env.REACT_APP_DB_HOST}/subscribe/alarm`,
-            //             {
-            //                 method: 'GET',
-            //                 headers: {
-            //                     Authorization: `Bearer ${uToken}`,
-            //                 },
-            //             }
-            //         );
+        //     //     // 기존 알람 데이터 받아오기
+        //     //     try {
+        //     //         const res = await fetch(
+        //     //             `${process.env.REACT_APP_DB_HOST}/subscribe/alarm`,
+        //     //             {
+        //     //                 method: 'GET',
+        //     //                 headers: {
+        //     //                     Authorization: `Bearer ${uToken}`,
+        //     //                 },
+        //     //             }
+        //     //         );
 
-            //         const data = await res.json();
-            //         console.log('Initial alarm data:', data);
-            //         // 여기서 기존 알람 데이터를 처리하거나 상태 업데이트 등을 수행할 수 있습니다.
-            //     } catch (error) {
-            //         console.error('Error fetching initial alarm data:', error);
-            //     }
-        };
+        //     //         const data = await res.json();
+        //     //         console.log('Initial alarm data:', data);
+        //     //         // 여기서 기존 알람 데이터를 처리하거나 상태 업데이트 등을 수행할 수 있습니다.
+        //     //     } catch (error) {
+        //     //         console.error('Error fetching initial alarm data:', error);
+        //     //     }
+        // };
 
         // 서버로부터 연결 이벤트를 수신할 때의 처리
         // eventSource.addEventListener('connection', (event: any) => {
@@ -279,13 +303,22 @@ export default function Header(props: any) {
         //     // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
         // });
 
-        eventSource.onmessage = async (e) => {
-            console.log('onmessage ::::::', e);
-            const res = await e.data;
-            const parsedData = JSON.parse(res);
-            //-- 받아오는 data로 할 일
-            console.log(parsedData);
-        };
+        // 서버로부터 연결 이벤트를 수신할 때의 처리
+        // eventSource.addEventListener('connection', (event: any) => {
+        //     console.log('e', event);
+
+        //     const eventData = JSON.parse(event.data);
+        //     console.log('Received connect event:', eventData);
+        //     // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
+        // });
+
+        // eventSource.onmessage = async (e) => {
+        //     console.log('onmessage ::::::', e);
+        //     const res = await e.data;
+        //     const parsedData = JSON.parse(res);
+        //     //-- 받아오는 data로 할 일
+        //     console.log(parsedData);
+        // };
 
         // // 서버로부터 이벤트를 수신할 때의 처리
         // props.sse.onmessage = (event: any) => {

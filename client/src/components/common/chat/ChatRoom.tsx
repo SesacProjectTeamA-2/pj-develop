@@ -130,10 +130,11 @@ export default function ChatRoom({
         // joinRoom 이벤트에 대한 리스너 추가
         socket?.on('joinRoom', (data: any) => {
             console.log('joinRoom event received on client', data); // 서버에서 보낸 data
-            setLoginUser(data.loginUser);
-            console.log('>>>>>>>>>>>>', data.allMsg);
 
-            if (typeof data.allMsg !== 'string') {
+            console.log('data.allMsg >>>>>>', data.allMsg);
+
+            // if (typeof data.allMsg !== 'string') {
+            if (data.allMsg.length > 0) {
                 const formattedData = data.allMsg?.map((msg: any) => ({
                     gSeq: msg.gSeq,
                     msg: msg.msg,
@@ -148,7 +149,13 @@ export default function ChatRoom({
 
                 setAllMsg(formattedData);
             }
+
+            if (data.loginUser.length > 0) {
+                setLoginUser(data.loginUser);
+            }
         });
+
+        console.log('loginUser >>>>>>', loginUser);
 
         // --컴포넌트가 언마운트될 때 리스너 해제
         // return () => {
