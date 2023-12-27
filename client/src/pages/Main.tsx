@@ -21,6 +21,8 @@ export default function Main({
     setInitialLogin,
     setSocket,
     setSse,
+    setAlarmCount,
+    setAlarmList,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -97,6 +99,9 @@ export default function Main({
             //-- 연결
             eventSource.addEventListener('connected', (e: any) => {
                 console.log('프론트 측 connect', e);
+
+                // 알람 count 받아오기
+                setAlarmCount(e.data);
             });
 
             //-- 미확인 알람 전체 리스트
@@ -104,37 +109,26 @@ export default function Main({
                 console.log('alarmList ::::', event);
                 // console.log('alarmList event.data ::::', event.data);
 
-                // const eventData = JSON.parse(event.data);
+                try {
+                    // 마지막에 , 제거
+                    // const jsonData = event.data.replace(/,(\s*)$/, '$1');
+                    // const eventData = JSON.parse(jsonData);
 
-                // console.log('eventData ::::', eventData);
+                    const eventData = JSON.parse(event.data);
+                    console.log('eventData ::::', eventData);
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                }
             });
 
-            //-- 미확인 알람 카운트
-            eventSource.addEventListener('alarmCount', (event: any) => {
-                console.log('alarmCount ::::', event);
-                // console.log('alarmList event.data ::::', event.data);
+            // //-- 메세지
+            // eventSource.addEventListener('commentAlarm', (event: any) => {
+            //     console.log('commentAlarm ::::', event);
+            //     console.log('commentAlarm event.data ::::', event.data);
 
-                // const eventData = JSON.parse(event.data);
+            //     const eventData = JSON.parse(event.data);
 
-                // console.log('eventData ::::', eventData);
-            });
-
-            //-- 메세지
-            eventSource.addEventListener('commentAlarm', (event: any) => {
-                console.log('commentAlarm ::::', event);
-                console.log('commentAlarm event.data ::::', event.data);
-
-                const eventData = JSON.parse(event.data);
-
-                console.log('eventData ::::', eventData);
-            });
-
-            // eventSource.addEventListener('connection', (event) => {
-            //     console.log(event);
-
-            //     // const eventData = JSON.parse(event.data);
-            //     // console.log('Received event data:', eventData);
-            //     // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
+            //     console.log('commentAlarm ::::', eventData);
             // });
 
             // console.log(':::::::::::: 최초 로그인 시");

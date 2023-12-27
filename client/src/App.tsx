@@ -46,6 +46,9 @@ function App() {
         return storedShowChat ? JSON.parse(storedShowChat) : false;
     });
 
+    const [alarmCount, setAlarmCount] = useState(0);
+    const [alarmList, setAlarmList] = useState<any>();
+
     //-- Header 채팅 아이콘 클릭 시 실행하는 함수
     const showChatting = (): void => {
         //     setShowChat(!showChat); // 채팅 사이드바 유무
@@ -96,6 +99,8 @@ function App() {
                 setSse={setSse}
                 adminUser={adminUser}
                 setAdminUser={setAdminUser}
+                alarmCount={alarmCount}
+                setAlarmCount={setAlarmCount}
             />
 
             <Routes>
@@ -136,6 +141,8 @@ function App() {
                                     setInitialLogin={setInitialLogin}
                                     setSocket={setSocket}
                                     setSse={setSse}
+                                    setAlarmCount={setAlarmCount}
+                                    setAlarmList={setAlarmList}
                                 />
                             }
                             showChat={showChat}

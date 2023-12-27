@@ -116,6 +116,11 @@ export default function GroupList() {
                     '가입한 모임이 없습니다. '
                 )}
             </div>
+            {joinGroup?.length > 0 ? (
+                <></>
+            ) : (
+                <div style={{ height: '16rem' }}></div>
+            )}
 
             {/* --- 이전 코드 --- */}
             {/* <div className="groups created"> */}

@@ -253,15 +253,42 @@ export default function Header(props: any) {
         setIsAlarm(!isAlarm);
     };
 
+    //; 초기 로그인 Main에서 연결
+    //; sse 는 전역관리
     const getNoti = () => {
-        const eventSource = new EventSourcePolyfill(
-            `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
-            {
-                headers: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            }
-        );
+        // console.log('***********', props.sse);
+
+        if (props.sse) {
+            //~ 콘솔이 안찍힘 => 전역으로 관리
+            //-- 미확인 알람 전체 리스트
+            props.sse.addEventListener('allAlarm', (event: any) => {
+                console.log('alarmList ::::', event);
+                // console.log('alarmList event.data ::::', event.data);
+
+                // const eventData = JSON.parse(event.data);
+
+                // console.log('eventData ::::', eventData);
+            });
+
+            //-- 메세지
+            props.sse.addEventListener('commentAlarm', (event: any) => {
+                console.log('commentAlarm ::::', event);
+                console.log('commentAlarm event.data ::::', event.data);
+
+                const eventData = JSON.parse(event.data);
+
+                console.log('eventData ::::', eventData);
+            });
+        }
+
+        //     const eventSource = new EventSourcePolyfill(
+        //         `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
+        //         {
+        //             headers: {
+        //                 Authorization: `Bearer ${uToken}`,
+        //             },
+        //         }
+        //     );
 
         // //-- 연결
         // eventSource.addEventListener('connected', (e: any) => {
@@ -633,7 +660,9 @@ export default function Header(props: any) {
                                                     onClick={alarmHandler}
                                                 >
                                                     <span className="notification-count">
-                                                        6
+                                                        {props.alarmCount < 100
+                                                            ? props.alarmCount
+                                                            : '99+'}
                                                     </span>
                                                 </div>
                                                 {/* <span id="logout-text">Bell</span> */}

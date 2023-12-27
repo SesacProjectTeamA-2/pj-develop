@@ -11,16 +11,17 @@ import { useEffect, useState } from 'react';
 import { Editor, SyntheticKeyboardEvent } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
-import { Fragment } from 'react';
+import htmlToDraft from 'html-to-draftjs';
+
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
-import createImagePlugin from '@draft-js-plugins/image';
+// import createImagePlugin from '@draft-js-plugins/image';
 
 // import { Editor, EditorState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import '../../styles/scss/components/editor.scss';
 
-const imagePlugin = createImagePlugin();
+// const imagePlugin = createImagePlugin();
 
 export default function EditorDraft({
     value,
@@ -41,60 +42,59 @@ export default function EditorDraft({
     useEffect(() => {
         if (value == '') return;
 
-        const newContentState = ContentState.createFromText(value);
-        const newEditorState = EditorState.createWithContent(newContentState);
-        setEditorState(newEditorState);
+        const blocksFromHtml = htmlToDraft(value);
+
+        if (blocksFromHtml) {
+            const { contentBlocks, entityMap } = blocksFromHtml;
+            // https://draftjs.org/docs/api-reference-content-state/#createfromblockarray
+            const contentState = ContentState.createFromBlockArray(
+                contentBlocks
+                // entityMap
+            );
+
+            // const contentState = ContentState.createFromBlockArray({
+            //     contentBlocks:
+            //         blocksFromHtml.contentBlocks as Draft.Model.ImmutableData.ContentBlock[],
+            //     entityMap: blocksFromHtml.entityMap,
+            // });
+
+            // ContentState를 EditorState기반으로 새 개체를 반환.
+            // https://draftjs.org/docs/api-reference-editor-state/#createwithcontent
+            const editorState = EditorState.createWithContent(contentState);
+            setEditorState(editorState);
+        }
+
+        // const newContentState = ContentState.createFromText(value);
+        // const newEditorState = EditorState.createWithContent(newContentState);
+        // setEditorState(newEditorState);
     }, [value]);
+
+    // useEffect(() => {
+    //     const blocksFromHtml = htmlToDraft(value);
+    //     if (blocksFromHtml) {
+    //         const { contentBlocks, entityMap } = blocksFromHtml;
+    //         // https://draftjs.org/docs/api-reference-content-state/#createfromblockarray
+    //         const contentState = ContentState.createFromBlockArray(
+    //             contentBlocks,
+    //             entityMap
+    //         );
+    //         // ContentState를 EditorState기반으로 새 개체를 반환.
+    //         // https://draftjs.org/docs/api-reference-editor-state/#createwithcontent
+    //         const editorState = EditorState.createWithContent(contentState);
+    //         setEditorState(editorState);
+    //     }
+    // }, []);
 
     const onEditorStateChange = function (editorState: any) {
         setEditorState(editorState);
         const contentState = editorState.getCurrentContent();
-
 
         // Draft.js editorState를 HTML 문자열로 변환
         const htmlContent = draftToHtml(convertToRaw(contentState));
 
         // const text = editorState.getCurrentContent().getPlainText('\u0001');
         handleEditorChange(htmlContent);
-
     };
-
-    // const uploadCallback = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const formData = new FormData(); // 사진 담을 formData 객체 생성
-
-    //     if (e.target && e.target.files && e.target.files[0]) {
-    //         formData.append('image', e.target.files[0]);
-    //         sendImg(formData);
-    //     }
-    // };
-
-    // const sendImg = async (formData: any) => {
-    //     const cookie = new Cookies();
-    //     const uToken = cookie.get('isUser');
-
-    //     try {
-    //         const res = await axios.post(
-    //             `${process.env.REACT_APP_DB_HOST}/board/create/img`,
-    //             formData,
-    //             {
-    //                 headers: {
-    //                     'Content-Type': 'multipart/form-data',
-    //                     Authorization: `Bearer ${uToken}`,
-    //                 },
-    //             }
-    //         );
-
-    //         if (res !== undefined && res.data !== undefined) {
-    //             console.log('post', res.data);
-    //         } else {
-    //             console.log('post 요청에 대한 응답이 없습니다.');
-    //         }
-    //     } catch (err) {
-    //         console.log('error 발생: ', err);
-    //     }
-    // };
-
-    /////////////////////////
 
     // 이미지 업로드 요청 함수
     const sendImg = async (imageFile: any) => {
@@ -138,10 +138,6 @@ export default function EditorDraft({
                 console.log('이미지 업로드 성공');
                 console.log(result);
 
-                //     // handleEditorImgUrl(imageUrl);
-
-                //     //-- imageUrl을 사용하여 필요한 작업 수행
-
                 //     // Atomic Block 추가 (이미지 미리보기)
 
                 //     const contentState = editorState.getCurrentContent();
@@ -173,50 +169,6 @@ export default function EditorDraft({
             // 업로드된 이미지 미리 보기를 추가
             return { data: { link: imageUrl, preview: imageUrl } };
 
-            // reader.readAsDataURL(file);
-
-            // const imageContent = `
-            // <img src="${imageUrl}" alt="uploaded image" />`;
-
-            // // 에디터의 내용 갱신
-            // const updatedText = editorState
-            //     .getCurrentContent()
-            //     .getPlainText('\u0001');
-            // handleEditorChange(updatedText);
-
-            // const updatedContent = ContentState.createFromText(
-            //     `${updatedText}\n${imageContent}`
-            // );
-            // const updatedEditorState =
-            //     EditorState.createWithContent(updatedContent);
-
-            // e.preventDefault();
-            // const file = e.target.files[0];
-            // const reader = new FileReader();
-
-            // reader.onload = (e) => {
-            //     const contentState = editorState.getCurrentContent();
-            //     const contentStateWithEntity = contentState.createEntity(
-            //         'atomic',
-            //         'IMMUTABLE',
-            //         { src: e && e.target && e.target.result }
-            //     );
-
-            //     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-            //     const newEditorState = EditorState.set(editorState, {
-            //         currentContent: contentStateWithEntity,
-            //     });
-
-            //     setEditorState(
-            //         AtomicBlockUtils.insertAtomicBlock(
-            //             newEditorState,
-            //             entityKey,
-            //             ' '
-            //         )
-            // );
-            // };
-
-            // reader.readAsDataURL(file);
             // } else {
             //     console.log('이미지 업로드 실패:', message);
             // }
@@ -224,40 +176,6 @@ export default function EditorDraft({
             console.error('이미지 업로드 오류:', error);
         }
     };
-
-    // const handleImageUpload = (e: any) => {
-    //     e.preventDefault();
-    //     const file = e.target.files[0];
-    //     const reader = new FileReader();
-
-    //     reader.onload = (e) => {
-    //         const contentState = editorState.getCurrentContent();
-    //         const contentStateWithEntity = contentState.createEntity(
-    //             'atomic',
-    //             'IMMUTABLE',
-    //             { src: e && e.target && e.target.result }
-    //         );
-
-    //         const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    //         const newEditorState = EditorState.set(editorState, {
-    //             currentContent: contentStateWithEntity,
-    //         });
-
-    //         setEditorState(
-    //             AtomicBlockUtils.insertAtomicBlock(
-    //                 newEditorState,
-    //                 entityKey,
-    //                 ' '
-    //             )
-    //         );
-    //     };
-
-    //     reader.readAsDataURL(file);
-    // };
-
-    // const editorToHtml = draftToHtml(
-    //     convertToRaw(editorState.getCurrentContent())
-    // );
 
     return (
         <>
