@@ -20,7 +20,6 @@ exports.chatSocket = async (io, socket) => {
         let userInfo = socket.userInfo;
         // 모임별 안읽은 메세지 개수
         const messageCount = [];
-        const roomInfoArray = [];
         const { uName, uSeq, socketId, gSeq } = userInfo;
         console.log('현재 접속중인 유저', userInfo);
         console.log(
@@ -92,6 +91,7 @@ exports.chatSocket = async (io, socket) => {
         socket.on('roomInfo', async () => {
           try {
             console.log('userinfo.gSeq>>>>', userInfo);
+            const roomInfoArray = [];
 
             // 1. 모임의 마지막 메세지 정보 송출
             if (Array.isArray(userInfo.gSeq)) {
@@ -103,7 +103,7 @@ exports.chatSocket = async (io, socket) => {
               for (const info of userInfo.gSeq) {
                 const listLength = await redisCli.lLen(`room${info}`);
                 if (listLength !== 0) {
-                  const message = await redisCli.lRange(`room${info}`, -1, -1);
+                  const message = await redisCli.lIndex(`room${info}`, 0);
                   const roomInfo = { gSeq: info, msg: JSON.parse(message) };
                   roomInfoArray.push(roomInfo);
                 } else {
