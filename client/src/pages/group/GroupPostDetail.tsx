@@ -119,6 +119,7 @@ export default function GroupPostDetail() {
     const [commentInput, setCommentInput] = useState({
         gbSeq,
         gbcContent: '',
+        gSeq,
     });
 
     const commentOnChange = (e: any) => {

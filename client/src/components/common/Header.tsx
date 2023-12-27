@@ -15,8 +15,8 @@ import Alarm from './Alarm';
 export default function Header(props: any) {
     const [isCookie, setIsCookie] = useState(false); // 쿠키 유무
 
-    console.log('socket 연결 여부  >>>>>> ', props.socket);
-    console.log('sse 연결 여부 ------> ', props.sse);
+    // console.log('socket 여부 >>>>>> ', props.socket);
+    // console.log('sse 여부 ------> ', props.sse);
 
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
@@ -672,6 +672,7 @@ export default function Header(props: any) {
                                             {isAlarm && (
                                                 <Alarm
                                                     alarmHandler={alarmHandler}
+                                                    alarmList={props.alarmList}
                                                 />
                                             )}
 
