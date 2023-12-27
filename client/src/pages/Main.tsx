@@ -137,6 +137,18 @@ export default function Main({
                 setCommentAlarm(eventData);
             });
 
+            //-- 댓글 수신 시, 카운트 업데이트
+            eventSource.addEventListener('alarmCount', (event: any) => {
+                // console.log('commentAlarm ::::', event);
+                // console.log('commentAlarm event.data ::::', event.data);
+
+                const eventData = JSON.parse(event.data);
+
+                console.log('alarmCount ::::', eventData);
+
+                setCommentAlarm(eventData);
+            });
+
             // console.log(':::::::::::: 최초 로그인 시");
         }
     }, []);
