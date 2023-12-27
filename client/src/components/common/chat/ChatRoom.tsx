@@ -157,23 +157,9 @@ export default function ChatRoom({
                 setLoginUser(data.loginUser);
             }
         });
-
-        // --컴포넌트가 언마운트될 때 리스너 해제
-        // return () => {
-        //     socket.off('joinRoom');
-        // };
-
-        //   socketInstances[id].on('alert', (message: string) => {
-        //     const welcomeChat: ChatMsg = {
-        //       username: '알림',
-        //       message: message,
-        //     };
-        //     setChat((prevChat) => [...prevChat, welcomeChat]);
-        //  }
     }, []);
 
     //; allMsg, data.loginUser 변경될 때마다
-    // let loginUName: any = []; // 로그인한 uName
     useEffect(() => {
         // joinRoom 이벤트에 대한 리스너 추가
         socket?.on('joinRoom', (data: any) => {
@@ -181,8 +167,6 @@ export default function ChatRoom({
 
             console.log('data.allMsg >>>>>>', data.allMsg);
 
-            // [참고] 변경이전
-            // if (data.allMsg?.length > 0) {
             if (typeof data.allMsg !== 'string') {
                 const formattedData = data.allMsg?.map((msg: any) => ({
                     gSeq: msg.gSeq,
@@ -317,22 +301,6 @@ export default function ChatRoom({
         }
     };
 
-    // {allMsg?.map((chat: any) => {
-    //     return (
-    //         <div className="chat-bubble-receive">
-    //             <div className="send-user">{chat.uName}</div>
-    //             <div className="msg-container">
-    //                 <div className="message re-msg">
-    //                     {chat.msg}
-    //                 </div>
-    //                 <div className="receive-time">
-    //                     {chat.timeStamp}
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     );
-    // })}
-
     //] 메세지 전송
     const sendMessage = () => {
         const timeStamp = Date.now();
@@ -367,10 +335,7 @@ export default function ChatRoom({
     // 1. 문자 입력
     // 2. 전송을 누른다
     // 3. 서버에 데이터를 전송한다
-    // 4. msg 이벤트로 내가 3번에서 보낸 데이터도 받는다
-    // 5. 말풍선을 그린다.
-
-    //XXX + 4. 서버에 데이터를 가공해서 말풍선을 그려준다
+    // 4. 서버에 데이터를 가공해서 말풍선을 그려준다
     useEffect(() => {
         if (isSent) {
             console.log('Sent !!!!!!', isSent);
@@ -392,8 +357,7 @@ export default function ChatRoom({
             //     //     msg: data.msg,
             //     // }));
 
-            //     //! [삭제 예정]
-            //     //-- [추후] 받아오는 말풍선 추가
+            //--  받아오는 말풍선 추가
             //     // addReceivedMessageBubble(data);
             // });
 
@@ -417,7 +381,7 @@ export default function ChatRoom({
             //     msg: data.msg,
             // }));
 
-            //-- [추후] 받아오는 말풍선 추가
+            //-- 받아오는 말풍선 추가
             addReceivedMessageBubble(data);
         });
     }, [socket, msgList]);
