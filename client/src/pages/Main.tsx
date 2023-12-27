@@ -107,7 +107,7 @@ export default function Main({
             //-- 미확인 알람 전체 리스트
             eventSource.addEventListener('allAlarm', (event: any) => {
                 console.log('alarmList ::::', event);
-                // console.log('alarmList event.data ::::', event.data);
+                console.log('alarmList event.data ::::', event.data);
 
                 try {
                     // 마지막에 , 제거
@@ -115,21 +115,26 @@ export default function Main({
                     // const eventData = JSON.parse(jsonData);
 
                     const eventData = JSON.parse(event.data);
+
                     console.log('eventData ::::', eventData);
+
+                    const testData = JSON.parse(eventData[0]);
+
+                    console.log('testData ::::', testData);
                 } catch (error) {
                     console.error('Error parsing JSON:', error);
                 }
             });
 
-            // //-- 메세지
-            // eventSource.addEventListener('commentAlarm', (event: any) => {
-            //     console.log('commentAlarm ::::', event);
-            //     console.log('commentAlarm event.data ::::', event.data);
+            //-- 메세지
+            eventSource.addEventListener('commentAlarm', (event: any) => {
+                console.log('commentAlarm ::::', event);
+                console.log('commentAlarm event.data ::::', event.data);
 
-            //     const eventData = JSON.parse(event.data);
+                const eventData = JSON.parse(event.data);
 
-            //     console.log('commentAlarm ::::', eventData);
-            // });
+                console.log('commentAlarm ::::', eventData);
+            });
 
             // console.log(':::::::::::: 최초 로그인 시");
         }
