@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
 // import useSocket from 'src/hooks/useSocket';
@@ -198,6 +198,8 @@ export default function ChatRoom({
 
         console.log('loginUser >>>>>>', loginUser);
         console.log('loginUName >>>>>>', loginUName);
+
+        scrollToBottom();
     }, [loginUser, allMsg]);
 
     //] 메세지 입력
@@ -264,7 +266,7 @@ export default function ChatRoom({
     //] 말풍선을 화면에 추가하는 함수 (타인이 보낸 메세지)
     const addReceivedMessageBubble = (data: any) => {
         // 시간 변환
-        const date = new Date(data.timeStamp);
+        const date = new Date(data?.timeStamp);
 
         // 수정된 부분: 시간을 24시간 형식으로 변환
         const formattedTime = date.toLocaleTimeString('en-US', {
@@ -288,8 +290,8 @@ export default function ChatRoom({
             messageDiv.className = 'message re-msg';
 
             const timeText = document.createTextNode(formattedTime);
-            const messageText = document.createTextNode(data.msg);
-            const nameText = document.createTextNode(data.uName);
+            const messageText = document.createTextNode(data?.msg);
+            const nameText = document.createTextNode(data?.uName);
 
             nameDiv.appendChild(nameText);
             messageDiv.appendChild(messageText);
@@ -298,6 +300,17 @@ export default function ChatRoom({
             bubbleDiv.appendChild(messageDiv);
             bubbleDiv.appendChild(timeDiv);
             chatContainer.appendChild(bubbleDiv);
+        }
+    };
+
+    //] 스크롤을 항상 제일 밑으로 내리기 위한 함수
+    const chatContainerRef = useRef<HTMLDivElement | null>(null);
+
+    // 스크롤을 항상 제일 밑으로 내리기 위한 함수
+    const scrollToBottom = () => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop =
+                chatContainerRef.current.scrollHeight;
         }
     };
 
@@ -374,17 +387,16 @@ export default function ChatRoom({
             console.log('MSG event received on client', data); // 서버에서 보낸 data
 
             setMsgList(data);
+            // console.log('setMsgList --->', msgList);
 
-            // setMsgList((prevData: any) => ({
-            //     ...prevData,
-            //     timeStamp: data.timeStamp,
-            //     msg: data.msg,
-            // }));
+            if (Object.keys(data).length > 0) {
+                //-- 받아오는 말풍선 추가
+                addReceivedMessageBubble(data);
+            }
 
-            //-- 받아오는 말풍선 추가
-            addReceivedMessageBubble(data);
+            scrollToBottom();
         });
-    }, [socket, msgList]);
+    }, []);
 
     // joinRoom - allMsg (방에 입장하기 전, 주고 받은 문자 내역들)
     // +++
@@ -574,7 +586,7 @@ export default function ChatRoom({
                 </div>
 
                 {/*========= 채팅 ========== */}
-                <div id="chat" className="messages">
+                <div id="chat" className="messages" ref={chatContainerRef}>
                     <div className="time">
                         {/* --- 날짜 --- */}
                         {currentTime.toLocaleDateString('ko-KR', {

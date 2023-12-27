@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans|Montserrat+Alternates');
-$main-color: #4264dd;
+$main-color: #655543;
 
 // $dark-purple: #4b384c;
 // // $crushed-raspberry: #632c65;
@@ -120,17 +120,17 @@ $secondary: #6fa57f;
     margin: 20px 20px 25px 43px;
 }
 
-// 선
-@for $i from 0 through 100 {
-    .panel .notifications .notification:nth-child(n + #{$i}) {
-        animation: here-am-i 0.5s ease-out $i * 0.2s;
-        animation-fill-mode: both;
-    }
+// // 선
+// @for $i from 0 through 100 {
+//     .panel .notifications .notification:nth-child(n + #{$i}) {
+//         animation: here-am-i 0.5s ease-out $i * 0.2s;
+//         animation-fill-mode: both;
+//     }
 
-    .line {
-        height: $i * 41px;
-    }
-}
+//     .line {
+//         height: $i * 41px;
+//     }
+// }
 
 // .panel .notifications .notification:nth-child(2) {
 //     animation: here-am-i 0.5s ease-out 0.4s;
@@ -148,7 +148,7 @@ $secondary: #6fa57f;
 .panel .notifications .notification p:hover {
     color: fade-out($main-color, 0.3);
     cursor: pointer;
-    transition: 0.4s all;
+    transition: 0.3s all;
 }
 
 .panel .notifications .notification .circle {
@@ -168,6 +168,7 @@ $secondary: #6fa57f;
     font-size: 0.75rem;
     line-height: 11px;
     margin-bottom: 2px;
+    color: gray;
 }
 .panel .notifications .notification p {
     line-height: 20px;

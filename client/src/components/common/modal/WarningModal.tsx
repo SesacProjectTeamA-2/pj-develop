@@ -143,10 +143,10 @@ export default function WarningModal({
                 gSeq: Number(gSeq),
             });
 
-            // 서버에서 보낸 data
-            socket?.on('msg', (data: any) => {
-                console.log('roomOut event received on client', data);
-            });
+            // // 서버에서 보낸 data
+            // socket?.on('msg', (data: any) => {
+            //     console.log('roomOut event received on client', data);
+            // });
         }
     }, [leaveGroupSuccess]);
 

@@ -513,37 +513,6 @@ export default function Header(props: any) {
                                             </div>
                                         ) : (
                                             <div className="menu-list-btn">
-                                                <li onClick={mainActiveHandler}>
-                                                    <Link
-                                                        to="/main"
-                                                        style={{
-                                                            color:
-                                                                isActive ===
-                                                                'main'
-                                                                    ? 'black'
-                                                                    : '',
-                                                        }}
-                                                    >
-                                                        Main
-                                                    </Link>
-                                                </li>
-                                                <li
-                                                    onClick={groupActiveHandler}
-                                                >
-                                                    <Link
-                                                        to="/group"
-                                                        style={{
-                                                            color:
-                                                                isActive ===
-                                                                'group'
-                                                                    ? 'black'
-                                                                    : '',
-                                                        }}
-                                                    >
-                                                        Group
-                                                    </Link>
-                                                </li>
-
                                                 {props.adminUser ? (
                                                     // === admin 경우 ===
                                                     <li
@@ -558,7 +527,44 @@ export default function Header(props: any) {
                                                         </Link>
                                                     </li>
                                                 ) : (
-                                                    ''
+                                                    <>
+                                                        <li
+                                                            onClick={
+                                                                mainActiveHandler
+                                                            }
+                                                        >
+                                                            <Link
+                                                                to="/main"
+                                                                style={{
+                                                                    color:
+                                                                        isActive ===
+                                                                        'main'
+                                                                            ? 'black'
+                                                                            : '',
+                                                                }}
+                                                            >
+                                                                Main
+                                                            </Link>
+                                                        </li>
+                                                        <li
+                                                            onClick={
+                                                                groupActiveHandler
+                                                            }
+                                                        >
+                                                            <Link
+                                                                to="/group"
+                                                                style={{
+                                                                    color:
+                                                                        isActive ===
+                                                                        'group'
+                                                                            ? 'black'
+                                                                            : '',
+                                                                }}
+                                                            >
+                                                                Group
+                                                            </Link>
+                                                        </li>
+                                                    </>
                                                 )}
                                             </div>
                                         )}
@@ -673,6 +679,9 @@ export default function Header(props: any) {
                                                 <Alarm
                                                     alarmHandler={alarmHandler}
                                                     alarmList={props.alarmList}
+                                                    commentAlarm={
+                                                        props.commentAlarm
+                                                    }
                                                 />
                                             )}
 
