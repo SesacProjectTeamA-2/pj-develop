@@ -59,35 +59,45 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
             day: '2-digit',
         });
 
-        // 새로운 알람 요소를 생성
-        const newNotificationDiv = document.createElement('div');
-        newNotificationDiv.className = 'notification';
-
-        const circleDiv = document.createElement('div');
-        circleDiv.className = 'circle';
-
-        const flexContainer = document.createElement('div');
-        flexContainer.style.display = 'flex';
-        flexContainer.style.alignItems = 'center';
-
-        const timeSpan = document.createElement('span');
-        timeSpan.className = 'time';
-        timeSpan.textContent = formattedTime;
-
-        const button = document.createElement('button');
-        button.textContent = '읽음';
-        button.addEventListener('click', readHandler); // 클릭 이벤트 핸들러 추가
-
-        flexContainer.appendChild(timeSpan);
-        flexContainer.appendChild(button);
-
-        newNotificationDiv.appendChild(circleDiv);
-        newNotificationDiv.appendChild(flexContainer);
-
         const notificationsContainer = document.querySelector('.comment-alarm');
 
         if (notificationsContainer) {
-            notificationsContainer.appendChild(newNotificationDiv);
+            // 새로운 알람 요소를 생성
+            const newNotificationDiv = document.createElement('div');
+            newNotificationDiv.className = 'notification';
+
+            const circleDiv = document.createElement('div');
+            circleDiv.className = 'circle';
+
+            const flexContainer = document.createElement('div');
+            flexContainer.style.display = 'flex';
+            flexContainer.style.alignItems = 'center';
+
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'time';
+            timeSpan.textContent = `${formattedDate} ${formattedTime}`;
+
+            const button = document.createElement('button');
+            button.textContent = '읽음';
+            button.addEventListener('click', readHandler); // 클릭 이벤트 핸들러 추가
+
+            const nameSpan = document.createElement('p');
+            nameSpan.innerHTML = `<b>${data.uName}</b> 님이 댓글을 남겼습니다.`;
+
+            flexContainer.appendChild(timeSpan);
+            flexContainer.appendChild(button);
+
+            newNotificationDiv.appendChild(circleDiv);
+            newNotificationDiv.appendChild(flexContainer);
+            newNotificationDiv.appendChild(nameSpan);
+
+            // 기존의 자식들 앞에 새로운 알람 요소를 추가
+            notificationsContainer.insertBefore(
+                newNotificationDiv,
+                notificationsContainer.firstChild
+            );
+
+            //   notificationsContainer.appendChild(newNotificationDiv);
         }
 
         // if (alarmWrapper) {
@@ -125,14 +135,13 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
         // if (commentAlarm?.length > 0) {
         if (commentAlarm) {
             addReceivedAlarm(commentAlarm);
-            console.log('@@@@@@');
         }
     }, [commentAlarm]);
 
     //] 읽음 처리
     const readHandler = () => {};
 
-    // 선 동적으로 처리
+    //++ 선 동적으로 처리
     useEffect(() => {
         const panel = document.querySelector('.panel');
 
@@ -161,7 +170,7 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
             }
             line.style.height = `${formattedAlarms.length * 130}px`;
         }
-    }, [formattedAlarms]);
+    }, [formattedAlarms, commentAlarm]);
 
     return (
         <div className="alarm-wrapper">
