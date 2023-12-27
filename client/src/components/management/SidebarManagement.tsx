@@ -30,74 +30,21 @@ export default function SidebarManagement() {
                         </Link>
                     </li>
 
-                    {/* <input type="radio" style={{ display: 'none' }} />
-                            <span data-hover="회원 관리"> 회원 관리</span> */}
-
-                    <li className="sidebar-listItem secondary-menu">
-                        <span
-                            className="sidebar-listItemText sub-menu-title"
-                            style={{ color: '#9f9f9f' }}
-                        >
-                            Board
-                        </span>
-                        <div
-                            className="sidebar-list-menu-wrapper"
-                            // onClick={menuBarTrue}
-                        >
-                            {/* <Link to={`/board/${gSeq}/notice`}> */}
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                className="sidebar-listIcon"
-                            >
-                                <rect
-                                    x="3"
-                                    y="4"
-                                    width="18"
-                                    height="18"
-                                    rx="2"
-                                    ry="2"
-                                />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg>
-
-                            <span className="sidebar-listItemText">
-                                공지사항
-                            </span>
-                            {/* </Link> */}
-                        </div>
-                    </li>
-
                     <li className="sidebar-listItem home-menu-containar">
                         <Link to="/management/users">
                             <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                className="sidebar-listIcon"
+                                fill="currentColor"
+                                viewBox="0 0 16 16"
+                                height="1.3em"
+                                width="1.3em"
+                                style={{ paddingRight: '0.4rem' }}
                             >
-                                <rect
-                                    x="3"
-                                    y="4"
-                                    width="18"
-                                    height="18"
-                                    rx="2"
-                                    ry="2"
+                                <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 100-6 3 3 0 000 6z" />
+                                <path
+                                    fillRule="evenodd"
+                                    d="M5.216 14A2.238 2.238 0 015 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 005 9c-4 0-5 3-5 4s1 1 1 1h4.216z"
                                 />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
+                                <path d="M4.5 8a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
                             </svg>
                             <span className="sidebar-listItemText">
                                 회원 관리
@@ -138,26 +85,17 @@ export default function SidebarManagement() {
                     <li className="sidebar-listItem home-menu-containar">
                         <Link to="/management/reports">
                             <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                className="sidebar-listIcon"
+                                viewBox="0 0 512 512"
+                                fill="currentColor"
+                                height="1.5em"
+                                width="1.5em"
+                                style={{ paddingRight: '0.4rem' }}
                             >
-                                <rect
-                                    x="3"
-                                    y="4"
-                                    width="18"
-                                    height="18"
-                                    rx="2"
-                                    ry="2"
+                                <path
+                                    fill="none"
+                                    d="M240 304h32l6-160h-44l6 160z"
                                 />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
+                                <path d="M256 48C141.31 48 48 141.31 48 256s93.31 208 208 208 208-93.31 208-208S370.69 48 256 48zm20 319.91h-40v-40h40zM272 304h-32l-6-160h44z" />
                             </svg>
                             <span className="sidebar-listItemText">
                                 신고 내역
