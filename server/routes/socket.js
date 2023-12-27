@@ -208,7 +208,7 @@ exports.chatSocket = async (io, socket) => {
                 //room data가 없는경우
                 socket.emit('joinRoom', {
                   allMsg: '모임방 메세지 없음!',
-                  loginUser: uNameInRoom,
+                  loginUser: userDatas,
                 });
               }
             }

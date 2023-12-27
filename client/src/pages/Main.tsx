@@ -87,10 +87,10 @@ export default function Main({
             const eventSource = new EventSourcePolyfill(
                 `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
                 {
+                    heartbeatTimeout: 180000,
                     headers: {
                         Authorization: `Bearer ${uToken}`,
                     },
-                    heartbeatTimeout: 120000,
                 }
             );
 
