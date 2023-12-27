@@ -68,7 +68,7 @@ function App() {
 
             // 서버에서 보낸 data
             socket?.on('roomInfo', (data: any) => {
-                console.log('joinRoom event received on client', data);
+                console.log('roomInfo event received on client :::', data);
             }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
         }
     }, [showChat]);
