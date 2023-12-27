@@ -83,7 +83,7 @@ exports.createComment = async (req, res) => {
       return;
     }
     const gbcContent = req.body.gbcContent;
-
+    const gSeq = req.body.gSeq;
     const newComment = await GroupBoardComment.create({
       gbSeq: gbSeq,
       gbcContent: gbcContent,
@@ -102,6 +102,7 @@ exports.createComment = async (req, res) => {
         type: 'comment',
         gbSeq,
         uName,
+        gSeq,
         commentTime,
       })
     );
@@ -122,6 +123,7 @@ exports.createComment = async (req, res) => {
         type: 'comment',
         gbSeq,
         uName,
+        gSeq,
         commentTime,
       })
     );
