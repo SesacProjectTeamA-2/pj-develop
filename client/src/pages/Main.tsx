@@ -23,6 +23,7 @@ export default function Main({
     setSse,
     setAlarmCount,
     setAlarmList,
+    setCommentAlarm,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -126,12 +127,14 @@ export default function Main({
 
             //-- 메세지
             eventSource.addEventListener('commentAlarm', (event: any) => {
-                console.log('commentAlarm ::::', event);
-                console.log('commentAlarm event.data ::::', event.data);
+                // console.log('commentAlarm ::::', event);
+                // console.log('commentAlarm event.data ::::', event.data);
 
                 const eventData = JSON.parse(event.data);
 
                 console.log('commentAlarm ::::', eventData);
+
+                setCommentAlarm(eventData);
             });
 
             // console.log(':::::::::::: 최초 로그인 시");

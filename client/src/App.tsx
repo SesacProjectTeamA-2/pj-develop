@@ -48,6 +48,7 @@ function App() {
 
     const [alarmCount, setAlarmCount] = useState(0);
     const [alarmList, setAlarmList] = useState<any>();
+    const [commentAlarm, setCommentAlarm] = useState<any>();
 
     //-- Header 채팅 아이콘 클릭 시 실행하는 함수
     const showChatting = (): void => {
@@ -102,6 +103,7 @@ function App() {
                 alarmCount={alarmCount}
                 setAlarmCount={setAlarmCount}
                 alarmList={alarmList}
+                commentAlarm={commentAlarm}
             />
 
             <Routes>
@@ -144,6 +146,7 @@ function App() {
                                     setSse={setSse}
                                     setAlarmCount={setAlarmCount}
                                     setAlarmList={setAlarmList}
+                                    setCommentAlarm={setCommentAlarm}
                                 />
                             }
                             showChat={showChat}
