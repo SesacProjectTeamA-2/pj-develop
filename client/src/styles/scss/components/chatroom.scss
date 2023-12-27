@@ -163,6 +163,18 @@ $background: #f7f7f7;
 
     transition: transform 500ms;
 
+    @media (min-width: 800px) and (max-width: 900px) {
+        transform: translate(-22rem, -50%);
+    }
+
+    @media (min-width: 900px) and (max-width: 1400px) {
+        transform: translate(-7rem, -50%);
+    }
+
+    @media (min-width: 1400px) {
+        transform: translate(-4rem, -50%);
+    }
+
     h2 {
         margin: 0.5rem 0 1.5rem 3rem;
     }
@@ -226,6 +238,21 @@ $background: #f7f7f7;
     background: white;
     box-shadow: 0 0 8rem 0 rgba(black, 0.1),
         0rem 2rem 4rem -3rem rgba(black, 0.5);
+
+    @media (min-width: 800px) and (max-width: 900px) {
+        width: 30vw;
+        right: 18rem;
+    }
+
+    @media (min-width: 900px) and (max-width: 1400px) {
+        width: 19vw;
+        right: 25%;
+    }
+
+    @media (min-width: 1400px) {
+        width: 15vw;
+        right: -3%;
+    }
 
     .contact.bar {
         flex-basis: 1rem;

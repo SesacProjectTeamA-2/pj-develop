@@ -27,7 +27,7 @@ export default function ChatRoom({
 
     const [loginUName, setLoginUName] = useState<any>([]);
 
-    // 서버에 전송할 데이터 2
+    // 내가 서버에 전송할 데이터 2
     const [msgData, setMsgData] = useState<any>({
         uSeq: 0,
         timeStamp: '',
@@ -37,13 +37,16 @@ export default function ChatRoom({
         uName: uName,
     });
 
-    // 내가 전송한 채팅 3
+    // 내가 전송한 채팅 3 (화면에 보여주기용)
     const [sendMsg, setSendMsg] = useState<any>({
-        timeStamp: '',
+        timeStamp: '', // 화면에 변환되어 보여줌
         msg: '',
         uName: uName,
         socketId: socket?.id,
     });
+
+    // 서버에서 받아올 데이터
+    const [msgList, setMsgList] = useState<any>();
 
     // 입력창 값
     const [inputValue, setInputValue] = useState('');
@@ -190,7 +193,7 @@ export default function ChatRoom({
                         // hour12: false,
                     }),
                     uSeq: msg.uSeq,
-                    // uName
+                    uName,
                 }));
 
                 setAllMsg(formattedData);
@@ -209,6 +212,7 @@ export default function ChatRoom({
 
         console.log('allMsg >>>>>>', allMsg);
 
+        console.log('loginUser >>>>>>', loginUser);
         console.log('loginUName >>>>>>', loginUName);
     }, [loginUser, allMsg]);
 
@@ -248,7 +252,7 @@ export default function ChatRoom({
     //     addMessageBubble(sendMsg);
     // }, []);
 
-    //] 말풍선을 화면에 추가하는 함수
+    //] 말풍선을 화면에 추가하는 함수 (내가 전송)
     const addMessageBubble = (data: any) => {
         const chatContainer = document.getElementById('chat');
         if (chatContainer) {
@@ -261,7 +265,7 @@ export default function ChatRoom({
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message send-msg';
 
-            const timeText = document.createTextNode(data.timeStamp.time);
+            const timeText = document.createTextNode(data.timeStamp?.time);
             const messageText = document.createTextNode(data.msg);
             // `${data.uName}: ${data.msg}`
 
@@ -272,6 +276,47 @@ export default function ChatRoom({
             chatContainer.appendChild(bubbleDiv);
         }
     };
+
+    //] 말풍선을 화면에 추가하는 함수 (타인이 보낸 메세지)
+    const addReceivedMessageBubble = (data: any) => {
+        const chatContainer = document.getElementById('chat');
+        if (chatContainer) {
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'chat-bubble-receive';
+
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'receive-time';
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message re-msg';
+
+            const timeText = document.createTextNode(data.timeStamp?.time);
+            const messageText = document.createTextNode(data.msg);
+            // `${data.uName}: ${data.msg}`
+
+            messageDiv.appendChild(messageText);
+            timeDiv.appendChild(timeText);
+            bubbleDiv.appendChild(timeDiv);
+            bubbleDiv.appendChild(messageDiv);
+            chatContainer.appendChild(bubbleDiv);
+        }
+    };
+
+    // {allMsg?.map((chat: any) => {
+    //     return (
+    //         <div className="chat-bubble-receive">
+    //             <div className="send-user">{chat.uName}</div>
+    //             <div className="msg-container">
+    //                 <div className="message re-msg">
+    //                     {chat.msg}
+    //                 </div>
+    //                 <div className="receive-time">
+    //                     {chat.timeStamp}
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     );
+    // })}
 
     //] 메세지 전송
     const sendMessage = () => {
@@ -312,21 +357,28 @@ export default function ChatRoom({
             // 서버에 데이터 전송
             socket?.emit('sendMsg', msgData);
 
-            // 서버에서 데이터 받아오기
-            socket?.on('msg', (data: any) => {
-                console.log('MSG event received on client', data); // 서버에서 보낸 data
-
-                // setSendMsg((prevData: any) => ({
-                //     ...prevData,
-                //     timeStamp: data.timeStamp,
-                //     msg: data.msg,
-                // }));
-            });
-
             //-- 말풍선 추가
             addMessageBubble(sendMsg);
         }
     }, [isSent]);
+
+    useEffect(() => {
+        // 서버에서 데이터 받아오기
+        socket?.on('msg', (data: any) => {
+            console.log('MSG event received on client', data); // 서버에서 보낸 data
+
+            setMsgList(data);
+
+            // setMsgList((prevData: any) => ({
+            //     ...prevData,
+            //     timeStamp: data.timeStamp,
+            //     msg: data.msg,
+            // }));
+
+            //-- [추후] 받아오는 말풍선 추가
+            addReceivedMessageBubble(data);
+        });
+    }, [socket, msgList]);
 
     //-- key down event 입력 시
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -527,8 +579,47 @@ export default function ChatRoom({
                         </div>
                     </div> */}
 
-                    {/* ----- 받은 문자 ----- */}
-                    {allMsg?.map((chat: any) => {
+                    {/* ----- 문자 내역 ----- */}
+                    {allMsg
+                        ?.slice()
+                        .reverse()
+                        .map((chat: any) => {
+                            return (
+                                <>
+                                    {chat.uName === uName ? (
+                                        //  ----- 보냈던 문자 -----
+                                        <div className="chat-bubble-send">
+                                            <div className="msg-container">
+                                                <div className="send-time">
+                                                    {chat.timeStamp}
+                                                </div>
+                                                <div className="message send-msg">
+                                                    {chat.msg}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        //  ----- 받은 문자 -----
+                                        <div className="chat-bubble-receive">
+                                            <div className="send-user">
+                                                {chat.uName}
+                                            </div>
+                                            <div className="msg-container">
+                                                <div className="message re-msg">
+                                                    {chat.msg}
+                                                </div>
+                                                <div className="receive-time">
+                                                    {chat.timeStamp}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </>
+                            );
+                        })}
+
+                    {/* --- [삭제예정] 받은 문자 --- */}
+                    {/* {allMsg?.map((chat: any) => {
                         return (
                             <div className="chat-bubble-receive">
                                 <div className="send-user">{chat.uName}</div>
@@ -542,7 +633,7 @@ export default function ChatRoom({
                                 </div>
                             </div>
                         );
-                    })}
+                    })} */}
 
                     {/* <div className="message send-msg">Field trip! 🤣</div> */}
                     {/* <div className="message send-msg">

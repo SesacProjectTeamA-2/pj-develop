@@ -79,40 +79,55 @@ export default function ChatList({
             <ul>
                 {/* 채팅방을 클릭해주세요 */}
 
-                {madeGroupInfo?.map((group: any, idx: number) => {
-                    return (
-                        <li
-                            className="group-list"
-                            onClick={() =>
-                                enterChatRoom(group.gSeq, group.gName)
-                            }
-                        >
-                            <div className="list-content-wrapper">
-                                <img
-                                    src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/thomas.jpg"
-                                    alt=""
-                                />
-                                <div>
-                                    <div>👑</div>
-                                    <div className="group-name">
-                                        {group.gName}
+                {!madeGroupInfo && !madeJoinInfo ? (
+                    <div
+                        style={{
+                            width: '100%',
+                            textAlign: 'center',
+                            color: 'gray',
+                            paddingTop: '2rem',
+                        }}
+                    >
+                        현재 참여한 채팅방이 없어요 !
+                    </div>
+                ) : (
+                    madeGroupInfo?.map((group: any, idx: number) => {
+                        return (
+                            <li
+                                className="group-list"
+                                onClick={() =>
+                                    enterChatRoom(group.gSeq, group.gName)
+                                }
+                            >
+                                <div className="list-content-wrapper">
+                                    <img
+                                        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/thomas.jpg"
+                                        alt=""
+                                    />
+                                    <div>
+                                        <div>👑</div>
+                                        <div className="group-name">
+                                            {group.gName}
+                                        </div>
+                                        <span className="preview">
+                                            I was wondering...
+                                        </span>
                                     </div>
-                                    <span className="preview">
-                                        I was wondering...
-                                    </span>
-                                </div>
 
-                                <div
-                                    className="chat-list-count-wrapper"
-                                    // onClick={alarmHandler}
-                                >
-                                    {/* <p>1 : 02 PM</p> */}
-                                    <span className="chat-list-count">6</span>
+                                    <div
+                                        className="chat-list-count-wrapper"
+                                        // onClick={alarmHandler}
+                                    >
+                                        {/* <p>1 : 02 PM</p> */}
+                                        <span className="chat-list-count">
+                                            6
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                    );
-                })}
+                            </li>
+                        );
+                    })
+                )}
                 {madeJoinInfo?.map((group: any, idx: number) => {
                     return (
                         <li
