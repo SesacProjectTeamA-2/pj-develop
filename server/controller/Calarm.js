@@ -5,6 +5,7 @@ const sub = require('../models/redis').sub;
 
 exports.alarming = async (req, res) => {
   try {
+    req.socket.setTimeout(0);
     // const sse = req.app.get('sse');
     // console.log(sse.server);
     if (req.headers.authorization) {
@@ -26,6 +27,7 @@ exports.alarming = async (req, res) => {
         Connection: 'keep-alive',
         'Access-Control-Allow-Origin': '*', // CORS 설정을 추가
       });
+      res.write('\n');
 
       const alarmCount = await redisCli.lLen(`user${uSeq}`);
       const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
