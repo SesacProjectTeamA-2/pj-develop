@@ -101,6 +101,7 @@ function App() {
                 setAdminUser={setAdminUser}
                 alarmCount={alarmCount}
                 setAlarmCount={setAlarmCount}
+                alarmList={alarmList}
             />
 
             <Routes>

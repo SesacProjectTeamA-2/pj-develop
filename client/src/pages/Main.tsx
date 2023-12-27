@@ -107,20 +107,18 @@ export default function Main({
             //-- 미확인 알람 전체 리스트
             eventSource.addEventListener('allAlarm', (event: any) => {
                 console.log('alarmList ::::', event);
-                console.log('alarmList event.data ::::', event.data);
+                // console.log('alarmList event.data ::::', event.data);
 
                 try {
-                    // 마지막에 , 제거
-                    // const jsonData = event.data.replace(/,(\s*)$/, '$1');
-                    // const eventData = JSON.parse(jsonData);
-
+                    // 파싱 이후 alarmList 업데이트
                     const eventData = JSON.parse(event.data);
 
-                    console.log('eventData ::::', eventData);
+                    let updateData = [];
+                    for (let i = 0; i < eventData.length; i++) {
+                        updateData.push(JSON.parse(eventData[i]));
+                    }
 
-                    const testData = JSON.parse(eventData[0]);
-
-                    console.log('testData ::::', testData);
+                    setAlarmList([...updateData]);
                 } catch (error) {
                     console.error('Error parsing JSON:', error);
                 }
