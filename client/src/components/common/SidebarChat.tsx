@@ -7,7 +7,13 @@ import ChatRoom from './chat/ChatRoom';
 import ChatList from './chat/ChatList';
 // import useSocket from 'src/hooks/useSocket';
 
-export default function SidebarChat({ socket, showChatting, showChat }: any) {
+export default function SidebarChat({
+    socket,
+    showChatting,
+    showChat,
+    recentMsg,
+    setRecentMsg,
+}: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -44,6 +50,7 @@ export default function SidebarChat({ socket, showChatting, showChat }: any) {
                     setNowGName={setNowGName}
                     showChatting={showChatting}
                     showChat={showChat}
+                    recentMsg={recentMsg}
                 />
             ) : (
                 <ChatRoom
@@ -53,6 +60,7 @@ export default function SidebarChat({ socket, showChatting, showChat }: any) {
                     nowGName={nowGName}
                     uName={uName}
                     socket={socket} // socket 인스턴스
+                    setRecentMsg={setRecentMsg}
                 />
             )}
         </div>

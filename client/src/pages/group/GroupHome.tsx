@@ -170,6 +170,9 @@ export default function GroupHome({ socket }: any) {
                         duration: 2000,
                     });
 
+                    //-- localStorage 채팅방 미확인 메세지 수 0으로 세팅
+                    localStorage.setItem(`gSeq${gSeq}`, '0');
+
                     setJoinSuccess(true);
                     window.location.reload();
                 }

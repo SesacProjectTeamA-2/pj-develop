@@ -19,6 +19,8 @@ export default function GroupLayout({
     showChat,
     showChatting,
     socket,
+    recentMsg,
+    setRecentMsg,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -128,6 +130,8 @@ export default function GroupLayout({
                                         showChat={showChat}
                                         showChatting={showChatting}
                                         socket={socket}
+                                        recentMsg={recentMsg}
+                                        setRecentMsg={setRecentMsg}
                                     />
                                 ) : null}
                             </Item>

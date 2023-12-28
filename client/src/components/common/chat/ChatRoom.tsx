@@ -8,12 +8,11 @@ import '../../../styles/scss/components/chatroom.scss';
 export default function ChatRoom({
     isEnter,
     setIsEnter,
-    // setSendMsg,
-    // sendMsg,
     nowGSeq,
     nowGName,
     socket,
     uName,
+    setRecentMsg,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -129,6 +128,9 @@ export default function ChatRoom({
         // console.log('joinRoom nowGSeq :::::', nowGSeq);
 
         socket?.emit('joinRoom', { gSeq: nowGSeq });
+
+        //-- localStorage 에서 해당 채팅방 메세지 읽음 처리
+        localStorage.setItem(`gSeq${nowGSeq}`, '0');
 
         // joinRoom 이벤트에 대한 리스너 추가
         socket?.on('joinRoom', (data: any) => {
@@ -351,9 +353,9 @@ export default function ChatRoom({
     // 4. 서버에 데이터를 가공해서 말풍선을 그려준다
     useEffect(() => {
         if (isSent) {
-            console.log('Sent !!!!!!', isSent);
-            console.log('sendMsg !!!!!!', sendMsg);
-            console.log('msgData !!!!!!', msgData);
+            // console.log('Sent !!!!!!', isSent);
+            // console.log('sendMsg !!!!!!', sendMsg);
+            // console.log('msgData !!!!!!', msgData);
 
             // 서버에 데이터 전송
             socket?.emit('sendMsg', msgData);
@@ -399,7 +401,6 @@ export default function ChatRoom({
     }, []);
 
     // joinRoom - allMsg (방에 입장하기 전, 주고 받은 문자 내역들)
-    // +++
     // msg - msgList (방에 입장 이후, 받은 문자)
 
     //-- key down event 입력 시
@@ -415,47 +416,24 @@ export default function ChatRoom({
 
     //] 방 나가기
     const leaveHandler = () => {
-        //~ roomInfo 추가
-        // useEffect(() => {
-        //     if (showChat) {
-        //         socket?.emit('roomInfo');
+        //; 방 나가면 : roomInfo 수행
+        socket?.emit('roomInfo', { isOut: 'y' });
 
-        //         // 서버에서 보낸 data
-        //         socket?.on('roomInfo', (data: any) => {
-        //             console.log('roomInfo event received on client :::', data);
-        //         }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
-        //     }
-        // }, [showChat]);
+        // localStorage 에서 해당 방의 미확인 메세지 개수 0 으로 세팅
+        localStorage.setItem(`gSeq${nowGSeq}`, '0');
+
+        // 서버에서 보낸 data
+        socket?.on('roomInfo', (data: any) => {
+            console.log('roomInfo 퇴장 :::', data);
+            setRecentMsg(data); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
+        });
 
         setIsSent(false);
         setIsEnter(false);
     };
 
-    //-- 채팅 받아오기
-    // useEffect(() => {
-    //     // 방 고유 Id
-    //     // socket 연결
-    //     // if (!socketInstances[id]) {
-    //     //   socketInstances[id] = socket(`${id}`)
-    //     // 서버에서 넘어오는 chat 응답 받아오기
-    //     //   socketInstances[id].on('chat', (data: socketChatMsg) => {
-    //     //     const newChat: ChatMsg = {
-    //     //       username: data.userInfo.userId,
-    //     //       message: data.message.message,
-    //     //       admin: data.userInfo.isAdmin,
-    //     //     };
-    //     //     setChat((prevChat) => [...prevChat, newChat]);
-    //     //   });
-    // }, []);
-
-    // useEffect(() => {
-    //     socket.on('receive_message', (data) => {
-    //         setChat(data.message);
-    //     });
-    // }, [socket]);
-
     console.log(msgData);
-    console.log('::::::', allMsg);
+    console.log('allMsg', allMsg);
 
     console.log('외부 loginUName ::::: ', loginUName);
 

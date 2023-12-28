@@ -101,10 +101,13 @@ export default function WarningModal({
                     .then((res) => {
                         console.log(res.data);
 
-                        //++ 모임 채팅 OUT
+                        //++ 모임 채팅방 OUT
                         setLeaveGroupSuccess(true);
 
-                        // [TEST]용 주석 처리
+                        //++ 미확인 채팅 메세지 데이터 지우기
+                        // 로컬스토리지 삭제
+                        localStorage.removeItem(`gSeq${gSeq}`);
+
                         nvg('/group');
                     });
             };

@@ -10,6 +10,7 @@ export default function ChatList({
     setNowGSeq,
     setNowGName,
     showChatting,
+    recentMsg,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -62,6 +63,8 @@ export default function ChatList({
         setIsEnter(true);
     };
 
+    console.log('방 퇴장 시 recentMsg', recentMsg);
+
     return (
         <div className="chat-list-wrapper">
             <div className="chat-list-close-icon-wrapper">
@@ -101,26 +104,39 @@ export default function ChatList({
                             >
                                 <div className="list-content-wrapper">
                                     <img
-                                        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/thomas.jpg"
+                                        src="/asset/images/leader.gif"
                                         alt=""
                                     />
+
                                     <div>
-                                        <div>👑</div>
                                         <div className="group-name">
                                             {group.gName}
                                         </div>
-                                        <span className="preview">
-                                            I was wondering...
-                                        </span>
+
+                                        {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
+                                            msg.msg 띄워주기  */}
+                                        {recentMsg
+                                            ?.filter(
+                                                (recent: any) =>
+                                                    recent.gSeq === group.gSeq
+                                            )
+                                            .map((filteredRecent: any) => (
+                                                <span className="preview">
+                                                    {filteredRecent.msg.msg}
+                                                </span>
+                                            ))}
                                     </div>
 
                                     <div
                                         className="chat-list-count-wrapper"
                                         // onClick={alarmHandler}
                                     >
-                                        {/* <p>1 : 02 PM</p> */}
+                                        <p>1 : 02 PM</p>
                                         <span className="chat-list-count">
-                                            6
+                                            {/* 미확인 메세지 개수 */}
+                                            {localStorage.getItem(
+                                                `gSeq${group.gSeq}`
+                                            )}
                                         </span>
                                     </div>
                                 </div>
@@ -137,18 +153,39 @@ export default function ChatList({
                             }
                         >
                             <div className="list-content-wrapper">
-                                <img
-                                    src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/dog.png"
-                                    alt=""
-                                />
-                                <div className="group-name">{group.gName}</div>
+                                <img src="/asset/images/member.gif" alt="" />
+
+                                <div>
+                                    <div className="group-name">
+                                        {group.gName}
+                                    </div>
+
+                                    {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
+                                            msg.msg 띄워주기  */}
+                                    {recentMsg
+                                        ?.filter(
+                                            (recent: any) =>
+                                                recent.gSeq === group.gSeq
+                                        )
+                                        .map((filteredRecent: any) => (
+                                            <span className="preview">
+                                                {filteredRecent.msg.msg}
+                                            </span>
+                                        ))}
+                                </div>
 
                                 <div
                                     className="chat-list-count-wrapper"
                                     // onClick={alarmHandler}
                                 >
+                                    {/* [추후] 시간변경 */}
                                     <p>12 : 02 PM</p>
-                                    <span className="chat-list-count">6</span>
+                                    <span className="chat-list-count">
+                                        {/* 미확인 메세지 개수 */}
+                                        {localStorage.getItem(
+                                            `gSeq${group.gSeq}`
+                                        )}
+                                    </span>
                                 </div>
                             </div>
                         </li>
