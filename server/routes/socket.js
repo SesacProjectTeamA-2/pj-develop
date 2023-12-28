@@ -51,10 +51,9 @@ exports.chatSocket = async (io, socket) => {
         if (Array.isArray(gSeq)) {
           gSeq.map((info) => {
             socket.join(`room${info}`);
-            console.log(groupChat.adapter.rooms);
           });
         } else {
-          console.log(`gSeq is not Array!`);
+          console.log(`gSeq is not Array111!`);
           return;
         }
 
@@ -76,7 +75,7 @@ exports.chatSocket = async (io, socket) => {
                 });
               });
             } else {
-              console.log(`gSeq is not Array!`);
+              console.log(`gSeq is not Array222!`);
               return;
             }
             socket.emit('loginSuccess', {
@@ -118,24 +117,15 @@ exports.chatSocket = async (io, socket) => {
                   }
 
                   console.log('roomInfoArray>>>', roomInfoArray);
-                  socket.emit('roomInfo', roomInfoArray);
                 } else {
-                  console.log(`gSeq is not Array!`);
-                  return;
+                  console.log(`gSeq is not Array333!`);
                 }
               }
+              socket.emit('roomInfo', roomInfoArray);
             }
           } catch (err) {
             console.error('roomInfo 에러', err);
           }
-        });
-
-        // 구독자설정(로컬스토리지 개수 + 1)
-        await sub.subscribe(`newMsg${gSeq}`, (data) => {
-          const gSeq = data.gSeq;
-          const content = JSON.parse(data.content);
-
-          socket.emit('newMsg', { gSeq, content });
         });
 
         // 모임별 채팅방 입장시
@@ -148,7 +138,6 @@ exports.chatSocket = async (io, socket) => {
             if (data.isSignup === 'true') {
               // gSeq 배열 추가
               userInfo.gSeq.push(...Number(data.gSeq));
-              console.log(userInfo.gSeq);
               // 캐시 update
               await redisCli.hSet(
                 `socket${uSeq}`,
@@ -169,7 +158,6 @@ exports.chatSocket = async (io, socket) => {
               console.log('rooms목록: ', groupChat.adapter.rooms);
               // 룸에 접속중인 소켓 로드 (접속중인 소켓 없을 때는 빈 배열 반환)
               const result = groupChat.adapter.rooms.get(`room${gSeq}`);
-              console.log(result);
               const socketsInRoom = Array.from(
                 groupChat.adapter.rooms.get(`room${gSeq}`) || []
               );
@@ -185,7 +173,6 @@ exports.chatSocket = async (io, socket) => {
                   (uSeq) => userSocketMap[uSeq] === socketId
                 )
               );
-              console.log(uSeqs);
               // room에 참가하고 있는 소켓의 정보를 담은 배열(forEach의 경우에는 배열의 모든 값에 대해 await 해주지않음!)
               const userDatasPromises = uSeqs.map(
                 async (uSeq) => await redisCli.hGetAll(`socket${uSeq}`)
@@ -239,7 +226,6 @@ exports.chatSocket = async (io, socket) => {
             // 닉네임(socketId)/시간/룸/targetSeq 가 0 일경우에는 전체
             const { uSeq, uName, timeStamp, msg, gSeq, targetSeq } = data;
             const result = JSON.stringify({ msg, timeStamp, uSeq });
-            console.log(uName);
             // 메세지 정보 redis에 저장
             await redisCli.lPush(
               `room${gSeq}`,
@@ -247,15 +233,17 @@ exports.chatSocket = async (io, socket) => {
             );
 
             // publisher setting
-            await redisCli.publish(`newMsg${gSeq}`, {
-              gSeq,
-              content: JSON.stringify({
-                msg,
-                timeStamp,
-                uName,
-              }),
-            });
-
+            await redisCli.publish(
+              `newMsg${gSeq}`,
+              JSON.stringify({
+                gSeq,
+                content: {
+                  msg,
+                  timeStamp,
+                  uName,
+                },
+              })
+            );
             // 만료시간 조회
             const expirationTime = await redisCli.ttl(`room${gSeq}`);
             // 메세지 유효시간 : 12시간
@@ -292,6 +280,16 @@ exports.chatSocket = async (io, socket) => {
           } catch (err) {
             console.error('sendMsg error', err);
           }
+        });
+
+        // 구독자설정(로컬스토리지 개수 + 1)
+        userInfo.gSeq.forEach((gSeq) => {
+          sub.subscribe(`newMsg${gSeq}`, (data) => {
+            const gSeq = data.gSeq;
+            const content = data.content;
+
+            socket.emit('newMsg', { gSeq, content });
+          });
         });
 
         // 모임탈퇴, 추방시 모임채팅 out

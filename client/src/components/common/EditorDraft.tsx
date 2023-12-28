@@ -48,8 +48,8 @@ export default function EditorDraft({
             const { contentBlocks, entityMap } = blocksFromHtml;
             // https://draftjs.org/docs/api-reference-content-state/#createfromblockarray
             const contentState = ContentState.createFromBlockArray(
-                contentBlocks
-                // entityMap
+                contentBlocks,
+                entityMap
             );
 
             // const contentState = ContentState.createFromBlockArray({
