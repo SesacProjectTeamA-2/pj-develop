@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import '../../styles/scss/components/alarm.scss';
 
 export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
@@ -139,7 +141,16 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
     }, [commentAlarm]);
 
     //] 읽음 처리
-    const readHandler = () => {};
+    const readHandler = () => {
+        // const res (
+        //         `${process.env.REACT_APP_DB_HOST}/subscribe/alarm`,
+        //         {
+        //             headers: {
+        //                 Authorization: `Bearer ${uToken}`,
+        //             },
+        //         }
+        //     );
+    };
 
     //++ 선 동적으로 처리
     useEffect(() => {
@@ -213,8 +224,14 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
 
                                 {alarm.type == 'comment' ? (
                                     <p>
-                                        <b>{alarm.uName}</b> 님이 댓글을
-                                        남겼습니다.
+                                        <Link
+                                            to={`/board/${Number(
+                                                alarm.gSeq
+                                            )}/free/${Number(alarm.gbSeq)}`}
+                                        >
+                                            <b>{alarm.uName}</b> 님이 댓글을
+                                            남겼습니다.
+                                        </Link>
                                     </p>
                                 ) : (
                                     <></>

@@ -60,25 +60,29 @@ function App() {
         });
     };
 
-    //++ Header 채팅 아이콘 클릭 시, socket roomInfo 이벤트
-    // 모임별 채팅 최신 정보 (최신 메세지, 안읽은 메세지)
-
-    useEffect(() => {
-        if (showChat) {
-            socket?.emit('roomInfo');
-
-            // 서버에서 보낸 data
-            socket?.on('roomInfo', (data: any) => {
-                console.log('roomInfo event received on client :::', data);
-            }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
-        }
-    }, [showChat]);
-
     const [isIntro, setIsIntro] = useState<boolean>(false);
     const [isLogin, setIsLogin] = useState<boolean>(false);
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
     const [initialLogin, setInitialLogin] = useState<any>(false);
     const [recentMsg, setRecentMsg] = useState<any>(); // 방 나갈 때, 최신 메세지
+
+    console.log('전역 recentMsg ::::', recentMsg);
+
+    //++ Header 채팅 아이콘 클릭 시, socket roomInfo 이벤트
+    // 모임별 채팅 최신 정보 (최신 메세지, 안읽은 메세지)
+
+    useEffect(() => {
+        if (showChat) {
+            socket?.emit('roomInfo', { isOut: '' });
+
+            // 서버에서 보낸 data
+            socket?.on('roomInfo', (data: any) => {
+                console.log('roomInfo event received on client :::', data);
+
+                setRecentMsg(data);
+            }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
+        }
+    }, [showChat]);
 
     // admin 인증
     const [adminUser, setAdminUser] = useState(false);

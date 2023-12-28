@@ -80,11 +80,14 @@ export default function Header(props: any) {
 
     //] 실시간으로 채팅 메세지 오면 업데이트
     useEffect(() => {
+        console.log('newMsg Event data ::::');
+
         props.socket?.on('newMsg', (data: any) => {
             const gSeq = data.gSeq;
             const content = data.content; // 최신 메세지 내용, 시간
 
-            console.log('newMsg Event ::::', gSeq, content);
+            console.log('newMsg Event data ::::', data);
+            console.log('newMsg Event gSeq, content ::::', gSeq, content);
 
             props.setRecentMsg(content);
 

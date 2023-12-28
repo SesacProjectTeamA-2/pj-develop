@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans|Montserrat+Alternates');
-$main-color: #977956cf;
+$main-color: #a58c6eeb;
 
 // $dark-purple: #4b384c;
 // // $crushed-raspberry: #632c65;
@@ -168,7 +168,7 @@ $secondary: #6fa57f;
     font-size: 0.75rem;
     line-height: 11px;
     margin-bottom: 2px;
-    color: gray;
+    color: #a8a8a8;
 }
 .panel .notifications .notification p {
     line-height: 20px;
@@ -193,7 +193,7 @@ $secondary: #6fa57f;
 
     button {
         border: none;
-        background-color: fade-out($main-color, 0.38);
+        background-color: fade-out($main-color, 0);
         color: white;
         font-size: 0.8rem;
         margin: 0 1rem;
