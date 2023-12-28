@@ -108,7 +108,15 @@ export default function ChatList({
                                         alt=""
                                     />
 
-                                    <div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            // width: '100%',
+                                            width: '6rem',
+                                            height: '100%',
+                                            flexDirection: 'column',
+                                        }}
+                                    >
                                         <div className="group-name">
                                             {group.gName}
                                         </div>
@@ -155,7 +163,14 @@ export default function ChatList({
                             <div className="list-content-wrapper">
                                 <img src="/asset/images/member.gif" alt="" />
 
-                                <div>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        width: '100%',
+                                        height: '100%',
+                                        flexDirection: 'column',
+                                    }}
+                                >
                                     <div className="group-name">
                                         {group.gName}
                                     </div>
@@ -167,7 +182,7 @@ export default function ChatList({
                                             (recent: any) =>
                                                 recent.gSeq === group.gSeq
                                         )
-                                        .map((filteredRecent: any) => (
+                                        ?.map((filteredRecent: any) => (
                                             <span className="preview">
                                                 {filteredRecent.msg.msg}
                                             </span>
