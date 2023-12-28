@@ -238,7 +238,9 @@ export default function Main({
                 setMainGroup(mainGroup);
 
                 //-- gSeqList => 채팅 서버 전송
-                const updatedGSeqList = [...gSeqList]; // 기존 배열을 복사
+                // const updatedGSeqList = [...gSeqList]; // 기존 배열을 복사
+
+                let updatedGSeqList: any = [];
 
                 for (let i = 0; i < groupInfo?.length; i++) {
                     updatedGSeqList.push(groupInfo[i].gSeq);
@@ -257,8 +259,21 @@ export default function Main({
                         gSeq: [...updatedGSeqList],
                     }));
                 }
+
+                // console.log('groupInfo', groupInfo);
+                // console.log('updatedGSeqList :::', updatedGSeqList);
+
+                //-- local Storage에 'gSeq번호 : 메세지 개수' 형식으로 담음
+                // { gSeq1: 3 }
+                updatedGSeqList?.map((gSeq: any) => {
+                    if (!localStorage.getItem(`gSeq${gSeq}`)) {
+                        localStorage.setItem(`gSeq${gSeq}`, '0');
+                    }
+                });
             });
     };
+
+    // console.log('gSeqList :::', gSeqList);
 
     useEffect(() => {
         // if (cookie.get('isUser')) {

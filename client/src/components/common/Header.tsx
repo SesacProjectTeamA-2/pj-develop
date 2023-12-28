@@ -78,6 +78,31 @@ export default function Header(props: any) {
     //     }
     // }, []);
 
+    //] 실시간으로 채팅 메세지 오면 업데이트
+    useEffect(() => {
+        props.socket?.on('newMsg', (data: any) => {
+            const gSeq = data.gSeq;
+            const content = data.content; // 최신 메세지 내용, 시간
+
+            console.log('newMsg Event ::::', gSeq, content);
+
+            props.setRecentMsg(content);
+
+            // 새로운 메세지 왔을경우, +1 count
+            let currentCount = localStorage.getItem(`gSeq${gSeq}`);
+            let newCount = parseInt(currentCount || '0', 10) + 1;
+            localStorage.setItem(`gSeq${gSeq}`, newCount.toString());
+        });
+    }, []);
+
+    // 1. 실시간 메세지 개수 -> Header : 채팅 알람 개수
+    // 2. 실시간 메세지 내용 -> ChatList
+
+    // 처음에 채팅창 켤 때 - roomInfo data
+    // 채팅방 나갈 때 - roomInfo data
+    // 이후에는 - newMsg
+    //--> recentMsg
+
     const nvg = useNavigate();
 
     const [uSeqData, setUSeqData] = useState({ uSeq: 0 });
@@ -144,6 +169,38 @@ export default function Header(props: any) {
         getJoinedGroup(); // uSeq 데이터 update
     }, []);
 
+    //] 로그아웃 시, gSeqList 전송
+    // --> localStorage 채팅방 모임 리스트 전체 삭제
+    const [gSeqList, setGSeqList] = useState<any>([]); // 참여 모임
+
+    const getMissionMain = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/mission/user`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                // console.log('유저 미션 조회 >> ', res.data);
+
+                const { groupInfo } = res.data;
+
+                let updatedGSeqList: any = [];
+
+                for (let i = 0; i < groupInfo?.length; i++) {
+                    updatedGSeqList.push(groupInfo[i].gSeq);
+                }
+
+                setGSeqList(updatedGSeqList);
+
+                console.log('updatedGSeqList', updatedGSeqList);
+
+                updatedGSeqList?.map((gSeq: any) => {
+                    localStorage.removeItem(`gSeq${gSeq}`);
+                });
+            });
+    };
+
     const [logoutConfirm, setLogoutConfirm] = useState(false);
 
     //] 로그아웃
@@ -155,7 +212,7 @@ export default function Header(props: any) {
             if (window.confirm('로그아웃하시겠습니까 ?')) {
                 // console.log('uSeqData ::::::', uSeqData);
 
-                //-- 채팅 종료
+                // 채팅 종료
                 // props.socket?.emit('logout', uSeqData);
                 // props.socket.emit('logout', { uSeq: 8 });
 
@@ -180,7 +237,10 @@ export default function Header(props: any) {
 
             localStorage.setItem('showChat', JSON.stringify(false));
 
-            //-- 2) 실시간 알람 종료
+            //-- 2) 로컬스토리지 삭제
+            // localStorage.removeItem(`gSeq${gSeq}`);
+
+            //-- 3) 실시간 알람 종료
             props.sse?.addEventListener('close', (event: any) => {
                 console.log('logout >>> 실시간 알람 종료');
                 // props.sse.close();
@@ -212,11 +272,19 @@ export default function Header(props: any) {
             });
     };
 
+    //; 로그아웃 확정되면
     useEffect(() => {
         if (logoutConfirm) {
             postLogOut();
+            getMissionMain(); //--> localStorage 채팅방 모임 리스트 전체 삭제
         }
     }, [logoutConfirm]);
+
+    // useEffect(() => {
+    //     if (logoutConfirm) {
+    //         getMissionMain();
+    //     }
+    // }, []);
 
     //] 초대장 링크 입력 후 버튼 클릭 시 그 그룹으로 이동
     const [grpInput, setGrpInput] = useState<string>('');
@@ -259,7 +327,7 @@ export default function Header(props: any) {
     //     // console.log('***********', props.sse);
 
     //     if (props.sse) {
-    //         //~ 콘솔이 안찍힘 => 전역으로 관리
+    //         // 콘솔이 안찍힘 => 전역으로 관리
     //         //-- 미확인 알람 전체 리스트
     //         props.sse.addEventListener('allAlarm', (event: any) => {
     //             console.log('alarmList ::::', event);

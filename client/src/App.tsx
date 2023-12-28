@@ -78,6 +78,7 @@ function App() {
     const [isLogin, setIsLogin] = useState<boolean>(false);
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
     const [initialLogin, setInitialLogin] = useState<any>(false);
+    const [recentMsg, setRecentMsg] = useState<any>(); // 방 나갈 때, 최신 메세지
 
     // admin 인증
     const [adminUser, setAdminUser] = useState(false);
@@ -104,6 +105,7 @@ function App() {
                 setAlarmCount={setAlarmCount}
                 alarmList={alarmList}
                 commentAlarm={commentAlarm}
+                setRecentMsg={setRecentMsg} // 전역으로 실시간 최신 메세지 업데이트
             />
 
             <Routes>
@@ -152,6 +154,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -164,6 +168,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -175,6 +181,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -188,6 +196,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -200,6 +210,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -212,6 +224,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -224,6 +238,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -235,6 +251,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -249,6 +267,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -263,6 +283,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -277,6 +299,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -289,6 +313,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -301,6 +327,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -314,6 +342,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -327,6 +357,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -340,6 +372,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
@@ -354,6 +388,8 @@ function App() {
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
                         />
                     }
                 />
