@@ -21,6 +21,8 @@ export default function GroupLayout({
     socket,
     recentMsg,
     setRecentMsg,
+    isEnter,
+    setIsEnter,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -132,6 +134,8 @@ export default function GroupLayout({
                                         socket={socket}
                                         recentMsg={recentMsg}
                                         setRecentMsg={setRecentMsg}
+                                        isEnter={isEnter}
+                                        setIsEnter={setIsEnter}
                                     />
                                 ) : null}
                             </Item>

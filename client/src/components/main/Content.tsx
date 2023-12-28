@@ -245,14 +245,15 @@ export default function Content({ setLoginData, loginData }: any) {
     }
 
     let newChar =
+        '/' +
         selectedCharacter?.slice(0, 17) +
         (charNum ?? '') +
         selectedCharacter?.slice(-4);
 
     // console.log('charNum', charNum);
     // console.log('newChar ::: ', newChar);
-    // console.log('totalRates', totalRates);
-    // console.log('totalPercent', totalPercent);
+    console.log('totalRates', totalRates);
+    console.log('totalPercent', totalPercent);
 
     useEffect(() => {
         setSelectedCharacter(newChar);

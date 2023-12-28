@@ -17,8 +17,6 @@ export default function ChatRoom({
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
-    // console.log('socket:::::', socket);
-
     // 받아올 채팅 1️
     const [allMsg, setAllMsg] = useState<any>([]);
 
@@ -270,7 +268,6 @@ export default function ChatRoom({
         // 시간 변환
         const date = new Date(data?.timeStamp);
 
-        // 수정된 부분: 시간을 24시간 형식으로 변환
         const formattedTime = date.toLocaleTimeString('en-US', {
             hour: '2-digit',
             minute: '2-digit',
