@@ -123,29 +123,51 @@ export default function ChatList({
 
                                         {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
                                             msg.msg 띄워주기  */}
-                                        {recentMsg
-                                            ?.filter(
-                                                (recent: any) =>
-                                                    recent.gSeq === group.gSeq
-                                            )
-                                            .map((filteredRecent: any) => (
-                                                <span className="preview">
-                                                    {filteredRecent.msg.msg}
-                                                </span>
-                                            ))}
+                                        {Array.isArray(recentMsg) &&
+                                            recentMsg
+                                                ?.filter(
+                                                    (recent: any) =>
+                                                        recent.gSeq ===
+                                                        group.gSeq
+                                                )
+                                                ?.map((filteredRecent: any) => (
+                                                    <span className="preview">
+                                                        {filteredRecent.msg.msg}
+                                                    </span>
+                                                ))}
                                     </div>
 
                                     <div
                                         className="chat-list-count-wrapper"
                                         // onClick={alarmHandler}
                                     >
-                                        <p>1 : 02 PM</p>
-                                        <span className="chat-list-count">
-                                            {/* 미확인 메세지 개수 */}
-                                            {localStorage.getItem(
-                                                `gSeq${group.gSeq}`
-                                            )}
-                                        </span>
+                                        {Array.isArray(recentMsg) &&
+                                            recentMsg
+                                                ?.filter(
+                                                    (recent: any) =>
+                                                        recent.gSeq ===
+                                                        group.gSeq
+                                                )
+                                                ?.map((filteredRecent: any) => (
+                                                    <p>
+                                                        {
+                                                            filteredRecent.msg
+                                                                .timeStamp
+                                                        }
+                                                    </p>
+                                                ))}
+
+                                        {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
+                                        {localStorage.getItem(
+                                            `gSeq${group.gSeq}`
+                                        ) !== '0' && (
+                                            <span className="chat-list-count">
+                                                {/* 미확인 메세지 개수 */}
+                                                {localStorage.getItem(
+                                                    `gSeq${group.gSeq}`
+                                                )}
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                             </li>
@@ -177,30 +199,51 @@ export default function ChatList({
 
                                     {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
                                             msg.msg 띄워주기  */}
-                                    {recentMsg
-                                        ?.filter(
-                                            (recent: any) =>
-                                                recent.gSeq === group.gSeq
-                                        )
-                                        ?.map((filteredRecent: any) => (
-                                            <span className="preview">
-                                                {filteredRecent.msg.msg}
-                                            </span>
-                                        ))}
+                                    {Array.isArray(recentMsg) &&
+                                        recentMsg
+                                            ?.filter(
+                                                (recent: any) =>
+                                                    recent.gSeq === group.gSeq
+                                            )
+                                            ?.map((filteredRecent: any) => (
+                                                <span className="preview">
+                                                    {filteredRecent.msg.msg}
+                                                </span>
+                                            ))}
                                 </div>
 
                                 <div
                                     className="chat-list-count-wrapper"
                                     // onClick={alarmHandler}
                                 >
-                                    {/* [추후] 시간변경 */}
-                                    <p>12 : 02 PM</p>
-                                    <span className="chat-list-count">
-                                        {/* 미확인 메세지 개수 */}
-                                        {localStorage.getItem(
-                                            `gSeq${group.gSeq}`
-                                        )}
-                                    </span>
+                                    {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
+                                            msg.timeStamp 띄워주기  */}
+                                    {Array.isArray(recentMsg) &&
+                                        recentMsg
+                                            ?.filter(
+                                                (recent: any) =>
+                                                    recent.gSeq === group.gSeq
+                                            )
+                                            ?.map((filteredRecent: any) => (
+                                                <p>
+                                                    {
+                                                        filteredRecent.msg
+                                                            .timeStamp
+                                                    }
+                                                </p>
+                                            ))}
+
+                                    {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
+                                    {localStorage.getItem(
+                                        `gSeq${group.gSeq}`
+                                    ) !== '0' && (
+                                        <span className="chat-list-count">
+                                            {/* 미확인 메세지 개수 */}
+                                            {localStorage.getItem(
+                                                `gSeq${group.gSeq}`
+                                            )}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         </li>

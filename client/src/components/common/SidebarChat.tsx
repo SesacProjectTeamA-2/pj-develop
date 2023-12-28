@@ -13,6 +13,8 @@ export default function SidebarChat({
     showChat,
     recentMsg,
     setRecentMsg,
+    isEnter,
+    setIsEnter,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -20,7 +22,7 @@ export default function SidebarChat({
     const [uName, setUName] = useState(''); // 닉네임
     const [nowGSeq, setNowGSeq] = useState(1); // 모임 번호
     const [nowGName, setNowGName] = useState(''); // 모임명
-    const [isEnter, setIsEnter] = useState(false); // 입장/나가기
+    // const [isEnter, setIsEnter] = useState(false); // 입장/나가기
 
     //] 1. 사용자 데이터 가져오기
     const getUserData = async () => {

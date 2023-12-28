@@ -372,7 +372,7 @@ export default function Main({
     let charNum = selectedCharacter?.slice(-5); // 2.svg
     // .jpeg
 
-    let originChar = selectedCharacter?.slice(1, 17); // asset/images/emo
+    let originChar = selectedCharacter?.slice(0, 17); // asset/images/emo
 
     console.log('originChar ::::::::', originChar);
 
@@ -385,16 +385,6 @@ export default function Main({
     for (let i = 0; i < doneRates?.length; i++) {
         totalRates += doneRates[i];
         totalPercent = totalRates / doneRates?.length; // 평균
-    }
-
-    if (totalPercent > 70) {
-        // charNum = '1';
-        // charNum = '1.gif';
-        newChar = originChar + '1.gif';
-    } else if (totalPercent < 30) {
-        // charNum = '3';
-        // charNum = '3.gif';
-        newChar = originChar + '3.gif';
     }
 
     // let newChar =
@@ -412,7 +402,19 @@ export default function Main({
     // console.log('totalPercent', totalPercent);
 
     useEffect(() => {
-        setSelectedCharacter(newChar);
+        // setSelectedCharacter(newChar);
+
+        if (totalPercent > 70) {
+            // charNum = '1';
+            // charNum = '1.gif';
+            newChar = originChar + '1.gif';
+            setSelectedCharacter(newChar);
+        } else if (totalPercent < 30) {
+            // charNum = '3';
+            // charNum = '3.gif';
+            newChar = originChar + '3.gif';
+            setSelectedCharacter(newChar);
+        }
     }, [totalPercent]);
 
     // 랜덤 색상을 선택하는 함수

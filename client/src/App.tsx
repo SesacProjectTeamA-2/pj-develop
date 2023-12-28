@@ -65,6 +65,7 @@ function App() {
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
     const [initialLogin, setInitialLogin] = useState<any>(false);
     const [recentMsg, setRecentMsg] = useState<any>(); // 방 나갈 때, 최신 메세지
+    const [isEnter, setIsEnter] = useState(false); // 입장/나가기
 
     console.log('전역 recentMsg ::::', recentMsg);
 
@@ -79,7 +80,24 @@ function App() {
             socket?.on('roomInfo', (data: any) => {
                 console.log('roomInfo event received on client :::', data);
 
-                setRecentMsg(data);
+                // 시간 변환
+                const formattedData = data?.map((msgObj: any) => ({
+                    ...msgObj,
+                    msg: {
+                        ...msgObj.msg,
+                        timeStamp: new Date(
+                            msgObj.msg.timeStamp
+                        ).toLocaleTimeString([], {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true,
+                        }),
+                    },
+                }));
+
+                setRecentMsg(formattedData);
+
+                // console.log('formattedData', formattedData);
             }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
         }
     }, [showChat]);
@@ -110,6 +128,7 @@ function App() {
                 alarmList={alarmList}
                 commentAlarm={commentAlarm}
                 setRecentMsg={setRecentMsg} // 전역으로 실시간 최신 메세지 업데이트
+                isEnter={isEnter} // 퇴장할 때마다, unreadMsg 업데이트
             />
 
             <Routes>
@@ -160,6 +179,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -174,6 +195,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -187,6 +210,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -202,6 +227,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -216,6 +243,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -230,6 +259,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -244,6 +275,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -257,6 +290,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -273,6 +308,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -289,6 +326,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -305,6 +344,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -319,6 +360,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -333,6 +376,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -348,6 +393,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -363,6 +410,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -378,6 +427,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />
@@ -394,6 +445,8 @@ function App() {
                             socket={socket}
                             recentMsg={recentMsg}
                             setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
                         />
                     }
                 />

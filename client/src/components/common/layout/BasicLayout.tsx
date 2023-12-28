@@ -17,6 +17,8 @@ export default function BasicLayout({
     socket,
     recentMsg,
     setRecentMsg,
+    isEnter,
+    setIsEnter,
 }: any) {
     return (
         <>
@@ -69,6 +71,8 @@ export default function BasicLayout({
                                         socket={socket}
                                         recentMsg={recentMsg}
                                         setRecentMsg={setRecentMsg}
+                                        isEnter={isEnter}
+                                        setIsEnter={setIsEnter}
                                     />
                                 ) : null}
                             </Item>

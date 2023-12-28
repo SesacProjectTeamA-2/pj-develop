@@ -224,14 +224,14 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
 
                                 {alarm.type == 'comment' ? (
                                     <p>
-                                        <Link
+                                        {/* <Link
                                             to={`/board/${Number(
                                                 alarm.gSeq
                                             )}/free/${Number(alarm.gbSeq)}`}
-                                        >
-                                            <b>{alarm.uName}</b> 님이 댓글을
-                                            남겼습니다.
-                                        </Link>
+                                        > */}
+                                        <b>{alarm.uName}</b> 님이 댓글을
+                                        남겼습니다.
+                                        {/* </Link> */}
                                     </p>
                                 ) : (
                                     <></>

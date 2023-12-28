@@ -180,9 +180,9 @@
 
 .chat-icon-container,
 .logout-icon-container,
+.alarm-icon-container,
 .mypage-icon-container {
     position: relative;
-    // font-family: 'Comfortaa', cursive;
     font-size: 0.9rem;
 }
 
@@ -227,6 +227,30 @@
     left: 20%;
 }
 
+.chat-icon-container:hover {
+    #chat-text {
+        opacity: 1;
+        transition: all 0.2s;
+    }
+}
+
+#alarm-btn {
+    width: 2rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    margin-left: 1.2rem;
+}
+
+.alarm-icon-container:hover {
+    #logout-text {
+        opacity: 1;
+        transition: all 0.2s;
+    }
+}
+
+.noti-chat-count-wrapper:hover + #chat-text,
 #chat-btn:hover + #chat-text,
 #logout-btn:hover + #logout-text,
 .mypage-icon-container:hover + #mypage-text {
@@ -392,15 +416,32 @@
 //     animation: rad 1s 2s both infinite;
 // }
 
-.noti-count-wrapper {
+.noti-count-wrapper,
+.noti-chat-count-wrapper {
     text-align: center;
+}
+
+.notification-chat-count {
+    position: absolute;
+    z-index: 1;
+    top: -1px;
+    right: -5px;
+    width: 21px;
+    height: 21px;
+    line-height: 22px;
+    font-size: 11px;
+    border-radius: 50%;
+    background-color: #d55841;
+    color: #fff;
+    animation: zoom 3s 3s both infinite;
+    cursor: pointer;
 }
 
 .notification-count {
     position: absolute;
     z-index: 1;
     top: 10px;
-    right: 10px;
+    right: 1px;
     width: 21px;
     height: 21px;
     line-height: 22px;
