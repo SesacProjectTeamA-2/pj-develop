@@ -68,6 +68,7 @@ exports.chatSocket = async (io, socket) => {
             if (Array.isArray(data.gSeq)) {
               data.gSeq.map((info) => {
                 const isExisting = groupChat.adapter.rooms.has(`room${info}`);
+
                 console.log(`room${info} 현재 생성되어 있음?`, isExisting);
                 // 방에 참가 및 notice
                 socket.to(`room${info}`).emit('loginNotice', {
@@ -88,7 +89,7 @@ exports.chatSocket = async (io, socket) => {
         });
 
         // 모임별 채팅에 대한 정보
-        socket.on('roomInfo', async () => {
+        socket.on('roomInfo', async (data) => {
           try {
             console.log('userinfo.gSeq>>>>', userInfo);
             const roomInfoArray = [];
@@ -104,25 +105,37 @@ exports.chatSocket = async (io, socket) => {
                 const listLength = await redisCli.lLen(`room${info}`);
                 if (listLength !== 0) {
                   const message = await redisCli.lIndex(`room${info}`, 0);
-                  const roomInfo = { gSeq: info, msg: JSON.parse(message) };
-                  roomInfoArray.push(roomInfo);
+
+                  // 해당 방에서 나갈때 0으로 세팅
+                  if (data.isOut === 'y') {
+                    const roomInfo = {
+                      gSeq: info,
+                      msg: JSON.parse(message),
+                    };
+                    roomInfoArray.push(roomInfo);
+                  } else {
+                    console.log(`room${info}에 아직 메세지가 없음!`);
+                  }
+
+                  console.log('roomInfoArray>>>', roomInfoArray);
+                  socket.emit('roomInfo', roomInfoArray);
                 } else {
-                  console.log(`room${info}에 아직 메세지가 없음!`);
+                  console.log(`gSeq is not Array!`);
+                  return;
                 }
               }
-              // 실시간으로 변동되는지...? check 필요
-
-              console.log('roomInfoArray>>>', roomInfoArray);
-              // 2. 안읽은 메세지 갯수
-
-              socket.emit('roomInfo', roomInfoArray);
-            } else {
-              console.log(`gSeq is not Array!`);
-              return;
             }
           } catch (err) {
             console.error('roomInfo 에러', err);
           }
+        });
+
+        // 구독자설정(로컬스토리지 개수 + 1)
+        await sub.subscribe(`newMsg${gSeq}`, (data) => {
+          const gSeq = data.gSeq;
+          const content = JSON.parse(data.content);
+
+          socket.emit('newMsg', { gSeq, content });
         });
 
         // 모임별 채팅방 입장시
@@ -152,6 +165,7 @@ exports.chatSocket = async (io, socket) => {
             } else {
               // 2. 이미 가입되어 있는 경우 채팅방 입장.
               const gSeq = data.gSeq;
+
               console.log('rooms목록: ', groupChat.adapter.rooms);
               // 룸에 접속중인 소켓 로드 (접속중인 소켓 없을 때는 빈 배열 반환)
               const result = groupChat.adapter.rooms.get(`room${gSeq}`);
@@ -232,6 +246,16 @@ exports.chatSocket = async (io, socket) => {
               JSON.stringify({ msg, timeStamp, uSeq, gSeq, uName })
             );
 
+            // publisher setting
+            await redisCli.publish(`newMsg${gSeq}`, {
+              gSeq,
+              content: JSON.stringify({
+                msg,
+                timeStamp,
+                uName,
+              }),
+            });
+
             // 만료시간 조회
             const expirationTime = await redisCli.ttl(`room${gSeq}`);
             // 메세지 유효시간 : 12시간
@@ -276,6 +300,7 @@ exports.chatSocket = async (io, socket) => {
             const gSeq = data.gSeq;
 
             console.log(groupChat.adapter.rooms);
+            // 저장된 캐시 update
             userInfo.gSeq = userInfo.gSeq.filter((seq) => seq !== gSeq);
 
             await redisCli.hSet(
@@ -300,7 +325,6 @@ exports.chatSocket = async (io, socket) => {
             console.log('User logged out:', socketId);
 
             // 유저 캐시 삭제
-
             await redisCli.del(`socket${uSeq}`);
 
             // userSocketMap 객체에서 특정 uSeq 키값을 삭제
