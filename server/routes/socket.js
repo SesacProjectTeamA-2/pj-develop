@@ -285,8 +285,9 @@ exports.chatSocket = async (io, socket) => {
         // 구독자설정(로컬스토리지 개수 + 1)
         userInfo.gSeq.forEach((gSeq) => {
           sub.subscribe(`newMsg${gSeq}`, (data) => {
-            const gSeq = data.gSeq;
-            const content = data.content;
+            const datas = JSON.parse(data);
+            const gSeq = datas.gSeq;
+            const content = datas.content;
 
             socket.emit('newMsg', { gSeq, content });
           });
