@@ -39,22 +39,22 @@ export default function Header(props: any) {
 
     //++ 연결 끊어졌을 경우, 재연결
     //-- 1. socket
-    useEffect(() => {
-        if (!props.socket) {
-            const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
-                path: '/socket.io',
-                reconnection: true,
-                reconnectionAttempts: Infinity,
-                reconnectionDelay: 1000, // 1초 간격으로 재시도
-                reconnectionDelayMax: 5000, // 최대 5초 간격으로 재시도
-                extraHeaders: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            });
+    // useEffect(() => {
+    //     if (!props.socket) {
+    //         const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
+    //             path: '/socket.io',
+    //             reconnection: true,
+    //             reconnectionAttempts: Infinity,
+    //             reconnectionDelay: 1000, // 1초 간격으로 재시도
+    //             reconnectionDelayMax: 5000, // 최대 5초 간격으로 재시도
+    //             extraHeaders: {
+    //                 Authorization: `Bearer ${uToken}`,
+    //             },
+    //         });
 
-            props.setSocket(newSocket);
-        }
-    }, []);
+    //         props.setSocket(newSocket);
+    //     }
+    // }, []);
 
     //-- 2. sse
     // useEffect(() => {
@@ -151,16 +151,17 @@ export default function Header(props: any) {
                 )
             );
 
-            // // props.setRecentMsg(content);
-            // props.setRecentMsg({
-            //     gSeq,
-            //     msg: formattedData,
-            // });
+            console.log('isEnter', props.isEnter);
 
-            // 새로운 메세지 왔을 경우, +1 count
-            let currentCount = localStorage.getItem(`gSeq${gSeq}`);
-            let newCount = parseInt(currentCount || '0', 10) + 1;
-            localStorage.setItem(`gSeq${gSeq}`, newCount.toString());
+            //; 새로운 메세지 왔을 경우, +1 count
+            // isEnter 채팅방 입장 시에는, 읽고 있는거니까 미확인 메세지 개수 0으로 설정
+            if (props.isEnter) {
+                localStorage.setItem(`gSeq${gSeq}`, '0');
+            } else {
+                let currentCount = localStorage.getItem(`gSeq${gSeq}`);
+                let newCount = parseInt(currentCount || '0', 10) + 1;
+                localStorage.setItem(`gSeq${gSeq}`, newCount.toString());
+            }
 
             //; localStorage 합산
             updateUnreadMsg();

@@ -61,7 +61,7 @@ export default function GroupSearchAll({
                 `${process.env.REACT_APP_DB_HOST}/group?search=%`
             );
 
-            console.log('검색결과', res.data.groupArray);
+            console.log('검색결과', res.data);
             console.log(res);
             setAllGroupList(res.data.groupArray);
         };
