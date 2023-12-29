@@ -156,6 +156,8 @@ export default function Header(props: any) {
             //; 새로운 메세지 왔을 경우, +1 count
             // isEnter 채팅방 입장 시에는, 읽고 있는거니까 미확인 메세지 개수 0으로 설정
             if (props.isEnter) {
+                // console.log('l>>>>>>>', localStorage.getItem(`gSeq${gSeq}`));
+
                 localStorage.setItem(`gSeq${gSeq}`, '0');
             } else {
                 let currentCount = localStorage.getItem(`gSeq${gSeq}`);
