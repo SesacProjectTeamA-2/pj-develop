@@ -1,18 +1,18 @@
 .summary-card-layout {
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 20px;
+    display: flex;
+    gap: 2rem;
     margin: 20px 10px;
 }
 
 .summary-paper {
-    min-width: 130px;
+    min-width: 100px;
     height: 100px;
+    padding: 0 1.5rem;
 
     display: flex;
-    justify-content: space-around;
-
+    gap: 1rem;
+    // justify-content: space-between;
     .summary-title-content {
         display: flex;
         flex-direction: column;
@@ -25,4 +25,10 @@
     img {
         width: 3em;
     }
+}
+
+.user-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

@@ -331,7 +331,7 @@ export default function Header(props: any) {
         // [추후] 로그아웃 모달창 처리
 
         //; 1. 관리자
-        if (props.adminUser) {
+        if (localStorage.getItem('adminUser') === 'true') {
             if (window.confirm('로그아웃하시겠습니까 ?')) {
                 // console.log('uSeqData ::::::', uSeqData);
 
@@ -340,6 +340,7 @@ export default function Header(props: any) {
                 // props.socket.emit('logout', { uSeq: 8 });
 
                 props.setAdminUser(false);
+                localStorage.removeItem('adminUser');
 
                 nvg('/login');
             } else {
@@ -492,14 +493,35 @@ export default function Header(props: any) {
             <div className="header-blur">
                 <div className="header-container">
                     {/* 로고 */}
-                    <div
-                        className="header-divOne"
-                        style={{ zIndex: '0', height: '120px' }}
-                    >
-                        <Link to="/">
+                    {localStorage.getItem('adminUser') === 'true' ? (
+                        <div
+                            className="header-divOne"
+                            style={{ zIndex: '0', height: '120px' }}
+                        >
                             <div className="title1 logo-text">MOTI</div>
-                        </Link>
-                    </div>
+                        </div>
+                    ) : (
+                        <div
+                            className="header-divOne"
+                            style={{ zIndex: '0', height: '120px' }}
+                        >
+                            <Link to="/">
+                                <div className="title1 logo-text">MOTI</div>
+                            </Link>
+                        </div>
+                    )}
+
+                    {/* // === admin === */}
+                    {/* {localStorage.getItem('adminUser') === 'true' ? (
+                        <div
+                            className="
+                        admin-welcome-text"
+                        >
+                            Welcome to Dashboard
+                        </div>
+                    ) : (
+                        <></>
+                    )} */}
 
                     {/* 회원가입 페이지 */}
                     {props.isJoinPage ? (
@@ -507,25 +529,41 @@ export default function Header(props: any) {
                     ) : (
                         <div className="header-divTwo pcMode">
                             <nav className="header-nav ">
-                                {/* <ThemeProvider theme={theme}> */}
-                                <input
-                                    type="text"
-                                    id="grpSearch-input"
-                                    value={grpInput}
-                                    placeholder="초대 링크를 넣어보세요"
-                                    onChange={(
-                                        e: React.ChangeEvent<HTMLInputElement>
-                                    ) => setGrpInput(e.target.value)}
-                                />
-                                <img
-                                    src="/asset/icons/search.svg"
-                                    id="grpSearch-btn"
-                                    onClick={(e: React.MouseEvent) =>
-                                        goInvited()
-                                    }
-                                    alt="search"
-                                ></img>
-
+                                {localStorage.getItem('adminUser') ===
+                                'true' ? (
+                                    <div
+                                        style={{
+                                            color: 'gray',
+                                            padding: '0 2rem',
+                                        }}
+                                    >
+                                        관리자로 로그인하셨습니다.
+                                    </div>
+                                ) : isCookie ? (
+                                    // ===login한 경우만 초대링크 ===
+                                    <>
+                                        {' '}
+                                        <input
+                                            type="text"
+                                            id="grpSearch-input"
+                                            value={grpInput}
+                                            placeholder="초대 링크를 넣어보세요"
+                                            onChange={(
+                                                e: React.ChangeEvent<HTMLInputElement>
+                                            ) => setGrpInput(e.target.value)}
+                                        />
+                                        <img
+                                            src="/asset/icons/search.svg"
+                                            id="grpSearch-btn"
+                                            onClick={(e: React.MouseEvent) =>
+                                                goInvited()
+                                            }
+                                            alt="search"
+                                        ></img>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
                                 <div id="navbar-animmenu">
                                     <ul className="show-dropdown main-navbar">
                                         <div className="hori-selector">
@@ -564,9 +602,12 @@ export default function Header(props: any) {
                                                         }
                                                     >
                                                         <Link to="/management">
-                                                            <Button className="menu-button">
+                                                            {/* <Button className="menu-button">
                                                                 Management
-                                                            </Button>
+                                                            </Button> */}
+                                                            {/* <div className="menu-button">
+                                                                Management
+                                                            </div> */}
                                                         </Link>
                                                     </li>
                                                 ) : (
@@ -575,18 +616,21 @@ export default function Header(props: any) {
                                             </div>
                                         ) : (
                                             <div className="menu-list-btn">
-                                                {props.adminUser ? (
+                                                {/* {props.adminUser ? ( */}
+                                                {localStorage.getItem(
+                                                    'adminUser'
+                                                ) === 'true' ? (
                                                     // === admin 경우 ===
                                                     <li
                                                         onClick={
                                                             adminActiveHandler
                                                         }
                                                     >
-                                                        <Link to="/management">
+                                                        {/* <Link to="/management">
                                                             <Button className="menu-button">
                                                                 Management
-                                                            </Button>
-                                                        </Link>
+                                                            </Button> 
+                                                        </Link> */}
                                                     </li>
                                                 ) : (
                                                     <>
@@ -632,7 +676,6 @@ export default function Header(props: any) {
                                         )}
                                     </ul>
                                 </div>
-
                                 {/* <ButtonGroup
                                     aria-label="outlined button group"
                                     variant="outlined"
@@ -650,13 +693,13 @@ export default function Header(props: any) {
                                         </Button>
                                     </Link> */}
                                 {/* </li> */}
-
                                 {/* </ButtonGroup> */}
                                 {/* </ThemeProvider> */}
-
                                 <ul className="menu">
                                     {!isCookie ? (
-                                        props.adminUser ? (
+                                        // props.adminUser ? (
+                                        localStorage.getItem('adminUser') ===
+                                        'true' ? (
                                             // === admin 경우 ===
                                             <li>
                                                 <ThemeProvider theme={theme}>
@@ -743,11 +786,18 @@ export default function Header(props: any) {
                                                     className="noti-count-wrapper"
                                                     onClick={alarmHandler}
                                                 >
-                                                    <span className="notification-count">
-                                                        {props.alarmCount < 100
-                                                            ? props.alarmCount
-                                                            : '99+'}
-                                                    </span>
+                                                    {props.alarmCount ===
+                                                    '0' ? (
+                                                        ''
+                                                    ) : (
+                                                        <span className="notification-count">
+                                                            {Number(
+                                                                props.alarmCount
+                                                            ) < 100
+                                                                ? props.alarmCount
+                                                                : '99+'}
+                                                        </span>
+                                                    )}
                                                 </div>
                                                 <span id="logout-text">
                                                     Alarm
