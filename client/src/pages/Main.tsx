@@ -103,6 +103,8 @@ export default function Main({
 
                 // 알람 count 받아오기
                 setAlarmCount(e.data);
+
+                localStorage.setItem('alarmCount', e.data);
             });
 
             //-- 미확인 알람 전체 리스트
@@ -133,6 +135,11 @@ export default function Main({
                 const eventData = JSON.parse(event.data);
 
                 console.log('commentAlarm ::::', eventData);
+                // commentTime: '2023-12-29T02:34:19.680Z';
+                // gSeq: '3';
+                // gbSeq: '22';
+                // type: 'comment';
+                // uName: '테스트111111';
 
                 setCommentAlarm(eventData);
             });
@@ -144,9 +151,12 @@ export default function Main({
 
                 const eventData = JSON.parse(event.data);
 
-                console.log('alarmCount ::::', eventData);
+                console.log('alarmCount - eventData ::::', eventData);
 
-                setCommentAlarm(eventData);
+                setAlarmCount(eventData);
+                localStorage.setItem('alarmCount', eventData.toString());
+
+                setAlarmCount(localStorage.getItem('alarmCount'));
             });
 
             // console.log(':::::::::::: 최초 로그인 시");

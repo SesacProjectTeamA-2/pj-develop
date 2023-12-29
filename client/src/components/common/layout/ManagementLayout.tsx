@@ -48,7 +48,7 @@ export default function ManagementLayout({ children, showChat }: any) {
                                 {' '}
                                 <Item
                                     style={{
-                                        padding: '7rem 3rem',
+                                        padding: '0',
                                         // paddingLeft: 0,
                                         // paddingRight: 0,
                                         // paddingTop: 0,
@@ -93,7 +93,7 @@ export default function ManagementLayout({ children, showChat }: any) {
                                         //     justifyContent: 'Center',
                                     }}
                                 >
-                                    <SidebarManagement />{' '}
+                                    <SidebarManagement />
                                 </Item>
                             </Grid>
                             <Grid
@@ -123,7 +123,11 @@ export default function ManagementLayout({ children, showChat }: any) {
                             ></Grid>
                         </>
                     )}
-                    <Footer />
+                    <div className="footer-layout-wrapper">
+                        <div className="fence"></div>
+
+                        <Footer />
+                    </div>
                 </Grid>
             </div>
         </>

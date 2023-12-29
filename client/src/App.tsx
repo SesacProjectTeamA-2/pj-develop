@@ -50,6 +50,9 @@ function App() {
     const [alarmList, setAlarmList] = useState<any>();
     const [commentAlarm, setCommentAlarm] = useState<any>();
 
+    console.log('alarmCount', alarmCount);
+    // console.log('commentAlarm', commentAlarm);
+
     //-- Header 채팅 아이콘 클릭 시 실행하는 함수
     const showChatting = (): void => {
         //     setShowChat(!showChat); // 채팅 사이드바 유무
