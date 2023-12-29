@@ -7,11 +7,6 @@ const {
   GroupBoardIcon,
   Mission,
 } = require('../models');
-// 로그인 된 사용자인지 아닌지 판별하려면 불러와야함
-const jwt = require('../modules/jwt');
-const authUtil = require('../middlewares/auth');
-const { token } = require('morgan');
-const score = require('../modules/rankSystem');
 
 exports.allUsers = async (req, res) => {
   try {
@@ -24,8 +19,8 @@ exports.allUsers = async (req, res) => {
       ],
     });
 
-    const user_group = userArray.map((arr) => arr.tb_groupUser);
-
+    const user_group = userArray.map((arr) => arr.tb_groupUsers);
+    console.log(user_group);
     res.send({
       allUser: userArray,
       joinGroup: user_group,
@@ -54,12 +49,11 @@ exports.allGroup = async (req, res) => {
     const groupArray = await Group.findAll();
 
     const groupUserArray = await GroupUser.findAll({
-      group: ['gSeq'],
-      attribute: ['gSeq'],
+      attributes: ['guSeq', 'gSeq'],
       include: [
         {
           model: User,
-          attribute: ['uName', 'uEmail'],
+          attributes: ['uName', 'uEmail'],
         },
       ],
     });
