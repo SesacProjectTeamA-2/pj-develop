@@ -39,6 +39,7 @@ function App() {
 
     //] 알람 sse 전역으로 관리
     const [sse, setSse] = useState<any>();
+    console.log('sse 여부 >>>>>>>', sse);
 
     const [showChat, setShowChat] = useState<boolean>(() => {
         // 로컬 스토리지에서 값을 읽어오기
@@ -132,6 +133,7 @@ function App() {
                 commentAlarm={commentAlarm}
                 setRecentMsg={setRecentMsg} // 전역으로 실시간 최신 메세지 업데이트
                 isEnter={isEnter} // 퇴장할 때마다, unreadMsg 업데이트
+                // isEnter인 경우에는 미확인 채팅 메세지 +1 안함
             />
 
             <Routes>
