@@ -90,6 +90,12 @@ exports.createComment = async (req, res) => {
       guSeq: guSeq,
     });
 
+    // 게시판 카테고리
+    const boardCategory = await GroupBoard.findOne({
+      where: { gbSeq },
+      attribute: ['gbCategory'],
+    });
+
     // redis에 캐시로 저장(알림 - hash)
     // (hash) 받는사람 : 게시글 작성자(gbSeq - uSeq)
     // (field) comment
@@ -124,6 +130,7 @@ exports.createComment = async (req, res) => {
         gbSeq,
         uName,
         gSeq,
+        category: boardCategory,
         commentTime,
       })
     );
