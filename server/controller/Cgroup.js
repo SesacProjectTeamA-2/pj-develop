@@ -1124,7 +1124,7 @@ exports.blackUser = async (req, res) => {
         const blackUser = await GroupUser.findOne({ where: { guSeq } });
         const blackTime = new Date();
         const receiver = blackUser.uSeq;
-        await redisCli.lPush(
+        const result = await redisCli.lPush(
           `user${receiver}`,
           JSON.stringify({
             type: 'groupAlarm',
@@ -1147,10 +1147,13 @@ exports.blackUser = async (req, res) => {
         await redisCli.publish(
           'group-alarm',
           JSON.stringify({
-            type: 'groupAlarm',
-            gSeq,
-            uName,
-            blackTime,
+            alarmCount: result,
+            message: {
+              type: 'groupAlarm',
+              gSeq,
+              uName,
+              blackTime,
+            },
           })
         );
       } else {

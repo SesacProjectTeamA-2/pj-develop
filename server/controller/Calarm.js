@@ -40,22 +40,28 @@ exports.alarming = async (req, res) => {
       res.write('event: connected\n' + `data: ${alarmCount}\n\n`);
 
       res.write('event: allAlarm\n' + `data: ${JSON.stringify(allAlarm)}\n\n`);
+      console.log('>>>>>>>>>>>>>>>', alarmCount);
 
-      // redis에 댓글추가시 메세지 전송 + count 1.
-      await sub.subscribe('comment-alarm', (message) => {
-        console.log('message', message);
-        res.write('event: commentAlarm\n' + `data:${message}\n\n`);
+      // 댓글 작성시 메세지 전송
+      await sub.subscribe('comment-alarm', (data) => {
+        const datas = JSON.parse(data);
         res.write(
-          'event: alarmCount\n' + `data: ${parseInt(alarmCount) + 1}\n\n`
+          'event: commentAlarm\n' + `data:${JSON.stringify(datas.message)}\n\n`
+        );
+        res.write(
+          'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
         );
       });
 
-      // 모임 추방시 메세지 전송 + count 1.
-      await sub.subscribe('group-alarm', (message) => {
+      // 모임 추방시 메세지 전송
+      await sub.subscribe('group-alarm', (data) => {
         console.log('message', message);
-        res.write('event: groupAlarm\n' + `data:${message}\n\n`);
+        const datas = JSON.parse(data);
         res.write(
-          'event: alarmCount\n' + `data: ${parseInt(alarmCount) + 1}\n\n`
+          'event: groupAlarm\n' + `data:${JSON.stringify(datas.message)}\n\n`
+        );
+        res.write(
+          'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
         );
       });
       // });
