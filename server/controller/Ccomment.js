@@ -95,6 +95,7 @@ exports.createComment = async (req, res) => {
       where: { gbSeq },
       attribute: ['gbCategory'],
     });
+    const category = boardCategory.gbCategory;
 
     // redis에 캐시로 저장(알림 - hash)
     // (hash) 받는사람 : 게시글 작성자(gbSeq - uSeq)
@@ -109,10 +110,11 @@ exports.createComment = async (req, res) => {
         gbSeq,
         uName,
         gSeq,
+        category,
         commentTime,
       })
     );
-    console.log(result);
+
     // 만료시간 조회
     const expirationTime = await redisCli.ttl(`user${receiver}`);
     // 유효시간 7일
@@ -126,12 +128,15 @@ exports.createComment = async (req, res) => {
     const result2 = await redisCli.publish(
       'comment-alarm',
       JSON.stringify({
-        type: 'comment',
-        gbSeq,
-        uName,
-        gSeq,
-        category: boardCategory,
-        commentTime,
+        alarmCount: result,
+        message: {
+          type: 'comment',
+          gbSeq,
+          uName,
+          gSeq,
+          category,
+          commentTime,
+        },
       })
     );
     console.log(result2);
