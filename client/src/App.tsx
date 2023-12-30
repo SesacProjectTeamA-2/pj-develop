@@ -78,6 +78,7 @@ function App() {
 
     useEffect(() => {
         if (showChat) {
+            console.log('###### 채팅방 !!!');
             socket?.emit('roomInfo', { isOut: '' });
 
             // 서버에서 보낸 data
@@ -105,6 +106,36 @@ function App() {
             }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
         }
     }, [showChat]);
+
+    // useEffect(() => {
+    //     socket?.emit('roomInfo', { isOut: '' });
+
+    //     console.log('###### 채팅방 !!!');
+
+    //     // 서버에서 보낸 data
+    //     socket?.on('roomInfo', (data: any) => {
+    //         console.log('roomInfo event received on client :::', data);
+
+    //         // 시간 변환
+    //         const formattedData = data?.map((msgObj: any) => ({
+    //             ...msgObj,
+    //             msg: {
+    //                 ...msgObj.msg,
+    //                 timeStamp: new Date(
+    //                     msgObj.msg.timeStamp
+    //                 ).toLocaleTimeString([], {
+    //                     hour: 'numeric',
+    //                     minute: '2-digit',
+    //                     hour12: true,
+    //                 }),
+    //             },
+    //         }));
+
+    //         setRecentMsg(formattedData);
+
+    //         // console.log('formattedData', formattedData);
+    //     }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
+    // }, []);
 
     // admin 인증
     const [adminUser, setAdminUser] = useState(false);

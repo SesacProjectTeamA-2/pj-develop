@@ -122,6 +122,37 @@ export default function Header(props: any) {
             });
     };
 
+    //] 최신 메세지 가져오기
+    const getRecentMsg = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/chat/roomInfo`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                console.log(res.data.roomInfoArray);
+                const { roomInfoArray } = res.data;
+
+                // 시간 변환
+                const formattedData = roomInfoArray?.map((msgObj: any) => ({
+                    ...msgObj,
+                    msg: {
+                        ...msgObj.msg,
+                        timeStamp: new Date(
+                            msgObj.msg.timeStamp
+                        ).toLocaleTimeString([], {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true,
+                        }),
+                    },
+                }));
+
+                props.setRecentMsg(formattedData);
+            });
+    };
+
     //] 실시간으로 채팅 메세지 오면 업데이트
     useEffect(() => {
         console.log('newMsg Event data ::::');
@@ -143,6 +174,8 @@ export default function Header(props: any) {
             console.log('newMsg Event gSeq, content ::::', gSeq, content);
 
             console.log('formattedData', formattedData);
+
+            // getRecentMsg();
 
             // gSeq가 같은 데이터만 업데이트
             props.setRecentMsg((prevRecentMsg: any) =>
@@ -168,6 +201,10 @@ export default function Header(props: any) {
             //; localStorage 합산
             updateUnreadMsg();
         });
+    }, [props.socket]);
+
+    useEffect(() => {
+        getRecentMsg();
     }, [props.socket]);
 
     // 1. 실시간 메세지 개수 -> Header : 채팅 알람 개수

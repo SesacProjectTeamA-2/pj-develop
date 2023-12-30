@@ -429,57 +429,101 @@ export default function ChatRoom({
     const [leaveRoom, setLeaveRoom] = useState(false);
 
     //] 방 나가기
+    // const leaveHandler = async () => {
+    //     setIsSent(false);
+
+    //     try {
+    //         // socket?.emit를 비동기적으로 수행하고 leaveRoom이 true로 설정된 후에 진행
+    //         await new Promise((resolve) => {
+    //             socket?.emit('roomInfo', { isOut: 'y' }, resolve);
+    //         });
+
+    //         // localStorage 에서 해당 방의 미확인 메세지 개수 0 으로 세팅
+    //         localStorage.setItem(`gSeq${nowGSeq}`, '0');
+
+    //         // 서버에서 보낸 data
+    //         socket?.on('roomInfo', (data: any) => {
+    //             console.log('roomInfo 퇴장 :::', data);
+    //             // setRecentMsg(data); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
+
+    //             // 시간 변환
+    //             const formattedData = data?.map((msgObj: any) => ({
+    //                 ...msgObj,
+    //                 msg: {
+    //                     ...msgObj.msg,
+    //                     timeStamp: new Date(
+    //                         msgObj.msg.timeStamp
+    //                     ).toLocaleTimeString([], {
+    //                         hour: 'numeric',
+    //                         minute: '2-digit',
+    //                         hour12: true,
+    //                     }),
+    //                 },
+    //             }));
+
+    //             setRecentMsg(formattedData);
+    //             setIsEnter(false);
+
+    //             console.log('나가요!!!!!!!!!!!!!!!!!!');
+    //         });
+    //     } catch (error) {
+    //         console.error('Error leaving room:', error);
+    //     }
+    // };
+
     const leaveHandler = () => {
         setIsSent(false);
-        setLeaveRoom(true);
+        setIsEnter(false);
+        // setLeaveRoom(true);
+        // console.log('leaveRoom', leaveRoom);
     };
 
-    useEffect(() => {
-        //; 방 나가면 : roomInfo 수행
-        if (leaveRoom) {
-            // const socketRoomInfoOut = () => {
-            socket?.emit('roomInfo', { isOut: 'y' });
+    // useEffect(() => {
+    //     //; 방 나가면 : roomInfo 수행
+    //     if (leaveRoom) {
+    //         // const socketRoomInfoOut = () => {
+    //         socket?.emit('roomInfo', { isOut: 'y' });
 
-            // localStorage 에서 해당 방의 미확인 메세지 개수 0 으로 세팅
-            localStorage.setItem(`gSeq${nowGSeq}`, '0');
+    //         // localStorage 에서 해당 방의 미확인 메세지 개수 0 으로 세팅
+    //         localStorage.setItem(`gSeq${nowGSeq}`, '0');
 
-            // 서버에서 보낸 data
-            socket?.on('roomInfo', (data: any) => {
-                console.log('roomInfo 퇴장 :::', data);
-                // setRecentMsg(data); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
+    //         // 서버에서 보낸 data
+    //         socket?.on('roomInfo', (data: any) => {
+    //             console.log('roomInfo 퇴장 :::', data);
+    //             // setRecentMsg(data); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
 
-                // 시간 변환
-                const formattedData = data?.map((msgObj: any) => ({
-                    ...msgObj,
-                    msg: {
-                        ...msgObj.msg,
-                        timeStamp: new Date(
-                            msgObj.msg.timeStamp
-                        ).toLocaleTimeString([], {
-                            hour: 'numeric',
-                            minute: '2-digit',
-                            hour12: true,
-                        }),
-                    },
-                }));
+    //             // 시간 변환
+    //             const formattedData = data?.map((msgObj: any) => ({
+    //                 ...msgObj,
+    //                 msg: {
+    //                     ...msgObj.msg,
+    //                     timeStamp: new Date(
+    //                         msgObj.msg.timeStamp
+    //                     ).toLocaleTimeString([], {
+    //                         hour: 'numeric',
+    //                         minute: '2-digit',
+    //                         hour12: true,
+    //                     }),
+    //                 },
+    //             }));
 
-                setRecentMsg(formattedData);
-                setIsEnter(false);
+    //             setRecentMsg(formattedData);
+    //             setIsEnter(false);
 
-                console.log('나가요!!!!!!!!!!!!!!!!!!');
-            });
-        }
+    //             console.log('나가요!!!!!!!!!!!!!!!!!!');
+    //         });
+    //     }
 
-        //; 방 나가면 : roomInfo 수행
-        // if (leaveRoom) {
-        //     socketRoomInfoOut();
-        // }
+    //; 방 나가면 : roomInfo 수행
+    // if (leaveRoom) {
+    //     socketRoomInfoOut();
+    // }
 
-        // 컴포넌트가 언마운트될 때 이전에 등록된 이벤트 리스너를 정리
-        // return () => {
-        //     socket?.off('roomInfo', socketRoomInfoOut);
-        // };
-    }, [leaveRoom]);
+    // 컴포넌트가 언마운트될 때 이전에 등록된 이벤트 리스너를 정리
+    // return () => {
+    //     socket?.off('roomInfo', socketRoomInfoOut);
+    // };
+    // }, [leaveRoom]);
 
     console.log(msgData);
     console.log('allMsg', allMsg);
