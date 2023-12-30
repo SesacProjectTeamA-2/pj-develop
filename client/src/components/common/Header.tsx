@@ -14,6 +14,8 @@ import Alarm from './Alarm';
 
 // 수정했습니다.
 
+// 제 2차 수정합니다.
+
 export default function Header(props: any) {
     const [isCookie, setIsCookie] = useState(false); // 쿠키 유무
 
