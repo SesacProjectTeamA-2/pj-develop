@@ -60,10 +60,12 @@ const options = {
     origin: [
       // 프론트
       `${process.env.SERVER_DEV_URL}:${process.env.FRONT_DEV_PORT}`, // 로컬
-      `${process.env.SERVER_PROD_DOMAIN}:${process.env.FRONT_PROD_PORT}`, // 배포
+      // `${process.env.SERVER_PROD_DOMAIN}:${process.env.FRONT_PROD_PORT}`, // 배포
+      `${process.env.SERVER_PROD_URL}:${process.env.FRONT_PROD_PORT}`, // 배포
       // 서버
       `${process.env.SERVER_DEV_URL}:${process.env.SERVER_DEV_PORT}`, // 로컬
-      `${process.env.SERVER_PROD_DOMAIN}:${process.env.SERVER_PROD_PORT}`, // 배포
+      // `${process.env.SERVER_PROD_DOMAIN}:${process.env.SERVER_PROD_PORT}`, // 배포
+      `${process.env.SERVER_PROD_URL}:${process.env.SERVER_PROD_PORT}`, // 배포
     ],
 
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
