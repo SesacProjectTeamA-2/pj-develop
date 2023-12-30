@@ -1,8 +1,4 @@
 //; Intro 화면의 MOTIMATES
-
-import React from 'https://cdn.skypack.dev/react';
-import ReactDOM from 'https://cdn.skypack.dev/react-dom';
-
 export default Text = ({ value }) => (
     <div className="text">
         {value.split('').map((char, i) => (
