@@ -23,6 +23,8 @@ export default function GroupLayout({
     setRecentMsg,
     isEnter,
     setIsEnter,
+    allGroupInfo,
+    setAllGroupInfo,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -136,6 +138,8 @@ export default function GroupLayout({
                                         setRecentMsg={setRecentMsg}
                                         isEnter={isEnter}
                                         setIsEnter={setIsEnter}
+                                        allGroupInfo={allGroupInfo}
+                                        setAllGroupInfo={setAllGroupInfo}
                                     />
                                 ) : null}
                             </Item>

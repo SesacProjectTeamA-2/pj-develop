@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { Cookies } from 'react-cookie';
+import axios from 'axios';
 
 import './styles/scss/base/reset.scss';
 
@@ -34,6 +36,9 @@ import MissionPost from './pages/group/MissionPost';
 import BoardMissionEdit from './pages/group/BoardMissionEdit';
 
 function App() {
+    const cookie = new Cookies();
+    const uToken = cookie.get('isUser');
+
     //] socket 전역으로 관리
     const [socket, setSocket] = useState<any>();
 
@@ -68,6 +73,44 @@ function App() {
     const [isLogin, setIsLogin] = useState<boolean>(false);
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
     const [initialLogin, setInitialLogin] = useState<any>(false);
+
+    const [allGroupInfo, setAllGroupInfo] = useState<any>([]); // 모든 모임(리더+멤버) 관리
+
+    // //] 유저 생성 모임
+    // const getMadeGroup = async () => {
+    //     const res = await axios
+    //         .get(`${process.env.REACT_APP_DB_HOST}/group/made`, {
+    //             headers: {
+    //                 Authorization: `Bearer ${uToken}`,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             const { groupInfo } = res.data;
+    //             setAllGroupInfo(groupInfo);
+    //         });
+    // };
+
+    // // ] 유저 가입 모임
+    // const getJoinedGroup = async () => {
+    //     const res = await axios
+    //         .get(`${process.env.REACT_APP_DB_HOST}/group/joined`, {
+    //             headers: {
+    //                 Authorization: `Bearer ${uToken}`,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             const { groupInfo } = res.data;
+    //             setAllGroupInfo((prev: any) => [...prev, ...groupInfo]);
+    //         });
+    // };
+
+    // useEffect(() => {
+    //     getMadeGroup();
+    //     getJoinedGroup();
+    // }, []);
+
+    console.log('allGroupInfo APP >>>>', allGroupInfo);
+
     const [recentMsg, setRecentMsg] = useState<any>(); // 방 나갈 때, 최신 메세지
     const [isEnter, setIsEnter] = useState(false); // 입장/나가기
 
@@ -78,7 +121,6 @@ function App() {
 
     useEffect(() => {
         if (showChat) {
-            console.log('###### 채팅방 !!!');
             socket?.emit('roomInfo', { isOut: '' });
 
             // 서버에서 보낸 data
@@ -165,6 +207,8 @@ function App() {
                 setRecentMsg={setRecentMsg} // 전역으로 실시간 최신 메세지 업데이트
                 isEnter={isEnter} // 퇴장할 때마다, unreadMsg 업데이트
                 // isEnter인 경우에는 미확인 채팅 메세지 +1 안함
+                allGroupInfo={allGroupInfo}
+                setAllGroupInfo={setAllGroupInfo}
             />
 
             <Routes>
@@ -217,6 +261,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -233,6 +279,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -248,6 +296,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -265,6 +315,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -281,6 +333,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -297,6 +351,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -313,6 +369,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -328,6 +386,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -346,6 +406,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -364,6 +426,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -382,6 +446,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -398,6 +464,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -414,6 +482,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -431,6 +501,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -448,6 +520,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -465,6 +539,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />
@@ -483,6 +559,8 @@ function App() {
                             setRecentMsg={setRecentMsg}
                             isEnter={isEnter}
                             setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
                         />
                     }
                 />

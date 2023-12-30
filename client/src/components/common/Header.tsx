@@ -12,10 +12,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../../styles/scss/layout/header.scss';
 import Alarm from './Alarm';
 
-// 수정했습니다.
-
-// 제 2차 수정합니다.
-
 export default function Header(props: any) {
     const [isCookie, setIsCookie] = useState(false); // 쿠키 유무
 
@@ -127,6 +123,7 @@ export default function Header(props: any) {
     };
 
     //] 최신 메세지 가져오기
+    //_ newMsg 최신 메세지 받아오면 실행 X
     const getRecentMsg = async () => {
         const res = await axios
             .get(`${process.env.REACT_APP_DB_HOST}/chat/roomInfo`, {
@@ -154,16 +151,75 @@ export default function Header(props: any) {
                 }));
 
                 props.setRecentMsg(formattedData);
+
+                //~ 삭제예정
+                //; 최신순으로 allGroupInfo 정렬
+                // if (props.allGroupInfo?.length > 0) {
+                //     const sortedAllGroupInfo = [...props.allGroupInfo]
+                //         .sort((a, b) => {
+                //             const getTimeStamp = (data: any) =>
+                //                 roomInfoArray.find(
+                //                     (item: any) => item.gSeq === data.gSeq
+                //                 )?.msg.timeStamp;
+
+                //             const timeStampA = roomInfoArray.some(
+                //                 (data: any) => data.gSeq === a.gSeq && data.msg
+                //             )
+                //                 ? getTimeStamp(a)
+                //                 : undefined;
+
+                //             const timeStampB = roomInfoArray.some(
+                //                 (data: any) => data.gSeq === b.gSeq && data.msg
+                //             )
+                //                 ? getTimeStamp(b)
+                //                 : undefined;
+
+                //             // gSeq가 recentMsg에 있는 경우를 먼저 정렬
+                //             return (
+                //                 (timeStampB &&
+                //                     timeStampA &&
+                //                     new Date(timeStampB).getTime() -
+                //                         new Date(timeStampA).getTime()) ||
+                //                 (timeStampB ? -1 : timeStampA ? 1 : 0)
+                //             );
+                //         })
+                //         .sort((a, b) => {
+                //             const hasTimeStampA = roomInfoArray.some(
+                //                 (data: any) => data.gSeq === a.gSeq && data.msg
+                //             );
+                //             const hasTimeStampB = roomInfoArray.some(
+                //                 (data: any) => data.gSeq === b.gSeq && data.msg
+                //             );
+
+                //             // gSeq가 recentMsg에 있는 경우를 먼저 정렬
+                //             return hasTimeStampA && hasTimeStampB
+                //                 ? 0
+                //                 : hasTimeStampA
+                //                 ? -1
+                //                 : hasTimeStampB
+                //                 ? 1
+                //                 : 0;
+                //         });
+
+                //     props.setAllGroupInfo(sortedAllGroupInfo);
+
+                //     // 정렬된 allGroupInfo
+                //     console.log(
+                //         'sortedAllGroupInfo>>>>>>>',
+                //         sortedAllGroupInfo
+                //     );
+                // }
             });
     };
 
     //] 실시간으로 채팅 메세지 오면 업데이트
+    //_ newMsg 최신 메세지 받아오면 실행 O
     useEffect(() => {
         console.log('newMsg Event data ::::');
 
-        props.socket?.on('newMsg', (data: any) => {
-            const gSeq = data.gSeq;
-            const content = data.content; // 최신 메세지 내용, 시간
+        props.socket?.on('newMsg', (newMsgData: any) => {
+            const gSeq = newMsgData.gSeq;
+            const content = newMsgData.content; // 최신 메세지 내용, 시간
 
             const formattedData = {
                 ...content,
@@ -174,12 +230,45 @@ export default function Header(props: any) {
                 }),
             };
 
-            console.log('newMsg Event data ::::', data);
+            console.log('newMsg Event newMsgData ::::', newMsgData);
             console.log('newMsg Event gSeq, content ::::', gSeq, content);
 
             console.log('formattedData', formattedData);
 
-            // getRecentMsg();
+            console.log(
+                '+++++++newMsg - props.allGroupInfo>>>>>>>',
+                props.allGroupInfo
+            );
+
+            //; 최신순으로 allGroupInfo 정렬
+            //) 주의할 점 ! --> newMsgData는 배열이 아닌, 객체 형태 (하나만 전송)
+            //) ChatList에서의 getRecentMsg axios와 다릅니다 !
+            //) => props.allGroupInfo에서 newMsgData를 무조건 제일 위에 정렬 !!!
+            // const newMsgData = {
+            //     gSeq: 1,
+            //     content: {
+            //         msg: 'haha',
+            //         timeStamp: '2023-12-30T07:02:47.085Z',
+            //         uName: 'TTTest222222',
+            //     },
+            // };
+            // if (props.allGroupInfo?.length > 0) {
+            const sortedAllGroupInfo = [...props.allGroupInfo].sort((a, b) => {
+                return a.gSeq === newMsgData.gSeq
+                    ? -1
+                    : b.gSeq === newMsgData.gSeq
+                    ? 1
+                    : 0;
+            });
+
+            props.setAllGroupInfo(sortedAllGroupInfo);
+
+            // 정렬된 allGroupInfo
+            console.log(
+                'newMsg - sortedAllGroupInfo>>>>>>>',
+                sortedAllGroupInfo
+            );
+            // }
 
             // gSeq가 같은 데이터만 업데이트
             props.setRecentMsg((prevRecentMsg: any) =>
@@ -205,10 +294,11 @@ export default function Header(props: any) {
             //; localStorage 합산
             updateUnreadMsg();
         });
-    }, [props.socket]);
+    }, [props.socket, props.allGroupInfo]);
 
     useEffect(() => {
-        getRecentMsg();
+        getRecentMsg(); // axios
+        //_ newMsg 최신 메세지 받아오면 실행 X
     }, [props.socket]);
 
     // 1. 실시간 메세지 개수 -> Header : 채팅 알람 개수
