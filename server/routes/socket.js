@@ -87,47 +87,6 @@ exports.chatSocket = async (io, socket) => {
           }
         });
 
-        // 모임별 채팅에 대한 정보
-        socket.on("roomInfo", async (data) => {
-          try {
-            console.log("userinfo.gSeq>>>>", userInfo);
-            const roomInfoArray = [];
-
-            // 1. 모임의 마지막 메세지 정보 송출
-            if (Array.isArray(userInfo.gSeq)) {
-              // 아래와같이 사용할 경우, map이 끝날때까지 기다리지 않음 => map에 대한 동작을 변수로 할당해 promise.all() 사용해야한다.
-              // userInfo.gSeq.map(async (info) => {
-              //   const message = await redisCli.lRange(`room${info}`, -1, -1);
-              //   socket.emit('roomInfo', JSON.parse(message));});
-
-              for (const info of userInfo.gSeq) {
-                const listLength = await redisCli.lLen(`room${info}`);
-                if (listLength !== 0) {
-                  const message = await redisCli.lIndex(`room${info}`, 0);
-
-                  // 해당 방에서 나갈때 0으로 세팅
-                  // if (data.isOut === "y") {
-                  const roomInfo = {
-                    gSeq: info,
-                    msg: JSON.parse(message),
-                  };
-                  roomInfoArray.push(roomInfo);
-                  // } else {
-                  //   console.log(`room${info}에 아직 메세지가 없음!`);
-                  // }
-
-                  console.log("roomInfoArray>>>", roomInfoArray);
-                } else {
-                  console.log(`gSeq is not Array333!`);
-                }
-              }
-              console.log("!!!!", roomInfoArray);
-              socket.emit("roomInfo", roomInfoArray);
-            }
-          } catch (err) {
-            console.error("roomInfo 에러", err);
-          }
-        });
 
         // 모임별 채팅방 입장시
         socket.on("joinRoom", async (data) => {
