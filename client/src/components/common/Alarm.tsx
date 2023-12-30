@@ -161,25 +161,57 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
 
     //] 읽음 처리
     const cookie = new Cookies();
-    const uToken = cookie.get('isUser'); // 토큰 값
+    const uToken = cookie.get('isUser');
 
-    const readHandler = async (idx: number) => {
-        console.log(idx);
+    const deleteAlarm = async (commentInfo: any) => {
+        const res = await axios
+            .delete(`${process.env.REACT_APP_DB_HOST}/subscribe/alarm`, {
+                // 삭제할 데이터 전송
+                data: commentInfo,
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                console.log(res);
+            });
     };
 
-    // const deleteAlarm = async () => {
-    //     const res = await axios
-    //         .delete(`${process.env.REACT_APP_DB_HOST}/subscribe/alarm`, {
-    //             //~ 삭제할 데이터 전송
-    //             // commentInfo,
-    //             headers: {
-    //                 Authorization: `Bearer ${uToken}`,
-    //             },
-    //         })
-    //         .then((res) => {
-    //             console.log(res);
-    //         });
-    // };
+    const readHandler = async (idx: number) => {
+        // 기존 알람 중 클릭한 데이터
+        // console.log(formattedAlarms[idx]);
+
+        //-- 1. 서버에 데이터 삭제 요청
+        deleteAlarm(alarmList[idx]);
+
+        //-- 2. 프론트에서 해당 데이터 삭제
+        // const noti = document.querySelector('notification');
+
+        // noti의 자식 요소들을 NodeList로 가져오기
+        const notiItems = document.querySelectorAll('.notification');
+
+        // 해당 인덱스의 .notification 요소를 선택
+        const specificNotification = notiItems[idx];
+
+        if (specificNotification) {
+            // 선택된 .notification 요소의 모든 자식 요소를 제거
+            while (specificNotification.firstChild) {
+                const firstChild = specificNotification.firstChild;
+                if (firstChild) {
+                    specificNotification.removeChild(firstChild);
+                }
+            }
+        }
+
+        //-- 3. 알람 수 -1
+        const currentAlarmCount = localStorage.getItem('alarmCount');
+
+        if (currentAlarmCount) {
+            // 현재 알람 수를 1 감소시키고 문자열로 변환하여 다시 저장
+            const newAlarmCount = (Number(currentAlarmCount) - 1).toString();
+            localStorage.setItem('alarmCount', newAlarmCount);
+        }
+    };
 
     //++ 선 동적으로 처리
     useEffect(() => {

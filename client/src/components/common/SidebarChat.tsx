@@ -53,6 +53,8 @@ export default function SidebarChat({
                     showChatting={showChatting}
                     showChat={showChat}
                     recentMsg={recentMsg}
+                    socket={socket}
+                    setRecentMsg={setRecentMsg}
                 />
             ) : (
                 <ChatRoom

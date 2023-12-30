@@ -11,9 +11,28 @@ export default function ChatList({
     setNowGName,
     showChatting,
     recentMsg,
+    socket,
+    setRecentMsg,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
+
+    //=== 기존 방법
+    // 1. axios 요청으로 LeaderGroup, memberGroup 모임 => 2개 state
+    // 2. map => LeaderGroup |||||| map => memberGroup
+
+    //=== 다른 방법
+    // 1. axios 요청으로 LeaderGroup, memberGroup 모임
+    //    => LeaderGroup + memberGroup => 하나의 state로 관리....
+    // 2. map => 하나의 state만
+    //    --> recentMsg 기준으로 (정렬)
+    //        1) 가장 최신 2) 있으면 3) else 없음
+
+    //===> 최신순 / 리더|멤버별
+    // 버튼 state로 관리
+
+    const [allGroupInfo, setAllGroupInfo] = useState<any>(); // 리더+멤버 모든 모임 관리
+    const [sorted, setSorted] = useState('recent'); // 정렬 기준
 
     // ] 유저 가입 모임
     const getJoinedGroup = async () => {
@@ -27,6 +46,7 @@ export default function ChatList({
                 const { groupInfo } = res.data;
 
                 setJoinGroupInfo(groupInfo);
+                setAllGroupInfo((prev: any) => [...prev, ...groupInfo]);
             });
     };
 
@@ -47,12 +67,45 @@ export default function ChatList({
             .then((res) => {
                 const { groupInfo } = res.data;
 
-                setMadeGroupInfo(groupInfo);
+                setAllGroupInfo((prev: any) => [...prev, ...groupInfo]);
+            });
+    };
+    console.log('allGroupInfo>>>>', allGroupInfo);
+
+    //] 최신 메세지 가져오기
+    const getRecentMsg = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/chat/roomInfo`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                console.log(res.data.roomInfoArray);
+                const { roomInfoArray } = res.data;
+
+                // 시간 변환
+                const formattedData = roomInfoArray?.map((msgObj: any) => ({
+                    ...msgObj,
+                    msg: {
+                        ...msgObj.msg,
+                        timeStamp: new Date(
+                            msgObj.msg.timeStamp
+                        ).toLocaleTimeString([], {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true,
+                        }),
+                    },
+                }));
+
+                setRecentMsg(formattedData);
             });
     };
 
     useEffect(() => {
         getMadeGroup();
+        getRecentMsg();
     }, []);
 
     const [madeGroupInfo, setMadeGroupInfo] = useState<any>([]);
@@ -63,7 +116,39 @@ export default function ChatList({
         setIsEnter(true);
     };
 
-    console.log('방 퇴장 시 recentMsg', recentMsg);
+    useEffect(() => {
+        if (!isEnter) {
+            socket?.emit('roomInfo', { isOut: '' });
+
+            console.log('###### 채팅방 !!!');
+
+            // 서버에서 보낸 data
+            socket?.on('roomInfo', (data: any) => {
+                console.log('roomInfo event received on client :::', data);
+
+                // 시간 변환
+                const formattedData = data?.map((msgObj: any) => ({
+                    ...msgObj,
+                    msg: {
+                        ...msgObj.msg,
+                        timeStamp: new Date(
+                            msgObj.msg.timeStamp
+                        ).toLocaleTimeString([], {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true,
+                        }),
+                    },
+                }));
+
+                setRecentMsg(formattedData);
+
+                // console.log('formattedData', formattedData);
+            }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
+        }
+    }, []);
+
+    console.log('ChatList에서 recentMsg', recentMsg);
 
     return (
         <div className="chat-list-wrapper">
@@ -94,6 +179,7 @@ export default function ChatList({
                         현재 참여한 채팅방이 없어요 !
                     </div>
                 ) : (
+                    //=== 리더 & 멤버
                     madeGroupInfo?.map((group: any, idx: number) => {
                         return (
                             <li
