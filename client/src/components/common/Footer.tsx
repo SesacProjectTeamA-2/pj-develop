@@ -56,7 +56,7 @@ export default function Footer() {
                         </div>
                     </p>
 
-                    <p>
+                    <p className="origin-team-wrapper">
                         <div className="team-title">Origin</div>
                         <div className="team-member">
                             <div>
@@ -75,7 +75,6 @@ export default function Footer() {
 
                 {/* LINK */}
                 <div className="link-wrapper social-links">
-                    {/* <h2>L I N K</h2> */}
                     <h2>Link</h2>
                     <div className="social-icons">
                         <li>
@@ -183,14 +182,7 @@ export default function Footer() {
                     </div>
                 </div>
             </div>
-
-            {/* 기존 footer */}
-
-            <div className="word-break">
-                <span>Skill</span> React, Typescript, Node.js, etc{' '}
-            </div>
-
-            <footer>
+            {/* <div>
                 Created for
                 <a
                     href="https://polydactyl-cello-2db.notion.site/Motimates-4617b0dbabe640deb5336bb2dddcd54a?pvs=4"
@@ -199,7 +191,14 @@ export default function Footer() {
                     Portfolio
                 </a>
                 @Motimates
-            </footer>
+            </div> */}
+
+            {/* 기존 footer */}
+
+            {/* <div className="word-break">
+                <span>Skill</span> React, Typescript, Node.js, etc{' '}
+            </div> */}
+
             {/* </div> */}
         </div>
     );

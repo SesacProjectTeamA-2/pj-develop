@@ -89,6 +89,9 @@ export default function Login(props: any) {
 
         if (pwValue === '1234') {
             props.setAdminUser(true);
+
+            localStorage.setItem('adminUser', 'true');
+
             navigate('/management');
         } else {
             setIsPasswordIncorrect(true);

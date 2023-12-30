@@ -1,5 +1,6 @@
 @import '../abstracts/variables';
 @import '../abstracts/utils';
+@import '~include-media/dist/include-media';
 
 .main1-div {
     width: 100%;
@@ -82,6 +83,10 @@
     height: fit-content;
     width: 100%;
     padding: 6rem 0 3rem 0;
+
+    @include media('<800px') {
+        padding: 0rem 0 3rem 0;
+    }
 }
 
 //=== 명언 스타일링 ===
@@ -155,7 +160,6 @@
     }
     to {
         width: var(--animation-duration);
-        // width: 40%;
     }
 }
 

@@ -1,4 +1,8 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { Cookies } from 'react-cookie';
+
 import '../../styles/scss/components/alarm.scss';
 
 export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
@@ -41,6 +45,23 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
     //     uName: 'TTTest222222';
     // }
 
+    //] 새로 추가된 알람 읽음 처리
+    // const newAddedMsgReadHandler = async () => {
+
+    //     const res = await axios
+    //         .delete(`${process.env.REACT_APP_DB_HOST}/subscribe/alarm`, {
+    //             // 삭제할 데이터 전송
+    //             // commentInfo,
+    //             headers: {
+    //                 Authorization: `Bearer ${uToken}`,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             console.log(res);
+    //         });
+
+    // };
+
     //] 새로운 알람 추가
     const addReceivedAlarm = (data: any) => {
         // 시간 변환
@@ -79,7 +100,7 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
 
             const button = document.createElement('button');
             button.textContent = '읽음';
-            button.addEventListener('click', readHandler); // 클릭 이벤트 핸들러 추가
+            // button.addEventListener('click', newAddedMsgReadHandler); // 클릭 이벤트 핸들러 추가
 
             const nameSpan = document.createElement('p');
             nameSpan.innerHTML = `<b>${data.uName}</b> 님이 댓글을 남겼습니다.`;
@@ -139,7 +160,26 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
     }, [commentAlarm]);
 
     //] 읽음 처리
-    const readHandler = () => {};
+    const cookie = new Cookies();
+    const uToken = cookie.get('isUser'); // 토큰 값
+
+    const readHandler = async (idx: number) => {
+        console.log(idx);
+    };
+
+    // const deleteAlarm = async () => {
+    //     const res = await axios
+    //         .delete(`${process.env.REACT_APP_DB_HOST}/subscribe/alarm`, {
+    //             //~ 삭제할 데이터 전송
+    //             // commentInfo,
+    //             headers: {
+    //                 Authorization: `Bearer ${uToken}`,
+    //             },
+    //         })
+    //         .then((res) => {
+    //             console.log(res);
+    //         });
+    // };
 
     //++ 선 동적으로 처리
     useEffect(() => {
@@ -195,33 +235,51 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
                     <div className="comment-alarm"></div>
 
                     {/* [START] alarmList - map 돌리기 ! */}
-                    {formattedAlarms?.map((alarm: any) => {
-                        return (
-                            <div className="notification">
-                                <div className="circle"></div>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <span className="time">
-                                        {alarm.commentTime}
-                                    </span>
-                                    <button onClick={readHandler}>읽음</button>
-                                </div>
+                    {formattedAlarms?.length == 0 ? (
+                        <div className="no-alarm-text">
+                            현재 알람이 없습니다.
+                        </div>
+                    ) : (
+                        formattedAlarms?.map((alarm: any, idx: number) => {
+                            return (
+                                <div className="notification">
+                                    <div className="circle"></div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <span className="time">
+                                            {alarm.commentTime}
+                                        </span>
+                                        <button
+                                            onClick={() => {
+                                                readHandler(idx);
+                                            }}
+                                        >
+                                            읽음
+                                        </button>
+                                    </div>
 
-                                {alarm.type == 'comment' ? (
-                                    <p>
-                                        <b>{alarm.uName}</b> 님이 댓글을
-                                        남겼습니다.
-                                    </p>
-                                ) : (
-                                    <></>
-                                )}
-                            </div>
-                        );
-                    })}
+                                    {alarm.type == 'comment' ? (
+                                        <p>
+                                            {/* <Link
+                                            to={`/board/${Number(
+                                                alarm.gSeq
+                                            )}/free/${Number(alarm.gbSeq)}`}
+                                        > */}
+                                            <b>{alarm.uName}</b> 님이 댓글을
+                                            남겼습니다.
+                                            {/* </Link> */}
+                                        </p>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </div>
+                            );
+                        })
+                    )}
                     {/* [END] alarmList */}
                 </div>
             </div>

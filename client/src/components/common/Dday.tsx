@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import '../../styles/scss/components/dday.scss';
 import useDdayCount from '../../hooks/useDdayCount';
 
-// [추후] days => redux에 값 저장하기
-
 export default function Dday({ targetDate, setTargetDate, gDday }: any) {
     // const [targetDate, setTargetDate] = useState(''); // 오늘 날짜로 수정
 

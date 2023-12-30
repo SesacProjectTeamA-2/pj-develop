@@ -35,26 +35,26 @@ export default function Header(props: any) {
         setIsActive('admin');
     };
 
-    console.log('adminUser', props.adminUser);
+    // console.log('adminUser', props.adminUser);
 
     //++ 연결 끊어졌을 경우, 재연결
     //-- 1. socket
-    useEffect(() => {
-        if (!props.socket) {
-            const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
-                path: '/socket.io',
-                reconnection: true,
-                reconnectionAttempts: Infinity,
-                reconnectionDelay: 1000, // 1초 간격으로 재시도
-                reconnectionDelayMax: 5000, // 최대 5초 간격으로 재시도
-                extraHeaders: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            });
+    // useEffect(() => {
+    //     if (!props.socket) {
+    //         const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
+    //             path: '/socket.io',
+    //             reconnection: true,
+    //             reconnectionAttempts: Infinity,
+    //             reconnectionDelay: 1000, // 1초 간격으로 재시도
+    //             reconnectionDelayMax: 5000, // 최대 5초 간격으로 재시도
+    //             extraHeaders: {
+    //                 Authorization: `Bearer ${uToken}`,
+    //             },
+    //         });
 
-            props.setSocket(newSocket);
-        }
-    }, []);
+    //         props.setSocket(newSocket);
+    //     }
+    // }, []);
 
     //-- 2. sse
     // useEffect(() => {
@@ -78,22 +78,97 @@ export default function Header(props: any) {
     //     }
     // }, []);
 
+    const updateUnreadMsg = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/mission/user`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                const { groupInfo } = res.data;
+
+                let updatedGSeqList: any = [];
+
+                for (let i = 0; i < groupInfo?.length; i++) {
+                    updatedGSeqList.push(groupInfo[i].gSeq);
+                }
+
+                setGSeqList(updatedGSeqList);
+
+                // console.log('newMsg---updatedGSeqList', updatedGSeqList);
+                // console.log('newMsg---gSeqList', gSeqList);
+
+                //; localStorage 합산
+                let accumulatedUnreadMsg = 0;
+
+                for (let i = 0; i < updatedGSeqList?.length; i++) {
+                    const currentUnreadMsg = localStorage.getItem(
+                        `gSeq${updatedGSeqList[i]}`
+                    );
+                    const parsedUnreadMsg = parseInt(
+                        currentUnreadMsg || '0',
+                        10
+                    );
+                    accumulatedUnreadMsg += parsedUnreadMsg;
+                    // console.log('currentUnreadMsg', currentUnreadMsg);
+                    // console.log('parsedUnreadMsg', parsedUnreadMsg);
+                    // console.log('accumulatedUnreadMsg', accumulatedUnreadMsg);
+                }
+
+                setUnreadMsg(accumulatedUnreadMsg);
+
+                // console.log('accumulatedUnreadMsg', accumulatedUnreadMsg);
+            });
+    };
+
     //] 실시간으로 채팅 메세지 오면 업데이트
     useEffect(() => {
+        console.log('newMsg Event data ::::');
+
         props.socket?.on('newMsg', (data: any) => {
             const gSeq = data.gSeq;
             const content = data.content; // 최신 메세지 내용, 시간
 
-            console.log('newMsg Event ::::', gSeq, content);
+            const formattedData = {
+                ...content,
+                timeStamp: new Date(content.timeStamp).toLocaleTimeString([], {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: true,
+                }),
+            };
 
-            props.setRecentMsg(content);
+            console.log('newMsg Event data ::::', data);
+            console.log('newMsg Event gSeq, content ::::', gSeq, content);
 
-            // 새로운 메세지 왔을경우, +1 count
-            let currentCount = localStorage.getItem(`gSeq${gSeq}`);
-            let newCount = parseInt(currentCount || '0', 10) + 1;
-            localStorage.setItem(`gSeq${gSeq}`, newCount.toString());
+            console.log('formattedData', formattedData);
+
+            // gSeq가 같은 데이터만 업데이트
+            props.setRecentMsg((prevRecentMsg: any) =>
+                prevRecentMsg?.map((item: any) =>
+                    item.gSeq == gSeq ? { ...item, msg: formattedData } : item
+                )
+            );
+
+            console.log('isEnter', props.isEnter);
+
+            //; 새로운 메세지 왔을 경우, +1 count
+            // isEnter 채팅방 입장 시에는, 읽고 있는거니까 미확인 메세지 개수 0으로 설정
+            if (props.isEnter) {
+                // console.log('l>>>>>>>', localStorage.getItem(`gSeq${gSeq}`));
+
+                localStorage.setItem(`gSeq${gSeq}`, '0');
+            } else {
+                let currentCount = localStorage.getItem(`gSeq${gSeq}`);
+                let newCount = parseInt(currentCount || '0', 10) + 1;
+                localStorage.setItem(`gSeq${gSeq}`, newCount.toString());
+            }
+
+            //; localStorage 합산
+            updateUnreadMsg();
         });
-    }, []);
+    }, [props.socket]);
 
     // 1. 실시간 메세지 개수 -> Header : 채팅 알람 개수
     // 2. 실시간 메세지 내용 -> ChatList
@@ -173,6 +248,11 @@ export default function Header(props: any) {
     // --> localStorage 채팅방 모임 리스트 전체 삭제
     const [gSeqList, setGSeqList] = useState<any>([]); // 참여 모임
 
+    //] localStorage 합산 (미확인 메세지 수)
+    //--> gSeqList 활용
+    const [unreadMsg, setUnreadMsg] = useState(0);
+
+    //; logout 시 실행
     const getMissionMain = async () => {
         const res = await axios
             .get(`${process.env.REACT_APP_DB_HOST}/mission/user`, {
@@ -201,6 +281,52 @@ export default function Header(props: any) {
             });
     };
 
+    // useEffect(() => {
+    //     // 새로운 메세지가 오면 unreadMsg 업데이트
+    //     let accumulatedUnreadMsg = 0;
+
+    //     for (let i = 0; i < gSeqList?.length; i++) {
+    //         const currentUnreadMsg = localStorage.getItem(`gSeq${gSeqList[i]}`);
+    //         const parsedUnreadMsg = parseInt(currentUnreadMsg || '0', 10);
+    //         accumulatedUnreadMsg += parsedUnreadMsg;
+    //     }
+
+    //     setUnreadMsg(accumulatedUnreadMsg);
+
+    //     console.log('accumulatedUnreadMsg', accumulatedUnreadMsg);
+    // }, [gSeqList, props.socket]);
+
+    useEffect(() => {
+        updateUnreadMsg();
+    }, [props.socket, props.isEnter]);
+
+    //     console.log('111111');
+    //     const updateUnreadMsg = async () => {
+    //         let accumulatedUnreadMsg = 0;
+    //         console.log('gSeqList', gSeqList);
+
+    //         for (let i = 0; i < gSeqList?.length; i++) {
+    //             const currentUnreadMsg = localStorage.getItem(
+    //                 `gSeq${gSeqList[i]}`
+    //             );
+    //             const parsedUnreadMsg = parseInt(currentUnreadMsg || '0', 10);
+    //             accumulatedUnreadMsg += parsedUnreadMsg;
+    //             console.log('currentUnreadMsg', currentUnreadMsg);
+    //             console.log('parsedUnreadMsg', parsedUnreadMsg);
+    //         }
+
+    //         setUnreadMsg(accumulatedUnreadMsg);
+
+    //         console.log('accumulatedUnreadMsg', accumulatedUnreadMsg);
+    //     };
+
+    //     // getMissionMain 호출이 완료될 때까지 기다리기
+    //     getMissionMain().then(() => {
+    //         updateUnreadMsg();
+    //     });
+
+    // console.log('unreadMsg', unreadMsg);
+
     const [logoutConfirm, setLogoutConfirm] = useState(false);
 
     //] 로그아웃
@@ -208,7 +334,7 @@ export default function Header(props: any) {
         // [추후] 로그아웃 모달창 처리
 
         //; 1. 관리자
-        if (props.adminUser) {
+        if (localStorage.getItem('adminUser') === 'true') {
             if (window.confirm('로그아웃하시겠습니까 ?')) {
                 // console.log('uSeqData ::::::', uSeqData);
 
@@ -217,6 +343,7 @@ export default function Header(props: any) {
                 // props.socket.emit('logout', { uSeq: 8 });
 
                 props.setAdminUser(false);
+                localStorage.removeItem('adminUser');
 
                 nvg('/login');
             } else {
@@ -280,12 +407,6 @@ export default function Header(props: any) {
         }
     }, [logoutConfirm]);
 
-    // useEffect(() => {
-    //     if (logoutConfirm) {
-    //         getMissionMain();
-    //     }
-    // }, []);
-
     //] 초대장 링크 입력 후 버튼 클릭 시 그 그룹으로 이동
     const [grpInput, setGrpInput] = useState<string>('');
     const grpInputObj = {
@@ -323,135 +444,12 @@ export default function Header(props: any) {
 
     //; 초기 로그인 Main에서 sse 관련 모든 이벤트 수행
 
-    // const getNoti = () => {
-    //     // console.log('***********', props.sse);
-
-    //     if (props.sse) {
-    //         // 콘솔이 안찍힘 => 전역으로 관리
-    //         //-- 미확인 알람 전체 리스트
-    //         props.sse.addEventListener('allAlarm', (event: any) => {
-    //             console.log('alarmList ::::', event);
-    //             // console.log('alarmList event.data ::::', event.data);
-
-    //             // const eventData = JSON.parse(event.data);
-
-    //             // console.log('eventData ::::', eventData);
-    //         });
-
-    //         //-- 메세지
-    //         props.sse.addEventListener('commentAlarm', (event: any) => {
-    //             console.log('commentAlarm ::::', event);
-    //             console.log('commentAlarm event.data ::::', event.data);
-
-    //             const eventData = JSON.parse(event.data);
-
-    //             console.log('eventData ::::', eventData);
-    //         });
-    //     }
-
-    //     const eventSource = new EventSourcePolyfill(
-    //         `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
-    //         {
-    //             headers: {
-    //                 Authorization: `Bearer ${uToken}`,
-    //             },
-    //         }
-    //     );
-
-    // //-- 연결
-    // eventSource.addEventListener('connected', (e: any) => {
-    //     const { data: receivedSections } = e;
-
-    //     console.log('connected ::::', e);
-    // });
-
-    // //-- 연결 시 할 일
-    // eventSource.onopen = async () => {
-    //     console.log('EventSource connection opened. onopen ::::');
-
-    //     //     // 기존 알람 데이터 받아오기
-    //     //     try {
-    //     //         const res = await fetch(
-    //     //             `${process.env.REACT_APP_DB_HOST}/subscribe/alarm`,
-    //     //             {
-    //     //                 method: 'GET',
-    //     //                 headers: {
-    //     //                     Authorization: `Bearer ${uToken}`,
-    //     //                 },
-    //     //             }
-    //     //         );
-
-    //     //         const data = await res.json();
-    //     //         console.log('Initial alarm data:', data);
-    //     //         // 여기서 기존 알람 데이터를 처리하거나 상태 업데이트 등을 수행할 수 있습니다.
-    //     //     } catch (error) {
-    //     //         console.error('Error fetching initial alarm data:', error);
-    //     //     }
-    // };
-
-    // 서버로부터 연결 이벤트를 수신할 때의 처리
-    // eventSource.addEventListener('connection', (event: any) => {
-    //     console.log('e', event);
-
-    //     const eventData = JSON.parse(event.data);
-    //     console.log('Received connect event:', eventData);
-    //     // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
-    // });
-
-    // 서버로부터 연결 이벤트를 수신할 때의 처리
-    // eventSource.addEventListener('connection', (event: any) => {
-    //     console.log('e', event);
-
-    //     const eventData = JSON.parse(event.data);
-    //     console.log('Received connect event:', eventData);
-    //     // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
-    // });
-
-    // eventSource.onmessage = async (e) => {
-    //     console.log('onmessage ::::::', e);
-    //     const res = await e.data;
-    //     const parsedData = JSON.parse(res);
-    //     //-- 받아오는 data로 할 일
-    //     console.log(parsedData);
-    // };
-
-    // // 서버로부터 이벤트를 수신할 때의 처리
-    // props.sse.onmessage = (event: any) => {
-    //     console.log('e', event);
-
-    //     const eventData = JSON.parse(event.data);
-    //     console.log('Received event data:', eventData);
-    //     // 여기서 상태를 업데이트하거나 필요한 작업을 수행할 수 있습니다.
-    // };
-
-    //     if (props.sse) {
-    //         props.sse.onerror = (e: any) => {
-    //             console.log('e', e);
-
-    //             //-- 종료 또는 에러 발생 시 할 일
-    //             // eventSource.close();
-
-    //             if (e.error) {
-    //                 //-- 에러 발생 시 할 일
-    //                 console.error('EventSource error:', e.error);
-    //             }
-
-    //             if (e.target.readyState === EventSource.CLOSED) {
-    //                 //-- 종료 시 할 일
-    //                 console.log('EventSource connection closed.');
-    //             }
-    //         };
-    //     } else {
-    //         console.error('props.sse is undefined');
-    //     }
-    // };
-
     //-- 컴포넌트가 마운트될 때 EventSource 생성
-    useEffect(() => {
-        if (isAlarm) {
-            // getNoti();
-        }
-    }, [isAlarm]);
+    // useEffect(() => {
+    //     if (isAlarm) {
+    //         // getNoti();
+    //     }
+    // }, [isAlarm]);
 
     //_ [ START ] 반응형 CSS
     const theme = createTheme({
@@ -498,14 +496,35 @@ export default function Header(props: any) {
             <div className="header-blur">
                 <div className="header-container">
                     {/* 로고 */}
-                    <div
-                        className="header-divOne"
-                        style={{ zIndex: '0', height: '120px' }}
-                    >
-                        <Link to="/">
+                    {localStorage.getItem('adminUser') === 'true' ? (
+                        <div
+                            className="header-divOne"
+                            style={{ zIndex: '0', height: '120px' }}
+                        >
                             <div className="title1 logo-text">MOTI</div>
-                        </Link>
-                    </div>
+                        </div>
+                    ) : (
+                        <div
+                            className="header-divOne"
+                            style={{ zIndex: '0', height: '120px' }}
+                        >
+                            <Link to="/">
+                                <div className="title1 logo-text">MOTI</div>
+                            </Link>
+                        </div>
+                    )}
+
+                    {/* // === admin === */}
+                    {/* {localStorage.getItem('adminUser') === 'true' ? (
+                        <div
+                            className="
+                        admin-welcome-text"
+                        >
+                            Welcome to Dashboard
+                        </div>
+                    ) : (
+                        <></>
+                    )} */}
 
                     {/* 회원가입 페이지 */}
                     {props.isJoinPage ? (
@@ -513,25 +532,41 @@ export default function Header(props: any) {
                     ) : (
                         <div className="header-divTwo pcMode">
                             <nav className="header-nav ">
-                                {/* <ThemeProvider theme={theme}> */}
-                                <input
-                                    type="text"
-                                    id="grpSearch-input"
-                                    value={grpInput}
-                                    placeholder="초대 링크를 넣어보세요"
-                                    onChange={(
-                                        e: React.ChangeEvent<HTMLInputElement>
-                                    ) => setGrpInput(e.target.value)}
-                                />
-                                <img
-                                    src="/asset/icons/search.svg"
-                                    id="grpSearch-btn"
-                                    onClick={(e: React.MouseEvent) =>
-                                        goInvited()
-                                    }
-                                    alt="search"
-                                ></img>
-
+                                {localStorage.getItem('adminUser') ===
+                                'true' ? (
+                                    <div
+                                        style={{
+                                            color: 'gray',
+                                            padding: '0 2rem',
+                                        }}
+                                    >
+                                        관리자로 로그인하셨습니다.
+                                    </div>
+                                ) : isCookie ? (
+                                    // ===login한 경우만 초대링크 ===
+                                    <>
+                                        {' '}
+                                        <input
+                                            type="text"
+                                            id="grpSearch-input"
+                                            value={grpInput}
+                                            placeholder="초대 링크를 넣어보세요"
+                                            onChange={(
+                                                e: React.ChangeEvent<HTMLInputElement>
+                                            ) => setGrpInput(e.target.value)}
+                                        />
+                                        <img
+                                            src="/asset/icons/search.svg"
+                                            id="grpSearch-btn"
+                                            onClick={(e: React.MouseEvent) =>
+                                                goInvited()
+                                            }
+                                            alt="search"
+                                        ></img>
+                                    </>
+                                ) : (
+                                    <></>
+                                )}
                                 <div id="navbar-animmenu">
                                     <ul className="show-dropdown main-navbar">
                                         <div className="hori-selector">
@@ -570,9 +605,12 @@ export default function Header(props: any) {
                                                         }
                                                     >
                                                         <Link to="/management">
-                                                            <Button className="menu-button">
+                                                            {/* <Button className="menu-button">
                                                                 Management
-                                                            </Button>
+                                                            </Button> */}
+                                                            {/* <div className="menu-button">
+                                                                Management
+                                                            </div> */}
                                                         </Link>
                                                     </li>
                                                 ) : (
@@ -581,18 +619,21 @@ export default function Header(props: any) {
                                             </div>
                                         ) : (
                                             <div className="menu-list-btn">
-                                                {props.adminUser ? (
+                                                {/* {props.adminUser ? ( */}
+                                                {localStorage.getItem(
+                                                    'adminUser'
+                                                ) === 'true' ? (
                                                     // === admin 경우 ===
                                                     <li
                                                         onClick={
                                                             adminActiveHandler
                                                         }
                                                     >
-                                                        <Link to="/management">
+                                                        {/* <Link to="/management">
                                                             <Button className="menu-button">
                                                                 Management
-                                                            </Button>
-                                                        </Link>
+                                                            </Button> 
+                                                        </Link> */}
                                                     </li>
                                                 ) : (
                                                     <>
@@ -638,7 +679,6 @@ export default function Header(props: any) {
                                         )}
                                     </ul>
                                 </div>
-
                                 {/* <ButtonGroup
                                     aria-label="outlined button group"
                                     variant="outlined"
@@ -656,13 +696,13 @@ export default function Header(props: any) {
                                         </Button>
                                     </Link> */}
                                 {/* </li> */}
-
                                 {/* </ButtonGroup> */}
                                 {/* </ThemeProvider> */}
-
                                 <ul className="menu">
                                     {!isCookie ? (
-                                        props.adminUser ? (
+                                        // props.adminUser ? (
+                                        localStorage.getItem('adminUser') ===
+                                        'true' ? (
                                             // === admin 경우 ===
                                             <li>
                                                 <ThemeProvider theme={theme}>
@@ -716,30 +756,55 @@ export default function Header(props: any) {
                                                         }
                                                         id="chat-btn"
                                                     />
+                                                    <div
+                                                        className="noti-chat-count-wrapper"
+                                                        onClick={() =>
+                                                            props.showChatting()
+                                                        }
+                                                    >
+                                                        {/* 0이면 span 없게 처리 */}
+                                                        {unreadMsg == 0 ? (
+                                                            <></>
+                                                        ) : (
+                                                            <span className="notification-chat-count">
+                                                                {/* 합산 */}
+                                                                {unreadMsg}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                     <span id="chat-text">
                                                         Chat
                                                     </span>
                                                 </div>
                                             )}
 
-                                            <div className="logout-icon-container">
+                                            <div className="alarm-icon-container">
                                                 <img
                                                     src="/asset/icons/Bell.svg"
                                                     alt="alarm"
                                                     onClick={alarmHandler}
-                                                    id="logout-btn"
+                                                    id="alarm-btn"
                                                 />
                                                 <div
                                                     className="noti-count-wrapper"
                                                     onClick={alarmHandler}
                                                 >
-                                                    <span className="notification-count">
-                                                        {props.alarmCount < 100
-                                                            ? props.alarmCount
-                                                            : '99+'}
-                                                    </span>
+                                                    {props.alarmCount ===
+                                                    '0' ? (
+                                                        ''
+                                                    ) : (
+                                                        <span className="notification-count">
+                                                            {Number(
+                                                                props.alarmCount
+                                                            ) < 100
+                                                                ? props.alarmCount
+                                                                : '99+'}
+                                                        </span>
+                                                    )}
                                                 </div>
-                                                {/* <span id="logout-text">Bell</span> */}
+                                                <span id="logout-text">
+                                                    Alarm
+                                                </span>
                                             </div>
                                             {/* 알람창 컴포넌트 */}
 

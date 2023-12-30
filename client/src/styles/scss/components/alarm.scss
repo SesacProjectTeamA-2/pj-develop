@@ -1,12 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Josefin+Sans|Montserrat+Alternates');
-$main-color: #977956cf;
-
-// $dark-purple: #4b384c;
-// // $crushed-raspberry: #632c65;
-// $rose: #e2a9e5;
+$main-color: #a58c6eeb;
 $black: #201c29;
 $white: #e6e6e6;
-$secondary: #6fa57f;
 
 // .frame {
 //     position: absolute;
@@ -86,10 +81,13 @@ $secondary: #6fa57f;
     justify-content: center;
     align-items: center;
 }
-// .panel .header .title {
-//     color: yellow;
-//     font-size: 1.6rem;
-// }
+
+.no-alarm-text {
+    color: rgb(139, 139, 139);
+    text-align: center;
+    padding-top: 11rem;
+    font-size: 1.2rem;
+}
 
 .panel .notifications {
     position: relative;
@@ -168,7 +166,7 @@ $secondary: #6fa57f;
     font-size: 0.75rem;
     line-height: 11px;
     margin-bottom: 2px;
-    color: gray;
+    color: #a8a8a8;
 }
 .panel .notifications .notification p {
     line-height: 20px;
@@ -193,7 +191,7 @@ $secondary: #6fa57f;
 
     button {
         border: none;
-        background-color: fade-out($main-color, 0.38);
+        background-color: fade-out($main-color, 0);
         color: white;
         font-size: 0.8rem;
         margin: 0 1rem;

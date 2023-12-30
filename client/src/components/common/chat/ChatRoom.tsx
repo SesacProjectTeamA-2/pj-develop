@@ -17,8 +17,6 @@ export default function ChatRoom({
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
-    // console.log('socket:::::', socket);
-
     // 받아올 채팅 1️
     const [allMsg, setAllMsg] = useState<any>([]);
 
@@ -263,6 +261,8 @@ export default function ChatRoom({
             bubbleDiv.appendChild(messageDiv);
             chatContainer.appendChild(bubbleDiv);
         }
+
+        scrollToBottom();
     };
 
     //] 말풍선을 화면에 추가하는 함수 (타인이 보낸 메세지)
@@ -270,11 +270,10 @@ export default function ChatRoom({
         // 시간 변환
         const date = new Date(data?.timeStamp);
 
-        // 수정된 부분: 시간을 24시간 형식으로 변환
         const formattedTime = date.toLocaleTimeString('en-US', {
             hour: '2-digit',
             minute: '2-digit',
-            hour12: false,
+            hour12: true,
         });
 
         const chatContainer = document.getElementById('chat');
@@ -318,6 +317,11 @@ export default function ChatRoom({
 
     //] 메세지 전송
     const sendMessage = () => {
+        // 빈 값이면 전송 안됨
+        if (sendMsg.msg === '') {
+            return;
+        }
+
         const timeStamp = Date.now();
         const currentDate = new Date(timeStamp);
 
@@ -384,21 +388,29 @@ export default function ChatRoom({
     console.log('msgList', msgList);
 
     useEffect(() => {
-        // 서버에서 데이터 받아오기
-        socket?.on('msg', (data: any) => {
+        const socketMsg = (data: any) => {
             console.log('MSG event received on client', data); // 서버에서 보낸 data
 
             setMsgList(data);
             // console.log('setMsgList --->', msgList);
 
-            if (Object.keys(data).length > 0) {
+            // 본인 포함 데이터 받아오는 것이므로,
+            // 내가 전송했을 경우에는 받아오는 말풍선 추가 X
+            if (Object.keys(data).length > 0 && data.uName !== uName) {
                 //-- 받아오는 말풍선 추가
                 addReceivedMessageBubble(data);
             }
 
             scrollToBottom();
-        });
-    }, []);
+        };
+
+        // 서버에서 데이터 받아오기
+        socket?.on('msg', socketMsg);
+
+        return () => {
+            socket?.off('msg', socketMsg);
+        };
+    }, [socket]);
 
     // joinRoom - allMsg (방에 입장하기 전, 주고 받은 문자 내역들)
     // msg - msgList (방에 입장 이후, 받은 문자)
@@ -414,23 +426,60 @@ export default function ChatRoom({
         }
     };
 
+    const [leaveRoom, setLeaveRoom] = useState(false);
+
     //] 방 나가기
     const leaveHandler = () => {
-        //; 방 나가면 : roomInfo 수행
-        socket?.emit('roomInfo', { isOut: 'y' });
-
-        // localStorage 에서 해당 방의 미확인 메세지 개수 0 으로 세팅
-        localStorage.setItem(`gSeq${nowGSeq}`, '0');
-
-        // 서버에서 보낸 data
-        socket?.on('roomInfo', (data: any) => {
-            console.log('roomInfo 퇴장 :::', data);
-            setRecentMsg(data); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
-        });
-
         setIsSent(false);
-        setIsEnter(false);
+        setLeaveRoom(true);
     };
+
+    useEffect(() => {
+        //; 방 나가면 : roomInfo 수행
+        if (leaveRoom) {
+            // const socketRoomInfoOut = () => {
+            socket?.emit('roomInfo', { isOut: 'y' });
+
+            // localStorage 에서 해당 방의 미확인 메세지 개수 0 으로 세팅
+            localStorage.setItem(`gSeq${nowGSeq}`, '0');
+
+            // 서버에서 보낸 data
+            socket?.on('roomInfo', (data: any) => {
+                console.log('roomInfo 퇴장 :::', data);
+                // setRecentMsg(data); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
+
+                // 시간 변환
+                const formattedData = data?.map((msgObj: any) => ({
+                    ...msgObj,
+                    msg: {
+                        ...msgObj.msg,
+                        timeStamp: new Date(
+                            msgObj.msg.timeStamp
+                        ).toLocaleTimeString([], {
+                            hour: 'numeric',
+                            minute: '2-digit',
+                            hour12: true,
+                        }),
+                    },
+                }));
+
+                setRecentMsg(formattedData);
+                setIsEnter(false);
+
+                console.log('나가요!!!!!!!!!!!!!!!!!!');
+            });
+        }
+
+        //; 방 나가면 : roomInfo 수행
+        // if (leaveRoom) {
+        //     socketRoomInfoOut();
+        // }
+
+        // 컴포넌트가 언마운트될 때 이전에 등록된 이벤트 리스너를 정리
+        // return () => {
+        //     socket?.off('roomInfo', socketRoomInfoOut);
+        // };
+    }, [leaveRoom]);
 
     console.log(msgData);
     console.log('allMsg', allMsg);
