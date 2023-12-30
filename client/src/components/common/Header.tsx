@@ -12,6 +12,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import '../../styles/scss/layout/header.scss';
 import Alarm from './Alarm';
 
+// 수정했습니다.
+
 export default function Header(props: any) {
     const [isCookie, setIsCookie] = useState(false); // 쿠키 유무
 
