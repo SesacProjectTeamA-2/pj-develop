@@ -15,6 +15,8 @@ export default function SidebarChat({
     setRecentMsg,
     isEnter,
     setIsEnter,
+    allGroupInfo,
+    setAllGroupInfo,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -55,6 +57,8 @@ export default function SidebarChat({
                     recentMsg={recentMsg}
                     socket={socket}
                     setRecentMsg={setRecentMsg}
+                    allGroupInfo={allGroupInfo}
+                    setAllGroupInfo={setAllGroupInfo}
                 />
             ) : (
                 <ChatRoom

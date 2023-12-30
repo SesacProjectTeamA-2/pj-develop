@@ -19,6 +19,8 @@ export default function BasicLayout({
     setRecentMsg,
     isEnter,
     setIsEnter,
+    allGroupInfo,
+    setAllGroupInfo,
 }: any) {
     return (
         <>
@@ -73,6 +75,8 @@ export default function BasicLayout({
                                         setRecentMsg={setRecentMsg}
                                         isEnter={isEnter}
                                         setIsEnter={setIsEnter}
+                                        allGroupInfo={allGroupInfo}
+                                        setAllGroupInfo={setAllGroupInfo}
                                     />
                                 ) : null}
                             </Item>

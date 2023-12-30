@@ -13,6 +13,8 @@ export default function ChatList({
     recentMsg,
     socket,
     setRecentMsg,
+    allGroupInfo,
+    setAllGroupInfo,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -31,29 +33,26 @@ export default function ChatList({
     //===> 최신순 / 리더|멤버별
     // 버튼 state로 관리
 
-    const [allGroupInfo, setAllGroupInfo] = useState<any>(); // 리더+멤버 모든 모임 관리
     const [sorted, setSorted] = useState('recent'); // 정렬 기준
 
-    // ] 유저 가입 모임
-    const getJoinedGroup = async () => {
+    //] 전체 모임
+    const getMissionMain = async () => {
         const res = await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/group/joined`, {
+            .get(`${process.env.REACT_APP_DB_HOST}/mission/user`, {
                 headers: {
                     Authorization: `Bearer ${uToken}`,
                 },
             })
             .then((res) => {
+                console.log('유저 미션 조회 >> ', res.data);
+
                 const { groupInfo } = res.data;
 
-                setJoinGroupInfo(groupInfo);
-                setAllGroupInfo((prev: any) => [...prev, ...groupInfo]);
+                setAllGroupInfo(groupInfo);
             });
     };
 
-    useEffect(() => {
-        getJoinedGroup();
-    }, []);
-
+    const [madeGroupInfo, setMadeGroupInfo] = useState<any>([]);
     const [madeJoinInfo, setJoinGroupInfo] = useState<any>([]);
 
     //] 유저 생성 모임
@@ -67,9 +66,27 @@ export default function ChatList({
             .then((res) => {
                 const { groupInfo } = res.data;
 
-                setAllGroupInfo((prev: any) => [...prev, ...groupInfo]);
+                setMadeGroupInfo(groupInfo);
+                // setAllGroupInfo(groupInfo);
             });
     };
+
+    // ] 유저 가입 모임
+    const getJoinedGroup = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/group/joined`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                const { groupInfo } = res.data;
+
+                setJoinGroupInfo(groupInfo);
+                // setAllGroupInfo((prev: any) => [...prev, ...groupInfo]);
+            });
+    };
+
     console.log('allGroupInfo>>>>', allGroupInfo);
 
     //] 최신 메세지 가져오기
@@ -100,15 +117,192 @@ export default function ChatList({
                 }));
 
                 setRecentMsg(formattedData);
+
+                console.log('최신 allGroupInfo>>>>', allGroupInfo);
+
+                //; 최신순으로 allGroupInfo 정렬
+                // if (allGroupInfo?.length > 0) {
+                const sortedAllGroupInfo = [...allGroupInfo]
+                    .sort((a, b) => {
+                        const getTimeStamp = (data: any) =>
+                            roomInfoArray.find(
+                                (item: any) => item.gSeq === data.gSeq
+                            )?.msg.timeStamp;
+
+                        const timeStampA = roomInfoArray.some(
+                            (data: any) => data.gSeq === a.gSeq && data.msg
+                        )
+                            ? getTimeStamp(a)
+                            : undefined;
+
+                        const timeStampB = roomInfoArray.some(
+                            (data: any) => data.gSeq === b.gSeq && data.msg
+                        )
+                            ? getTimeStamp(b)
+                            : undefined;
+
+                        // gSeq가 recentMsg에 있는 경우를 먼저 정렬
+                        return (
+                            (timeStampB &&
+                                timeStampA &&
+                                new Date(timeStampB).getTime() -
+                                    new Date(timeStampA).getTime()) ||
+                            (timeStampB ? -1 : timeStampA ? 1 : 0)
+                        );
+                    })
+                    .sort((a, b) => {
+                        const hasTimeStampA = roomInfoArray.some(
+                            (data: any) => data.gSeq === a.gSeq && data.msg
+                        );
+                        const hasTimeStampB = roomInfoArray.some(
+                            (data: any) => data.gSeq === b.gSeq && data.msg
+                        );
+
+                        // gSeq가 recentMsg에 있는 경우를 먼저 정렬
+                        return hasTimeStampA && hasTimeStampB
+                            ? 0
+                            : hasTimeStampA
+                            ? -1
+                            : hasTimeStampB
+                            ? 1
+                            : 0;
+                    });
+
+                // const sortedAllGroupInfo = [...allGroupInfo]
+                //     .sort((a, b) => {
+                //         const hasTimeStampA = roomInfoArray.some(
+                //             (data: any) => data.gSeq === a.gSeq && data.msg
+                //         );
+                //         const hasTimeStampB = roomInfoArray.some(
+                //             (data: any) => data.gSeq === b.gSeq && data.msg
+                //         );
+
+                //         const timeStampA = hasTimeStampA
+                //             ? roomInfoArray.find(
+                //                   (data: any) => data.gSeq === a.gSeq
+                //               )?.msg.timeStamp
+                //             : undefined;
+
+                //         const timeStampB = hasTimeStampB
+                //             ? roomInfoArray.find(
+                //                   (data: any) => data.gSeq === b.gSeq
+                //               )?.msg.timeStamp
+                //             : undefined;
+
+                //         // gSeq가 recentMsg에 있는 경우
+                //         if (timeStampB && timeStampA) {
+                //             // timeStamp가 있는 경우, timeStamp를 기준으로 정렬
+                //             return (
+                //                 new Date(timeStampB).getTime() -
+                //                 new Date(timeStampA).getTime()
+                //             );
+                //         } else if (timeStampB) {
+                //             // b가 recentMsg에 있는 경우 먼저 정렬
+                //             return -1;
+                //         } else if (timeStampA) {
+                //             // a가 recentMsg에 있는 경우 먼저 정렬
+                //             return 1;
+                //         }
+
+                //         // gSeq가 recentMsg에 없는 경우
+                //         // timeStamp가 없는 경우, 기본적인 비교 수행
+                //         return 0;
+                //     })
+                //     .sort((a, b) => {
+                //         const hasTimeStampA = roomInfoArray.some(
+                //             (data: any) => data.gSeq === a.gSeq && data.msg
+                //         );
+                //         const hasTimeStampB = roomInfoArray.some(
+                //             (data: any) => data.gSeq === b.gSeq && data.msg
+                //         );
+
+                //         // gSeq가 recentMsg에 있는 경우를 먼저 정렬
+                //         if (hasTimeStampA && hasTimeStampB) {
+                //             return 0;
+                //         } else if (hasTimeStampA) {
+                //             return -1;
+                //         } else if (hasTimeStampB) {
+                //             return 1;
+                //         }
+
+                //         return 0;
+                //     });
+
+                //     const sortedAllGroupInfo = [...allGroupInfo].sort(
+                //         (a, b) => {
+                //             const hasTimeStampA = roomInfoArray.some(
+                //                 (data: any) => data.gSeq === a.gSeq
+                //             );
+                //             const hasTimeStampB = roomInfoArray.some(
+                //                 (data: any) => data.gSeq === b.gSeq
+                //             );
+
+                //             // gSeq가 recentMsg에 있는 경우
+                //             if (hasTimeStampB && hasTimeStampA) {
+                //                 // timeStamp가 있는 경우, timeStamp를 기준으로 정렬
+                //                 return (
+                //                     new Date(b.msg.timeStamp).getTime() -
+                //                     new Date(a.msg.timeStamp).getTime()
+                //                 );
+                //             } else if (hasTimeStampB) {
+                //                 // b가 recentMsg에 있는 경우 먼저 정렬
+                //                 return -1;
+                //             } else if (hasTimeStampA) {
+                //                 // a가 recentMsg에 있는 경우 먼저 정렬
+                //                 return 1;
+                //             }
+
+                //             // gSeq가 recentMsg에 없는 경우
+                //             // timeStamp가 없는 경우, 기본적인 비교 수행
+                //             return 0;
+                //         }
+                //     );
+
+                //-- 최신 메세지 gSeq 유뮤만
+                //     const sortedAllGroupInfo = [...allGroupInfo].sort(
+                //         (a, b) => {
+                //             // gSeq가 recentMsg에 있는 경우 먼저 정렬
+                //             if (
+                //                 roomInfoArray.some(
+                //                     (data: any) => data.gSeq === b.gSeq
+                //                 )
+                //             ) {
+                //                 return 1;
+                //             }
+                //             // gSeq가 recentMsg에 있는 경우, a를 먼저 정렬
+                //             if (
+                //                 roomInfoArray.some(
+                //                     (data: any) => data.gSeq === a.gSeq
+                //                 )
+                //             ) {
+                //                 return -1;
+                //             }
+                //             // gSeq가 recentMsg에 없는 경우, 기본적인 비교 수행
+                //             return 0;
+                //         }
+                //     );
+
+                setAllGroupInfo(sortedAllGroupInfo);
+
+                // 정렬된 allGroupInfo
+                console.log('sortedAllGroupInfo>>>>>>>', sortedAllGroupInfo);
+                // }
             });
     };
 
     useEffect(() => {
-        getMadeGroup();
-        getRecentMsg();
-    }, []);
+        getMissionMain(); // 전체 그룹 조회
 
-    const [madeGroupInfo, setMadeGroupInfo] = useState<any>([]);
+        getMadeGroup();
+        getJoinedGroup();
+
+        //) 비동기 문제를 해결하기 위해 조건을 추가함
+        // 이전에는 allGroupInfo가 뒤늦게 도착하여 빈 배열이 찍혀, 최신순으로 나열되지 않았으나,
+        // 조건문을 추가함으로써, allGroupInfo가 빈 배열이 아닌 경우에만 해당 동작 수행
+        // 조건이 만족되면 최신 메세지 가져오는 작업 수행 (순서대로 처리됨)
+        // allGroupInfo?.length && getRecentMsg();
+        allGroupInfo?.length && getRecentMsg();
+    }, []);
 
     const enterChatRoom = (gSeq: number, gName: string) => {
         setNowGSeq(gSeq);
@@ -166,6 +360,85 @@ export default function ChatList({
             </div>
             <ul>
                 {/* 채팅방을 클릭해주세요 */}
+                {/* --- 전체 모임 --- */}
+                {/* [추후] 전체 모임 없는 경우 추가 */}
+                {allGroupInfo?.map((group: any, idx: number) => {
+                    return (
+                        <li
+                            className="group-list"
+                            onClick={() =>
+                                enterChatRoom(group.gSeq, group.tb_group.gName)
+                            }
+                        >
+                            <div className="list-content-wrapper">
+                                <img src="/asset/images/leader.gif" alt="" />
+
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        // width: '100%',
+                                        width: '6rem',
+                                        height: '100%',
+                                        flexDirection: 'column',
+                                    }}
+                                >
+                                    <div className="group-name">
+                                        {group.tb_group.gName}
+                                    </div>
+
+                                    {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
+                                msg.msg 띄워주기  */}
+                                    {Array.isArray(recentMsg) &&
+                                        recentMsg
+                                            ?.filter(
+                                                (recent: any) =>
+                                                    recent.gSeq === group.gSeq
+                                            )
+                                            ?.map((filteredRecent: any) => (
+                                                <span className="preview">
+                                                    {filteredRecent.msg.msg}
+                                                </span>
+                                            ))}
+                                </div>
+
+                                <div
+                                    className="chat-list-count-wrapper"
+                                    // onClick={alarmHandler}
+                                >
+                                    {Array.isArray(recentMsg) &&
+                                        recentMsg
+                                            ?.filter(
+                                                (recent: any) =>
+                                                    recent.gSeq === group.gSeq
+                                            )
+                                            ?.map((filteredRecent: any) => (
+                                                <p>
+                                                    {
+                                                        filteredRecent.msg
+                                                            .timeStamp
+                                                    }
+                                                </p>
+                                            ))}
+
+                                    {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
+                                    {localStorage.getItem(
+                                        `gSeq${group.gSeq}`
+                                    ) !== '0' && (
+                                        <span className="chat-list-count">
+                                            {/* 미확인 메세지 개수 */}
+                                            {localStorage.getItem(
+                                                `gSeq${group.gSeq}`
+                                            )}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </li>
+                    );
+                })}
+
+                {/* --- 리더 & 멤버 구분 ---  */}
+                <div>아래는 리더 & 멤버 구분입니다.</div>
 
                 {!madeGroupInfo && !madeJoinInfo ? (
                     <div
