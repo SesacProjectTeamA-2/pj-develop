@@ -25,11 +25,6 @@ export default function MissionList() {
             level: 3,
             completed: true,
         },
-        // { id: 1, name: ' div 배치 ', completed: false },
-        // { id: 2, name: ' 다중 선택 태그 로직 찾아보기 ', completed: false },
-        // { id: 3, name: ' 토끼 불러오기 ', completed: false },
-
-        // { id: 5, name: ' 달성 완료랑 group 페이지 연결 ', completed: true },
     ]);
 
     const cookie = new Cookies();

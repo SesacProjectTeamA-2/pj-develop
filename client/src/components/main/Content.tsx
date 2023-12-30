@@ -105,7 +105,7 @@ export default function Content({ setLoginData, loginData }: any) {
                 },
             })
             .then((res) => {
-                // console.log('유저 미션 조회 >> ', res.data);
+                console.log('유저 미션 조회 >> ', res.data);
 
                 const {
                     missionArray,
