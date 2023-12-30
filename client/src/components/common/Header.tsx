@@ -217,7 +217,7 @@ export default function Header(props: any) {
     useEffect(() => {
         console.log('newMsg Event data ::::');
 
-        props.socket?.on('newMsg', (newMsgData: any) => {
+        const socketNewMsg = (newMsgData: any) => {
             const gSeq = newMsgData.gSeq;
             const content = newMsgData.content; // 최신 메세지 내용, 시간
 
@@ -243,7 +243,6 @@ export default function Header(props: any) {
             //; 최신순으로 allGroupInfo 정렬
             //) 주의할 점 ! --> newMsgData는 배열이 아닌, 객체 형태 (하나만 전송)
             //) ChatList에서의 getRecentMsg axios와 다릅니다 !
-            //) => props.allGroupInfo에서 newMsgData를 무조건 제일 위에 정렬 !!!
             // const newMsgData = {
             //     gSeq: 1,
             //     content: {
@@ -252,6 +251,7 @@ export default function Header(props: any) {
             //         uName: 'TTTest222222',
             //     },
             // };
+            //--> props.allGroupInfo에서 newMsgData를 무조건 제일 위에 정렬 !!!
             // if (props.allGroupInfo?.length > 0) {
             const sortedAllGroupInfo = [...props.allGroupInfo].sort((a, b) => {
                 return a.gSeq === newMsgData.gSeq
@@ -264,10 +264,10 @@ export default function Header(props: any) {
             props.setAllGroupInfo(sortedAllGroupInfo);
 
             // 정렬된 allGroupInfo
-            console.log(
-                'newMsg - sortedAllGroupInfo>>>>>>>',
-                sortedAllGroupInfo
-            );
+            // console.log(
+            //     'newMsg - sortedAllGroupInfo>>>>>>>',
+            //     sortedAllGroupInfo
+            // );
             // }
 
             // gSeq가 같은 데이터만 업데이트
@@ -286,14 +286,21 @@ export default function Header(props: any) {
 
                 localStorage.setItem(`gSeq${gSeq}`, '0');
             } else {
+                console.log('??????', gSeq);
                 let currentCount = localStorage.getItem(`gSeq${gSeq}`);
-                let newCount = parseInt(currentCount || '0', 10) + 1;
+                let newCount = Number(currentCount) + 1;
                 localStorage.setItem(`gSeq${gSeq}`, newCount.toString());
             }
 
             //; localStorage 합산
             updateUnreadMsg();
-        });
+        };
+
+        props.socket?.on('newMsg', socketNewMsg);
+
+        return () => {
+            props.socket?.off('newMsg', socketNewMsg);
+        };
     }, [props.socket, props.allGroupInfo]);
 
     useEffect(() => {
