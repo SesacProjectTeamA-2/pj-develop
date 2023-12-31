@@ -74,7 +74,7 @@ export default function MemberList({
                             <div className="ranking-list-img-div">
                                 <img
                                     src={
-                                        leaderInfo.uImg ||
+                                        leaderInfo?.uImg ||
                                         '/asset/images/user.svg'
                                     }
                                     alt="userImg"
@@ -83,7 +83,7 @@ export default function MemberList({
 
                             <div className="cur-ranking-content">
                                 <div className="member-list-name-text">
-                                    {leaderInfo.uName}
+                                    {leaderInfo?.uName}
                                 </div>
                                 <div className="is-leader-div">(모임장) </div>
                             </div>
@@ -96,7 +96,7 @@ export default function MemberList({
                                 <div className="ranking-list">
                                     <img
                                         src={
-                                            member.uImg ||
+                                            member?.uImg ||
                                             '/asset/images/user.svg'
                                         }
                                         alt="userImg"
@@ -104,7 +104,7 @@ export default function MemberList({
 
                                     <div className="cur-ranking-content">
                                         <div className="member-list-name-text">
-                                            {member.uName}
+                                            {member?.uName}
                                         </div>
                                         {/* <div className="">
                                             {member.description}

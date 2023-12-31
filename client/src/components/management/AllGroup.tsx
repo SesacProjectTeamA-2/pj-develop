@@ -75,7 +75,7 @@ export default function AllGroup() {
 
     return (
         <div style={{ margin: '0 0 4rem 7rem' }}>
-            <SummaryCard />
+            <SummaryCard allUser={allUser} allGroup={allGroup} />
             <Paper elevation={3} className="list-paper">
                 {/* <div className="title4 list-title">전체 유저</div> */}
                 <div
@@ -86,11 +86,10 @@ export default function AllGroup() {
                     }}
                 >
                     <div>
-                        <strong>[참고 사항]</strong>
+                        <strong>[ CAUTION ]</strong>
                     </div>
-                    <div> 포트폴리오용이므로 개인정보는 제외했습니다.</div>
                     <div>
-                        관리자 권한으로, 체크박스를 클릭하면 유저를 삭제할 수
+                        관리자 권한으로, 체크박스를 클릭하면 그룹을 삭제할 수
                         있습니다.
                     </div>
                 </div>

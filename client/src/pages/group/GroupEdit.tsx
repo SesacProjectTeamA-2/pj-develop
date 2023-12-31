@@ -358,6 +358,7 @@ export default function GroupEdit() {
                                     }
                                     className="tag-btn"
                                     style={{
+                                        padding: '0.2rem 0',
                                         background:
                                             selectedInterestId === interest.id
                                                 ? '#94897c'

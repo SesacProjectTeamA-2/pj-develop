@@ -52,18 +52,40 @@ export default function MEnhancedTable() {
         };
     }
 
-    const [allUser, setAllUser] = useState<any>();
-    const [allUserInfo, setAllUserInfo] = useState<any>();
-    const [allJoinInfo, setAllJoinInfo] = useState<any>();
+    const [allGroup, setAllGroup] = useState<any>();
+    const [allGroupUser, setAllGroupUser] = useState<any>();
+    const [gSeqCountArray, setGSeqCountArray] = useState<any>();
+    // [[gSeq, 유저수]]
+    // [[1, 2], [2, 5], ...]
 
-    const getAllUser = async () => {
+    const getAllGroup = async () => {
         const res = await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/admin/users`)
+            .get(`${process.env.REACT_APP_DB_HOST}/admin/groups`)
             .then((res) => {
-                console.log('getAllUser', res.data);
-                setAllUser(res.data);
-                setAllUserInfo(res.data.allUser);
-                setAllJoinInfo(res.data.joinGroup);
+                console.log('getAllGroup >>>>>>', res.data);
+                setAllGroup(res.data.allGroup);
+                setAllGroupUser(res.data.groupUserArray);
+
+                const gSeqCount: any = [];
+
+                // gSeq 세팅
+                for (let i = 0; i < res.data.allGroup?.length; i++) {
+                    gSeqCount.push([res.data.allGroup[i].gSeq, 0]);
+                }
+
+                console.log('gSeqCount 세팅 >>>>>', gSeqCount);
+
+                for (let i = 0; i < res.data.groupUserArray?.length; i++) {
+                    for (let j = 0; j < gSeqCount.length; j++) {
+                        if (
+                            gSeqCount[j][0] === res.data.groupUserArray[i].gSeq
+                        ) {
+                            gSeqCount[j][1] += 1;
+                        }
+                    }
+                }
+
+                setGSeqCountArray(gSeqCount);
             })
             .catch((err) => {
                 console.log('error 발생: ', err);
@@ -71,24 +93,22 @@ export default function MEnhancedTable() {
     };
 
     useEffect(() => {
-        getAllUser();
+        getAllGroup();
     }, []);
 
+    console.log('gSeqCount 최종 >>>>>', gSeqCountArray);
+
     // //; 유저 데이터 들어오는 부분
-    const rows = allUserInfo
-        ? allUserInfo?.map((user: any, index: number) =>
+    const rows = allGroup
+        ? allGroup?.map((group: any, idx: number) =>
               createData(
-                  user.uSeq,
-                  user.uName,
-                  `${new Date(user.createdAt).getFullYear()}/${
-                      new Date(user.createdAt).getMonth() + 1
-                  }/${new Date(user.createdAt).getDate()}`, // user.createdAt,
-                  user.tb_groupUsers.filter(
-                      (user: any) => user.guIsLeader === 'y'
-                  ).length,
-                  user.tb_groupUsers.filter(
-                      (user: any) => user.guIsLeader === null
-                  ).length
+                  group.gSeq,
+                  group.gName,
+                  `${new Date(group.createdAt).getFullYear()}/${
+                      new Date(group.createdAt).getMonth() + 1
+                  }/${new Date(group.createdAt).getDate()}`, // group.createdAt,
+                  group.gCategory,
+                  gSeqCountArray[idx][1] // 전체 인원 수
               )
           )
         : [];
@@ -165,7 +185,10 @@ export default function MEnhancedTable() {
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2, boxShadow: 'none' }}>
-                <GEnhancedTableToolbar numSelected={selected.length} />
+                <GEnhancedTableToolbar
+                    selected={selected}
+                    numSelected={selected.length}
+                />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 620 }}
@@ -213,6 +236,7 @@ export default function MEnhancedTable() {
                                             scope="row"
                                             padding="none"
                                             align="center"
+                                            style={{ minWidth: '6rem' }}
                                         >
                                             {row.id}
                                         </TableCell>
@@ -221,7 +245,10 @@ export default function MEnhancedTable() {
                                         </TableCell>
                                         <TableCell
                                             align="right"
-                                            style={{ minWidth: '5rem' }}
+                                            style={{
+                                                minWidth: '6rem',
+                                                padding: '0.3rem',
+                                            }}
                                         >
                                             {row.joinDate}
                                         </TableCell>
