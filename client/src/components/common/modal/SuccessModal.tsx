@@ -92,8 +92,8 @@ any) {
                     />
                 </div>
                 <div className="modal-mission-cancel-content leave-modal-content">
-                    <div className="modal-cancel-title-container leave-modal-container">
-                        <div className="title1">
+                    <div className="modal-cancel-title-container create-group-done-modal-container">
+                        <div className="title3">
                             {action === '모임 생성'
                                 ? `${groupName} ${action}했습니다 !`
                                 : action === '자유/질문을 작성'

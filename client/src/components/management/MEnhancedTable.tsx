@@ -165,7 +165,10 @@ export default function MEnhancedTable() {
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2, boxShadow: 'none' }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar
+                    numSelected={selected.length}
+                    selected={selected}
+                />
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 620 }}
@@ -198,7 +201,10 @@ export default function MEnhancedTable() {
                                         selected={isItemSelected}
                                         sx={{ cursor: 'pointer' }}
                                     >
-                                        <TableCell padding="checkbox">
+                                        <TableCell
+                                            padding="checkbox"
+                                            style={{ width: '2rem' }}
+                                        >
                                             <Checkbox
                                                 color="primary"
                                                 checked={isItemSelected}
@@ -213,14 +219,21 @@ export default function MEnhancedTable() {
                                             scope="row"
                                             padding="none"
                                             align="center"
+                                            style={{
+                                                minWidth: '4rem',
+                                                paddingRight: '2rem',
+                                            }}
                                         >
                                             {row.id}
                                         </TableCell>
-                                        <TableCell align="right">
+                                        <TableCell
+                                            align="center"
+                                            style={{ minWidth: '4rem' }}
+                                        >
                                             {row.name}
                                         </TableCell>
                                         <TableCell
-                                            align="right"
+                                            align="center"
                                             style={{ minWidth: '5rem' }}
                                         >
                                             {row.joinDate}

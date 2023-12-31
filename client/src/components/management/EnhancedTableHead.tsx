@@ -60,19 +60,19 @@ interface HeadCell {
 const headCells: readonly HeadCell[] = [
     {
         id: 'id',
-        numeric: true,
-        disablePadding: true,
-        label: 'No.',
+        numeric: false,
+        disablePadding: false,
+        label: '고유 번호',
     },
     {
         id: 'name',
-        numeric: true,
+        numeric: false,
         disablePadding: false,
         label: '성함',
     },
     {
         id: 'joinDate',
-        numeric: true,
+        numeric: false,
         disablePadding: false,
         label: '가입날짜',
     },
@@ -131,9 +131,9 @@ export default function EnhancedTableHead(props: EnhancedTableProps) {
                 </TableCell>
                 {headCells.map((headCell) => (
                     <TableCell
-                        style={{ padding: '10px' }}
+                        style={{ padding: '6px' }}
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
+                        align={headCell.numeric ? 'right' : 'center'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >

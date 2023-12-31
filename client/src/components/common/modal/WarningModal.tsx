@@ -17,6 +17,8 @@ export default function WarningModal({
     gbSeq,
     mSeq,
     socket,
+    selectedUSeq, // 관리자가 삭제하려는 uSeq List
+    selectedGSeq, // 관리자가 삭제하려는 gSeq List
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
@@ -132,6 +134,40 @@ export default function WarningModal({
                     });
             };
             boardDeleteHandler(gbSeq);
+        } else if (action === '관리자 유저 삭제') {
+            const adminDeleteUserHandler = async () => {
+                // selected uSeq 배열 반복
+                for (const uSeq of selectedUSeq) {
+                    try {
+                        // 각 uSeq에 대한 삭제 요청
+                        const res = await axios.delete(
+                            `${process.env.REACT_APP_DB_HOST}/admin/users/${uSeq}`
+                        );
+                        window.location.reload();
+                        console.log(`deleteUser ${uSeq}`, res.data);
+                    } catch (err) {
+                        console.log(`error 발생 for uSeq ${uSeq}: `, err);
+                    }
+                }
+            };
+            adminDeleteUserHandler();
+        } else if (action === '관리자 그룹 삭제') {
+            const adminDeleteGroupHandler = async () => {
+                // selected gSeq 배열 반복
+                for (const gSeq of selectedGSeq) {
+                    try {
+                        // 각 gSeq에 대한 삭제 요청
+                        const res = await axios.delete(
+                            `${process.env.REACT_APP_DB_HOST}/admin/groups/${gSeq}`
+                        );
+                        window.location.reload();
+                        console.log(`deleteUser ${gSeq}`, res.data);
+                    } catch (err) {
+                        console.log(`error 발생 for gSeq ${gSeq}: `, err);
+                    }
+                }
+            };
+            adminDeleteGroupHandler();
         }
     };
 
@@ -184,6 +220,10 @@ export default function WarningModal({
                                 ? `${groupName}  모임을 정말 ${action}하시겠습니까 ?`
                                 : action === '회원 탈퇴'
                                 ? `정말 ${action}하시겠습니까 ?`
+                                : action === '관리자 유저 삭제'
+                                ? `강제 퇴장시키겠습니까 ?`
+                                : action === '관리자 그룹 삭제'
+                                ? `그룹을 강제 삭제하겠습니까 ?`
                                 : `정말 ${action}하시겠습니까 ?`}
                         </div>
 
@@ -198,6 +238,48 @@ export default function WarningModal({
                             </div>
                         ) : action === '댓글 삭제' ? (
                             ''
+                        ) : action === '관리자 유저 삭제' ? (
+                            <div className="title5 cancel-modal-description">
+                                관리자 권한으로{' '}
+                                {selectedUSeq.map(
+                                    (userUSeq: number, index: number) => (
+                                        <span
+                                            key={userUSeq}
+                                            style={{
+                                                color: '#d01e1e',
+                                                display: 'inline',
+                                            }}
+                                        >
+                                            {index > 0 && ', '}
+                                            {`${userUSeq}번`}
+                                        </span>
+                                    )
+                                )}{' '}
+                                회원을 강제 퇴장시킵니다. <br />
+                            </div>
+                        ) : action === '관리자 그룹 삭제' ? (
+                            <div className="title5 cancel-modal-description">
+                                관리자 권한으로{' '}
+                                {selectedGSeq.map(
+                                    (userGSeq: number, index: number) => (
+                                        <span
+                                            key={userGSeq}
+                                            style={{
+                                                color: '#d01e1e',
+                                                display: 'inline',
+                                            }}
+                                        >
+                                            {index > 0 && ', '}
+                                            {`${userGSeq}번`}
+                                        </span>
+                                    )
+                                )}{' '}
+                                그룹을 강제 삭제합니다. <br />
+                                <div style={{ color: '#9a9a9a' }}>
+                                    모임의 활동 정보가 모두 사라지며 복구되지
+                                    않습니다.
+                                </div>{' '}
+                            </div>
                         ) : action === '회원 탈퇴' || '탈퇴' ? (
                             <div className="title5 cancel-modal-description">
                                 모임의 활동 정보가 모두 사라지며 복구되지
@@ -213,7 +295,13 @@ export default function WarningModal({
                             onClick={doneHandler}
                             className="btn-md mission-cancel-done-btn"
                         >
-                            {action === '게시글을 삭제' ? '삭제' : action}
+                            {action === '게시글을 삭제'
+                                ? '삭제'
+                                : action === '관리자 유저 삭제'
+                                ? '강제 퇴장'
+                                : action === '관리자 그룹 삭제'
+                                ? '강제 삭제'
+                                : action}
                         </button>
                         <button
                             onClick={closeModalHandler}

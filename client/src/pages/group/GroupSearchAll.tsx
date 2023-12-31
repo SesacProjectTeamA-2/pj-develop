@@ -104,7 +104,7 @@ export default function GroupSearchAll({
     }
 
     // 현재 참석 멤버수
-    for (let i = 0; i < allGroupMember.length; i++) {
+    for (let i = 0; i < allGroupMember?.length; i++) {
         countArray.push(allGroupMember[i].count);
     }
 

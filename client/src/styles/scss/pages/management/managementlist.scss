@@ -17,8 +17,20 @@
     margin-bottom: 5rem;
 
     h2 {
+        // text-align: center;
+        padding-top: 2rem;
+        margin-left: 3rem;
+    }
+
+    h4 {
         text-align: center;
-        padding-top: 3rem;
+        margin-top: 2rem;
+        margin-left: 3rem;
+        width: 76%;
+        border-radius: 0.4rem;
+        padding: 0.5rem 1rem;
+        background-color: rgb(240, 240, 240);
+        color: rgb(119, 119, 119);
     }
 }
 
@@ -28,6 +40,14 @@
     canvas {
         position: relative;
         margin: 2rem;
-        padding: 2rem;
+    }
+}
+
+.group-line-graph-container {
+    height: 20rem;
+
+    canvas {
+        position: relative;
+        margin: 2rem;
     }
 }

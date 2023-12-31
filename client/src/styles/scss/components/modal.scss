@@ -24,7 +24,7 @@
     max-height: 70vh;
 
     width: 100%;
-    height: 80%;
+    height: 72%;
     align-items: center;
 
     button {
@@ -39,7 +39,6 @@
     button {
         border-radius: 10px;
         width: 80%;
-        margin: 1.2rem auto;
         white-space: nowrap;
         @include media('<800px') {
             width: 7rem;
@@ -69,7 +68,6 @@
 
 .modal-style {
     width: 76vw;
-
     z-index: 150;
     position: absolute;
     top: 50%;
@@ -97,8 +95,8 @@
 }
 
 .warning-modal-style {
-    width: 40rem;
-    height: 28rem;
+    width: 29rem;
+    height: 23rem;
     z-index: 150;
     position: absolute;
     top: 50%;
@@ -147,6 +145,8 @@
 }
 
 .modal-style-mission-add {
+    display: flex;
+    flex-direction: column;
     width: 72vw;
     height: 70vh;
     z-index: 1000;
@@ -232,22 +232,33 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 50%;
+        // width: 50%;
 
         @include media('<800px') {
             width: 100%;
         }
 
+        @include media('<600px') {
+            .deadline-text {
+                display: none;
+            }
+
+            flex-direction: column;
+            gap: 1rem;
+        }
+
         input {
-            width: 60%;
+            width: 8rem;
+            margin: 0 1rem 0 2rem;
 
             @include media('<800px') {
-                width: 100%;
+                width: 8rem;
             }
         }
     }
     #dday-text {
-        width: 100%;
+        // width: 100%;
+        font-weight: 500;
     }
 }
 
@@ -357,6 +368,10 @@
 .modal-cancel-title-container {
     display: flex;
     flex-direction: column;
+}
+
+.cancel-modal-description {
+    text-align: center;
 }
 
 .mission-cancel-modal-mission-list {
@@ -505,7 +520,7 @@
 .leave-modal-content {
     margin: 0;
     display: flex;
-    margin: 20% auto;
+    margin: 15% auto;
 
     overflow-y: auto !important;
     max-height: 70vh;
@@ -517,6 +532,15 @@
     width: 100%;
     justify-content: center;
     margin-bottom: 3rem;
+}
+
+//=== 모임 생성 성공 ===
+.create-group-done-modal-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    padding-top: 2rem;
 }
 
 //=== 미션 수정 모달 ===

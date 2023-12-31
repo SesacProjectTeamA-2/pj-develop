@@ -542,9 +542,9 @@ export default function MissionAddModal({
                             <div className="title4">Mission List</div>
 
                             <div className="group-create-content modal-mission-box">
-                                <div className="deadline-text">마감일</div>
-
                                 <div className="dday-container">
+                                    <div className="deadline-text">마감일</div>
+
                                     {action === '미션생성' ? (
                                         <input
                                             type="date"

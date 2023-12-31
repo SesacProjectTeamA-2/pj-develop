@@ -32,10 +32,6 @@ export function getComparator<Key extends keyof any>(
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 export function stableSort<T>(array: any, comparator: (a: T, b: T) => number) {
     const stabilizedThis = array.map(
         (el: any, index: any) => [el, index] as [T, number]
@@ -60,33 +56,33 @@ interface HeadCell {
 const headCells: readonly HeadCell[] = [
     {
         id: 'id',
-        numeric: true,
+        numeric: false,
         disablePadding: true,
-        label: 'No.',
+        label: '고유 번호',
     },
     {
         id: 'name',
         numeric: true,
         disablePadding: false,
-        label: '성함',
+        label: '그룹명',
     },
     {
         id: 'joinDate',
         numeric: true,
         disablePadding: false,
-        label: '가입날짜',
+        label: '생성 날짜',
     },
     {
         id: 'madeGroup',
         numeric: true,
         disablePadding: false,
-        label: '생성한 모임 수 (Leader)',
+        label: '카테고리',
     },
     {
         id: 'joinGroup',
         numeric: true,
         disablePadding: false,
-        label: '참여한 모임 수 (Member)',
+        label: '전체 인원',
     },
 ];
 
@@ -131,7 +127,7 @@ export default function GEnhancedTableHead(props: EnhancedTableProps) {
                 </TableCell>
                 {headCells.map((headCell) => (
                     <TableCell
-                        style={{ padding: '10px' }}
+                        style={{ padding: '6px' }}
                         key={headCell.id}
                         align={headCell.numeric ? 'right' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
