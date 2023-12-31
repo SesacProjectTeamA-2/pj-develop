@@ -52,7 +52,7 @@ export default function ManagementLayout({ children, showChat }: any) {
                                         // paddingLeft: 0,
                                         // paddingRight: 0,
                                         // paddingTop: 0,
-                                        // justifyContent: 'Center',
+                                        justifyContent: 'Center',
                                     }}
                                 >
                                     {children}
@@ -104,11 +104,10 @@ export default function ManagementLayout({ children, showChat }: any) {
                             >
                                 <Item
                                     style={{
-                                        padding: '7rem 3rem',
                                         // paddingLeft: 0,
                                         // paddingRight: 0,
-                                        // paddingTop: 0,
-                                        // justifyContent: 'Center',
+                                        paddingTop: '5rem',
+                                        justifyContent: 'Center',
                                     }}
                                 >
                                     {' '}

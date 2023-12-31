@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { Link, useParams, useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
@@ -8,8 +7,6 @@ import { Cookies } from 'react-cookie';
 import SwiperComponent from '../../components/group/SwiperComponent';
 
 export default function GroupList() {
-    const nvg = useNavigate();
-
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -75,13 +72,6 @@ export default function GroupList() {
         // console.log('madeGroup', madeGroup);
     }, []);
 
-    const createHandler = () => {
-        if (!uToken) {
-            alert('로그인이 필요합니다 !');
-            return;
-        } else nvg('/group/create');
-    };
-
     return (
         <div>
             {/* === 변경 === */}
@@ -140,25 +130,7 @@ export default function GroupList() {
             </div> */}
             {/* <div className="btn-fixed-wrapper"> */}
             {/* <Link to="/group/create"> */}
-            <div className="btn-fixed-wrapper">
-                {/* <button className="btn-fixed" onClick={createHandler}> */}
-                {/* <button className="btn-fixed-floating" onClick={createHandler}>
-                    내가 모임 만들기 !
-                </button> */}
-                <button className="btn-fixed-rl" onClick={createHandler}>
-                    <span className="shadow">
-                        <span className="vert">
-                            <span className="floating">
-                                <span className="front">
-                                    원하는 모임이 없나요 ?
-                                </span>
-                                <span className="back">직접 만들러 가요 !</span>
-                            </span>
-                        </span>
-                    </span>
-                </button>
-                {/* <span className="btn-fixed-floating-shadow"></span> */}
-            </div>
+
             {/* </Link> */}
             {/* </div> */}
         </div>

@@ -13,6 +13,7 @@ import InterestedList from '../../components/common/InterestedList';
 import GroupList from './GroupList';
 import GroupSearch from './GroupSearch';
 import GroupSearchAll from './GroupSearchAll';
+import { useNavigate } from 'react-router-dom';
 
 export default function Groups() {
     const cookie = new Cookies();
@@ -26,6 +27,8 @@ export default function Groups() {
     const [searchInput, setSearchInput] = useState('');
 
     const [searchGroupList, setSearchGroupList] = useState([]);
+
+    const nvg = useNavigate();
 
     const getSearchGroupList = async () => {
         const res = await axios
@@ -67,6 +70,13 @@ export default function Groups() {
         if (event.key === 'Enter') {
             setSearch(true);
         }
+    };
+
+    const createHandler = () => {
+        if (!uToken) {
+            alert('로그인이 필요합니다 !');
+            return;
+        } else nvg('/group/create');
     };
 
     return (
@@ -130,6 +140,25 @@ export default function Groups() {
                 ) : (
                     <GroupList />
                 )}
+            </div>
+            <div className="btn-fixed-wrapper">
+                {/* <button className="btn-fixed" onClick={createHandler}> */}
+                {/* <button className="btn-fixed-floating" onClick={createHandler}>
+                    내가 모임 만들기 !
+                </button> */}
+                <button className="btn-fixed-rl" onClick={createHandler}>
+                    <span className="shadow">
+                        <span className="vert">
+                            <span className="floating">
+                                <span className="front">
+                                    원하는 모임이 없나요 ?
+                                </span>
+                                <span className="back">직접 만들러 가요 !</span>
+                            </span>
+                        </span>
+                    </span>
+                </button>
+                {/* <span className="btn-fixed-floating-shadow"></span> */}
             </div>
         </div>
     );
