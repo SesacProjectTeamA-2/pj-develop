@@ -36,7 +36,7 @@ export default function SummaryCard({ allUser, allGroup }: any) {
                     </svg>
                 </div>
                 <div className="summary-title-content">
-                    <div className="title5">100</div>
+                    <div className="title5">{allGroup?.length}</div>
                     <div className="summary-title">Groups</div>
                 </div>
             </Paper>
@@ -55,7 +55,7 @@ export default function SummaryCard({ allUser, allGroup }: any) {
                     </svg>
                 </div>
                 <div className="summary-title-content">
-                    <div className="title5">100</div>
+                    <div className="title5">0</div>
                     <div className="summary-title">Reports</div>
                 </div>
             </Paper>

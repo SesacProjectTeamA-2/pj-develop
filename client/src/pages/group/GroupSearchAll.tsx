@@ -15,6 +15,7 @@ export default function GroupSearchAll({
     const uToken = cookie.get('isUser');
 
     const [allGroupList, setAllGroupList] = useState<any>([]);
+    const [allGroupMember, setAllGroupMember] = useState<any>([]);
 
     //-- 움직이는 효과
     useEffect(() => {
@@ -64,6 +65,7 @@ export default function GroupSearchAll({
             console.log('검색결과', res.data);
             console.log(res);
             setAllGroupList(res.data.groupArray);
+            setAllGroupMember(res.data.groupMember);
         };
 
         getSearchGroupList();
@@ -102,9 +104,9 @@ export default function GroupSearchAll({
     }
 
     // 현재 참석 멤버수
-    // for (let i = 0; i < memberCount.length; i++) {
-    //     countArray.push(memberCount[i].count);
-    // }
+    for (let i = 0; i < allGroupMember.length; i++) {
+        countArray.push(allGroupMember[i].count);
+    }
 
     return (
         <div>
@@ -135,27 +137,27 @@ export default function GroupSearchAll({
                                           <li className="title6">
                                               {searchGroup.gDday}
                                           </li>
+                                          <li>
+                                              <i
+                                                  className="fa fa-check"
+                                                  aria-hidden="true"
+                                              ></i>
+                                              참석인원
+                                              {countArray[idx]}/
+                                              {searchGroup.gMaxMem}
+                                          </li>
+
+                                          {searchGroup.gMaxMem -
+                                              countArray[idx] >
+                                          0 ? (
+                                              <button className="all-group-serach-join-btn">
+                                                  참석 가능
+                                              </button>
+                                          ) : (
+                                              <button>마감</button>
+                                          )}
                                       </ul>
                                   </Link>
-
-                                  {/* === 기존 코드 === */}
-                                  {/* <div className="title-card">
-                            {searchGroup.gName}
-                        </div>
-                        <br />
-                        <span
-                            style={{
-                                // margin: '0px 15px',
-                                color: '#8D6262',
-                                //   fontWeight: 'bold',
-                                //   fontSize: '1.2rem',
-                            }}
-                        >
-                            <span className="title5">D-day</span>
-                        </span>
-                        <div className="title6">
-                            {searchGroup.gDday}
-                        </div> */}
                               </div>
                           )
                       )}
