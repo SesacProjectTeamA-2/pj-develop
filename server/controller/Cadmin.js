@@ -30,13 +30,16 @@ exports.allUsers = async (req, res) => {
   }
 };
 
-exports.delUsers = async (req, res) => {
+exports.outUsers = async (req, res) => {
   try {
     const uSeq = req.params.uSeq;
 
-    await User.destroy({
-      where: { uSeq },
-    });
+    await User.update(
+      { isUse: null },
+      {
+        where: { uSeq },
+      }
+    );
 
     res.send({ isSuccess: 'true' });
   } catch (err) {

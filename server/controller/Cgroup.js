@@ -336,6 +336,10 @@ exports.deleteQuitGroup = async (req, res) => {
             await GroupUser.destroy({
               where: { uSeq, gSeq },
             });
+
+            // 토큰값에서 삭제
+            user.gSeq = user.gSeq.filter((item) => item.gSeq !== gSeq);
+
             res.status(200).send({
               success: true,
               msg: '모임 탈퇴 및 모임장 위임 성공',
@@ -365,6 +369,7 @@ exports.deleteQuitGroup = async (req, res) => {
     await GroupUser.destroy({
       where: { uSeq, gSeq },
     });
+    user.gSeq = user.gSeq.filter((item) => item.gSeq !== gSeq);
 
     res.status(200).send({
       success: true,
@@ -455,6 +460,9 @@ exports.postGroup = async (req, res) => {
         }
 
         if (missionArray.length === mCnt) {
+          // 토큰값 추가
+          user.gSeq = [...insertOneGroup.gSeq];
+
           res.status(200).send({
             isSuccess: true,
             msg: '모임 생성에 성공했습니다.',
@@ -829,7 +837,10 @@ exports.joinGroup = async (req, res) => {
       gSeq: groupSeq,
       uSeq: user.uSeq,
     });
-    // 참여 요청-알림-수락의 경우 레디스/웹소켓이 필요할것으로 생각됨
+    // 참여 요청 - 모임장 알림 - 수락
+
+    // 토큰에 gSeq 추가
+    user.gSeq = [...groupSeq];
   } else {
     res.send({ result: false, message: '먼저 로그인 해주세요.' });
   }
@@ -926,6 +937,9 @@ exports.postJoinByLink = async (req, res) => {
     });
 
     if (result) {
+      // 토큰값 추가
+      user.gSeq = [...group.gSeq];
+
       res.status(200).send({
         success: true,
         msg: '모임 참여에 성공했습니다.',
@@ -989,6 +1003,9 @@ exports.postJoin = async (req, res) => {
     });
 
     if (result) {
+      // 토큰값 추가
+      user.gSeq = [...gSeq];
+
       res.status(200).send({
         success: true,
         msg: '모임 참여에 성공했습니다.',
