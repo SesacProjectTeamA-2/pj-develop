@@ -88,6 +88,13 @@ export default function ChoiceModal({
         }
     };
 
+    //~ [추후신고]
+    // 신고 사유
+    const [inputVal, setInputVal] = useState('');
+
+    //=== 신고하기 ===
+    const reportDone = () => {};
+
     return (
         <div>
             <Modal
@@ -107,12 +114,18 @@ export default function ChoiceModal({
                 <div className="modal-mission-cancel-content">
                     <div className="title5 modal-cancel-header">
                         <div className="modal-cancel-title-container">
-                            <div className="title3">{action}</div>
+                            <div className="title3">
+                                {action === '신고'
+                                    ? '🚨 관리자에게 신고하기'
+                                    : action}
+                            </div>
                             <div className="title5 cancel-modal-description">
                                 {action === '모임장 권한 넘기기'
                                     ? '누구에게 모임의 모든 권한을 넘길까요 ?'
                                     : action === '강제 퇴장'
                                     ? '누구를 모임에서 강제로 퇴장할까요 ?'
+                                    : action === '신고'
+                                    ? '누구를 신고할까요 ?'
                                     : ''}
                             </div>
                         </div>
@@ -120,6 +133,7 @@ export default function ChoiceModal({
                     <div>
                         <div className="modal-line"></div>
                     </div>
+
                     <ModalMemberList
                         action={action}
                         setChoiceModalSwitch={setChoiceModalSwitch}
@@ -129,6 +143,40 @@ export default function ChoiceModal({
                         selectedMemberName={selectedMemberName}
                         setSelectedMemberName={setSelectedMemberName}
                     />
+
+                    {/* 신고일 경우, 사유 입력칸 */}
+                    {action === '신고' ? (
+                        <div className="modal-form">
+                            <Box
+                                component="form"
+                                sx={{
+                                    '& .MuiTextField-root': {
+                                        width: '67ch',
+                                    },
+                                }}
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                }}
+                                noValidate
+                                autoComplete="off"
+                            >
+                                <TextField
+                                    id="filled-multiline-flexible"
+                                    label="사유를 자세히 기재하면, 관리자가 적절한 조치를 취할 수 있습니다."
+                                    multiline
+                                    maxRows={4}
+                                    variant="filled"
+                                    onChange={(e) => {
+                                        setInputVal(e.target.value);
+                                    }}
+                                />
+                            </Box>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+
                     <div className="mission-cancel-btn-container">
                         {action === '모임장 권한 넘기기' ? (
                             <button
@@ -144,6 +192,13 @@ export default function ChoiceModal({
                             >
                                 {action}
                             </button>
+                        ) : action === '신고' ? (
+                            <button
+                                // onClick={reportDone}
+                                className="btn-md mission-cancel-done-btn"
+                            >
+                                {action}
+                            </button>
                         ) : (
                             ''
                         )}
@@ -154,26 +209,7 @@ export default function ChoiceModal({
                             취소
                         </button>
                     </div>
-                    {/* <div className="modal-form">
-                        <Box
-                            component="form"
-                            sx={{
-                                '& .MuiTextField-root': {
-                                    width: '67ch',
-                                },
-                            }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <TextField
-                                id="filled-multiline-flexible"
-                                label="이유가 무엇인가요 ?"
-                                multiline
-                                maxRows={4}
-                                variant="filled"
-                            />
-                        </Box>
-                    </div> */}
+
                     {/* <div className="mission-cancel-btn-container">
                         <button
                             onClick={doneHandler}

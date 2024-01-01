@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Cookies } from 'react-cookie';
 
@@ -10,7 +10,7 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
     console.log('commentAlarm', commentAlarm);
 
     // alarmList 배열을 순회하면서 데이터 가공
-    const formattedAlarms = alarmList.map((alarm: any) => {
+    const formattedAlarms = alarmList?.map((alarm: any) => {
         // 각 알람 항목에서 commentTime을 Date 객체로 변환
         const date = new Date(alarm?.commentTime);
 
@@ -62,8 +62,12 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
 
     // };
 
+    const [newAlarm, setNewAlarm] = useState(false); // 새로운 알람이 왔는지 여부
+
     //] 새로운 알람 추가
     const addReceivedAlarm = (data: any) => {
+        setNewAlarm(true);
+
         // 시간 변환
         const date = new Date(data?.commentTime);
 
@@ -103,7 +107,7 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
             // button.addEventListener('click', newAddedMsgReadHandler); // 클릭 이벤트 핸들러 추가
 
             const nameSpan = document.createElement('p');
-            nameSpan.innerHTML = `<b>${data.uName}</b> 님이 댓글을 남겼습니다.`;
+            nameSpan.innerHTML = ` <div className="alarm-title-text-wrapper"><span className="alarm-title-text" style={{fontWeight: 'bold'}}>${data.title}</span> <span> 게시글에</span></div> <b>${data.uName}</b> 님이 댓글을 남겼습니다.`;
 
             flexContainer.appendChild(timeSpan);
             flexContainer.appendChild(button);
@@ -244,6 +248,22 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
         }
     }, [formattedAlarms, commentAlarm]);
 
+    //] 링크 이동
+    const nvg = useNavigate();
+    const { gSeq, category, gbSeq } = useParams();
+
+    const linkToHandler = (gSeq: any, category: string, gbSeq: any) => {
+        console.log('gSeq', gSeq);
+        console.log('category', category);
+        console.log('gbSeq', gbSeq);
+        // nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`);
+        // window.location.href = `/board/${Number(gSeq)}/${category}/${Number(
+        //     gbSeq
+        // )}`;
+
+        // ! 강제이동이 되긴 하는데 sse 연결이 끊김...
+    };
+
     return (
         <div className="alarm-wrapper">
             <div className="panel">
@@ -267,7 +287,7 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
                     <div className="comment-alarm"></div>
 
                     {/* [START] alarmList - map 돌리기 ! */}
-                    {formattedAlarms?.length == 0 ? (
+                    {formattedAlarms?.length == 0 && !newAlarm ? (
                         <div className="no-alarm-text">
                             현재 알람이 없습니다.
                         </div>
@@ -295,14 +315,35 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
                                     </div>
 
                                     {alarm.type == 'comment' ? (
-                                        <p>
+                                        <p
+                                            // className="notification-message-wrapper-p"
+                                            onClick={() =>
+                                                linkToHandler(
+                                                    alarm.gSeq,
+                                                    alarm.category,
+                                                    alarm.gbSeq
+                                                )
+                                            }
+                                        >
                                             {/* <Link
-                                            to={`/board/${Number(
-                                                alarm.gSeq
-                                            )}/free/${Number(alarm.gbSeq)}`}
-                                        > */}
-                                            <b>{alarm.uName}</b> 님이 댓글을
-                                            남겼습니다.
+                                                to={`/board/${Number(
+                                                    alarm.gSeq
+                                                )}/${alarm.category}/${Number(
+                                                    alarm.gbSeq
+                                                )}`}
+                                                className="alarm-link"
+                                                key={`${alarm.gSeq}-${alarm.category}-${alarm.gbSeq}`}
+                                            > */}
+                                            <div className="alarm-title-text-wrapper">
+                                                <span className="alarm-title-text">
+                                                    {alarm.title}
+                                                </span>{' '}
+                                                <span> 게시글에</span>
+                                            </div>
+                                            <span>
+                                                <b>{alarm.uName}</b> 님이 댓글을
+                                                남겼습니다.
+                                            </span>
                                             {/* </Link> */}
                                         </p>
                                     ) : (
