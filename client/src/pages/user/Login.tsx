@@ -135,7 +135,7 @@ export default function Login(props: any) {
                             GUEST 2
                         </TesterLoginBtn2>
 
-                        <GoogleLoginBtn
+                        {/* <GoogleLoginBtn
                             onClick={() => googleLogin()}
                             align="center"
                             className="loginBtn"
@@ -145,7 +145,7 @@ export default function Login(props: any) {
                             onClick={(): void => kakaoLogin()}
                             align="center"
                             className="loginBtn"
-                        />
+                        /> */}
 
                         <NaverLoginBtn
                             onClick={(): void => naverLogin()}

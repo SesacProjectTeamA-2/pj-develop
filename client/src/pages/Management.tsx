@@ -347,13 +347,16 @@ export default function Management() {
                     <div className="graph-container">
                         <PolarArea data={areaData} />
                     </div>
-                    <h4>참가 인원</h4>
-                    <div className="graph-container">
-                        <Pie data={pieData} options={pieOptions} />
-                        {/* [추후] 참가 인원이 없을 경우 ! */}
-                        {/* {
-                    ? 모임에 참여한 인원이 없습니다.
-                   }    : <Pie data={PieData} /> */}
+                    <h4 style={{ marginTop: '6rem' }}>참가 인원</h4>
+                    <div
+                        className="graph-container"
+                        style={{ paddingBottom: '4rem' }}
+                    >
+                        {allGroup?.length > 0 ? (
+                            <Pie data={pieData} options={pieOptions} />
+                        ) : (
+                            <div>그룹에 참가한 인원이 없습니다. </div>
+                        )}
                     </div>
                 </Paper>
                 <br />

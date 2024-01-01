@@ -66,6 +66,37 @@ export default function MEnhancedTable() {
                 setAllGroup(res.data.allGroup);
                 setAllGroupUser(res.data.groupUserArray);
 
+                // 가공된 그룹 데이터 배열을 담을 상태
+                const updatedCategoryAllGroup = res.data.allGroup.map(
+                    (group: any) => {
+                        // 각 그룹의 카테고리에 따라 가공
+                        switch (group.gCategory) {
+                            case 'ex':
+                                return { ...group, gCategory: '운동' };
+                            case 're':
+                                return { ...group, gCategory: '독서' };
+                            case 'lan':
+                                return { ...group, gCategory: '언어' };
+                            case 'cert':
+                                return { ...group, gCategory: '자격증' };
+                            case 'st':
+                                return { ...group, gCategory: '스터디' };
+                            case 'eco':
+                                return { ...group, gCategory: '경제' };
+                            case 'it':
+                                return { ...group, gCategory: 'IT' };
+                            case 'etc':
+                                return { ...group, gCategory: '기타' };
+                            default:
+                                return group;
+                        }
+                    }
+                );
+
+                // 가공된 그룹 데이터 배열을 상태에 저장
+                setAllGroup(updatedCategoryAllGroup);
+
+                //; 그룹 전체 인원 카운트
                 const gSeqCount: any = [];
 
                 // gSeq 세팅
@@ -96,7 +127,7 @@ export default function MEnhancedTable() {
         getAllGroup();
     }, []);
 
-    console.log('gSeqCount 최종 >>>>>', gSeqCountArray);
+    // console.log('gSeqCount 최종 >>>>>', gSeqCountArray);
 
     // //; 유저 데이터 들어오는 부분
     const rows = allGroup
