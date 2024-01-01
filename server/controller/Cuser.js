@@ -193,6 +193,14 @@ exports.getLoginNaverRedirect = async (req, res) => {
       });
       console.log('>>>>>>>>>>>>>>>>', alreadyUser);
 
+      if (alreadyUser.isUse === 'y') {
+        res.send({
+          isSuccess: false,
+          msg: '접근이 제한된 유저입니다.',
+        });
+        return;
+      }
+
       // db에 값 있으면 이미 회원가입 한 유저
       if (alreadyUser) {
         // 해당 3개의 값 가지는 토큰 생성
