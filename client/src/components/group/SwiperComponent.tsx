@@ -182,13 +182,13 @@ export default function SwiperTest({
                                                     </li>
                                                 </ul>
                                             </div>
-
-                                            {data.gMaxMem - countArray[idx] >
+                                            {/* --- 이미 참여한 상태이므로 필요 없음 --- */}
+                                            {/* {data.gMaxMem - countArray[idx] >
                                             0 ? (
                                                 <button>참석 가능</button>
                                             ) : (
                                                 <button>마감</button>
-                                            )}
+                                            )} */}
                                         </div>
                                     </div>
                                 </Link>

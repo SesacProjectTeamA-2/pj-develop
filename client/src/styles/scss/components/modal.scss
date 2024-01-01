@@ -371,7 +371,7 @@
 }
 
 .cancel-modal-description {
-    text-align: center;
+    // text-align: center;
 }
 
 .mission-cancel-modal-mission-list {
@@ -410,7 +410,8 @@
 .modal-member-list {
     gap: 3rem;
     img {
-        width: 100px !important;
+        // width: 100px !important;
+        width: 55px !important;
         height: 55px !important;
     }
 }

@@ -4,10 +4,7 @@ import {
     AtomicBlockUtils,
     ContentState,
 } from 'draft-js';
-// 이미지를 표시하기 위해 이미지를 로드하는 데 사용되는 Entity 타입인 ‘atomic’을 지원해야 합니다.
-// https://colinch4.github.io/2023-11-24/11-09-13-449385-draftjs%EC%97%90%EC%84%9C-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%B6%94%EA%B0%80-%EA%B8%B0%EB%8A%A5-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/
 import { useEffect, useState } from 'react';
-// import Editor from '@draft-js-plugins/editor';
 import { Editor, SyntheticKeyboardEvent } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
@@ -18,7 +15,7 @@ import axios from 'axios';
 // import createImagePlugin from '@draft-js-plugins/image';
 
 // import { Editor, EditorState } from 'draft-js';
-import 'draft-js/dist/Draft.css';
+// import 'draft-js/dist/Draft.css';
 import '../../styles/scss/components/editor.scss';
 
 // const imagePlugin = createImagePlugin();
@@ -48,8 +45,8 @@ export default function EditorDraft({
             const { contentBlocks, entityMap } = blocksFromHtml;
             // https://draftjs.org/docs/api-reference-content-state/#createfromblockarray
             const contentState = ContentState.createFromBlockArray(
-                contentBlocks,
-                entityMap
+                contentBlocks
+                // entityMap
             );
 
             // const contentState = ContentState.createFromBlockArray({
@@ -208,6 +205,7 @@ export default function EditorDraft({
                         defaultsize: {
                             height: 'auto',
                             width: 'auto',
+                            maxWidth: '54vw',
                         },
                     },
                 }}

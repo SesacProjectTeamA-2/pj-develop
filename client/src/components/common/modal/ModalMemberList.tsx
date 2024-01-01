@@ -106,13 +106,17 @@ export default function ModalMemberList({
                                     className="modal-member-list-label"
                                     style={{
                                         backgroundColor:
-                                            action === '강제 퇴장' &&
+                                            action === '신고' &&
                                             selectedMemberId === member.uSeq
-                                                ? '#e20606'
+                                                ? '#cc0101'
+                                                : action === '강제 퇴장' &&
+                                                  selectedMemberId ===
+                                                      member.uSeq
+                                                ? '#cc0101'
                                                 : action === '미션인증 취소' &&
                                                   selectedMemberId ===
                                                       member.uSeq
-                                                ? '#e20606'
+                                                ? '#cc0101'
                                                 : action ===
                                                       '모임장 권한 넘기기' &&
                                                   selectedMemberId ===
@@ -126,6 +130,8 @@ export default function ModalMemberList({
                                                 : 'black',
 
                                         cursor: 'pointer',
+
+                                        fontWeight: 'bold',
                                     }}
                                 >
                                     <input
@@ -140,6 +146,11 @@ export default function ModalMemberList({
                                                 '/asset/images/user.svg'
                                             }
                                             alt="userImg"
+                                            style={{
+                                                // width: '40px',
+                                                // height: '40px',
+                                                width: '100%',
+                                            }}
                                         />
                                         <div className="cur-ranking-content">
                                             <div className="title4 name">

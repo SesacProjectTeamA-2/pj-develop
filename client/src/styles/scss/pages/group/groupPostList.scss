@@ -42,6 +42,12 @@
 
 .post-list-main {
     padding: 1rem 1rem;
+
+    img {
+        max-width: 40vw;
+        padding: 2rem;
+        margin: 0 auto;
+    }
 }
 
 .post-list-footer {
