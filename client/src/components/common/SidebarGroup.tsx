@@ -13,6 +13,8 @@ export default function SideBarGroup({
     isShrinkView,
     setIsShrinkView,
     socket,
+    key,
+    setKey,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -94,7 +96,7 @@ export default function SideBarGroup({
     };
 
     return (
-        <div className="sidebar-all">
+        <div className="sidebar-all" key={key}>
             {/* <div
                 style={{
                     height: '230px',
@@ -442,6 +444,7 @@ export default function SideBarGroup({
                                     }
                                     menu={menu}
                                     setMenu={setMenu}
+                                    setKey={setKey}
                                 />
                             ) : (
                                 <SideBarGroupMember

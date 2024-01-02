@@ -5,7 +5,12 @@ import { Cookies } from 'react-cookie';
 
 import '../../styles/scss/components/alarm.scss';
 
-export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
+export default function Alarm({
+    setKey,
+    alarmHandler,
+    alarmList,
+    commentAlarm,
+}: any) {
     console.log('alarmList', alarmList);
     console.log('commentAlarm', commentAlarm);
 
@@ -252,14 +257,21 @@ export default function Alarm({ alarmHandler, alarmList, commentAlarm }: any) {
     const nvg = useNavigate();
     const { gSeq, category, gbSeq } = useParams();
 
+    // const [key, setKey] = useState(0); // key 상태 추가
+
     const linkToHandler = (gSeq: any, category: string, gbSeq: any) => {
         console.log('gSeq', gSeq);
         console.log('category', category);
         console.log('gbSeq', gbSeq);
-        // nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`);
+
+        // key 값을 변경하여 리렌더링 유도
+        setKey((prevKey: any) => prevKey + 1);
+
+        nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`);
         // window.location.href = `/board/${Number(gSeq)}/${category}/${Number(
         //     gbSeq
         // )}`;
+        // window.location.reload();
 
         // ! 강제이동이 되긴 하는데 sse 연결이 끊김...
     };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
@@ -17,8 +17,10 @@ export default function ChoiceModal({
     setChoiceModalSwitch,
     choiceModalSwitchHandler,
     action,
+    setKey,
 }: any) {
     const { gSeq } = useParams();
+    const nvg = useNavigate();
 
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -81,7 +83,13 @@ export default function ChoiceModal({
                     alert(
                         `${selectedMemberName} 님에게 모임장을 위임하였습니다.`
                     );
-                    window.location.reload();
+                    // window.location.reload();
+                    setChoiceModalSwitch(false);
+
+                    // key 값을 변경하여 리렌더링 유도
+                    setKey((prevKey: any) => prevKey + 1);
+
+                    nvg(`/group/home/${gSeq}`);
                 });
         } catch (err) {
             alert('모임장 위임에 실패하였습니다.');

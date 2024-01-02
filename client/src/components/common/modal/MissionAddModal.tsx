@@ -43,6 +43,7 @@ export default function MissionAddModal({
     input,
     gDday,
     groupDetail,
+    setKey,
 }: any) {
     //] 1. 그룹 생성
     //-- action = 미션생성
@@ -292,7 +293,9 @@ export default function MissionAddModal({
 
             patchMissionListHandler();
 
-            window.location.reload();
+            //++ window.location.reload(); 대신에,
+            // key 값을 변경하여 리렌더링 유도
+            setKey((prevKey: any) => prevKey + 1);
         }
     };
 

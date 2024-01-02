@@ -12,9 +12,13 @@ export default function GroupSearch({
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
-    const [searchGroupList, setSearchGroupList] = useState([]);
+    const [searchGroupList, setSearchGroupList] = useState<any>();
+    const [allGroupMember, setAllGroupMember] = useState<any>([]);
 
     console.log(selectedArr);
+
+    let categories: any = [];
+    let countArray: any = [];
 
     useEffect(() => {
         const getSearchGroupList = async () => {
@@ -23,8 +27,9 @@ export default function GroupSearch({
                 `${process.env.REACT_APP_DB_HOST}/group?search=${searchInput}&category=${selectedArr}`
             );
 
-            console.log('검색결과', res.data.groupArray);
+            console.log('검색결과', res.data);
             setSearchGroupList(res.data.groupArray);
+            setAllGroupMember(res.data.groupMember);
         };
 
         getSearchGroupList();
@@ -32,22 +37,105 @@ export default function GroupSearch({
 
     console.log('searchGroupList', searchGroupList);
 
+    for (let i = 0; i < searchGroupList?.length; i++) {
+        switch (searchGroupList[i].gCategory) {
+            case 'ex':
+                categories.push('🏃🏻‍♂️');
+                break;
+            case 're':
+                categories.push('📚');
+                break;
+            case 'lan':
+                categories.push('🔠');
+                break;
+            case 'cert':
+                categories.push('🪪');
+                break;
+            case 'st':
+                categories.push('✍🏻');
+                break;
+            case 'eco':
+                categories.push('💵');
+                break;
+            case 'it':
+                categories.push('🌐');
+                break;
+            case 'etc':
+                categories.push('👥');
+                break;
+        }
+    }
+
+    // 현재 참석 멤버수
+    for (let i = 0; i < allGroupMember?.length; i++) {
+        countArray.push(allGroupMember[i].count);
+    }
+
+    console.log(allGroupMember, countArray);
+
     return (
         <div>
-            <div className="title3" style={{ marginBottom: '2rem' }}>
+            <div className="title4" style={{ marginBottom: '2rem' }}>
                 검색 결과
             </div>
 
             <div className="search-group-grid">
-                {searchGroupList?.length === 0 || searchGroupList == undefined
+                {!searchGroupList ||
+                searchGroupList?.length === 0 ||
+                searchGroupList == undefined
                     ? '검색 결과가 없습니다.'
-                    : searchGroupList?.map((searchGroup: GroupStateType) => (
-                          <div
-                              key={searchGroup.gSeq}
-                              className="search-group-container"
-                          >
-                              <Link to={`/group/home/${searchGroup.gSeq}`}>
-                                  <div className="title-card">
+                    : searchGroupList?.map(
+                          (searchGroup: GroupStateType, idx: number) => (
+                              <div
+                                  key={searchGroup.gSeq}
+                                  className="search-group-container"
+                              >
+                                  <Link to={`/group/home/${searchGroup.gSeq}`}>
+                                      <ul className="search-card">
+                                          <li>
+                                              <h1> {categories[idx]}</h1>
+                                          </li>
+
+                                          <li className="title-card">
+                                              {searchGroup.gName}
+                                          </li>
+                                          <li className="group-search-dday-text">
+                                              {/* <span>D-Day</span> */}
+                                              <svg
+                                                  viewBox="0 0 24 24"
+                                                  fill="currentColor"
+                                                  height="1.4em"
+                                                  width="1.4em"
+                                              >
+                                                  <path d="M7 10h5v5H7m12 4H5V8h14m0-5h-1V1h-2v2H8V1H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z" />
+                                              </svg>
+                                              {searchGroup.gDday}
+                                          </li>
+                                          <li className="attend-member-count">
+                                              {/* <i
+                                                  className="fa fa-check"
+                                                  aria-hidden="true"
+                                              ></i> */}
+                                              참석 인원&nbsp;
+                                              <b>
+                                                  {countArray[idx]}&nbsp;/&nbsp;
+                                                  {searchGroup.gMaxMem}
+                                              </b>
+                                          </li>
+                                          {searchGroup.gMaxMem -
+                                              countArray[idx] >
+                                          0 ? (
+                                              <button className="all-group-serach-join-btn">
+                                                  참석 가능
+                                              </button>
+                                          ) : (
+                                              <button className="all-group-serach-join-done-btn">
+                                                  마감
+                                              </button>
+                                          )}
+                                      </ul>
+
+                                      {/* <div className="title-card">
                                       {searchGroup.gName}
                                   </div>
                                   <br />
@@ -63,10 +151,11 @@ export default function GroupSearch({
                                   </span>
                                   <div className="title6">
                                       {searchGroup.gDday}
-                                  </div>
-                              </Link>
-                          </div>
-                      ))}
+                                  </div> */}
+                                  </Link>
+                              </div>
+                          )
+                      )}
             </div>
         </div>
     );

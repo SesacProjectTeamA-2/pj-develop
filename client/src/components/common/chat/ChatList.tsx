@@ -3,6 +3,9 @@ import { Cookies } from 'react-cookie';
 import axios from 'axios';
 
 import '../../../styles/scss/components/chatlist.scss';
+import { FormControlLabel, Stack, Typography } from '@mui/material';
+import Switch, { SwitchProps } from '@mui/material/Switch';
+import { styled } from '@mui/material/styles';
 
 export default function ChatList({
     isEnter,
@@ -32,8 +35,6 @@ export default function ChatList({
 
     //===> 최신순 / 리더|멤버별
     // 버튼 state로 관리
-
-    const [sorted, setSorted] = useState('recent'); // 정렬 기준
 
     const [madeGroupInfo, setMadeGroupInfo] = useState<any>([]);
     const [madeJoinInfo, setJoinGroupInfo] = useState<any>([]);
@@ -327,6 +328,92 @@ export default function ChatList({
 
     console.log('ChatList에서 recentMsg', recentMsg);
 
+    //] toggle
+
+    const MaterialUISwitch = styled(Switch)(({ theme }) => ({
+        width: 62,
+        height: 34,
+        padding: 7,
+        '& .MuiSwitch-switchBase': {
+            margin: 1,
+            padding: 0,
+            transform: 'translateX(6px)',
+            '&.Mui-checked': {
+                color: '#fff',
+                transform: 'translateX(22px)',
+                '& .MuiSwitch-thumb:before': {
+                    // backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 20 20"><path fill="${encodeURIComponent(
+                    //     '#fff'
+                    // )}" d="M4.2 2.5l-.7 1.8-1.8.7 1.8.7.7 1.8.6-1.8L6.7 5l-1.9-.7-.6-1.8zm15 8.3a6.7 6.7 0 11-6.6-6.6 5.8 5.8 0 006.6 6.6z"/></svg>')`,
+
+                    backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="18" viewBox="0 0 15 15"><path fill="${encodeURIComponent(
+                        '#fff'
+                    )}" d="M4.243 4.757a3.757 3.757 0 115.851 3.119 6.006 6.006 0 013.9 5.339.75.75 0 01-.715.784H2.721a.75.75 0 01-.714-.784 6.006 6.006 0 013.9-5.34 3.753 3.753 0 01-1.664-3.118z"/></svg>')`,
+                },
+                '& + .MuiSwitch-track': {
+                    opacity: 1,
+                    backgroundColor:
+                        theme.palette.mode === 'dark' ? '#8796A5' : '#aab4be',
+                },
+            },
+        },
+        '& .MuiSwitch-thumb': {
+            backgroundColor:
+                theme.palette.mode === 'dark' ? '#003892' : '#001e3c',
+            width: 32,
+            height: 32,
+            '&::before': {
+                content: "''",
+                position: 'absolute',
+                width: '100%',
+                height: '100%',
+                left: 0,
+                top: 0,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24"> <path fill="${encodeURIComponent(
+                    '#fff'
+                )}" d="M7 10h5v5H7m12 4H5V8h14m0-5h-1V1h-2v2H8V1H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z" /></svg>')`,
+            },
+        },
+        '& .MuiSwitch-track': {
+            opacity: 1,
+            backgroundColor:
+                theme.palette.mode === 'dark' ? '#8796A5' : '#aab4be',
+            borderRadius: 20 / 2,
+        },
+    }));
+
+    const [key, setKey] = useState(0); // key 상태 추가
+
+    const [leaderSorted, setLeaderSorted] = useState(false); // 정렬 기준
+    // false: 최신순
+    // true: 리더순
+
+    let sorted = false;
+
+    useEffect(() => {}, []);
+
+    const sortedHandler = (e: any) => {
+        console.log(e.target.checked);
+        setLeaderSorted((prevLeaderSorted) => !prevLeaderSorted);
+        // const isChecked = e.target.checked;
+        // console.log('isChecked', isChecked);
+        // sorted = isChecked;
+        // console.log('sorted', sorted);
+        // setKey((prevKey: any) => prevKey + 1);
+        // setLeaderSorted(isChecked);
+        // setLeaderSorted((prevLeaderSorted) => !prevLeaderSorted);
+        // setLeaderSorted((prevLeaderSorted) => isChecked);
+    };
+
+    const toggleClickHandler = () => {
+        setLeaderSorted((prevLeaderSorted) => !prevLeaderSorted);
+    };
+
+    console.log('leaderSorted', leaderSorted);
+    console.log('sorted', sorted);
+
     return (
         <div className="chat-list-wrapper">
             <div className="chat-list-close-icon-wrapper">
@@ -341,257 +428,358 @@ export default function ChatList({
                     <path d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z" />
                 </svg>
             </div>
-            <div></div>
+
+            {/* <div></div> */}
+
+            <div className="list-sort-toggle-wrapper">
+                <span>최신순</span>
+
+                <FormControlLabel
+                    // control={<MaterialUISwitch sx={{ m: 1 }} defaultChecked />}
+                    control={
+                        <MaterialUISwitch
+                            sx={{ m: 1 }}
+                            style={{ overflow: 'visible' }}
+                            defaultChecked={leaderSorted}
+                            // onChange={sortedHandler}
+                            // onClick={toggleClickHandler}
+                        />
+                    }
+                    label="Leader"
+                    onChange={sortedHandler}
+                />
+                {/* <FormControlLabel
+                    control={<Switch defaultChecked />}
+                    label="Leader"
+                /> */}
+            </div>
 
             <ul>
-                {/* --- 전체 모임 --- */}
-                {/* [추후] 전체 모임 없는 경우 추가 */}
-                {allGroupInfo?.map((group: any, idx: number) => {
-                    return (
-                        <li
-                            className="group-list"
-                            onClick={() =>
-                                enterChatRoom(group.gSeq, group.tb_group.gName)
-                            }
-                        >
-                            <div className="list-content-wrapper">
-                                <img src="/asset/images/leader.gif" alt="" />
-
+                <div key={key}>
+                    {leaderSorted ? (
+                        <div key={key}>
+                            {/* --- 리더 & 멤버 구분 ---  */}
+                            {!madeGroupInfo && !madeJoinInfo ? (
                                 <div
                                     style={{
-                                        display: 'flex',
-                                        // width: '100%',
-                                        width: '6rem',
-                                        height: '100%',
-                                        flexDirection: 'column',
+                                        width: '100%',
+                                        textAlign: 'center',
+                                        color: 'gray',
+                                        paddingTop: '2rem',
                                     }}
                                 >
-                                    <div className="group-name">
-                                        {group.tb_group.gName}
-                                    </div>
-
-                                    {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
-                                msg.msg 띄워주기  */}
-                                    {Array.isArray(recentMsg) &&
-                                        recentMsg
-                                            ?.filter(
-                                                (recent: any) =>
-                                                    recent.gSeq === group.gSeq
-                                            )
-                                            ?.map((filteredRecent: any) => (
-                                                <span className="preview">
-                                                    {filteredRecent.msg.msg}
-                                                </span>
-                                            ))}
+                                    현재 참여한 채팅방이 없어요 !
                                 </div>
+                            ) : (
+                                //=== 리더 & 멤버 ===
+                                madeGroupInfo?.map(
+                                    (group: any, idx: number) => {
+                                        return (
+                                            <li
+                                                className="group-list"
+                                                onClick={() =>
+                                                    enterChatRoom(
+                                                        group.gSeq,
+                                                        group.gName
+                                                    )
+                                                }
+                                            >
+                                                <div className="list-content-wrapper">
+                                                    <img
+                                                        src="/asset/images/leader.gif"
+                                                        alt=""
+                                                    />
 
-                                <div
-                                    className="chat-list-count-wrapper"
-                                    // onClick={alarmHandler}
-                                >
-                                    {Array.isArray(recentMsg) &&
-                                        recentMsg
-                                            ?.filter(
-                                                (recent: any) =>
-                                                    recent.gSeq === group.gSeq
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            // width: '100%',
+                                                            width: '6rem',
+                                                            height: '100%',
+                                                            flexDirection:
+                                                                'column',
+                                                        }}
+                                                    >
+                                                        <div className="group-name">
+                                                            {group.gName}
+                                                        </div>
+
+                                                        {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
+                            msg.msg 띄워주기  */}
+                                                        {Array.isArray(
+                                                            recentMsg
+                                                        ) &&
+                                                            recentMsg
+                                                                ?.filter(
+                                                                    (
+                                                                        recent: any
+                                                                    ) =>
+                                                                        recent.gSeq ===
+                                                                        group.gSeq
+                                                                )
+                                                                ?.map(
+                                                                    (
+                                                                        filteredRecent: any
+                                                                    ) => (
+                                                                        <span className="preview">
+                                                                            {
+                                                                                filteredRecent
+                                                                                    .msg
+                                                                                    .msg
+                                                                            }
+                                                                        </span>
+                                                                    )
+                                                                )}
+                                                    </div>
+
+                                                    <div
+                                                        className="chat-list-count-wrapper"
+                                                        // onClick={alarmHandler}
+                                                    >
+                                                        {Array.isArray(
+                                                            recentMsg
+                                                        ) &&
+                                                            recentMsg
+                                                                ?.filter(
+                                                                    (
+                                                                        recent: any
+                                                                    ) =>
+                                                                        recent.gSeq ===
+                                                                        group.gSeq
+                                                                )
+                                                                ?.map(
+                                                                    (
+                                                                        filteredRecent: any
+                                                                    ) => (
+                                                                        <p>
+                                                                            {
+                                                                                filteredRecent
+                                                                                    .msg
+                                                                                    .timeStamp
+                                                                            }
+                                                                        </p>
+                                                                    )
+                                                                )}
+
+                                                        {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
+                                                        {localStorage.getItem(
+                                                            `gSeq${group.gSeq}`
+                                                        ) !== '0' && (
+                                                            <span className="chat-list-count">
+                                                                {/* 미확인 메세지 개수 */}
+                                                                {localStorage.getItem(
+                                                                    `gSeq${group.gSeq}`
+                                                                )}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        );
+                                    }
+                                )
+                            )}
+                            {madeJoinInfo?.map((group: any, idx: number) => {
+                                return (
+                                    <li
+                                        className="group-list"
+                                        onClick={() =>
+                                            enterChatRoom(
+                                                group.gSeq,
+                                                group.gName
                                             )
-                                            ?.map((filteredRecent: any) => (
-                                                <p>
-                                                    {
-                                                        filteredRecent.msg
-                                                            .timeStamp
-                                                    }
-                                                </p>
-                                            ))}
-
-                                    {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
-                                    {localStorage.getItem(
-                                        `gSeq${group.gSeq}`
-                                    ) !== '0' && (
-                                        <span className="chat-list-count">
-                                            {/* 미확인 메세지 개수 */}
-                                            {localStorage.getItem(
-                                                `gSeq${group.gSeq}`
-                                            )}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        </li>
-                    );
-                })}
-
-                {/* --- 리더 & 멤버 구분 ---  */}
-                <div>아래는 리더 & 멤버 구분입니다.</div>
-
-                {!madeGroupInfo && !madeJoinInfo ? (
-                    <div
-                        style={{
-                            width: '100%',
-                            textAlign: 'center',
-                            color: 'gray',
-                            paddingTop: '2rem',
-                        }}
-                    >
-                        현재 참여한 채팅방이 없어요 !
-                    </div>
-                ) : (
-                    //=== 리더 & 멤버
-                    madeGroupInfo?.map((group: any, idx: number) => {
-                        return (
-                            <li
-                                className="group-list"
-                                onClick={() =>
-                                    enterChatRoom(group.gSeq, group.gName)
-                                }
-                            >
-                                <div className="list-content-wrapper">
-                                    <img
-                                        src="/asset/images/leader.gif"
-                                        alt=""
-                                    />
-
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            // width: '100%',
-                                            width: '6rem',
-                                            height: '100%',
-                                            flexDirection: 'column',
-                                        }}
+                                        }
                                     >
-                                        <div className="group-name">
-                                            {group.gName}
-                                        </div>
+                                        <div className="list-content-wrapper">
+                                            <img
+                                                src="/asset/images/member.gif"
+                                                alt=""
+                                            />
 
-                                        {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
-                                            msg.msg 띄워주기  */}
-                                        {Array.isArray(recentMsg) &&
-                                            recentMsg
-                                                ?.filter(
-                                                    (recent: any) =>
-                                                        recent.gSeq ===
-                                                        group.gSeq
-                                                )
-                                                ?.map((filteredRecent: any) => (
-                                                    <span className="preview">
-                                                        {filteredRecent.msg.msg}
-                                                    </span>
-                                                ))}
-                                    </div>
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    flexDirection: 'column',
+                                                }}
+                                            >
+                                                <div className="group-name">
+                                                    {group.gName}
+                                                </div>
 
-                                    <div
-                                        className="chat-list-count-wrapper"
-                                        // onClick={alarmHandler}
-                                    >
-                                        {Array.isArray(recentMsg) &&
-                                            recentMsg
-                                                ?.filter(
-                                                    (recent: any) =>
-                                                        recent.gSeq ===
-                                                        group.gSeq
-                                                )
-                                                ?.map((filteredRecent: any) => (
-                                                    <p>
-                                                        {
-                                                            filteredRecent.msg
-                                                                .timeStamp
-                                                        }
-                                                    </p>
-                                                ))}
+                                                {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
+                            msg.msg 띄워주기  */}
+                                                {Array.isArray(recentMsg) &&
+                                                    recentMsg
+                                                        ?.filter(
+                                                            (recent: any) =>
+                                                                recent.gSeq ===
+                                                                group.gSeq
+                                                        )
+                                                        ?.map(
+                                                            (
+                                                                filteredRecent: any
+                                                            ) => (
+                                                                <span className="preview">
+                                                                    {
+                                                                        filteredRecent
+                                                                            .msg
+                                                                            .msg
+                                                                    }
+                                                                </span>
+                                                            )
+                                                        )}
+                                            </div>
 
-                                        {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
-                                        {localStorage.getItem(
-                                            `gSeq${group.gSeq}`
-                                        ) !== '0' && (
-                                            <span className="chat-list-count">
-                                                {/* 미확인 메세지 개수 */}
+                                            <div
+                                                className="chat-list-count-wrapper"
+                                                // onClick={alarmHandler}
+                                            >
+                                                {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
+                            msg.timeStamp 띄워주기  */}
+                                                {Array.isArray(recentMsg) &&
+                                                    recentMsg
+                                                        ?.filter(
+                                                            (recent: any) =>
+                                                                recent.gSeq ===
+                                                                group.gSeq
+                                                        )
+                                                        ?.map(
+                                                            (
+                                                                filteredRecent: any
+                                                            ) => (
+                                                                <p>
+                                                                    {
+                                                                        filteredRecent
+                                                                            .msg
+                                                                            .timeStamp
+                                                                    }
+                                                                </p>
+                                                            )
+                                                        )}
+
+                                                {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
                                                 {localStorage.getItem(
                                                     `gSeq${group.gSeq}`
+                                                ) !== '0' && (
+                                                    <span className="chat-list-count">
+                                                        {/* 미확인 메세지 개수 */}
+                                                        {localStorage.getItem(
+                                                            `gSeq${group.gSeq}`
+                                                        )}
+                                                    </span>
                                                 )}
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
-                            </li>
-                        );
-                    })
-                )}
-                {madeJoinInfo?.map((group: any, idx: number) => {
-                    return (
-                        <li
-                            className="group-list"
-                            onClick={() =>
-                                enterChatRoom(group.gSeq, group.gName)
-                            }
-                        >
-                            <div className="list-content-wrapper">
-                                <img src="/asset/images/member.gif" alt="" />
-
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        width: '100%',
-                                        height: '100%',
-                                        flexDirection: 'column',
-                                    }}
-                                >
-                                    <div className="group-name">
-                                        {group.gName}
-                                    </div>
-
-                                    {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
-                                            msg.msg 띄워주기  */}
-                                    {Array.isArray(recentMsg) &&
-                                        recentMsg
-                                            ?.filter(
-                                                (recent: any) =>
-                                                    recent.gSeq === group.gSeq
+                                            </div>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        //=== 최신순 ===
+                        <div key={key}>
+                            {' '}
+                            {/* --- 전체 모임 --- */}
+                            {/* [추후] 전체 모임 없는 경우 추가 */}
+                            {allGroupInfo?.map((group: any, idx: number) => {
+                                return (
+                                    <li
+                                        className="group-list"
+                                        onClick={() =>
+                                            enterChatRoom(
+                                                group.gSeq,
+                                                group.tb_group.gName
                                             )
-                                            ?.map((filteredRecent: any) => (
-                                                <span className="preview">
-                                                    {filteredRecent.msg.msg}
-                                                </span>
-                                            ))}
-                                </div>
+                                        }
+                                    >
+                                        <div className="list-content-wrapper">
+                                            <img
+                                                src="/asset/images/leader.gif"
+                                                alt=""
+                                            />
 
-                                <div
-                                    className="chat-list-count-wrapper"
-                                    // onClick={alarmHandler}
-                                >
-                                    {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
-                                            msg.timeStamp 띄워주기  */}
-                                    {Array.isArray(recentMsg) &&
-                                        recentMsg
-                                            ?.filter(
-                                                (recent: any) =>
-                                                    recent.gSeq === group.gSeq
-                                            )
-                                            ?.map((filteredRecent: any) => (
-                                                <p>
-                                                    {
-                                                        filteredRecent.msg
-                                                            .timeStamp
-                                                    }
-                                                </p>
-                                            ))}
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    // width: '100%',
+                                                    width: '6rem',
+                                                    height: '100%',
+                                                    flexDirection: 'column',
+                                                }}
+                                            >
+                                                <div className="group-name">
+                                                    {group.tb_group.gName}
+                                                </div>
 
-                                    {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
-                                    {localStorage.getItem(
-                                        `gSeq${group.gSeq}`
-                                    ) !== '0' && (
-                                        <span className="chat-list-count">
-                                            {/* 미확인 메세지 개수 */}
-                                            {localStorage.getItem(
-                                                `gSeq${group.gSeq}`
-                                            )}
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        </li>
-                    );
-                })}
+                                                {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
+                                        msg.msg 띄워주기  */}
+                                                {Array.isArray(recentMsg) &&
+                                                    recentMsg
+                                                        ?.filter(
+                                                            (recent: any) =>
+                                                                recent.gSeq ===
+                                                                group.gSeq
+                                                        )
+                                                        ?.map(
+                                                            (
+                                                                filteredRecent: any
+                                                            ) => (
+                                                                <span className="preview">
+                                                                    {
+                                                                        filteredRecent
+                                                                            .msg
+                                                                            .msg
+                                                                    }
+                                                                </span>
+                                                            )
+                                                        )}
+                                            </div>
+
+                                            <div
+                                                className="chat-list-count-wrapper"
+                                                // onClick={alarmHandler}
+                                            >
+                                                {Array.isArray(recentMsg) &&
+                                                    recentMsg
+                                                        ?.filter(
+                                                            (recent: any) =>
+                                                                recent.gSeq ===
+                                                                group.gSeq
+                                                        )
+                                                        ?.map(
+                                                            (
+                                                                filteredRecent: any
+                                                            ) => (
+                                                                <p>
+                                                                    {
+                                                                        filteredRecent
+                                                                            .msg
+                                                                            .timeStamp
+                                                                    }
+                                                                </p>
+                                                            )
+                                                        )}
+
+                                                {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
+                                                {localStorage.getItem(
+                                                    `gSeq${group.gSeq}`
+                                                ) !== '0' && (
+                                                    <span className="chat-list-count">
+                                                        {/* 미확인 메세지 개수 */}
+                                                        {localStorage.getItem(
+                                                            `gSeq${group.gSeq}`
+                                                        )}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
             </ul>
         </div>
     );

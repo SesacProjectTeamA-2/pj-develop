@@ -22,6 +22,7 @@ export default function HomeMissionList({
     gDday,
     isLeader,
     groupDetail,
+    setKey,
 }: any) {
     const [addModalSwitch, setAddModalSwitch] = useState(false);
     const missionAddHandler = () => {
@@ -127,6 +128,7 @@ export default function HomeMissionList({
                         setMissionList={setMissionList}
                         gDday={gDday}
                         groupDetail={groupDetail}
+                        setKey={setKey}
                     />
                 ) : null}
                 <div className="title5">

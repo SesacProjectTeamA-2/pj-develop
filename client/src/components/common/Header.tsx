@@ -39,44 +39,44 @@ export default function Header(props: any) {
 
     //++ 연결 끊어졌을 경우, 재연결
     //-- 1. socket
-    // useEffect(() => {
-    //     if (!props.socket) {
-    //         const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
-    //             path: '/socket.io',
-    //             reconnection: true,
-    //             reconnectionAttempts: Infinity,
-    //             reconnectionDelay: 1000, // 1초 간격으로 재시도
-    //             reconnectionDelayMax: 5000, // 최대 5초 간격으로 재시도
-    //             extraHeaders: {
-    //                 Authorization: `Bearer ${uToken}`,
-    //             },
-    //         });
+    useEffect(() => {
+        if (!props.socket) {
+            const newSocket = io(`${process.env.REACT_APP_DB_HOST}/chat`, {
+                path: '/socket.io',
+                reconnection: true,
+                reconnectionAttempts: Infinity,
+                reconnectionDelay: 1000, // 1초 간격으로 재시도
+                reconnectionDelayMax: 5000, // 최대 5초 간격으로 재시도
+                extraHeaders: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            });
 
-    //         props.setSocket(newSocket);
-    //     }
-    // }, []);
+            props.setSocket(newSocket);
+        }
+    }, []);
 
-    //-- 2. sse
-    // useEffect(() => {
-    //     if (!props.sse) {
-    //         const eventSource = new EventSourcePolyfill(
-    //             `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${uToken}`,
-    //                 },
-    //                 heartbeatTimeout: 120000,
-    //             }
-    //         );
+    // -- 2. sse
+    useEffect(() => {
+        if (!props.sse) {
+            const eventSource = new EventSourcePolyfill(
+                `${process.env.REACT_APP_DB_HOST}/subscribe/alarming`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${uToken}`,
+                    },
+                    heartbeatTimeout: 120000,
+                }
+            );
 
-    //         props.setSse(eventSource);
+            props.setSse(eventSource);
 
-    //         //-- 연결
-    //         eventSource.addEventListener('connected', (e: any) => {
-    //             console.log('sse connected :::', e);
-    //         });
-    //     }
-    // }, []);
+            //-- 연결
+            eventSource.addEventListener('connected', (e: any) => {
+                console.log('sse connected :::', e);
+            });
+        }
+    }, []);
 
     const updateUnreadMsg = async () => {
         const res = await axios
@@ -953,6 +953,7 @@ export default function Header(props: any) {
                                                     commentAlarm={
                                                         props.commentAlarm
                                                     }
+                                                    setKey={props.setKey}
                                                 />
                                             )}
 

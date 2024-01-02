@@ -21,6 +21,7 @@ export default function SideBarGroupLeader({
     warningModalSwitchHandler,
     menu,
     setMenu,
+    setKey,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -240,6 +241,7 @@ export default function SideBarGroupLeader({
                 setChoiceModalSwitch={setChoiceModalSwitch}
                 choiceModalSwitchHandler={choiceModalSwitchHandler}
                 action={menu}
+                setKey={setKey}
             />
 
             {/* 경고 공통 모달 */}

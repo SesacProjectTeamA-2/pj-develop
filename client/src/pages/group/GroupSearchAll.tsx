@@ -121,20 +121,83 @@ export default function GroupSearchAll({
                           (searchGroup: GroupStateType, idx: number) => (
                               <div
                                   key={searchGroup.gSeq}
-                                  className="glow-card-container"
+                                  className="search-group-container"
                               >
-                                  {/* === 새로 추가한 코드 === */}
                                   <Link to={`/group/home/${searchGroup.gSeq}`}>
-                                      <div className="glow-card-overlay"></div>
-                                      <ul className="glow-card">
+                                      <ul className="search-card">
                                           <li>
-                                              <h1> {categories[idx]}</h1>
+                                              <h2> {categories[idx]}</h2>
                                           </li>
 
                                           <li className="title-card">
                                               {searchGroup.gName}
                                           </li>
-                                          <li className="title6">
+
+                                          <li className="group-search-dday-text">
+                                              {/* <span>D-Day</span> */}
+                                              <svg
+                                                  viewBox="0 0 24 24"
+                                                  fill="currentColor"
+                                                  height="1.4em"
+                                                  width="1.4em"
+                                              >
+                                                  <path d="M7 10h5v5H7m12 4H5V8h14m0-5h-1V1h-2v2H8V1H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z" />
+                                              </svg>
+                                              {searchGroup.gDday}
+                                          </li>
+                                          <li className="attend-member-count">
+                                              {/* <i
+                                                  className="fa fa-check"
+                                                  aria-hidden="true"
+                                              ></i> */}
+                                              참석 인원&nbsp;
+                                              <b>
+                                                  {countArray[idx]}&nbsp;/&nbsp;
+                                                  {searchGroup.gMaxMem}
+                                              </b>
+                                          </li>
+
+                                          {searchGroup.gMaxMem -
+                                              countArray[idx] >
+                                          0 ? (
+                                              <button className="all-group-serach-join-btn">
+                                                  참석 가능
+                                              </button>
+                                          ) : (
+                                              <button className="all-group-serach-join-done-btn">
+                                                  마감
+                                              </button>
+                                          )}
+                                      </ul>
+                                  </Link>
+                              </div>
+                          )
+                      )}
+            </div>
+
+            {/* 반짝이는 효과 */}
+            {/* <div className="search-group-grid">
+                {!allGroupList || allGroupList?.length === 0
+                    ? '생성된 모임이 없습니다.'
+                    : allGroupList?.map(
+                          (searchGroup: GroupStateType, idx: number) => (
+                              <div
+                                  key={searchGroup.gSeq}
+                                  className="glow-card-container"
+                              >
+                                  <Link to={`/group/home/${searchGroup.gSeq}`}>
+                                      <div className="glow-card-overlay"></div>
+                                      <ul className="glow-card">
+                                          <li>
+                                              <h2> {categories[idx]}</h2>
+                                          </li>
+
+                                          <li className="title-card">
+                                              {searchGroup.gName}
+                                          </li>
+
+                                          <li className="group-search-dday-text">
+                                              <span>D-Day</span>
                                               {searchGroup.gDday}
                                           </li>
                                           <li>
@@ -154,14 +217,16 @@ export default function GroupSearchAll({
                                                   참석 가능
                                               </button>
                                           ) : (
-                                              <button>마감</button>
+                                              <button className="all-group-serach-join-done-btn">
+                                                  마감
+                                              </button>
                                           )}
                                       </ul>
                                   </Link>
                               </div>
                           )
                       )}
-            </div>
+            </div> */}
         </div>
     );
 }
