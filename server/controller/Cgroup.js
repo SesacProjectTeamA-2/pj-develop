@@ -109,7 +109,11 @@ exports.getJoined = async (req, res) => {
 
     // uSeq로 GroupUser 테이블에서 모임에 참여 중인 gSeq 찾기
     const groupUserList = await GroupUser.findAll({
-      where: { uSeq, guIsLeader: { [Op.is]: null } }, // 모임장은 제외 -> 생성한 모임에서 보여주도록
+      where: {
+        uSeq,
+        guIsLeader: { [Op.is]: null },
+        guIsBlackUser: { [Op.is]: null },
+      }, // 모임장은 제외 -> 생성한 모임에서 보여주도록
       attributes: ['gSeq'],
     });
 
@@ -711,7 +715,11 @@ exports.getGroupDetail = async (req, res) => {
       include: [
         {
           model: GroupUser,
-          where: { gSeq: groupSeq, guIsLeader: { [Op.is]: null } },
+          where: {
+            gSeq: groupSeq,
+            guIsLeader: { [Op.is]: null },
+            guIsBlackUser: { [Op.is]: null },
+          },
           attributes: ['guSeq'],
         },
       ],
@@ -989,6 +997,14 @@ exports.postJoin = async (req, res) => {
     });
 
     if (alreadyJoined) {
+      if (alreadyJoined.guIsBlackUser === 'y') {
+        res.send({
+          success: false,
+          msg: '사용자는 모임에서 추방되었습니다.',
+        });
+        return;
+      }
+
       res.send({
         success: false,
         msg: '사용자는 이미 그룹에 속해 있습니다.',
@@ -1110,73 +1126,5 @@ exports.patchLeader = async (req, res) => {
       success: false,
       msg: '서버 에러',
     });
-  }
-};
-
-exports.blackUser = async (req, res) => {
-  try {
-    if (req.headers.authorization) {
-      const token = req.headers.authorization.split(' ')[1];
-      const user = await jwt.verify(token);
-      const uSeq = user.uSeq;
-
-      const guSeq = req.params.guSeq;
-      const { guBanReason, gSeq } = req.body;
-      // 모임장 여부
-      const result = await GroupUser.findOne({
-        where: { uSeq, gSeq },
-        attributes: ['guIsLeader'],
-      });
-      if (result.guIsLeader === 'y') {
-        // DB update
-        await GroupUser.update(
-          {
-            guBanReason,
-            guIsLeader: 'y',
-          },
-          { where: { guSeq } }
-        );
-
-        // redis 연동
-        const blackUser = await GroupUser.findOne({ where: { guSeq } });
-        const blackTime = new Date();
-        const receiver = blackUser.uSeq;
-        const result = await redisCli.lPush(
-          `user${receiver}`,
-          JSON.stringify({
-            type: 'groupAlarm',
-            gSeq,
-            guBanReason,
-            blackTime,
-          })
-        );
-
-        // 만료시간 조회
-        const expirationTime = await redisCli.ttl(`user${receiver}`);
-        // 유효시간 7일
-        if (expirationTime > 0) {
-          console.log('이미 만료시간 설정되어 있음!');
-        } else {
-          await redisCli.expire(`user${receiver}`, 604800);
-        }
-
-        // redis pub 처리
-        const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
-
-        await redisCli.publish(
-          'group-alarm',
-          JSON.stringify({
-            alarmCount: result,
-            allAlarm,
-          })
-        );
-      } else {
-        res.send({ result: false, message: '권한이 없어요!' });
-      }
-    } else {
-      res.send({ result: false, message: '로그인 해주세요!' });
-    }
-  } catch (err) {
-    console.error('유저 블랙 서버 error!!', err);
   }
 };
