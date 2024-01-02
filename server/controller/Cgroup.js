@@ -1161,16 +1161,13 @@ exports.blackUser = async (req, res) => {
         }
 
         // redis pub 처리
+        const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
+
         await redisCli.publish(
           'group-alarm',
           JSON.stringify({
             alarmCount: result,
-            message: {
-              type: 'groupAlarm',
-              gSeq,
-              uName,
-              blackTime,
-            },
+            allAlarm,
           })
         );
       } else {
