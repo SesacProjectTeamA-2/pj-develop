@@ -10,7 +10,8 @@ export default function Alarm({
     alarmHandler,
     alarmList,
     commentAlarm,
-}: any) {
+}: // key,
+any) {
     console.log('alarmList', alarmList);
     console.log('commentAlarm', commentAlarm);
 
@@ -161,10 +162,16 @@ export default function Alarm({
         // }
     };
 
+    //] 업데이트된 알람
+    const updateAlarmHandler = () => {};
+
     useEffect(() => {
         // if (commentAlarm?.length > 0) {
         if (commentAlarm) {
-            addReceivedAlarm(commentAlarm);
+            // addReceivedAlarm(commentAlarm);
+
+            // 업데이트된 알람 반영
+            updateAlarmHandler();
         }
     }, [commentAlarm]);
 
@@ -249,9 +256,9 @@ export default function Alarm({
                 notification.style.animationFillMode = 'both';
                 // line.style.height = `${i * 0.9 * 250}px`;
             }
-            line.style.height = `${formattedAlarms.length * 130}px`;
+            line.style.height = `${formattedAlarms.length * 150}px`;
         }
-    }, [formattedAlarms, commentAlarm]);
+    }, [formattedAlarms, commentAlarm, alarmList]);
 
     //] 링크 이동
     const nvg = useNavigate();
@@ -268,12 +275,6 @@ export default function Alarm({
         setKey((prevKey: any) => prevKey + 1);
 
         nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`);
-        // window.location.href = `/board/${Number(gSeq)}/${category}/${Number(
-        //     gbSeq
-        // )}`;
-        // window.location.reload();
-
-        // ! 강제이동이 되긴 하는데 sse 연결이 끊김...
     };
 
     return (
@@ -296,7 +297,7 @@ export default function Alarm({
                     </svg>
 
                     {/* 새로운 알람 추가 */}
-                    <div className="comment-alarm"></div>
+                    {/* <div className="comment-alarm"></div> */}
 
                     {/* [START] alarmList - map 돌리기 ! */}
                     {formattedAlarms?.length == 0 && !newAlarm ? (

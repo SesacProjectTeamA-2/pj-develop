@@ -60,7 +60,8 @@ function App() {
     const [commentAlarm, setCommentAlarm] = useState<any>();
 
     console.log('alarmCount', alarmCount);
-    // console.log('commentAlarm', commentAlarm);
+    console.log('실시간 commentAlarm >>>>>>', commentAlarm);
+    console.log('업데이트 여부 alarmList >>>>>>', alarmList);
 
     //-- Header 채팅 아이콘 클릭 시 실행하는 함수
     const showChatting = (): void => {
@@ -183,6 +184,7 @@ function App() {
                 allGroupInfo={allGroupInfo}
                 setAllGroupInfo={setAllGroupInfo}
                 setKey={setKey}
+                key={key}
             />
 
             <Routes>
@@ -226,6 +228,7 @@ function App() {
                                     setAlarmCount={setAlarmCount}
                                     setAlarmList={setAlarmList}
                                     setCommentAlarm={setCommentAlarm}
+                                    setKey={setKey}
                                 />
                             }
                             showChat={showChat}
