@@ -46,7 +46,7 @@ exports.alarming = async (req, res) => {
       await sub.subscribe('comment-alarm', (data) => {
         const datas = JSON.parse(data);
         res.write(
-          'event: commentAlarm\n' + `data:${JSON.stringify(datas.message)}\n\n`
+          'event: commentAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
         res.write(
           'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
@@ -58,7 +58,7 @@ exports.alarming = async (req, res) => {
         console.log('message', message);
         const datas = JSON.parse(data);
         res.write(
-          'event: groupAlarm\n' + `data:${JSON.stringify(datas.message)}\n\n`
+          'event: groupAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
         res.write(
           'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`

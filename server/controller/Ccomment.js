@@ -124,22 +124,16 @@ exports.createComment = async (req, res) => {
     }
 
     // redis pub 처리
-    const result2 = await redisCli.publish(
+    // 모든 알람 리스트
+    const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
+    await redisCli.publish(
       'comment-alarm',
       JSON.stringify({
         alarmCount: result,
-        message: {
-          type: 'comment',
-          gbSeq,
-          title,
-          uName,
-          gSeq,
-          category,
-          commentTime,
-        },
+        allAlarm,
       })
     );
-    console.log(result2);
+
     // 정상 처리
     res.status(200).send({
       success: true,
