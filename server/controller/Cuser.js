@@ -193,7 +193,7 @@ exports.getLoginNaverRedirect = async (req, res) => {
       });
       console.log('>>>>>>>>>>>>>>>>', alreadyUser);
 
-      if (alreadyUser.isUse === 'y') {
+      if (alreadyUser.isUse === null) {
         res.send({
           isSuccess: false,
           msg: '접근이 제한된 유저입니다.',

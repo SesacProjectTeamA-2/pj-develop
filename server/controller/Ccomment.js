@@ -125,12 +125,13 @@ exports.createComment = async (req, res) => {
 
     // redis pub 처리
     // 모든 알람 리스트
-    const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
+    const alarms = await redisCli.lRange(`user${receiver}`, 0, -1);
+
     await redisCli.publish(
       'comment-alarm',
       JSON.stringify({
         alarmCount: result,
-        allAlarm,
+        allAlarm: alarms,
       })
     );
 

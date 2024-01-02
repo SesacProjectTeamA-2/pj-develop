@@ -45,6 +45,7 @@ exports.alarming = async (req, res) => {
       // 댓글 작성시 메세지 전송
       await sub.subscribe('comment-alarm', (data) => {
         const datas = JSON.parse(data);
+        console.log('datas>>>>>>>>>>', datas);
         res.write(
           'event: commentAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
