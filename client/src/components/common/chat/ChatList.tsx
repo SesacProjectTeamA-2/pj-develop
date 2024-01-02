@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 import '../../../styles/scss/components/chatlist.scss';
 import { FormControlLabel, Stack, Typography } from '@mui/material';
@@ -415,7 +416,7 @@ export default function ChatList({
     console.log('sorted', sorted);
 
     return (
-        <div className="chat-list-wrapper">
+        <div className="chat-list-wrapper" key={key}>
             <div className="chat-list-close-icon-wrapper">
                 <svg
                     viewBox="0 0 512 512"
@@ -448,17 +449,13 @@ export default function ChatList({
                     label="Leader"
                     onChange={sortedHandler}
                 />
-                {/* <FormControlLabel
-                    control={<Switch defaultChecked />}
-                    label="Leader"
-                /> */}
             </div>
 
             <ul>
                 <div key={key}>
+                    {/* --- 리더 & 멤버 구분 ---  */}
                     {leaderSorted ? (
                         <div key={key}>
-                            {/* --- 리더 & 멤버 구분 ---  */}
                             {!madeGroupInfo && !madeJoinInfo ? (
                                 <div
                                     style={{
@@ -469,6 +466,11 @@ export default function ChatList({
                                     }}
                                 >
                                     현재 참여한 채팅방이 없어요 !
+                                    <button className="group-attend-btn">
+                                        <Link to="/group">
+                                            모임 참여하러 가기
+                                        </Link>
+                                    </button>
                                 </div>
                             ) : (
                                 //=== 리더 & 멤버 ===
@@ -679,104 +681,141 @@ export default function ChatList({
                     ) : (
                         //=== 최신순 ===
                         <div key={key}>
-                            {' '}
                             {/* --- 전체 모임 --- */}
                             {/* [추후] 전체 모임 없는 경우 추가 */}
-                            {allGroupInfo?.map((group: any, idx: number) => {
-                                return (
-                                    <li
-                                        className="group-list"
-                                        onClick={() =>
-                                            enterChatRoom(
-                                                group.gSeq,
-                                                group.tb_group.gName
-                                            )
-                                        }
-                                    >
-                                        <div className="list-content-wrapper">
-                                            <img
-                                                src="/asset/images/leader.gif"
-                                                alt=""
-                                            />
 
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    // width: '100%',
-                                                    width: '6rem',
-                                                    height: '100%',
-                                                    flexDirection: 'column',
-                                                }}
-                                            >
-                                                <div className="group-name">
-                                                    {group.tb_group.gName}
-                                                </div>
+                            {!madeGroupInfo && !madeJoinInfo ? (
+                                <div
+                                    style={{
+                                        width: '100%',
+                                        textAlign: 'center',
+                                        color: 'gray',
+                                        paddingTop: '2rem',
+                                    }}
+                                >
+                                    <span className="no-chat-room-text">
+                                        현재 참여한 채팅방이 없어요 !
+                                    </span>
+                                    <button className="group-attend-btn">
+                                        <Link to="/group">
+                                            모임 참여하러 가기
+                                        </Link>
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    {allGroupInfo?.map(
+                                        (group: any, idx: number) => {
+                                            return (
+                                                <li
+                                                    className="group-list"
+                                                    onClick={() =>
+                                                        enterChatRoom(
+                                                            group.gSeq,
+                                                            group.tb_group.gName
+                                                        )
+                                                    }
+                                                >
+                                                    <div className="list-content-wrapper">
+                                                        <img
+                                                            src="/asset/images/leader.gif"
+                                                            alt=""
+                                                        />
 
-                                                {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                // width: '100%',
+                                                                width: '6rem',
+                                                                height: '100%',
+                                                                flexDirection:
+                                                                    'column',
+                                                            }}
+                                                        >
+                                                            <div className="group-name">
+                                                                {
+                                                                    group
+                                                                        .tb_group
+                                                                        .gName
+                                                                }
+                                                            </div>
+
+                                                            {/* recentMsg[i].gSeq와 group[i].gSeq와 동일하면,
                                         msg.msg 띄워주기  */}
-                                                {Array.isArray(recentMsg) &&
-                                                    recentMsg
-                                                        ?.filter(
-                                                            (recent: any) =>
-                                                                recent.gSeq ===
-                                                                group.gSeq
-                                                        )
-                                                        ?.map(
-                                                            (
-                                                                filteredRecent: any
-                                                            ) => (
-                                                                <span className="preview">
-                                                                    {
-                                                                        filteredRecent
-                                                                            .msg
-                                                                            .msg
-                                                                    }
+                                                            {Array.isArray(
+                                                                recentMsg
+                                                            ) &&
+                                                                recentMsg
+                                                                    ?.filter(
+                                                                        (
+                                                                            recent: any
+                                                                        ) =>
+                                                                            recent.gSeq ===
+                                                                            group.gSeq
+                                                                    )
+                                                                    ?.map(
+                                                                        (
+                                                                            filteredRecent: any
+                                                                        ) => (
+                                                                            <span className="preview">
+                                                                                {
+                                                                                    filteredRecent
+                                                                                        .msg
+                                                                                        .msg
+                                                                                }
+                                                                            </span>
+                                                                        )
+                                                                    )}
+                                                        </div>
+
+                                                        <div
+                                                            className="chat-list-count-wrapper"
+                                                            // onClick={alarmHandler}
+                                                        >
+                                                            {Array.isArray(
+                                                                recentMsg
+                                                            ) &&
+                                                                recentMsg
+                                                                    ?.filter(
+                                                                        (
+                                                                            recent: any
+                                                                        ) =>
+                                                                            recent.gSeq ===
+                                                                            group.gSeq
+                                                                    )
+                                                                    ?.map(
+                                                                        (
+                                                                            filteredRecent: any
+                                                                        ) => (
+                                                                            <p>
+                                                                                {
+                                                                                    filteredRecent
+                                                                                        .msg
+                                                                                        .timeStamp
+                                                                                }
+                                                                            </p>
+                                                                        )
+                                                                    )}
+
+                                                            {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
+                                                            {localStorage.getItem(
+                                                                `gSeq${group.gSeq}`
+                                                            ) !== '0' && (
+                                                                <span className="chat-list-count">
+                                                                    {/* 미확인 메세지 개수 */}
+                                                                    {localStorage.getItem(
+                                                                        `gSeq${group.gSeq}`
+                                                                    )}
                                                                 </span>
-                                                            )
-                                                        )}
-                                            </div>
-
-                                            <div
-                                                className="chat-list-count-wrapper"
-                                                // onClick={alarmHandler}
-                                            >
-                                                {Array.isArray(recentMsg) &&
-                                                    recentMsg
-                                                        ?.filter(
-                                                            (recent: any) =>
-                                                                recent.gSeq ===
-                                                                group.gSeq
-                                                        )
-                                                        ?.map(
-                                                            (
-                                                                filteredRecent: any
-                                                            ) => (
-                                                                <p>
-                                                                    {
-                                                                        filteredRecent
-                                                                            .msg
-                                                                            .timeStamp
-                                                                    }
-                                                                </p>
-                                                            )
-                                                        )}
-
-                                                {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
-                                                {localStorage.getItem(
-                                                    `gSeq${group.gSeq}`
-                                                ) !== '0' && (
-                                                    <span className="chat-list-count">
-                                                        {/* 미확인 메세지 개수 */}
-                                                        {localStorage.getItem(
-                                                            `gSeq${group.gSeq}`
-                                                        )}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </li>
-                                );
-                            })}
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            );
+                                        }
+                                    )}
+                                </>
+                            )}
                         </div>
                     )}
                 </div>

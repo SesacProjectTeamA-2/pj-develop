@@ -15,6 +15,15 @@
     }
 }
 
+.group-attend-btn {
+    margin-top: 2rem !important;
+    border: none;
+    font-size: 0.8rem;
+    background-color: #aab4be;
+    color: white;
+    box-shadow: 0.3rem 0.3rem 0.5rem 0 rgba(0, 0, 0, 0.3);
+}
+
 .css-1rr66gk-MuiSwitch-root {
     overflow: visible;
 }
@@ -79,14 +88,28 @@
 .list-sort-toggle-wrapper {
     display: flex;
     align-items: center;
-    // justify-content: flex-end;
+
     justify-content: center;
     padding-left: 1rem;
     background-color: #162c4287;
     color: white;
+
     span {
         padding-right: 0.3rem;
     }
+
+    @media (max-width: 1060px) {
+        padding-left: 0.2rem;
+        font-size: 0.8rem;
+
+        span {
+            font-size: 0.8rem;
+        }
+    }
+}
+
+.no-chat-room-text {
+    padding: 0.7rem;
 }
 
 .chat-list-count-wrapper {

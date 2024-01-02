@@ -954,6 +954,7 @@ export default function Header(props: any) {
                                                         props.commentAlarm
                                                     }
                                                     setKey={props.setKey}
+                                                    // key={props.key}
                                                 />
                                             )}
 

@@ -24,6 +24,7 @@ export default function Main({
     setAlarmCount,
     setAlarmList,
     setCommentAlarm,
+    setKey,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -134,14 +135,25 @@ export default function Main({
 
                 const eventData = JSON.parse(event.data);
 
-                console.log('commentAlarm ::::', eventData);
+                let updateData = [];
+                for (let i = 0; i < eventData.length; i++) {
+                    updateData.push(JSON.parse(eventData[i]));
+                }
+
+                // setCommentAlarm([...updateData]);
+                setAlarmList([...updateData]);
+
+                // key 값을 변경하여 리렌더링 유도
+                // setKey((prevKey: any) => prevKey + 1);
+
+                // console.log('commentAlarm 이벤트 받아옴 >>>>>', commentAlarm);
                 // commentTime: '2023-12-29T02:34:19.680Z';
                 // gSeq: '3';
                 // gbSeq: '22';
                 // type: 'comment';
                 // uName: '테스트111111';
 
-                setCommentAlarm(eventData);
+                // setCommentAlarm(eventData);
             });
 
             //-- 댓글 수신 시, 카운트 업데이트
@@ -157,6 +169,9 @@ export default function Main({
                 localStorage.setItem('alarmCount', eventData.toString());
 
                 setAlarmCount(localStorage.getItem('alarmCount'));
+
+                // key 값을 변경하여 리렌더링 유도
+                // setKey((prevKey: any) => prevKey + 1);
             });
 
             // console.log(':::::::::::: 최초 로그인 시");
