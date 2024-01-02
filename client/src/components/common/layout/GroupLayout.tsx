@@ -25,6 +25,8 @@ export default function GroupLayout({
     setIsEnter,
     allGroupInfo,
     setAllGroupInfo,
+    key,
+    setKey,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -98,6 +100,8 @@ export default function GroupLayout({
                                     isShrinkView={isShrinkView}
                                     setIsShrinkView={setIsShrinkView}
                                     socket={socket}
+                                    key={key}
+                                    setKey={setKey}
                                 />
                             </Item>
                         </Grid>

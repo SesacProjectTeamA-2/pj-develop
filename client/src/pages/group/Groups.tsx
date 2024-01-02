@@ -92,6 +92,15 @@ export default function Groups() {
                             setSearchInput(e.target.value);
                         }}
                     />
+                    {/* <div className="search-btns">
+                        <button className="btn-sm" onClick={searchHandler}>
+                            {search ? '취소' : '검색'}
+                        </button>
+                        <button className="btn-sm">
+                            <Link to="/group/all">전체</Link>
+                        </button>
+                    </div> */}
+
                     <div className="search-btns">
                         {searchAll ? (
                             <button

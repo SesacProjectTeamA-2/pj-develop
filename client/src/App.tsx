@@ -34,6 +34,8 @@ import BoardEdit from './pages/group/BoardEdit';
 import GroupMissionDetail from './pages/group/GroupMissionDetail';
 import MissionPost from './pages/group/MissionPost';
 import BoardMissionEdit from './pages/group/BoardMissionEdit';
+import GroupList from './pages/group/GroupList';
+import GroupSearchAll from './pages/group/GroupSearchAll';
 
 function App() {
     const cookie = new Cookies();
@@ -44,7 +46,8 @@ function App() {
 
     //] 알람 sse 전역으로 관리
     const [sse, setSse] = useState<any>();
-    console.log('sse 여부 >>>>>>>', sse);
+    console.log('sse 여부 [App] >>>>>>>', sse);
+    console.log('socket 여부 [App] >>>>>>>', socket);
 
     const [showChat, setShowChat] = useState<boolean>(() => {
         // 로컬 스토리지에서 값을 읽어오기
@@ -69,6 +72,9 @@ function App() {
         });
     };
 
+    //] 알람 설정 시, 리렌더링
+    const [key, setKey] = useState(0); // key 상태 추가
+
     const [isIntro, setIsIntro] = useState<boolean>(false);
     const [isLogin, setIsLogin] = useState<boolean>(false);
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
@@ -76,40 +82,7 @@ function App() {
 
     const [allGroupInfo, setAllGroupInfo] = useState<any>([]); // 모든 모임(리더+멤버) 관리
 
-    // //] 유저 생성 모임
-    // const getMadeGroup = async () => {
-    //     const res = await axios
-    //         .get(`${process.env.REACT_APP_DB_HOST}/group/made`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${uToken}`,
-    //             },
-    //         })
-    //         .then((res) => {
-    //             const { groupInfo } = res.data;
-    //             setAllGroupInfo(groupInfo);
-    //         });
-    // };
-
-    // // ] 유저 가입 모임
-    // const getJoinedGroup = async () => {
-    //     const res = await axios
-    //         .get(`${process.env.REACT_APP_DB_HOST}/group/joined`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${uToken}`,
-    //             },
-    //         })
-    //         .then((res) => {
-    //             const { groupInfo } = res.data;
-    //             setAllGroupInfo((prev: any) => [...prev, ...groupInfo]);
-    //         });
-    // };
-
-    // useEffect(() => {
-    //     getMadeGroup();
-    //     getJoinedGroup();
-    // }, []);
-
-    console.log('allGroupInfo APP >>>>', allGroupInfo);
+    // console.log('allGroupInfo APP >>>>', allGroupInfo);
 
     const [recentMsg, setRecentMsg] = useState<any>(); // 방 나갈 때, 최신 메세지
     const [isEnter, setIsEnter] = useState(false); // 입장/나가기
@@ -209,6 +182,7 @@ function App() {
                 // isEnter인 경우에는 미확인 채팅 메세지 +1 안함
                 allGroupInfo={allGroupInfo}
                 setAllGroupInfo={setAllGroupInfo}
+                setKey={setKey}
             />
 
             <Routes>
@@ -284,6 +258,25 @@ function App() {
                         />
                     }
                 />
+
+                <Route
+                    path="/group/all"
+                    element={
+                        <BasicLayout
+                            children={<GroupSearchAll />}
+                            showChat={showChat}
+                            showChatting={showChatting}
+                            socket={socket}
+                            recentMsg={recentMsg}
+                            setRecentMsg={setRecentMsg}
+                            isEnter={isEnter}
+                            setIsEnter={setIsEnter}
+                            allGroupInfo={allGroupInfo}
+                            setAllGroupInfo={setAllGroupInfo}
+                        />
+                    }
+                />
+
                 <Route
                     path="/group/create"
                     element={
@@ -307,7 +300,13 @@ function App() {
                     path="/group/home/:gSeq"
                     element={
                         <GroupLayout
-                            children={<GroupHome socket={socket} />}
+                            children={
+                                <GroupHome
+                                    socket={socket}
+                                    key={key}
+                                    setKey={setKey}
+                                />
+                            }
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
@@ -317,6 +316,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -335,6 +336,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -353,6 +356,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -371,6 +376,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -388,6 +395,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -408,6 +417,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -428,6 +439,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -448,6 +461,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -456,7 +471,7 @@ function App() {
                     path="/board/:gSeq/:gCategory/:gbSeq"
                     element={
                         <GroupLayout
-                            children={<GroupPostDetail />}
+                            children={<GroupPostDetail key={key} />}
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
@@ -466,6 +481,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -484,6 +501,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -503,6 +522,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -522,6 +543,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -541,6 +564,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />
@@ -561,6 +586,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            setKey={setKey}
+                            key={key}
                         />
                     }
                 />

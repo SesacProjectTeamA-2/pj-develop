@@ -46,7 +46,22 @@
 //     gap: 5rem;
 // }
 
+.swiper-dday-text {
+    padding: 0.8rem 0 2rem 0;
+    color: #7c7c7c;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+
+    svg {
+        padding-right: 0.2rem;
+    }
+}
+
 .card {
+    height: 12rem;
     position: relative;
     z-index: 40;
     min-width: 180px;
@@ -57,7 +72,8 @@
     margin: 0 auto;
     padding: 20px 10px;
     -webkit-box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.3);
+    // box-shadow: 4px 8px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: -11px 11px 22px #bebebe, 11px -11px 22px #ffffff;
     -webkit-transition: 0.4s;
     transition: 0.4s;
 
@@ -90,7 +106,7 @@
         position: relative;
         margin: 20px 0 0;
         padding: 0;
-        color: #fff;
+        color: gray;
         font-size: 1.6rem;
         z-index: 2;
     }
@@ -167,29 +183,11 @@
     transform: skewY(-5deg) scale(1.5);
 }
 
-//) [참고] 반응 없음..
-// .col-sm-4:nth-child(1) .card,
-// .col-sm-4:nth-child(1) .card .title .fa {
-//     background: linear-gradient(-45deg, #f403d1, #64b5f6);
-// }
-// .col-sm-4:nth-child(2) .card,
-// .col-sm-4:nth-child(2) .card .title .fa {
-//     background: linear-gradient(-45deg, #ffec61, #f321d7);
-// }
-// .col-sm-4:nth-child(3) .card,
-// .col-sm-4:nth-child(3) .card .title .fa {
-//     background: linear-gradient(-45deg, #24ff72, #9a4eff);
-// }
-
-// .option ul {
-//     margin: 0;
-//     padding: 0;
-// }
 .option ul li {
     margin: 0 0 10px;
     padding: 0;
     list-style: none;
-    color: #fff;
+    color: rgb(113, 113, 113);
     font-size: 16px;
 
     @media (min-width: 0px) and (max-width: 300px) {

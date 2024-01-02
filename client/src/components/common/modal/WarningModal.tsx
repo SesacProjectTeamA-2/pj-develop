@@ -27,7 +27,7 @@ export default function WarningModal({
 
     const [groupName, setGroupName] = useState<GroupMissionsType[]>([]);
 
-    console.log('warningModal socket >>>', socket);
+    // console.log('warningModal socket >>>', socket);
 
     const getGroup = async () => {
         const res = await axios

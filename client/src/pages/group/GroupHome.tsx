@@ -18,7 +18,7 @@ import MemberList from '../../components/group/home/MemberList';
 
 import { GroupDetailType, RootStateType } from '../../../src/types/types'; // Redux 스토어 전체 타입을 가져옵니다.
 
-export default function GroupHome({ socket }: any) {
+export default function GroupHome({ socket, setKey, key }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -174,7 +174,10 @@ export default function GroupHome({ socket }: any) {
                     localStorage.setItem(`gSeq${gSeq}`, '0');
 
                     setJoinSuccess(true);
-                    window.location.reload();
+
+                    // window.location.reload(); 대신에,
+                    // key 값을 변경하여 리렌더링 유도
+                    setKey((prevKey: any) => prevKey + 1);
                 }
             });
     };
@@ -236,7 +239,7 @@ export default function GroupHome({ socket }: any) {
     console.log('groupDetail HOME', groupDetail);
 
     return (
-        <div className="section group-home">
+        <div className="section group-home" key={key}>
             {/* [추후] 모임생성 시, 이미지 파일 없으므로 삼항연산자로 처리 */}
 
             {groupDetail.groupCoverImg ? (
@@ -268,6 +271,8 @@ export default function GroupHome({ socket }: any) {
                 gDday={groupDetail.groupDday}
                 isLeader={isLeader}
                 groupDetail={groupDetail}
+                setKey={setKey}
+                // key={key}
             />
 
             <div className="ranking-container">

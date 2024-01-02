@@ -82,8 +82,9 @@ export default function GroupList() {
                         <SwiperComponent
                             groupArray={madeGroup}
                             memberCount={madeNumGroup}
-                            color1="#ff9400"
-                            color2="#ffde04"
+                            color1="#fff7c3a6"
+                            color2="#e0e0e0"
+                            // color2="#ffde04"
                         />
                     ) : (
                         '생성한 모임이 없습니다. '
@@ -99,8 +100,9 @@ export default function GroupList() {
                         groupArray={joinGroup}
                         // setGroupArray={setJoinGroup}
                         memberCount={joinNumGroup}
-                        color1="#ffbccd"
-                        color2="#ff7575"
+                        // color1="#ffbccd"
+                        color1="#ffcdda69"
+                        color2="#e0e0e0"
                     />
                 ) : (
                     '가입한 모임이 없습니다. '
