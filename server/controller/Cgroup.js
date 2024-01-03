@@ -9,6 +9,7 @@ const {
   GroupBoardComment,
   GroupBoardIcon,
   Mission,
+  Complain,
 } = require('../models');
 const Op = require('sequelize').Op;
 const sequelize = require('sequelize');
@@ -1183,5 +1184,32 @@ exports.patchLeader = async (req, res) => {
       success: false,
       msg: '서버 에러',
     });
+  }
+};
+
+exports.complainUser = async (req, res) => {
+  try {
+    const guSeq = req.params.guSeq;
+    const { cDetail, gSeq } = req.body;
+
+    // 로그인상태
+    if (req.headers.authorization) {
+      let token = req.headers.authorization.split(' ')[1];
+      const user = await jwt.verify(token);
+      const cuSeq = user.uSeq;
+
+      await Complain.create({
+        guSeq,
+        gSeq,
+        cuSeq,
+        cDetail,
+      });
+
+      res.send({ isSuccess: true, msg: '신고가 접수되었습니다.' });
+    } else {
+      res.send({ result: false, message: '먼저 로그인 해주세요.' });
+    }
+  } catch (err) {
+    console.error('complain error', err);
   }
 };

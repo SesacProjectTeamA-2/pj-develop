@@ -320,4 +320,7 @@ router.post('/join', authUtil, controller.postJoin); // 모임 가입
  */
 router.patch('/leader/:gSeq', authUtil, controller.patchLeader); // 모임장 위임
 
+// 신고 기능
+router.post('/complain/:guSeq', controller.complainUser);
+
 module.exports = router;
