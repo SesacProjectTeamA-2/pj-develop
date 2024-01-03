@@ -487,10 +487,17 @@ export default function ChatList({
                                                 }
                                             >
                                                 <div className="list-content-wrapper">
-                                                    <img
+                                                    {/* <img
                                                         src="/asset/images/leader.gif"
                                                         alt=""
-                                                    />
+                                                    /> */}
+                                                    {/* [추후변경] 그룹명의 앞글자만 따옴 */}
+                                                    <div className="list-img-circle">
+                                                        {group.gName.slice(
+                                                            0,
+                                                            1
+                                                        )}
+                                                    </div>
 
                                                     <div
                                                         style={{
