@@ -35,46 +35,103 @@ function calculateDDay(targetDate) {
 // 모임 조회 (검색어 검색 / 카테고리 검색)
 exports.getGroups = async (req, res) => {
   try {
-    let { search, category } = req.query;
-    if (!search) search = '';
-    if (!category || (Array.isArray(category) && category.length === 0)) {
-      category = ['ex', 're', 'st', 'eco', 'lan', 'cert', 'it', 'etc'];
-    } else {
-      category = category.split(',');
-    }
+    // 회원일 경우
+    if (req.headers.authorization) {
+      let token = req.headers.authorization.split(' ')[1];
+      const user = await jwt.verify(token);
+      const uSeq = user.uSeq;
 
-    const selectGroups = await Group.findAndCountAll({
-      where: {
-        [Op.or]: [
-          {
-            gName: { [Op.like]: `%${search}%` },
-          },
-          {
-            gDesc: { [Op.like]: `%${search}%` },
-          },
-        ],
-        [Op.and]: [
-          {
-            gCategory: { [Op.in]: category },
-          },
-        ],
-      },
-    });
+      let { search, category } = req.query;
+      if (!search) search = '';
+      if (!category || (Array.isArray(category) && category.length === 0)) {
+        category = ['ex', 're', 'st', 'eco', 'lan', 'cert', 'it', 'etc'];
+      } else {
+        category = category.split(',');
+      }
 
-    const guNumber = await GroupUser.count({
-      attributes: ['gSeq'],
-      include: [{ model: Group }],
-      group: ['gSeq'],
-    });
-
-    if (selectGroups.count > 0) {
-      res.send({
-        count: selectGroups.count,
-        groupMember: guNumber,
-        groupArray: selectGroups.rows,
+      const selectGroups = await Group.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {
+              gName: { [Op.like]: `%${search}%` },
+            },
+            {
+              gDesc: { [Op.like]: `%${search}%` },
+            },
+          ],
+          [Op.and]: [
+            {
+              gCategory: { [Op.in]: category },
+            },
+          ],
+        },
       });
+
+      const guNumber = await GroupUser.count({
+        attributes: ['gSeq'],
+        include: [{ model: Group }],
+        group: ['gSeq'],
+      });
+
+      // 리더/멤버 여부
+      const isJoin = await GroupUser.findAll({
+        where: { uSeq, guIsBlackUser: { [Op.is]: null } },
+        attributes: ['gSeq', 'guIsLeader'],
+      });
+
+      if (selectGroups.count > 0) {
+        res.send({
+          count: selectGroups.count,
+          groupMember: guNumber,
+          groupArray: selectGroups.rows,
+          isJoin,
+        });
+      } else {
+        res.send({ isSuccess: true, msg: '해당하는 모임이 없습니다.' });
+      }
     } else {
-      res.send({ isSuccess: true, msg: '해당하는 모임이 없습니다.' });
+      // 비회원일경우
+      let { search, category } = req.query;
+      if (!search) search = '';
+      if (!category || (Array.isArray(category) && category.length === 0)) {
+        category = ['ex', 're', 'st', 'eco', 'lan', 'cert', 'it', 'etc'];
+      } else {
+        category = category.split(',');
+      }
+
+      const selectGroups = await Group.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {
+              gName: { [Op.like]: `%${search}%` },
+            },
+            {
+              gDesc: { [Op.like]: `%${search}%` },
+            },
+          ],
+          [Op.and]: [
+            {
+              gCategory: { [Op.in]: category },
+            },
+          ],
+        },
+      });
+
+      const guNumber = await GroupUser.count({
+        attributes: ['gSeq'],
+        include: [{ model: Group }],
+        group: ['gSeq'],
+      });
+
+      if (selectGroups.count > 0) {
+        res.send({
+          count: selectGroups.count,
+          groupMember: guNumber,
+          groupArray: selectGroups.rows,
+        });
+      } else {
+        res.send({ isSuccess: true, msg: '해당하는 모임이 없습니다.' });
+      }
     }
   } catch (err) {
     console.error(err);
