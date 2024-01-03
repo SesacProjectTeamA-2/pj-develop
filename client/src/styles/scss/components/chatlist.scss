@@ -153,6 +153,19 @@
     align-items: center;
     padding: 1rem 0 0 0;
 
+    .list-img-circle {
+        border-radius: 50%;
+        width: 5rem;
+        height: 2.2rem;
+        background-color: #162c4287;
+        margin-right: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        // font-weight: bold;
+    }
+
     img {
         // float: left;
         width: 40px;
