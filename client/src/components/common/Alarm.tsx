@@ -10,37 +10,55 @@ export default function Alarm({
     alarmHandler,
     alarmList,
     commentAlarm,
+    setAlarmCount,
 }: // key,
 any) {
-    console.log('alarmList', alarmList);
-    console.log('commentAlarm', commentAlarm);
+    console.log('alarmList >>>>>>>', alarmList);
+    console.log('commentAlarm >>>>>>>', commentAlarm);
 
-    // alarmList 배열을 순회하면서 데이터 가공
-    const formattedAlarms = alarmList?.map((alarm: any) => {
-        // 각 알람 항목에서 commentTime을 Date 객체로 변환
-        const date = new Date(alarm?.commentTime);
+    const [formattedAlarms, setFormattedAlarms] = useState([]);
 
-        // 시간을 24시간 형식으로 변환
-        const formattedTime = date.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
+    // let formattedAlarmsData: any[] = [];
+
+    useEffect(() => {
+        // console.log('alarmList ???????', alarmList);
+
+        // alarmList 배열을 순회하면서 데이터 가공
+        const formattedAlarmsData = alarmList?.map((alarm: any) => {
+            // 각 알람 항목에서 commentTime을 Date 객체로 변환
+            const date = new Date(alarm?.commentTime);
+
+            // 시간을 24시간 형식으로 변환
+            const formattedTime = date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+            });
+
+            // 날짜를 형식에 맞게 변환
+            const formattedDate = date.toLocaleDateString('en-US', {
+                // year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            });
+
+            // 가공된 데이터를 새로운 객체로 반환
+            return {
+                ...alarm,
+                // commentTime: formattedTime,
+                commentTime: `${formattedDate} ${formattedTime}`,
+                // 다른 필요한 가공 작업 수행
+            };
         });
 
-        // 날짜를 형식에 맞게 변환
-        const formattedDate = date.toLocaleDateString('en-US', {
-            // year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-        });
+        // 가공된 데이터를 상태로 설정
+        setFormattedAlarms(formattedAlarmsData);
 
-        // 가공된 데이터를 새로운 객체로 반환
-        return {
-            ...alarm,
-            // commentTime: formattedTime,
-            commentTime: `${formattedDate} ${formattedTime}`,
-            // 다른 필요한 가공 작업 수행
-        };
-    });
+        if (alarmList) {
+            setAlarmNone(false);
+        }
+
+        console.log('실행 ???????');
+    }, [alarmList]);
 
     console.log('formattedAlarms :::', formattedAlarms);
 
@@ -68,116 +86,115 @@ any) {
 
     // };
 
-    const [newAlarm, setNewAlarm] = useState(false); // 새로운 알람이 왔는지 여부
+    // const [newAlarm, setNewAlarm] = useState(false); // 새로운 알람이 왔는지 여부
 
     //] 새로운 알람 추가
-    const addReceivedAlarm = (data: any) => {
-        setNewAlarm(true);
+    // const addReceivedAlarm = (data: any) => {
+    //     setNewAlarm(true);
 
-        // 시간 변환
-        const date = new Date(data?.commentTime);
+    //     // 시간 변환
+    //     const date = new Date(data?.commentTime);
 
-        // 수정된 부분: 시간을 24시간 형식으로 변환
-        const formattedTime = date.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-        });
+    //     // 수정된 부분: 시간을 24시간 형식으로 변환
+    //     const formattedTime = date.toLocaleTimeString('en-US', {
+    //         hour: '2-digit',
+    //         minute: '2-digit',
+    //     });
 
-        // 날짜를 형식에 맞게 변환
-        const formattedDate = date.toLocaleDateString('en-US', {
-            // year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-        });
+    //     // 날짜를 형식에 맞게 변환
+    //     const formattedDate = date.toLocaleDateString('en-US', {
+    //         // year: 'numeric',
+    //         month: '2-digit',
+    //         day: '2-digit',
+    //     });
 
-        const notificationsContainer = document.querySelector('.comment-alarm');
+    //     const notificationsContainer = document.querySelector('.comment-alarm');
 
-        if (notificationsContainer) {
-            // 새로운 알람 요소를 생성
-            const newNotificationDiv = document.createElement('div');
-            newNotificationDiv.className = 'notification';
+    //     if (notificationsContainer) {
+    //         // 새로운 알람 요소를 생성
+    //         const newNotificationDiv = document.createElement('div');
+    //         newNotificationDiv.className = 'notification';
 
-            const circleDiv = document.createElement('div');
-            circleDiv.className = 'circle';
+    //         const circleDiv = document.createElement('div');
+    //         circleDiv.className = 'circle';
 
-            const flexContainer = document.createElement('div');
-            flexContainer.style.display = 'flex';
-            flexContainer.style.alignItems = 'center';
+    //         const flexContainer = document.createElement('div');
+    //         flexContainer.style.display = 'flex';
+    //         flexContainer.style.alignItems = 'center';
 
-            const timeSpan = document.createElement('span');
-            timeSpan.className = 'time';
-            timeSpan.textContent = `${formattedDate} ${formattedTime}`;
+    //         const timeSpan = document.createElement('span');
+    //         timeSpan.className = 'time';
+    //         timeSpan.textContent = `${formattedDate} ${formattedTime}`;
 
-            const button = document.createElement('button');
-            button.textContent = '읽음';
-            // button.addEventListener('click', newAddedMsgReadHandler); // 클릭 이벤트 핸들러 추가
+    //         const button = document.createElement('button');
+    //         button.textContent = '읽음';
+    //         // button.addEventListener('click', newAddedMsgReadHandler); // 클릭 이벤트 핸들러 추가
 
-            const nameSpan = document.createElement('p');
-            nameSpan.innerHTML = ` <div className="alarm-title-text-wrapper"><span className="alarm-title-text" style={{fontWeight: 'bold'}}>${data.title}</span> <span> 게시글에</span></div> <b>${data.uName}</b> 님이 댓글을 남겼습니다.`;
+    //         const nameSpan = document.createElement('p');
+    //         nameSpan.innerHTML = ` <div className="alarm-title-text-wrapper"><span className="alarm-title-text" style={{fontWeight: 'bold'}}>${data.title}</span> <span> 게시글에</span></div> <b>${data.uName}</b> 님이 댓글을 남겼습니다.`;
 
-            flexContainer.appendChild(timeSpan);
-            flexContainer.appendChild(button);
+    //         flexContainer.appendChild(timeSpan);
+    //         flexContainer.appendChild(button);
 
-            newNotificationDiv.appendChild(circleDiv);
-            newNotificationDiv.appendChild(flexContainer);
-            newNotificationDiv.appendChild(nameSpan);
+    //         newNotificationDiv.appendChild(circleDiv);
+    //         newNotificationDiv.appendChild(flexContainer);
+    //         newNotificationDiv.appendChild(nameSpan);
 
-            // 기존의 자식들 앞에 새로운 알람 요소를 추가
-            notificationsContainer.insertBefore(
-                newNotificationDiv,
-                notificationsContainer.firstChild
-            );
+    //         // 기존의 자식들 앞에 새로운 알람 요소를 추가
+    //         notificationsContainer.insertBefore(
+    //             newNotificationDiv,
+    //             notificationsContainer.firstChild
+    //         );
 
-            //   notificationsContainer.appendChild(newNotificationDiv);
-        }
+    //         //   notificationsContainer.appendChild(newNotificationDiv);
+    //     }
 
-        // if (alarmWrapper) {
-        //     const newElements = commentAlarm.map((alarm, index) => (
-        //         <div key={index} className="notification">
-        //             <div className="circle"></div>
-        //             <div
-        //                 style={{
-        //                     display: 'flex',
-        //                     alignItems: 'center',
-        //                 }}
-        //             >
-        //                 <span className="time">{commentAlarm.commentTime}</span>
-        //                 <button onClick={readHandler}>읽음</button>
-        //             </div>
-        //             {alarm.type === 'comment' ? (
-        //                 <p>
-        //                     <b>{alarm.uName}</b> 님이 댓글을 남겼습니다.
-        //                 </p>
-        //             ) : (
-        //                 <></>
-        //             )}
-        //         </div>
-        //     ));
+    // if (alarmWrapper) {
+    //     const newElements = commentAlarm.map((alarm, index) => (
+    //         <div key={index} className="notification">
+    //             <div className="circle"></div>
+    //             <div
+    //                 style={{
+    //                     display: 'flex',
+    //                     alignItems: 'center',
+    //                 }}
+    //             >
+    //                 <span className="time">{commentAlarm.commentTime}</span>
+    //                 <button onClick={readHandler}>읽음</button>
+    //             </div>
+    //             {alarm.type === 'comment' ? (
+    //                 <p>
+    //                     <b>{alarm.uName}</b> 님이 댓글을 남겼습니다.
+    //                 </p>
+    //             ) : (
+    //                 <></>
+    //             )}
+    //         </div>
+    //     ));
 
-        //     // 생성된 엘리먼트를 DOM에 추가합니다.
-        //     alarmWrapper.innerHTML = ''; // 현재 내용을 지우고
-        //     newElements.forEach((element) => {
-        //         alarmWrapper.appendChild(element);
-        //     });
-        // }
-    };
+    //     // 생성된 엘리먼트를 DOM에 추가합니다.
+    //     alarmWrapper.innerHTML = ''; // 현재 내용을 지우고
+    //     newElements.forEach((element) => {
+    //         alarmWrapper.appendChild(element);
+    //     });
+    // }
+    // };
 
-    //] 업데이트된 알람
-    const updateAlarmHandler = () => {};
+    // useEffect(() => {
+    //     // if (commentAlarm?.length > 0) {
+    //     if (commentAlarm) {
+    //         // addReceivedAlarm(commentAlarm);
 
-    useEffect(() => {
-        // if (commentAlarm?.length > 0) {
-        if (commentAlarm) {
-            // addReceivedAlarm(commentAlarm);
-
-            // 업데이트된 알람 반영
-            updateAlarmHandler();
-        }
-    }, [commentAlarm]);
+    //         // 업데이트된 알람 반영
+    //         updateAlarmHandler();
+    //     }
+    // }, [commentAlarm]);
 
     //] 읽음 처리
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
+
+    const [alarmNone, setAlarmNone] = useState(false);
 
     const deleteAlarm = async (commentInfo: any) => {
         const res = await axios
@@ -189,7 +206,12 @@ any) {
                 },
             })
             .then((res) => {
-                console.log(res);
+                console.log(res.data);
+
+                //~ [추후] alarmList 업데이트 처리 !!!
+                console.log('alarmList 알람 읽은 처리 후 >>>>>>', alarmList); // 업데이트 반영이 안됨 !
+
+                // setAlarmList();
             });
     };
 
@@ -226,19 +248,28 @@ any) {
             // 현재 알람 수를 1 감소시키고 문자열로 변환하여 다시 저장
             const newAlarmCount = (Number(currentAlarmCount) - 1).toString();
             localStorage.setItem('alarmCount', newAlarmCount);
+            setAlarmCount(localStorage.getItem('alarmCount')); // 알람 수 업데이트
+
+            // 현재 알람이 없습니다.
+            if (newAlarmCount === '0') {
+                setAlarmNone(true);
+            }
         }
+
+        console.log('삭제되었나요 ????', alarmList);
     };
 
     //++ 선 동적으로 처리
     useEffect(() => {
         const panel = document.querySelector('.panel');
+        const line = document.querySelector('.line') as HTMLDivElement;
 
-        if (panel) {
+        if (alarmNone) {
+            line.style.height = '0';
+        } else if (panel) {
             // const notificationBox = document.querySelector(
             //     '.notifications'
             // ) as HTMLDivElement;
-
-            const line = document.querySelector('.line') as HTMLDivElement;
 
             const notifications = document.querySelectorAll(
                 '.panel .notifications .notification'
@@ -262,7 +293,6 @@ any) {
 
     //] 링크 이동
     const nvg = useNavigate();
-    const { gSeq, category, gbSeq } = useParams();
 
     // const [key, setKey] = useState(0); // key 상태 추가
 
@@ -300,7 +330,9 @@ any) {
                     {/* <div className="comment-alarm"></div> */}
 
                     {/* [START] alarmList - map 돌리기 ! */}
-                    {formattedAlarms?.length == 0 && !newAlarm ? (
+                    {alarmNone ||
+                    !formattedAlarms ||
+                    formattedAlarms?.length == 0 ? (
                         <div className="no-alarm-text">
                             현재 알람이 없습니다.
                         </div>
