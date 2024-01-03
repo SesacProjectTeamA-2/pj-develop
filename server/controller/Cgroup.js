@@ -81,12 +81,21 @@ exports.getGroups = async (req, res) => {
       });
 
       if (selectGroups.count > 0) {
-        res.send({
-          count: selectGroups.count,
-          groupMember: guNumber,
-          groupArray: selectGroups.rows,
-          isJoin,
-        });
+        if (isJoin.length === 0) {
+          res.send({
+            count: selectGroups.count,
+            groupMember: guNumber,
+            groupArray: selectGroups.rows,
+            isJoin: '참여그룹 없음',
+          });
+        } else {
+          res.send({
+            count: selectGroups.count,
+            groupMember: guNumber,
+            groupArray: selectGroups.rows,
+            isJoin,
+          });
+        }
       } else {
         res.send({ isSuccess: true, msg: '해당하는 모임이 없습니다.' });
       }
