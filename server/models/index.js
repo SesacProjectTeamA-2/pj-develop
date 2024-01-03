@@ -146,10 +146,6 @@ GroupUser.hasMany(Complain, {
   foreignKey: 'gSeq',
   onUpdate: 'CASCADE',
 });
-GroupUser.hasMany(Complain, {
-  foreignKey: 'uSeq',
-  onUpdate: 'CASCADE',
-});
 
 db.User = User;
 db.Group = Group;

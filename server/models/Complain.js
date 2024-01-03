@@ -14,6 +14,11 @@ const Complain = (Sequelize, DataTypes) => {
         allowNull: false,
         comment: '신고내용',
       },
+      cuSeq: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        comment: '신고한 사람',
+      },
     },
     {
       tableName: 'tb_complain',
