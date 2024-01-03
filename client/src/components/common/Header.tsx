@@ -953,6 +953,9 @@ export default function Header(props: any) {
                                                     commentAlarm={
                                                         props.commentAlarm
                                                     }
+                                                    setAlarmCount={
+                                                        props.setAlarmCount
+                                                    }
                                                     setKey={props.setKey}
                                                     // key={props.key}
                                                 />

@@ -140,8 +140,9 @@ export default function Main({
                     updateData.push(JSON.parse(eventData[i]));
                 }
 
-                // setCommentAlarm([...updateData]);
                 setAlarmList([...updateData]);
+
+                // setCommentAlarm([...updateData]);
 
                 // key 값을 변경하여 리렌더링 유도
                 // setKey((prevKey: any) => prevKey + 1);
