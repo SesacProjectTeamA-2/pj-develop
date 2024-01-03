@@ -101,9 +101,15 @@ exports.delAlarm = async (req, res) => {
     const result = await redisCli.lRem(`user${uSeq}`, 0, JSON.stringify(value));
     console.log('redis 데이터 삭제 완료', result);
 
+    const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
+
     // 해당 페이지 이동위한 gbSeq
     if (value.gbSeq) {
-      return res.send({ isSuccess: true, gbSeq: value.gbSeq });
+      return res.send({
+        isSuccess: true,
+        gbSeq: value.gbSeq,
+        alarmList: JSON.stringify(allAlarm),
+      });
     } else {
       return res.send({
         isSuccess: true,
