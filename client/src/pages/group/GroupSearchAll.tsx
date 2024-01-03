@@ -16,6 +16,8 @@ export default function GroupSearchAll({
 
     const [allGroupList, setAllGroupList] = useState<any>([]);
     const [allGroupMember, setAllGroupMember] = useState<any>([]);
+    const [gSeqIsLeader, setGSeqIsLeader] = useState<any>([]);
+    // [{gSeq: 1, guIsLeader: 'y'}, {...}, ...]
 
     //-- 움직이는 효과
     useEffect(() => {
@@ -56,19 +58,43 @@ export default function GroupSearchAll({
 
     //-- 전체 검색
     useEffect(() => {
-        const getSearchGroupList = async () => {
-            const res = await axios.get(
-                // 전체 검색
-                `${process.env.REACT_APP_DB_HOST}/group?search=%`
-            );
+        if (uToken) {
+            const getSearchGroupList = async () => {
+                const res = await axios.get(
+                    // 전체 검색
+                    `${process.env.REACT_APP_DB_HOST}/group?search=%`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${uToken}`,
+                        },
+                    }
+                );
 
-            console.log('검색결과', res.data);
-            console.log(res);
-            setAllGroupList(res.data.groupArray);
-            setAllGroupMember(res.data.groupMember);
-        };
+                console.log('검색결과', res.data);
+                console.log(res);
+                setAllGroupList(res.data.groupArray);
+                setAllGroupMember(res.data.groupMember);
+                setGSeqIsLeader(res.data.isJoin);
+            };
 
-        getSearchGroupList();
+            getSearchGroupList();
+        } else if (!uToken) {
+            // 비회원일 경우
+            const getGuestSearchGroupList = async () => {
+                const res = await axios.get(
+                    // 전체 검색
+                    `${process.env.REACT_APP_DB_HOST}/group?search=%`
+                );
+
+                console.log('검색결과', res.data);
+                console.log(res);
+
+                setAllGroupList(res.data.groupArray);
+                setAllGroupMember(res.data.groupMember);
+            };
+
+            getGuestSearchGroupList();
+        }
     }, [searchInput, selectedArr]);
 
     let categories: any = [];
@@ -108,6 +134,8 @@ export default function GroupSearchAll({
         countArray.push(allGroupMember[i].count);
     }
 
+    console.log(gSeqIsLeader);
+
     return (
         <div>
             <div className="title3" style={{ marginBottom: '2rem' }}>
@@ -118,60 +146,101 @@ export default function GroupSearchAll({
                 {!allGroupList || allGroupList?.length === 0
                     ? '생성된 모임이 없습니다.'
                     : allGroupList?.map(
-                          (searchGroup: GroupStateType, idx: number) => (
-                              <div
-                                  key={searchGroup.gSeq}
-                                  className="search-group-container"
-                              >
-                                  <Link to={`/group/home/${searchGroup.gSeq}`}>
-                                      <ul className="search-card">
-                                          <li>
-                                              <h2> {categories[idx]}</h2>
-                                          </li>
+                          (searchGroup: GroupStateType, idx: number) => {
+                              const isLeader =
+                                  gSeqIsLeader.find(
+                                      (item: any) =>
+                                          item.gSeq === searchGroup.gSeq
+                                  )?.guIsLeader === 'y';
 
-                                          <li className="title-card">
-                                              {searchGroup.gName}
-                                          </li>
+                              //   const isMember =
+                              //       gSeqIsLeader.find(
+                              //           (item: any) =>
+                              //               item.gSeq === searchGroup.gSeq
+                              //       )?.guIsLeader === null;
 
-                                          <li className="group-search-dday-text">
-                                              {/* <span>D-Day</span> */}
-                                              <svg
-                                                  viewBox="0 0 24 24"
-                                                  fill="currentColor"
-                                                  height="1.4em"
-                                                  width="1.4em"
-                                              >
-                                                  <path d="M7 10h5v5H7m12 4H5V8h14m0-5h-1V1h-2v2H8V1H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z" />
-                                              </svg>
-                                              {searchGroup.gDday}
-                                          </li>
-                                          <li className="attend-member-count">
-                                              {/* <i
+                              const isSelectedGroup = gSeqIsLeader.find(
+                                  (item: any) => item.gSeq === searchGroup.gSeq
+                              );
+
+                              const background = isLeader
+                                  ? '#fff7c3a6'
+                                  : isSelectedGroup
+                                  ? '#ffcdda69'
+                                  : '#e0e0e0';
+
+                              return (
+                                  <div
+                                      key={searchGroup.gSeq}
+                                      className="search-group-container"
+                                  >
+                                      <Link
+                                          to={`/group/home/${searchGroup.gSeq}`}
+                                      >
+                                          <div
+                                              className="search-all-card text-center"
+                                              style={{
+                                                  background: `linear-gradient(-45deg, ${background}, #e0e0e0)`,
+                                              }}
+                                          >
+                                              <ul className="search-card">
+                                                  <li>
+                                                      <h2>
+                                                          {' '}
+                                                          {categories[idx]}
+                                                      </h2>
+                                                  </li>
+
+                                                  <li className="title-card">
+                                                      {searchGroup.gName}
+                                                  </li>
+
+                                                  <li className="group-search-dday-text">
+                                                      {/* <span>D-Day</span> */}
+                                                      <svg
+                                                          viewBox="0 0 24 24"
+                                                          fill="currentColor"
+                                                          height="1.4em"
+                                                          width="1.4em"
+                                                      >
+                                                          <path d="M7 10h5v5H7m12 4H5V8h14m0-5h-1V1h-2v2H8V1H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z" />
+                                                      </svg>
+                                                      {searchGroup.gDday}
+                                                  </li>
+                                                  <li className="attend-member-count">
+                                                      {/* <i
                                                   className="fa fa-check"
                                                   aria-hidden="true"
                                               ></i> */}
-                                              참석 인원&nbsp;
-                                              <b>
-                                                  {countArray[idx]}&nbsp;/&nbsp;
-                                                  {searchGroup.gMaxMem}
-                                              </b>
-                                          </li>
+                                                      참석 인원&nbsp;
+                                                      <b>
+                                                          {countArray[idx]}
+                                                          &nbsp;/&nbsp;
+                                                          {searchGroup.gMaxMem}
+                                                      </b>
+                                                  </li>
 
-                                          {searchGroup.gMaxMem -
-                                              countArray[idx] >
-                                          0 ? (
-                                              <button className="all-group-serach-join-btn">
-                                                  참석 가능
-                                              </button>
-                                          ) : (
-                                              <button className="all-group-serach-join-done-btn">
-                                                  마감
-                                              </button>
-                                          )}
-                                      </ul>
-                                  </Link>
-                              </div>
-                          )
+                                                  {/* 이미 참여했다면, 버튼 안뜨게 ! */}
+
+                                                  {isSelectedGroup ? (
+                                                      <></>
+                                                  ) : searchGroup.gMaxMem -
+                                                        countArray[idx] >
+                                                    0 ? (
+                                                      <button className="all-group-serach-join-btn">
+                                                          참석 가능
+                                                      </button>
+                                                  ) : (
+                                                      <button className="all-group-serach-join-done-btn">
+                                                          마감
+                                                      </button>
+                                                  )}
+                                              </ul>
+                                          </div>
+                                      </Link>
+                                  </div>
+                              );
+                          }
                       )}
             </div>
 
