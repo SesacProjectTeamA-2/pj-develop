@@ -42,23 +42,23 @@ export default function Groups() {
     };
 
     const searchHandler = () => {
-        if (!uToken) {
-            alert('로그인이 필요합니다 !');
-            return;
-        } else {
-            getSearchGroupList();
-            setSearch(!search);
-        }
+        // if (!uToken) {
+        //     alert('로그인이 필요합니다 !');
+        //     return;
+        // } else {
+        getSearchGroupList();
+        setSearch(!search);
+        // }
     };
 
     const searchAllHandler = () => {
-        if (!uToken) {
-            alert('로그인이 필요합니다 !');
-            return;
-        } else {
-            getSearchGroupList();
-            setSearchAll(!searchAll);
-        }
+        // if (!uToken) {
+        //     alert('로그인이 필요합니다 !');
+        //     return;
+        // } else {
+        getSearchGroupList();
+        setSearchAll(!searchAll);
+        // }
     };
 
     // key down event 입력 시
