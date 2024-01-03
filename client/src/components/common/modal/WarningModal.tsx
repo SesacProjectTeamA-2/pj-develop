@@ -168,6 +168,8 @@ export default function WarningModal({
                 }
             };
             adminDeleteGroupHandler();
+        } else if (action === '로그인 이동') {
+            nvg('/login');
         }
     };
 
@@ -224,6 +226,8 @@ export default function WarningModal({
                                 ? `강제 퇴장시키겠습니까 ?`
                                 : action === '관리자 그룹 삭제'
                                 ? `그룹을 강제 삭제하겠습니까 ?`
+                                : action === '로그인 이동'
+                                ? `로그인이 필요한 서비스입니다.`
                                 : `정말 ${action}하시겠습니까 ?`}
                         </div>
 
@@ -280,6 +284,10 @@ export default function WarningModal({
                                     않습니다.
                                 </div>{' '}
                             </div>
+                        ) : action === '로그인 이동' ? (
+                            <div className="title5 cancel-modal-description">
+                                로그인 페이지로 이동하시겠습니까?
+                            </div>
                         ) : action === '회원 탈퇴' || '탈퇴' ? (
                             <div className="title5 cancel-modal-description">
                                 모임의 활동 정보가 모두 사라지며 복구되지
@@ -291,18 +299,29 @@ export default function WarningModal({
                     </div>
 
                     <div className="mission-cancel-btn-container">
-                        <button
-                            onClick={doneHandler}
-                            className="btn-md mission-cancel-done-btn"
-                        >
-                            {action === '게시글을 삭제'
-                                ? '삭제'
-                                : action === '관리자 유저 삭제'
-                                ? '강제 퇴장'
-                                : action === '관리자 그룹 삭제'
-                                ? '강제 삭제'
-                                : action}
-                        </button>
+                        {action === '로그인 이동' ? (
+                            <button
+                                onClick={doneHandler}
+                                className="btn-md move-to-login-btn"
+                            >
+                                로그인 이동
+                            </button>
+                        ) : (
+                            <button
+                                onClick={doneHandler}
+                                className="btn-md mission-cancel-done-btn"
+                                // style={action === '로그인 이동' ? buttonStyle : {}}
+                            >
+                                {action === '게시글을 삭제'
+                                    ? '삭제'
+                                    : action === '관리자 유저 삭제'
+                                    ? '강제 퇴장'
+                                    : action === '관리자 그룹 삭제'
+                                    ? '강제 삭제'
+                                    : action}
+                            </button>
+                        )}
+
                         <button
                             onClick={closeModalHandler}
                             className="btn-md mission-cancel-back-btn"
