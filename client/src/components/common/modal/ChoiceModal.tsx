@@ -83,7 +83,7 @@ export default function ChoiceModal({
                     alert(
                         `${selectedMemberName} 님에게 모임장을 위임하였습니다.`
                     );
-                    // window.location.reload();
+
                     setChoiceModalSwitch(false);
 
                     // key 값을 변경하여 리렌더링 유도
@@ -96,12 +96,34 @@ export default function ChoiceModal({
         }
     };
 
-    //~ [추후신고]
-    // 신고 사유
-    const [inputVal, setInputVal] = useState('');
+    //] 신고하기
 
-    //=== 신고하기 ===
-    const reportDone = () => {};
+    const [complainData, setComplainData] = useState<any>({
+        guSeq: 0,
+        gSeq: Number(gSeq),
+        cDetail: '',
+    });
+
+    console.log('complainData:::::::', complainData);
+
+    const reportDone = async () => {
+        const res = await axios
+            .post(
+                `${process.env.REACT_APP_DB_HOST}/group/complain/${complainData.guSeq}`,
+                complainData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${uToken}`,
+                    },
+                }
+            )
+            .then((res) => {
+                console.log(res.data);
+                alert(`${selectedMemberName}님을 신고하였습니다.`);
+                closeModalHandler();
+            })
+            .catch((err) => console.log(err));
+    };
 
     return (
         <div>
@@ -150,6 +172,7 @@ export default function ChoiceModal({
                         setSelectedMemberId={setSelectedMemberId}
                         selectedMemberName={selectedMemberName}
                         setSelectedMemberName={setSelectedMemberName}
+                        setComplainData={setComplainData}
                     />
 
                     {/* 신고일 경우, 사유 입력칸 */}
@@ -176,7 +199,10 @@ export default function ChoiceModal({
                                     maxRows={4}
                                     variant="filled"
                                     onChange={(e) => {
-                                        setInputVal(e.target.value);
+                                        setComplainData((prev: any) => ({
+                                            ...prev,
+                                            cDetail: e.target.value,
+                                        }));
                                     }}
                                 />
                             </Box>
@@ -202,7 +228,7 @@ export default function ChoiceModal({
                             </button>
                         ) : action === '신고' ? (
                             <button
-                                // onClick={reportDone}
+                                onClick={reportDone}
                                 className="btn-md mission-cancel-done-btn"
                             >
                                 {action}

@@ -17,6 +17,7 @@ export default function ModalMemberList({
     selectedMemberId,
     setSelectedMemberName,
     selectedMemberName,
+    setComplainData,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -82,10 +83,14 @@ export default function ModalMemberList({
         memberArray.id = i;
     }
 
-    const listClickHandler = (uSeq: number, uName: string) => {
+    const listClickHandler = (guSeq: number, uSeq: number, uName: string) => {
         setSelectedMemberId(uSeq);
         setSelectedMemberName(uName);
+        console.log('guSeq::::::', guSeq);
+        setComplainData((prev: any) => ({ ...prev, guSeq }));
     };
+
+    console.log('memberArray::::::', memberArray);
 
     return (
         <div className="modal-member-list-container">
@@ -99,6 +104,7 @@ export default function ModalMemberList({
                                     key={member.uSeq}
                                     onClick={() =>
                                         listClickHandler(
+                                            member.tb_groupUsers[0].guSeq,
                                             member.uSeq,
                                             member.uName
                                         )
