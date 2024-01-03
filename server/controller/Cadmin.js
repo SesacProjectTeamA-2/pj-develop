@@ -85,7 +85,7 @@ exports.blackUser = async (req, res) => {
     }
 
     // redis pub 처리
-    const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
+    const allAlarm = await redisCli.lRange(`user${receiver}`, 0, -1);
 
     await redisCli.publish(
       'group-alarm',
@@ -94,6 +94,8 @@ exports.blackUser = async (req, res) => {
         allAlarm,
       })
     );
+
+    res.send({ isSuccess: true, msg: '모임 추방 완료' });
   } catch (err) {
     console.error('유저 블랙 서버 error!!', err);
   }
