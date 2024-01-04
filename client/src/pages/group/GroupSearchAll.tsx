@@ -61,37 +61,50 @@ export default function GroupSearchAll({
     useEffect(() => {
         if (uToken) {
             const getSearchGroupList = async () => {
-                const res = await axios.get(
-                    // 전체 검색
-                    `${process.env.REACT_APP_DB_HOST}/group?search=%`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${uToken}`,
-                        },
-                    }
-                );
 
-                console.log('검색결과', res.data);
-                console.log(res);
-                setAllGroupList(res.data.groupArray);
-                setAllGroupMember(res.data.groupMember);
-                setGSeqIsLeader([...res.data?.isJoin]);
+                try {
+                    const res = await axios.get(
+                        // 전체 검색
+                        `${process.env.REACT_APP_DB_HOST}/group?search=%`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${uToken}`,
+                            },
+                        }
+                    );
+
+                    console.log('검색결과', res.data);
+                    console.log(res);
+                    setAllGroupList(res.data.groupArray);
+                    setAllGroupMember(res.data.groupMember);
+                    setGSeqIsLeader([...res.data?.isJoin]);
+                } catch (error) {
+                    console.error('Error fetching search group list:', error);
+                }
+
             };
 
             getSearchGroupList();
         } else if (!uToken) {
             // 비회원일 경우
             const getGuestSearchGroupList = async () => {
-                const res = await axios.get(
-                    // 전체 검색
-                    `${process.env.REACT_APP_DB_HOST}/group?search=%`
-                );
+                try {
+                    const res = await axios.get(
+                        // 전체 검색
+                        `${process.env.REACT_APP_DB_HOST}/group?search=%`
+                    );
 
-                console.log('검색결과', res.data);
-                console.log(res);
+                    console.log('검색결과', res.data);
+                    console.log(res);
 
-                setAllGroupList(res.data.groupArray);
-                setAllGroupMember(res.data.groupMember);
+                    setAllGroupList(res.data.groupArray);
+                    setAllGroupMember(res.data.groupMember);
+                } catch (error) {
+                    console.error(
+                        'Error fetching guest search group list:',
+                        error
+                    );
+                }
             };
 
             getGuestSearchGroupList();

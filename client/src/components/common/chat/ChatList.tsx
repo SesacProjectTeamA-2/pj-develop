@@ -391,29 +391,16 @@ export default function ChatList({
     // false: 최신순
     // true: 리더순
 
-    let sorted = false;
-
-    useEffect(() => {}, []);
-
     const sortedHandler = (e: any) => {
         console.log(e.target.checked);
         setLeaderSorted((prevLeaderSorted) => !prevLeaderSorted);
-        // const isChecked = e.target.checked;
-        // console.log('isChecked', isChecked);
-        // sorted = isChecked;
-        // console.log('sorted', sorted);
-        // setKey((prevKey: any) => prevKey + 1);
-        // setLeaderSorted(isChecked);
-        // setLeaderSorted((prevLeaderSorted) => !prevLeaderSorted);
-        // setLeaderSorted((prevLeaderSorted) => isChecked);
     };
 
-    const toggleClickHandler = () => {
-        setLeaderSorted((prevLeaderSorted) => !prevLeaderSorted);
-    };
+    // const toggleClickHandler = () => {
+    //     setLeaderSorted((prevLeaderSorted) => !prevLeaderSorted);
+    // };
 
     console.log('leaderSorted', leaderSorted);
-    console.log('sorted', sorted);
 
     return (
         <div className="chat-list-wrapper" key={key}>

@@ -26,33 +26,46 @@ export default function GroupSearch({
     useEffect(() => {
         if (uToken) {
             const getSearchGroupList = async () => {
-                const res = await axios.get(
-                    // 임시로 전체 검색
-                    `${process.env.REACT_APP_DB_HOST}/group?search=${searchInput}&category=${selectedArr}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${uToken}`,
-                        },
-                    }
-                );
+                try {
+                    const res = await axios.get(
+                        // 임시로 전체 검색
+                        `${process.env.REACT_APP_DB_HOST}/group?search=${searchInput}&category=${selectedArr}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${uToken}`,
+                            },
+                        }
+                    );
 
-                console.log('검색결과', res.data);
-                setSearchGroupList(res.data.groupArray);
-                setAllGroupMember(res.data.groupMember);
-                setGSeqIsLeader([...res.data?.isJoin]);
+
+                    console.log('검색결과', res.data);
+                    setSearchGroupList(res.data.groupArray);
+                    setAllGroupMember(res.data.groupMember);
+                    setGSeqIsLeader([...res.data?.isJoin]);
+                } catch (error) {
+                    console.error('Error fetching search group list:', error);
+                }
+
             };
 
             getSearchGroupList();
         } else if (!uToken) {
             const getGuestSearchGroupList = async () => {
-                const res = await axios.get(
-                    // 임시로 전체 검색
-                    `${process.env.REACT_APP_DB_HOST}/group?search=${searchInput}&category=${selectedArr}`
-                );
+                try {
+                    const res = await axios.get(
+                        // 임시로 전체 검색
+                        `${process.env.REACT_APP_DB_HOST}/group?search=${searchInput}&category=${selectedArr}`
+                    );
 
-                console.log('검색결과', res.data);
-                setSearchGroupList(res.data.groupArray);
-                setAllGroupMember(res.data.groupMember);
+                    console.log('검색결과', res.data);
+                    setSearchGroupList(res.data.groupArray);
+                    setAllGroupMember(res.data.groupMember);
+                } catch (error) {
+                    console.error(
+                        'Error fetching guest search group list:',
+                        error
+                    );
+                }
             };
 
             getGuestSearchGroupList();

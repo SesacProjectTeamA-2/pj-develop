@@ -6,6 +6,10 @@ import { Paper } from '@mui/material';
 import '../../styles/scss/pages/management/managementlist.scss';
 
 export default function Report() {
+
+
+
+    
     return (
         <div>
             <SummaryCard />
