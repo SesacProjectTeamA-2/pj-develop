@@ -99,8 +99,58 @@ export default function ChoiceModal({
         }
     };
 
-    //] 신고하기
+    //] 모임장 : 위임 후 모임 삭제 (탈퇴 처리)
+    //-- 남은 인원 2명 이상인 경우
+    const patchLeaderThenDeleteGroup = async () => {
+        const input = { newLeaderUSeq: selectedMemberId };
 
+        console.log(input);
+
+        if (!selectedMemberId) {
+            alert('모임장 권한 넘길 멤버를 클릭해주세요.');
+            return;
+        }
+
+        //] 위임 & 삭제 요청 한 번에 !
+        try {
+            //) 1. 모임장 위임 요청
+            const patchLeaderFirst = await axios.patch(
+                `${process.env.REACT_APP_DB_HOST}/group/leader/${gSeq}`,
+                input,
+                {
+                    headers: {
+                        Authorization: `Bearer ${uToken}`,
+                    },
+                }
+            );
+
+            //) 2. 모임 탈퇴 요청
+            const thenDeleteGroup = await axios.delete(
+                `${process.env.REACT_APP_DB_HOST}/group/quit/${gSeq}`,
+                {
+                    data: { gSeq },
+                    headers: {
+                        Authorization: `Bearer ${uToken}`,
+                    },
+                }
+            );
+
+            // .then((res) => {
+            alert(`${selectedMemberName} 님에게 모임장을 위임하였습니다.`);
+
+            setChoiceModalSwitch(false); // 모달창 닫기
+
+            // key 값을 변경하여 리렌더링 유도
+            setKey((prevKey: any) => prevKey + 1);
+
+            // nvg(`/group/home/${gSeq}`);
+            // });
+        } catch (err) {
+            alert('모임 탈퇴에 실패하였습니다.');
+        }
+    };
+
+    //] 신고하기
     const [complainData, setComplainData] = useState<any>({
         uSeq: 0,
         gSeq: Number(gSeq),
@@ -221,6 +271,13 @@ export default function ChoiceModal({
                                 className="btn-md leader-patch-btn"
                             >
                                 {action}
+                            </button>
+                        ) : action === '모임 위임 후 삭제' ? (
+                            <button
+                                onClick={patchLeaderThenDeleteGroup}
+                                className="btn-md leader-patch-btn"
+                            >
+                                모임 탈퇴
                             </button>
                         ) : action === '강제 퇴장' ? (
                             <button

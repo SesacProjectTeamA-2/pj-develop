@@ -43,6 +43,7 @@ export default function ChatList({
     //++ 채팅방 목록 가져오는 로직 - 하나의 함수에 처리
     const fetchData = async () => {
         try {
+            //) 1. 전체 그룹 조회 요청
             const userMissionRes = await axios.get(
                 `${process.env.REACT_APP_DB_HOST}/mission/user`,
                 {
@@ -56,6 +57,7 @@ export default function ChatList({
 
             const { groupInfo } = userMissionRes.data;
 
+            //) 2. 최신 메세지 조회 요청
             // Fetch recent messages
             const roomInfoRes = await axios.get(
                 `${process.env.REACT_APP_DB_HOST}/chat/roomInfo`,

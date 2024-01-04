@@ -11,6 +11,7 @@ export default function Alarm({
     alarmList,
     commentAlarm,
     setAlarmCount,
+    setAlarmList,
 }: // key,
 any) {
     console.log('alarmList >>>>>>>', alarmList);
@@ -206,12 +207,15 @@ any) {
                 },
             })
             .then((res) => {
-                console.log(res.data);
+                console.log('읽음 처리 delete >>>>>>', res.data);
 
-                //~ [추후] alarmList 업데이트 처리 !!!
-                console.log('alarmList 알람 읽은 처리 후 >>>>>>', alarmList); // 업데이트 반영이 안됨 !
+                let updateData = [];
+                for (let i = 0; i < res.data.length; i++) {
+                    updateData.push(JSON.parse(res.data[i]));
+                }
 
-                // setAlarmList();
+                console.log('parsedData:::::', updateData);
+                setAlarmList([...updateData]);
             });
     };
 
