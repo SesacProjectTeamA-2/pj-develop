@@ -81,15 +81,15 @@ export default function GroupCreate(socket: any) {
                 });
                 setInput({ ...input, [name]: 1 });
 
-                e.target.value = '1';
-                e.target.focus();
+                // e.target.value = '1';
+                // e.target.focus();
                 return;
             } else if (isNaN(intValue) || intValue > 100) {
                 // 숫자가 아니거나 1 미만인 경우
                 toast.error('모임 인원은 100명 미만으로 가능합니다!', {
                     duration: 2000,
                 });
-                setInput({ ...input, [name]: 1 }); // 기본값으로 설정
+                setInput({ ...input, [name]: value }); // 기본값으로 설정
                 // 해당 input에 포커스를 이동
                 e.target.value = '1'; // 입력값을 1로 설정
                 e.target.focus();
@@ -371,7 +371,24 @@ export default function GroupCreate(socket: any) {
             </div>
             <div className="group-create-content">
                 <div className="title5">제한 인원</div>
-                <input
+                {/* <input
+                    defaultValue={1}
+                    className="limit-number"
+                    type="number"
+                    onChange={onChange}
+                    name="gMaxMem"
+                /> */}
+                {/* <TextField
+                    id="demo-helper-text-misaligned-no-helper"
+                    // label="Name"
+                    defaultValue={1}
+                    className="limit-number"
+                    type="number"
+                    onChange={onChange}
+                    name="gMaxMem"
+                /> */}
+                <TextField
+                    variant="standard"
                     defaultValue={1}
                     className="limit-number"
                     type="number"

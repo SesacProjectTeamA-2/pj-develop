@@ -871,6 +871,7 @@ export default function Header(props: any) {
                                                             aria-label="outlined button group"
                                                             variant="outlined"
                                                             className="menu-button"
+                                                            style={{color: 'black'}}
                                                         >
                                                             Login
                                                         </Button>
