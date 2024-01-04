@@ -6,6 +6,7 @@ const {
   GroupBoardComment,
   GroupBoardIcon,
   Mission,
+  Complain,
 } = require('../models');
 
 exports.allUsers = async (req, res) => {
@@ -131,5 +132,15 @@ exports.delGroup = async (req, res) => {
     res.send({ isSuccess: 'true' });
   } catch (err) {
     console.error('delGroup error', err);
+  }
+};
+
+exports.complain = async (req, res) => {
+  try {
+    const result = await Complain.findAll();
+
+    res.send({ result });
+  } catch (err) {
+    console.error('complain error', err);
   }
 };
