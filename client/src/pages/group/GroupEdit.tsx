@@ -180,8 +180,8 @@ export default function GroupEdit() {
                 });
                 setInput({ ...input, [name]: 1 }); // 기본값으로 설정
                 // 해당 input에 포커스를 이동
-                e.target.value = '1'; // 입력값을 1로 설정
-                e.target.focus();
+                // e.target.value = '1'; // 입력값을 1로 설정
+                // e.target.focus();
                 return;
             } else if (isNaN(intValue) || intValue < memberNum) {
                 toast.error(
@@ -307,7 +307,7 @@ export default function GroupEdit() {
         <div className="section group-create-contianer title5">
             <div className="title2">모임 수정하기</div>
             <div className="group-create-content group-create-title">
-                <Toaster />
+                {/* <Toaster /> */}
 
                 <div className="title-wrapper">
                     <Box
@@ -401,7 +401,16 @@ export default function GroupEdit() {
 
             <div className="group-create-content">
                 <div>제한 인원</div>
-                <input
+                {/* <input
+                    defaultValue={1}
+                    className="limit-number"
+                    type="number"
+                    onChange={onChange}
+                    name="gMaxMem"
+                    value={input.gMaxMem}
+                /> */}
+                <TextField
+                    variant="standard"
                     defaultValue={1}
                     className="limit-number"
                     type="number"

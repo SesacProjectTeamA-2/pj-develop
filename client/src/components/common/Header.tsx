@@ -871,7 +871,9 @@ export default function Header(props: any) {
                                                             aria-label="outlined button group"
                                                             variant="outlined"
                                                             className="menu-button"
-                                                            style={{color: 'black'}}
+                                                            style={{
+                                                                color: 'black',
+                                                            }}
                                                         >
                                                             Login
                                                         </Button>
@@ -1022,7 +1024,7 @@ export default function Header(props: any) {
                     </div>
                 </div>
 
-                {/* 모바일일 때 메뉴 바*/}
+                {/* ======  모바일일 때 메뉴 바 ====== */}
                 <div className="header-divTwo mobMode">
                     <nav className="header-nav ">
                         <ul
@@ -1031,61 +1033,156 @@ export default function Header(props: any) {
                                 display: isVisibleMobile ? 'flex' : 'none',
                             }}
                         >
-                            <li>
-                                <Link to="/main">
-                                    <button className="menu-button">
-                                        MAIN
-                                    </button>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/group">
-                                    <button className="menu-button">
-                                        GROUP
-                                    </button>
-                                </Link>
-                            </li>
-
-                            {/* 관리자만 보이는 버튼 */}
-                            {/* <li>
-                            <Link to="/management/users">
-                                <button className="menu-button">
-                                    Management
-                                </button>
-                            </Link>
-                        </li> */}
+                            {/* 회원가입 페이지 */}
 
                             {/* 로그인/비로그인 구분 */}
                             {!isCookie ? (
-                                <li>
-                                    {/* 비로그인 시 */}
-                                    <Link to="/login">
-                                        <button className="menu-button">
-                                            Login
-                                        </button>
-                                    </Link>
-                                </li>
+                                // props.adminUser ? (
+                                localStorage.getItem('adminUser') === 'true' ? (
+                                    // === admin 경우 ===
+                                    <li>
+                                        <ThemeProvider theme={theme}>
+                                            {/* <Link to="/login">Login</Link> */}
+
+                                            <Link to="/login">
+                                                <Button
+                                                    aria-label="outlined button group"
+                                                    variant="outlined"
+                                                    className="menu-button"
+                                                    onClick={logoutHandler}
+                                                >
+                                                    Logout
+                                                </Button>
+                                            </Link>
+                                        </ThemeProvider>
+                                    </li>
+                                ) : (
+                                    <li>
+                                        {/* 비로그인 시 */}
+                                        <Link to="/login">
+                                            <button className="menu-button">
+                                                Login
+                                            </button>
+                                        </Link>
+                                    </li>
+                                )
                             ) : (
                                 <>
-                                    <li
+                                    <li>
+                                        <Link to="/main">
+                                            <button className="menu-button">
+                                                MAIN
+                                            </button>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/group">
+                                            <button className="menu-button">
+                                                GROUP
+                                            </button>
+                                        </Link>
+                                    </li>
+
+                                    {!props.isIntro && (
+                                        <div className="chat-icon-container">
+                                            <img
+                                                src="/asset/icons/chat.svg"
+                                                style={{
+                                                    width: '40px',
+                                                    height: '40px',
+                                                }}
+                                                alt="chatImg"
+                                                onClick={() =>
+                                                    props.showChatting()
+                                                }
+                                                id="chat-btn"
+                                            />
+                                            <div
+                                                className="noti-chat-count-wrapper"
+                                                onClick={() =>
+                                                    props.showChatting()
+                                                }
+                                            >
+                                                {unreadMsg == 0 ? (
+                                                    <></>
+                                                ) : (
+                                                    <span className="notification-chat-count">
+                                                        {/* 합산 */}
+                                                        {unreadMsg}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <span id="chat-text">Chat</span>
+                                        </div>
+                                    )}
+
+                                    {/* <div className="alarm-icon-container">
+                                        <img
+                                            src="/asset/icons/Bell.svg"
+                                            alt="alarm"
+                                            onClick={alarmHandler}
+                                            id="alarm-btn"
+                                        />
+                                        <div
+                                            className="noti-count-wrapper"
+                                            onClick={alarmHandler}
+                                        >
+                                            {props.alarmCount === '0' ? (
+                                                ''
+                                            ) : (
+                                                <span className="notification-count">
+                                                    {Number(props.alarmCount) <
+                                                    100
+                                                        ? props.alarmCount
+                                                        : '99+'}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span id="alarm-text">Alarm</span>
+                                    </div> */}
+
+                                    <div className="logout-icon-container">
+                                        <img
+                                            src="/asset/icons/logout.svg"
+                                            alt="logout"
+                                            onClick={logoutHandler}
+                                            id="logout-btn"
+                                        />
+                                        <span id="logout-text">Logout</span>
+                                    </div>
+                                    <li>
+                                        {/* <div className="mypage-icon-container"> */}
+                                        <Link to="/mypage">
+                                            <img
+                                                src={userImgSrc}
+                                                style={{
+                                                    width: '40px',
+                                                    height: '40px',
+                                                }}
+                                                alt="userImg"
+                                                className="myPage-btn"
+                                            />
+                                        </Link>
+                                    </li>
+                                    {/* <li
                                         style={{
                                             display: 'flex',
                                             flexDirection: 'column',
                                             width: '100%',
                                             alignItems: 'center',
                                         }}
-                                    >
-                                        {/* 로그인 시 */}
-                                        {/* 모바일에서 - 채팅 컴포넌트 */}
-                                        {/* <li id="chat-li"> */}
-                                        {/* <img
+                                    > */}
+                                    {/* 로그인 시 */}
+                                    {/* 모바일에서 - 채팅 컴포넌트 */}
+                                    {/* <li id="chat-li"> */}
+                                    {/* <img
                                             src="/asset/icons/chat.svg"
                                             alt="chatImg"
                                             onClick={() => props.showChatting()}
                                             id="chat-btn"
                                         /> */}
-                                        {/* </li> */}
-                                        <img
+                                    {/* </li> */}
+                                    {/* <img
                                             src="/asset/icons/logout.svg"
                                             alt="logout"
                                             onClick={logoutHandler}
@@ -1101,8 +1198,7 @@ export default function Header(props: any) {
                                                 className="myPage-btn"
                                                 alt="userImg"
                                             ></img>
-                                        </Link>
-                                    </li>
+                                        </Link> */}
                                 </>
                             )}
                         </ul>
