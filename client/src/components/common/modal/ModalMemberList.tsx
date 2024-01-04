@@ -96,7 +96,7 @@ export default function ModalMemberList({
         setSelectedMemberName(uName);
         console.log('guSeq::::::', guSeq);
         console.log('uSeq 클릭 ::::::', uSeq);
-        setComplainData((prev: any) => ({ ...prev, guSeq }));
+        setComplainData((prev: any) => ({ ...prev, guSeq, uSeq, uName }));
     };
 
     console.log('memberArray::::::', memberArray);

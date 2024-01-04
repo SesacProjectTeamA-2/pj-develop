@@ -175,6 +175,19 @@ export default function Main({
                 // setKey((prevKey: any) => prevKey + 1);
             });
 
+            //-- 모임 추방 시 알람
+            eventSource.addEventListener('groupAlarm', (event: any) => {
+                // console.log('commentAlarm ::::', event);
+                // console.log('commentAlarm event.data ::::', event.data);
+
+                const eventData = JSON.parse(event.data);
+
+                console.log('groupAlarm - eventData ::::', eventData);
+
+                // key 값을 변경하여 리렌더링 유도
+                // setKey((prevKey: any) => prevKey + 1);
+            });
+
             // console.log(':::::::::::: 최초 로그인 시");
         }
     }, []);
