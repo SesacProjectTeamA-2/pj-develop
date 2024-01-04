@@ -57,6 +57,25 @@ export default function GroupLayout({
 
     const [isShrinkView, setIsShrinkView] = React.useState(false);
 
+    useEffect(() => {
+        const handleResize = () => {
+            // 화면 너비가 500px 이하인지 확인
+            const newIsShrinkView = window.innerWidth <= 600;
+            setIsShrinkView(newIsShrinkView);
+        };
+
+        // 처음 렌더링 시에도 화면 너비 확인
+        handleResize();
+
+        // 창 크기가 변경될 때마다 이벤트 리스너 등록
+        window.addEventListener('resize', handleResize);
+
+        // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     return (
         <>
             {/* 전체 레이아웃 컨테이너 */}
@@ -64,7 +83,9 @@ export default function GroupLayout({
                 <Grid container>
                     <>
                         {/* 그룹 메뉴 바 컴포넌트 들어갈 곳 */}
-                        <Grid md={2} sm={12} xs={12} className="groupMenu-div">
+                        {/* <Grid md={2} sm={12} xs={12} className="groupMenu-div"> */}
+                        {/* <Grid md={2} sm={3} xs={4} className="groupMenu-div"> */}
+                        <Grid md={2} sm={3} xs={4} className="groupMenu-div">
                             <Item
                                 className="item-sidebar-box-list"
                                 style={
@@ -106,12 +127,7 @@ export default function GroupLayout({
                             </Item>
                         </Grid>
 
-                        <Grid
-                            md={8}
-                            sm={12}
-                            xs={12}
-                            className="section-wrapper"
-                        >
+                        <Grid md={8} sm={7} xs={4} className="section-wrapper">
                             {' '}
                             <Item
                                 style={{
@@ -125,7 +141,13 @@ export default function GroupLayout({
                         </Grid>
 
                         {/* 채팅 컴포넌트 들어갈 곳 */}
-                        <Grid md={2} sm={0} xs={0} className="chatting-div">
+                        <Grid
+                            container
+                            md={2}
+                            sm={1}
+                            xs={1}
+                            className="chatting-div"
+                        >
                             <Item
                                 style={{
                                     paddingLeft: 0,
