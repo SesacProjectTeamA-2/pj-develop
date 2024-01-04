@@ -20,4 +20,7 @@ router.get('/groups', controller.allGroup);
 // 모임 삭제
 router.delete('/groups/:gSeq', controller.delGroup);
 
+// 신고 목록
+router.get('/complain', controller.complain);
+
 module.exports = router;
