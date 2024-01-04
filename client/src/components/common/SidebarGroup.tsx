@@ -44,7 +44,8 @@ export default function SideBarGroup({
             setIsJoin(res.data.isJoin);
 
             setLeaderName(res.data.leaderInfo.uName);
-            setLeftMember(res.data.memberArray[0]?.uSeq);
+            // setLeftMember(res.data.memberArray[0]?.uSeq);
+            setLeftMember(res.data.memberArray[0]); // 남은 인원이 1명일 경우
             setMemberArray(res.data.memberArray);
         };
 

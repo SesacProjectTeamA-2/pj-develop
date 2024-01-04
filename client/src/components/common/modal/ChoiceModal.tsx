@@ -152,7 +152,7 @@ export default function ChoiceModal({
 
     //] 신고하기
     const [complainData, setComplainData] = useState<any>({
-        uSeq: 0,
+        // guSeq: 0,
         gSeq: Number(gSeq),
         cDetail: '',
     });
@@ -162,7 +162,7 @@ export default function ChoiceModal({
     const reportDone = async () => {
         const res = await axios
             .post(
-                `${process.env.REACT_APP_DB_HOST}/group/complain/${complainData.uSeq}`,
+                `${process.env.REACT_APP_DB_HOST}/group/complain/${complainData.guSeq}`,
                 complainData,
                 {
                     headers: {

@@ -210,7 +210,7 @@ any) {
                 console.log('읽음 처리 delete >>>>>>', res.data);
 
                 let updateData = [];
-                for (let i = 0; i < res.data.length; i++) {
+                for (let i = 0; i < res.data?.length; i++) {
                     updateData.push(JSON.parse(res.data[i]));
                 }
 
@@ -280,7 +280,7 @@ any) {
             );
 
             // 데이터 수에 따라 동적으로 처리
-            for (let i = 0; i < formattedAlarms.length; i++) {
+            for (let i = 0; i < formattedAlarms?.length; i++) {
                 const notification = notifications[i] as HTMLDivElement;
                 // const height = i * 10; // 데이터에 따라 높이 계산
 
@@ -291,7 +291,7 @@ any) {
                 notification.style.animationFillMode = 'both';
                 // line.style.height = `${i * 0.9 * 250}px`;
             }
-            line.style.height = `${formattedAlarms.length * 150}px`;
+            line.style.height = `${formattedAlarms?.length * 150}px`;
         }
     }, [formattedAlarms, commentAlarm, alarmList]);
 

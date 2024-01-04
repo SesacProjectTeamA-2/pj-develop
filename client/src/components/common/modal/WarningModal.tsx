@@ -21,7 +21,7 @@ export default function WarningModal({
     setKey,
     selectedUSeq, // 관리자가 삭제하려는 uSeq List
     selectedGSeq, // 관리자가 삭제하려는 gSeq List
-    leftMember, // 2명그룹 : 모임장이 모임 삭제할 경우 자동 위임되는 "남아있는 한 명의 uSeq" (숫자 하나만 보냄)
+    leftMember, // 2명그룹 : 모임장이 모임 삭제할 경우 자동 위임되는 --> .uSeq: "남아있는 한 명의 uSeq" (숫자 하나만 보냄)
     memberArray, // 3명이상그룹 : 모임장이 모임 삭제할 경우 위임창 뜨게
 }: any) {
     const cookie = new Cookies();
@@ -83,10 +83,15 @@ export default function WarningModal({
                     logoutHandler();
                 });
         } else if (action === '모임 삭제') {
+            //-- 남은 인원 1명이 있을 경우 : 마찬가지 ?
+            //-- 0명일 경우
             const deleteGroupHandler = async () => {
                 const res = await axios
                     .delete(`${process.env.REACT_APP_DB_HOST}/group`, {
-                        data: { gSeq, newLeaderUSeq: leftMember },
+                        data: {
+                            gSeq: Number(gSeq),
+                            newLeaderUSeq: leftMember?.uSeq,
+                        },
                         headers: {
                             Authorization: `Bearer ${uToken}`,
                         },
@@ -96,7 +101,8 @@ export default function WarningModal({
                         toast.success(
                             `${groupName} 모임을 ${action}하셨습니다.`
                         );
-                        alert(`${groupName} 모임을 나가셨습니다.`);
+                        //-- 남은 인원 0명 : 모임 완전 삭제
+                        alert(`${groupName} 모임을 삭제하셨습니다.`);
                         nvg('/group');
 
                         //_ [참고] 위임 모달창 (choiceModal)에서 위임 후 삭제 처리하도록 수정했습니다.
@@ -264,8 +270,10 @@ export default function WarningModal({
                                     ? `그룹을 강제 삭제하겠습니까 ?`
                                     : action === '로그인 이동'
                                     ? `로그인이 필요한 서비스입니다.`
-                                    : action === '모임 위임 후 삭제'
-                                    ? `정말 모임을 삭제하시겠습니까 ?`
+                                    : action === '모임 위임 후 삭제' // 남은 인원 2명이상
+                                    ? `정말 ${groupName} 모임을 나가시겠습니까 ?`
+                                    : action === '모임 자동위임' // 남은 인원 1명
+                                    ? `${groupName} 모임을 나가시겠습니까 ?`
                                     : `정말 ${action}하시겠습니까 ?`}
                             </div>
 
@@ -327,8 +335,25 @@ export default function WarningModal({
                                 <div className="title5 cancel-modal-description">
                                     로그인 페이지로 이동하시겠습니까?
                                 </div>
-                            ) : action === '모임 위임 후 삭제' ? (
+                            ) : action === '모임 위임 후 삭제' ? ( // 남은 인원 2명 이상
                                 <div className="title5 cancel-modal-description">
+                                    모임의 활동 정보가 모두 사라지며 복구되지
+                                    않습니다.
+                                </div>
+                            ) : action === '모임 자동위임' ? ( // 남은 인원 1명
+                                <div
+                                    className="title5 cancel-modal-description"
+                                    style={{ textAlign: 'center' }}
+                                >
+                                    <span
+                                        style={{
+                                            color: 'gray',
+                                            display: 'inline',
+                                        }}
+                                    >
+                                        {leftMember?.uName}
+                                    </span>
+                                    &nbsp;님에게 모임장 권한 위임 후, <br />
                                     모임의 활동 정보가 모두 사라지며 복구되지
                                     않습니다.
                                 </div>
@@ -357,13 +382,15 @@ export default function WarningModal({
                                     // style={action === '로그인 이동' ? buttonStyle : {}}
                                 >
                                     {action === '게시글을 삭제'
-                                        ? '삭제'
+                                        ? '삭 제'
                                         : action === '관리자 유저 삭제'
                                         ? '강제 퇴장'
                                         : action === '관리자 그룹 삭제'
                                         ? '강제 삭제'
                                         : action === '모임 위임 후 삭제'
                                         ? '모임 삭제'
+                                        : action === '모임 자동위임'
+                                        ? '탈 퇴'
                                         : action}
                                 </button>
                             )}
