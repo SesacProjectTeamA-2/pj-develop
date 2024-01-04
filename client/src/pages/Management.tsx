@@ -40,6 +40,7 @@ ChartJS.register(
 export default function Management() {
     const [allUser, setAllUser] = useState<any>();
     const [allGroup, setAllGroup] = useState<any>();
+    const [allComplain, setAllComplain] = useState<any>();
     const [gCategoryCount, setGCategoryCount] = useState<any>([
         { ex: 0 },
         { re: 0 },
@@ -56,6 +57,7 @@ export default function Management() {
     // [[gSeq, gName, 유저수]]
     // [[1, "모임명1", 2], [2, "모임명2", 5], ...]
 
+    //] 전체 유저 GET
     const getAllUser = async () => {
         const res = await axios
             .get(`${process.env.REACT_APP_DB_HOST}/admin/users`)
@@ -90,6 +92,7 @@ export default function Management() {
             });
     };
 
+    //] 전체 모임 GET
     const getAllGroup = async () => {
         const res = await axios
             .get(`${process.env.REACT_APP_DB_HOST}/admin/groups`)
@@ -168,9 +171,23 @@ export default function Management() {
             });
     };
 
+    //] 신고 GET
+    const getAllComplain = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/admin/complain`)
+            .then((res) => {
+                console.log('getAllComplain', res.data);
+                setAllComplain(res.data.result);
+            })
+            .catch((err) => {
+                console.log('error 발생: ', err);
+            });
+    };
+
     useEffect(() => {
         getAllUser();
         getAllGroup();
+        getAllComplain();
     }, []);
 
     console.log('allUser >>>', allUser);
@@ -178,7 +195,7 @@ export default function Management() {
     // console.log('gCategoryCount >>>', gCategoryCount);
     // console.log('groupedDcumulativeCountata>>>>>', allGroupDate);
     // console.log('groupedDcumulativeCountata>>>>>', allUserDate);
-    console.log('setGSeqCountArray>>>>>', gSeqCountArray);
+    // console.log('setGSeqCountArray>>>>>', gSeqCountArray);
     // console.log('setGSeqCountArray>>>>>', [
     //     ...gSeqCountArray?.map((item: any) => item[2]),
     // ]);
@@ -325,7 +342,11 @@ export default function Management() {
     return (
         <div>
             <h1>Welcome to DashBoard</h1>
-            <SummaryCard allUser={allUser} allGroup={allGroup} />
+            <SummaryCard
+                allUser={allUser}
+                allGroup={allGroup}
+                allComplain={allComplain}
+            />
             {/* 그래프 */}
             <div className="paper-graph-container">
                 <Paper elevation={3}>

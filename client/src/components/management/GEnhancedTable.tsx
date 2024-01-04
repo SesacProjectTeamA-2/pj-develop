@@ -129,7 +129,7 @@ export default function MEnhancedTable() {
 
     // console.log('gSeqCount 최종 >>>>>', gSeqCountArray);
 
-    // //; 유저 데이터 들어오는 부분
+    //; 유저 데이터 들어오는 부분
     const rows = allGroup
         ? allGroup?.map((group: any, idx: number) =>
               createData(
