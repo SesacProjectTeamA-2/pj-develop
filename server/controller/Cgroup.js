@@ -1243,7 +1243,7 @@ exports.patchLeader = async (req, res) => {
 exports.complainUser = async (req, res) => {
   try {
     const guSeq = req.params.guSeq;
-    const { cDetail, gSeq } = req.body;
+    const { cDetail, gSeq, uSeq, uName } = req.body;
 
     // 로그인상태
     if (req.headers.authorization) {
@@ -1254,11 +1254,13 @@ exports.complainUser = async (req, res) => {
       const isAlready = await Complain.findOne({
         where: { guSeq, cuSeq },
       });
-
+      console.log();
       if (isAlready === null) {
         await Complain.create({
-          // guSeq,
-          // gSeq,
+          guSeq,
+          gSeq,
+          uSeq,
+          uName,
           cuSeq,
           cDetail,
         });

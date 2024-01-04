@@ -140,23 +140,7 @@ exports.complain = async (req, res) => {
   try {
     const result = await Complain.findAll();
 
-    const guSeqArray = result.map((item) => item.guSeq);
-
-    const userArray = await User.findAll({
-      attributes: ['uSeq', 'uName'],
-      includes: [
-        {
-          model: GroupUser,
-          where: {
-            guSeq: { [Op.in]: guSeqArray },
-            guIsBlackUser: { [Op.is]: null },
-          },
-          attributes: ['guSeq'],
-        },
-      ],
-    });
-
-    res.send({ result, userArray });
+    res.send({ result });
   } catch (err) {
     console.error('complain error', err);
   }
