@@ -155,13 +155,15 @@ export default function ChoiceModal({
         // guSeq: 0,
         gSeq: Number(gSeq),
         cDetail: '',
+        uSeq: 0,
+        uName: '',
     });
 
     console.log('complainData:::::::', complainData);
 
     const reportDone = async () => {
-        const res = await axios
-            .post(
+        try {
+            const res = await axios.post(
                 `${process.env.REACT_APP_DB_HOST}/group/complain/${complainData.guSeq}`,
                 complainData,
                 {
@@ -169,17 +171,27 @@ export default function ChoiceModal({
                         Authorization: `Bearer ${uToken}`,
                     },
                 }
-            )
-            .then((res) => {
+            );
+            console.log('신고 성공 !!!!!!');
+            console.log(res.data.isSuccess);
+
+            if (!res.data.isSuccess) {
+                // false 이면
+                console.log('신고 실패 !!!!!!');
+
                 console.log(res.data);
+                alert(res.data.msg);
+            } else {
                 alert(`${selectedMemberName}님을 신고하였습니다.`);
-                closeModalHandler();
-            })
-            .catch((err) => {
-                console.log(res);
-                alert(err);
-                closeModalHandler();
-            });
+            }
+            closeModalHandler();
+        } catch (err: any) {
+            console.log('신고 실패 !!!!!!');
+
+            console.log(err);
+            alert(err.msg);
+            closeModalHandler();
+        }
     };
 
     return (

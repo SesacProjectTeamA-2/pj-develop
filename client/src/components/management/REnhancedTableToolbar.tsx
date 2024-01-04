@@ -17,6 +17,9 @@ export default function REnhancedTableToolbar(
     const { numSelected, selected } = props;
     console.log(selected);
 
+    // selectedGSeq={selectedGSeq}
+    // selectedCDetail={selectedCDetail}
+
     const [warningModalSwitch, setWarningModalSwitch] = useState(false);
 
     const warningModalSwitchHandler = () => {
@@ -104,8 +107,10 @@ export default function REnhancedTableToolbar(
                 warningModalSwitch={warningModalSwitch}
                 setWarningModalSwitch={setWarningModalSwitch}
                 warningModalSwitchHandler={warningModalSwitchHandler}
-                action={'관리자 유저 삭제'}
+                action={'관리자 모임 추방'}
                 selectedUSeq={selected}
+                // selectedGSeq={selectedGSeq}
+                // selectedCDetail={selectedCDetail}
             />
         </>
     );

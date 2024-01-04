@@ -71,18 +71,18 @@ export default function REnhancedTable() {
     // console.log('gSeqCount 최종 >>>>>', gSeqCountArray);
 
     //; 유저 데이터 들어오는 부분
-    const rows = allComplain;
-    //     ? allComplain?.map((complain: any, idx: number) =>
-    //           createData(
-    //               complain.cuSeq, // uSeq
-    //               complain.uName, // 이름
-    //               `${new Date(complain.createdAt).getFullYear()}/${
-    //                   new Date(complain.createdAt).getMonth() + 1
-    //               }/${new Date(complain.createdAt).getDate()}`, // complain.createdAt,
-    //               complain.cDetail
-    //           )
-    //       )
-    //     : [];
+    const rows = allComplain
+        ? allComplain?.map((complain: any, idx: number) =>
+              createData(
+                  complain.uSeq, // uSeq
+                  complain.uName, // 이름
+                  `${new Date(complain.createdAt).getFullYear()}/${
+                      new Date(complain.createdAt).getMonth() + 1
+                  }/${new Date(complain.createdAt).getDate()}`, // complain.createdAt,
+                  complain.cDetail
+              )
+          )
+        : [];
 
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
