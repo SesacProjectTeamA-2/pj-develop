@@ -63,6 +63,8 @@ export default function ChoiceModal({
     const patchLeader = async () => {
         const input = { newLeaderUSeq: selectedMemberId };
 
+        console.log(input);
+
         if (!selectedMemberId) {
             alert('모임장 권한 넘길 멤버를 클릭해주세요.');
             return;
@@ -89,9 +91,10 @@ export default function ChoiceModal({
                     // key 값을 변경하여 리렌더링 유도
                     setKey((prevKey: any) => prevKey + 1);
 
-                    nvg(`/group/home/${gSeq}`);
+                    // nvg(`/group/home/${gSeq}`);
                 });
         } catch (err) {
+            console.log('>>>>', input);
             alert('모임장 위임에 실패하였습니다.');
         }
     };
@@ -99,7 +102,7 @@ export default function ChoiceModal({
     //] 신고하기
 
     const [complainData, setComplainData] = useState<any>({
-        guSeq: 0,
+        uSeq: 0,
         gSeq: Number(gSeq),
         cDetail: '',
     });
@@ -109,7 +112,7 @@ export default function ChoiceModal({
     const reportDone = async () => {
         const res = await axios
             .post(
-                `${process.env.REACT_APP_DB_HOST}/group/complain/${complainData.guSeq}`,
+                `${process.env.REACT_APP_DB_HOST}/group/complain/${complainData.uSeq}`,
                 complainData,
                 {
                     headers: {

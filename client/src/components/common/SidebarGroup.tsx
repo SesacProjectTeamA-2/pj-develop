@@ -23,6 +23,8 @@ export default function SideBarGroup({
 
     const [groupMissions, setGroupMissions] = useState<GroupMissionsType[]>([]);
     const [groupName, setGroupName] = useState<GroupMissionsType[]>([]);
+    const [leftMember, setLeftMember] = useState<any>([]);
+    const [memberArray, setMemberArray] = useState<any>([]);
 
     useEffect(() => {
         const getGroup = async () => {
@@ -42,10 +44,14 @@ export default function SideBarGroup({
             setIsJoin(res.data.isJoin);
 
             setLeaderName(res.data.leaderInfo.uName);
+            setLeftMember(res.data.memberArray[0]?.uSeq);
+            setMemberArray(res.data.memberArray);
         };
 
         getGroup();
     }, []);
+
+    // console.log(leftMember);
 
     //-- 모임장 / 멤버
     const [isLeader, setIsLeader] = useState(false);
@@ -445,6 +451,8 @@ export default function SideBarGroup({
                                     menu={menu}
                                     setMenu={setMenu}
                                     setKey={setKey}
+                                    leftMember={leftMember}
+                                    memberArray={memberArray}
                                 />
                             ) : (
                                 <SideBarGroupMember
