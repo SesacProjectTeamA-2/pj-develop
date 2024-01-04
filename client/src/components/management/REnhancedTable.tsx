@@ -14,13 +14,13 @@ import {
     TablePagination,
     TableRow,
 } from '@mui/material';
-import GEnhancedTableToolbar from './GEnhancedTableToolbar';
-import GEnhancedTableHead, {
+import REnhancedTableToolbar from './REnhancedTableToolbar';
+import REnhancedTableHead, {
     getComparator,
     stableSort,
-} from './GEnhancedTableHead';
+} from './REnhancedTableHead';
 
-export default function GEnhancedTable() {
+export default function REnhancedTable() {
     const [order, setOrder] = React.useState<any>('asc');
     const [orderBy, setOrderBy] = React.useState<any>('calories');
     const [selected, setSelected] = React.useState<readonly number[]>([]);
@@ -31,92 +31,33 @@ export default function GEnhancedTable() {
     interface Data {
         id: number;
         name: string;
-        joinDate: any;
-        madeGroup: number;
-        joinGroup: number;
+        createdAt: any;
+        cDetail: string;
     }
 
     function createData(
         id: number,
         name: string,
-        joinDate: any,
-        madeGroup: number,
-        joinGroup: number
+        createdAt: any,
+        cDetail: string
     ): Data {
         return {
             id,
             name,
-            joinDate,
-            madeGroup,
-            joinGroup,
+            createdAt,
+            cDetail,
         };
     }
 
-    const [allGroup, setAllGroup] = useState<any>();
-    const [allGroupUser, setAllGroupUser] = useState<any>();
-    const [gSeqCountArray, setGSeqCountArray] = useState<any>();
-    // [[gSeq, 유저수]]
-    // [[1, 2], [2, 5], ...]
+    const [allComplain, setAllComplain] = useState<any>();
 
-    const getAllGroup = async () => {
+    //] 신고 GET
+    const getAllComplain = async () => {
         const res = await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/admin/groups`)
+            .get(`${process.env.REACT_APP_DB_HOST}/admin/complain`)
             .then((res) => {
-                console.log('getAllGroup >>>>>>', res.data);
-                setAllGroup(res.data.allGroup);
-                setAllGroupUser(res.data.groupUserArray);
-
-                // 가공된 그룹 데이터 배열을 담을 상태
-                const updatedCategoryAllGroup = res.data.allGroup.map(
-                    (group: any) => {
-                        // 각 그룹의 카테고리에 따라 가공
-                        switch (group.gCategory) {
-                            case 'ex':
-                                return { ...group, gCategory: '운동' };
-                            case 're':
-                                return { ...group, gCategory: '독서' };
-                            case 'lan':
-                                return { ...group, gCategory: '언어' };
-                            case 'cert':
-                                return { ...group, gCategory: '자격증' };
-                            case 'st':
-                                return { ...group, gCategory: '스터디' };
-                            case 'eco':
-                                return { ...group, gCategory: '경제' };
-                            case 'it':
-                                return { ...group, gCategory: 'IT' };
-                            case 'etc':
-                                return { ...group, gCategory: '기타' };
-                            default:
-                                return group;
-                        }
-                    }
-                );
-
-                // 가공된 그룹 데이터 배열을 상태에 저장
-                setAllGroup(updatedCategoryAllGroup);
-
-                //; 그룹 전체 인원 카운트
-                const gSeqCount: any = [];
-
-                // gSeq 세팅
-                for (let i = 0; i < res.data.allGroup?.length; i++) {
-                    gSeqCount.push([res.data.allGroup[i].gSeq, 0]);
-                }
-
-                console.log('gSeqCount 세팅 >>>>>', gSeqCount);
-
-                for (let i = 0; i < res.data.groupUserArray?.length; i++) {
-                    for (let j = 0; j < gSeqCount.length; j++) {
-                        if (
-                            gSeqCount[j][0] === res.data.groupUserArray[i].gSeq
-                        ) {
-                            gSeqCount[j][1] += 1;
-                        }
-                    }
-                }
-
-                setGSeqCountArray(gSeqCount);
+                console.log('getAllComplain', res.data);
+                setAllComplain(res.data.result);
             })
             .catch((err) => {
                 console.log('error 발생: ', err);
@@ -124,25 +65,24 @@ export default function GEnhancedTable() {
     };
 
     useEffect(() => {
-        getAllGroup();
+        getAllComplain();
     }, []);
 
     // console.log('gSeqCount 최종 >>>>>', gSeqCountArray);
 
     //; 유저 데이터 들어오는 부분
-    const rows = allGroup
-        ? allGroup?.map((group: any, idx: number) =>
-              createData(
-                  group.gSeq,
-                  group.gName,
-                  `${new Date(group.createdAt).getFullYear()}/${
-                      new Date(group.createdAt).getMonth() + 1
-                  }/${new Date(group.createdAt).getDate()}`, // group.createdAt,
-                  group.gCategory,
-                  gSeqCountArray[idx][1] // 전체 인원 수
-              )
-          )
-        : [];
+    const rows = allComplain;
+    //     ? allComplain?.map((complain: any, idx: number) =>
+    //           createData(
+    //               complain.cuSeq, // uSeq
+    //               complain.uName, // 이름
+    //               `${new Date(complain.createdAt).getFullYear()}/${
+    //                   new Date(complain.createdAt).getMonth() + 1
+    //               }/${new Date(complain.createdAt).getDate()}`, // complain.createdAt,
+    //               complain.cDetail
+    //           )
+    //       )
+    //     : [];
 
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
@@ -216,7 +156,7 @@ export default function GEnhancedTable() {
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2, boxShadow: 'none' }}>
-                <GEnhancedTableToolbar
+                <REnhancedTableToolbar
                     selected={selected}
                     numSelected={selected.length}
                 />
@@ -226,7 +166,7 @@ export default function GEnhancedTable() {
                         aria-labelledby="tableTitle"
                         size={dense ? 'small' : 'medium'}
                     >
-                        <GEnhancedTableHead
+                        <REnhancedTableHead
                             numSelected={selected.length}
                             order={order}
                             orderBy={orderBy}
@@ -274,7 +214,7 @@ export default function GEnhancedTable() {
                                         <TableCell align="right">
                                             {row.name}
                                         </TableCell>
-                                        <TableCell
+                                        {/* <TableCell
                                             align="right"
                                             style={{
                                                 minWidth: '6rem',
@@ -282,18 +222,18 @@ export default function GEnhancedTable() {
                                             }}
                                         >
                                             {row.joinDate}
+                                        </TableCell> */}
+                                        <TableCell
+                                            align="right"
+                                            style={{ minWidth: '6rem' }}
+                                        >
+                                            {row.createdAt}
                                         </TableCell>
                                         <TableCell
                                             align="right"
                                             style={{ minWidth: '6rem' }}
                                         >
-                                            {row.madeGroup}
-                                        </TableCell>
-                                        <TableCell
-                                            align="right"
-                                            style={{ minWidth: '6rem' }}
-                                        >
-                                            {row.joinGroup}
+                                            {row.cDetail}
                                         </TableCell>
                                     </TableRow>
                                 );

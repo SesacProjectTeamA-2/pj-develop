@@ -175,7 +175,11 @@ export default function ChoiceModal({
                 alert(`${selectedMemberName}님을 신고하였습니다.`);
                 closeModalHandler();
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                console.log(res);
+                alert(err);
+                closeModalHandler();
+            });
     };
 
     return (
@@ -200,6 +204,8 @@ export default function ChoiceModal({
                             <div className="title3">
                                 {action === '신고'
                                     ? '🚨 관리자에게 신고하기'
+                                    : action === '모임 위임 후 삭제'
+                                    ? '모임장 권한 넘기기'
                                     : action}
                             </div>
                             <div className="title5 cancel-modal-description">
@@ -209,6 +215,18 @@ export default function ChoiceModal({
                                     ? '누구를 모임에서 강제로 퇴장할까요 ?'
                                     : action === '신고'
                                     ? '누구를 신고할까요 ?'
+                                    : action === '모임 위임 후 삭제'
+                                    ? '누구에게 모임의 모든 권한을 넘길까요 ?'
+                                    : ''}
+                            </div>
+                            <div
+                                className="cancel-modal-description"
+                                style={{
+                                    color: 'gray',
+                                }}
+                            >
+                                {action === '모임 위임 후 삭제'
+                                    ? '모임장 권한을 넘겨야 탈퇴 처리가 됩니다.'
                                     : ''}
                             </div>
                         </div>

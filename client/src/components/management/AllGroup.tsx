@@ -10,6 +10,8 @@ import GEnhancedTable from './GEnhancedTable';
 export default function AllGroup() {
     const [allUser, setAllUser] = useState();
     const [allGroup, setAllGroup] = useState();
+    const [allComplain, setAllComplain] = useState<any>();
+
     const [gCategoryCount, setGCategoryCount] = useState<any>([
         { ex: 0 },
         { re: 0 },
@@ -64,9 +66,23 @@ export default function AllGroup() {
             });
     };
 
+    //] 신고 GET
+    const getAllComplain = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/admin/complain`)
+            .then((res) => {
+                console.log('getAllComplain', res.data);
+                setAllComplain(res.data.result);
+            })
+            .catch((err) => {
+                console.log('error 발생: ', err);
+            });
+    };
+
     useEffect(() => {
         getAllUser();
         getAllGroup();
+        getAllComplain();
     }, []);
 
     console.log('allUser >>>', allUser);
@@ -75,7 +91,12 @@ export default function AllGroup() {
 
     return (
         <div style={{ margin: '0 0 4rem 7rem' }}>
-            <SummaryCard allUser={allUser} allGroup={allGroup} />
+            <SummaryCard
+                allUser={allUser}
+                allGroup={allGroup}
+                allComplain={allComplain}
+            />
+
             <Paper elevation={3} className="list-paper">
                 {/* <div className="title4 list-title">전체 유저</div> */}
                 <div

@@ -83,8 +83,7 @@ export default function WarningModal({
                     logoutHandler();
                 });
         } else if (action === '모임 삭제') {
-            //-- 남은 인원 1명이 있을 경우 : 마찬가지 ?
-            //-- 0명일 경우
+            //) 남은 인원 0명일 경우 : 모임 완전 삭제
             const deleteGroupHandler = async () => {
                 const res = await axios
                     .delete(`${process.env.REACT_APP_DB_HOST}/group`, {
@@ -118,8 +117,40 @@ export default function WarningModal({
                     });
             };
             deleteGroupHandler();
+        } else if (action === '모임 자동위임') {
+            //) 남은 인원 1명이 있을 경우 : 0명과 마찬가지 ?
+            const deleteGroupHandler = async () => {
+                const res = await axios
+                    .delete(`${process.env.REACT_APP_DB_HOST}/group`, {
+                        data: {
+                            gSeq: Number(gSeq),
+                            newLeaderUSeq: leftMember?.uSeq,
+                        },
+                        headers: {
+                            Authorization: `Bearer ${uToken}`,
+                        },
+                    })
+                    .then((res) => {
+                        console.log(res.data);
+
+                        alert(`${groupName} 모임을 나가셨습니다.`);
+                        nvg('/group');
+
+                        //_ [참고] 위임 모달창 (choiceModal)에서 위임 후 삭제 처리하도록 수정했습니다.
+                        // //-- 남은 인원 2명 이상 : 위임 모달창
+                        // if (memberArray?.length >= 2) {
+                        //     // console.log('modal 떠라...!', memberArray?.length);
+                        //     setWarningModalSwitch(false); // 모임 삭제 모달창 닫기
+                        //     return choiceModalSwitchHandler(); // 위임 모달창 실행
+                        // if (memberArray?.length === 1) {
+                        //-- 남은 인원 1명 : 자동 위임
+                        // nvg('/group');
+                        // } else nvg('/group');
+                    });
+            };
+            deleteGroupHandler();
         } else if (action === '모임 위임 후 삭제') {
-            //-- 남은 인원 2명 이상 : 위임 모달창
+            //) 남은 인원 2명 이상 : 위임 모달창
             setWarningModalSwitch(false); // 모임 삭제 모달창 닫기
             choiceModalSwitchHandler(); // 위임 모달창 실행
         } else if (action === '모임 탈퇴') {
@@ -257,7 +288,10 @@ export default function WarningModal({
                     <div className="modal-mission-cancel-content leave-modal-content">
                         <div className="modal-cancel-title-container leave-modal-container">
                             <div className="title1">🚨</div>
-                            <div className="title3">
+                            <div
+                                className="title3"
+                                style={{ textAlign: 'center' }}
+                            >
                                 {action === '삭제'
                                     ? `게시글을 ${action}하시겠습니까 ?`
                                     : action === '탈퇴'
@@ -271,9 +305,11 @@ export default function WarningModal({
                                     : action === '로그인 이동'
                                     ? `로그인이 필요한 서비스입니다.`
                                     : action === '모임 위임 후 삭제' // 남은 인원 2명이상
-                                    ? `정말 ${groupName} 모임을 나가시겠습니까 ?`
+                                    ? `${groupName} 모임을 나가시겠습니까 ?`
                                     : action === '모임 자동위임' // 남은 인원 1명
                                     ? `${groupName} 모임을 나가시겠습니까 ?`
+                                    : action === '모임 삭제' // 남은 인원 0명
+                                    ? `${groupName} 모임을 삭제하시겠습니까 ?`
                                     : `정말 ${action}하시겠습니까 ?`}
                             </div>
 
@@ -388,7 +424,7 @@ export default function WarningModal({
                                         : action === '관리자 그룹 삭제'
                                         ? '강제 삭제'
                                         : action === '모임 위임 후 삭제'
-                                        ? '모임 삭제'
+                                        ? '탈 퇴'
                                         : action === '모임 자동위임'
                                         ? '탈 퇴'
                                         : action}

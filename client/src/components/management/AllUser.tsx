@@ -29,6 +29,7 @@ export default function AllUser() {
     const [allUserInfo, setAllUserInfo] = useState<any>();
     const [allJoinInfo, setAllJoinInfo] = useState<any>();
     const [allGroup, setAllGroup] = useState();
+    const [allComplain, setAllComplain] = useState<any>();
 
     const getAllUser = async () => {
         const res = await axios
@@ -56,9 +57,23 @@ export default function AllUser() {
             });
     };
 
+    //] 신고 GET
+    const getAllComplain = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/admin/complain`)
+            .then((res) => {
+                console.log('getAllComplain', res.data);
+                setAllComplain(res.data.result);
+            })
+            .catch((err) => {
+                console.log('error 발생: ', err);
+            });
+    };
+
     useEffect(() => {
         getAllUser();
         getAllGroup();
+        getAllComplain();
     }, []);
     console.log('allUser >>>', allUser);
     console.log('allUserInfo >>>', allUserInfo);
@@ -69,7 +84,11 @@ export default function AllUser() {
 
     return (
         <div style={{ margin: '0 0 4rem 7rem' }}>
-            <SummaryCard allUser={allUserInfo} allGroup={allGroup} />
+            <SummaryCard
+                allUser={allUserInfo}
+                allGroup={allGroup}
+                allComplain={allComplain}
+            />
             <Paper elevation={3} className="list-paper">
                 {/* <div className="title4 list-title">전체 유저</div> */}
                 <div
