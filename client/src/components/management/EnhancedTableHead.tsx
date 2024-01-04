@@ -32,10 +32,6 @@ export function getComparator<Key extends keyof any>(
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 export function stableSort<T>(array: any, comparator: (a: T, b: T) => number) {
     const stabilizedThis = array.map(
         (el: any, index: any) => [el, index] as [T, number]
