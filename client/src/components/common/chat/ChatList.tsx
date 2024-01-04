@@ -481,7 +481,14 @@ export default function ChatList({
                                                         alt=""
                                                     /> */}
                                                     {/* [추후변경] 그룹명의 앞글자만 따옴 */}
-                                                    <div className="list-img-circle">
+                                                    <div
+                                                        className="list-img-circle"
+                                                        style={{
+                                                            backgroundColor:
+                                                                '#f5df60',
+                                                            color: '#444444',
+                                                        }}
+                                                    >
                                                         {group.gName.slice(
                                                             0,
                                                             1
@@ -589,10 +596,18 @@ export default function ChatList({
                                         }
                                     >
                                         <div className="list-content-wrapper">
-                                            <img
+                                            {/* <img
                                                 src="/asset/images/member.gif"
                                                 alt=""
-                                            />
+                                            /> */}
+                                            <div
+                                                className="list-img-circle"
+                                                style={{
+                                                    backgroundColor: '#f88c99',
+                                                }}
+                                            >
+                                                {group.gName.slice(0, 1)}
+                                            </div>
 
                                             <div
                                                 style={{
@@ -713,10 +728,23 @@ export default function ChatList({
                                                     }
                                                 >
                                                     <div className="list-content-wrapper">
-                                                        <img
+                                                        {/* <img
                                                             src="/asset/images/leader.gif"
                                                             alt=""
-                                                        />
+                                                        /> */}
+                                                        <div
+                                                            className="list-img-circle"
+                                                            style={{
+                                                                backgroundColor:
+                                                                    '#848f9b',
+                                                                // color: '#444444',
+                                                            }}
+                                                        >
+                                                            {group.tb_group.gName.slice(
+                                                                0,
+                                                                1
+                                                            )}
+                                                        </div>
 
                                                         <div
                                                             style={{
