@@ -43,7 +43,7 @@ exports.outUsers = async (req, res) => {
       }
     );
 
-    res.send({ isSuccess: 'true' });
+    res.send({ isSuccess: 'true', msg: '유저 추방 완료' });
   } catch (err) {
     console.error('editUsers error', err);
   }
