@@ -71,12 +71,10 @@ GroupBoard.belongsTo(Mission, {
 GroupUser.hasMany(GroupBoard, {
   foreignKey: 'gSeq',
   sourceKey: 'gSeq',
-  onUpdate: 'CASCADE',
 });
 GroupBoard.belongsTo(GroupUser, {
   foreignKey: 'gSeq',
   targetKey: 'gSeq',
-  onUpdate: 'CASCADE',
 });
 
 // 6. GroupUser 1 - GroupBoard 다

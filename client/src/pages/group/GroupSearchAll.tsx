@@ -75,7 +75,7 @@ export default function GroupSearchAll({
                 console.log(res);
                 setAllGroupList(res.data.groupArray);
                 setAllGroupMember(res.data.groupMember);
-                setGSeqIsLeader([...res.data.isJoin]);
+                setGSeqIsLeader([...res.data?.isJoin]);
             };
 
             getSearchGroupList();

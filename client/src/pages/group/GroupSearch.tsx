@@ -39,7 +39,7 @@ export default function GroupSearch({
                 console.log('검색결과', res.data);
                 setSearchGroupList(res.data.groupArray);
                 setAllGroupMember(res.data.groupMember);
-                setGSeqIsLeader([...res.data.isJoin]);
+                setGSeqIsLeader([...res.data?.isJoin]);
             };
 
             getSearchGroupList();

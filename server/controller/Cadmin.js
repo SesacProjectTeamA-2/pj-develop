@@ -15,7 +15,7 @@ exports.allUsers = async (req, res) => {
       include: [
         {
           model: GroupUser,
-          attribute: ['guSeq', 'gSeq', 'guIsLeader', 'guIsBlackUser'],
+          attributes: ['guSeq', 'uSeq', 'gSeq', 'guIsLeader', 'guIsBlackUser'],
         },
       ],
     });
@@ -50,7 +50,7 @@ exports.outUsers = async (req, res) => {
 
 exports.blackUser = async (req, res) => {
   try {
-    const guSeq = req.params.guSeq;
+    const uSeq = req.params.uSeq;
     const { guBanReason, gSeq } = req.body;
 
     // 블랙 유저 data 처리
@@ -59,11 +59,11 @@ exports.blackUser = async (req, res) => {
         guBanReason,
         guIsBlackUser: 'y',
       },
-      { where: { guSeq } }
+      { where: { uSeq, gSeq } }
     );
 
     // redis 연동
-    const blackUser = await GroupUser.findOne({ where: { guSeq } });
+    const blackUser = await GroupUser.findOne({ where: { uSeq, gSeq } });
     const blackTime = new Date();
     const receiver = blackUser.uSeq;
     const result = await redisCli.lPush(
