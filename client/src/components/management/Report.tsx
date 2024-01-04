@@ -82,13 +82,13 @@ export default function Report() {
                         <strong>[ CAUTION ]</strong>
                     </div>
                     <div>
-                        관리자 권한으로, 체크박스를 클릭하면 그룹을 삭제할 수
-                        있습니다.
+                        관리자 권한으로, 체크박스를 클릭하면 해당 유저를
+                        그룹에서 강제 추방할 수 있습니다.
                     </div>
                 </div>
                 <br />
 
-                {/* <REnhancedTable /> */}
+                <REnhancedTable />
 
                 {/* <List
                     //  sx={style}

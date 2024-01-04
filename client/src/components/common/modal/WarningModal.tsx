@@ -204,7 +204,8 @@ export default function WarningModal({
                 for (const uSeq of selectedUSeq) {
                     try {
                         // 각 uSeq에 대한 삭제 요청
-                        const res = await axios.delete(
+                        //-- 유저 완전 추방 !!
+                        const res = await axios.patch(
                             `${process.env.REACT_APP_DB_HOST}/admin/users/${uSeq}`
                         );
                         window.location.reload();
@@ -232,6 +233,27 @@ export default function WarningModal({
                 }
             };
             adminDeleteGroupHandler();
+        } else if (action === '관리자 모임 추방') {
+            const adminBlackGroupHandler = async () => {
+                console.log('uSeq>>>>>>', selectedUSeq);
+                // selected gSeq 배열 반복
+                for (const uSeq of selectedUSeq) {
+                    try {
+                        // 각 gSeq에 대한 삭제 요청
+                        const res = await axios.patch(
+                            `${process.env.REACT_APP_DB_HOST}/admin/black/${uSeq}`
+                        );
+                        // window.location.reload();
+                        console.log(`adminBlackGroupHandler ${uSeq}`, res.data);
+                    } catch (err) {
+                        console.log(
+                            `error 발생 adminBlackGroupHandler ${uSeq}: `,
+                            err
+                        );
+                    }
+                }
+            };
+            adminBlackGroupHandler();
         } else if (action === '로그인 이동') {
             nvg('/login');
         }
@@ -310,6 +332,8 @@ export default function WarningModal({
                                     ? `${groupName} 모임을 나가시겠습니까 ?`
                                     : action === '모임 삭제' // 남은 인원 0명
                                     ? `${groupName} 모임을 삭제하시겠습니까 ?`
+                                    : action === '관리자 모임 추방'
+                                    ? `모임에서 강제 추방하겠습니까 ?`
                                     : `정말 ${action}하시겠습니까 ?`}
                             </div>
 
@@ -326,7 +350,10 @@ export default function WarningModal({
                             ) : action === '댓글 삭제' ? (
                                 ''
                             ) : action === '관리자 유저 삭제' ? (
-                                <div className="title5 cancel-modal-description">
+                                <div
+                                    className="title5 cancel-modal-description"
+                                    style={{ textAlign: 'center' }}
+                                >
                                     관리자 권한으로{' '}
                                     {selectedUSeq.map(
                                         (userUSeq: number, index: number) => (
@@ -343,6 +370,29 @@ export default function WarningModal({
                                         )
                                     )}{' '}
                                     회원을 강제 퇴장시킵니다. <br />
+                                </div>
+                            ) : action === '관리자 모임 추방' ? (
+                                <div
+                                    className="title5 cancel-modal-description"
+                                    style={{ textAlign: 'center' }}
+                                >
+                                    관리자 권한으로{' '}
+                                    {selectedUSeq.map(
+                                        (userUSeq: number, index: number) => (
+                                            <span
+                                                key={userUSeq}
+                                                style={{
+                                                    color: '#d01e1e',
+                                                    display: 'inline',
+                                                }}
+                                            >
+                                                {index > 0 && ', '}
+                                                {`${userUSeq}번`}
+                                            </span>
+                                        )
+                                    )}{' '}
+                                    회원을 <br />
+                                    모임에서 강제 퇴장시킵니다. <br />
                                 </div>
                             ) : action === '관리자 그룹 삭제' ? (
                                 <div className="title5 cancel-modal-description">
@@ -427,6 +477,8 @@ export default function WarningModal({
                                         ? '탈 퇴'
                                         : action === '모임 자동위임'
                                         ? '탈 퇴'
+                                        : action === '관리자 모임 추방'
+                                        ? '모임에서 추방'
                                         : action}
                                 </button>
                             )}
