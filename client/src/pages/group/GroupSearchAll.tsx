@@ -61,6 +61,7 @@ export default function GroupSearchAll({
     useEffect(() => {
         if (uToken) {
             const getSearchGroupList = async () => {
+
                 try {
                     const res = await axios.get(
                         // 전체 검색
@@ -80,6 +81,7 @@ export default function GroupSearchAll({
                 } catch (error) {
                     console.error('Error fetching search group list:', error);
                 }
+
             };
 
             getSearchGroupList();

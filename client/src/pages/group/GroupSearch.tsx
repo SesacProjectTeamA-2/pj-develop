@@ -37,6 +37,7 @@ export default function GroupSearch({
                         }
                     );
 
+
                     console.log('검색결과', res.data);
                     setSearchGroupList(res.data.groupArray);
                     setAllGroupMember(res.data.groupMember);
@@ -44,6 +45,7 @@ export default function GroupSearch({
                 } catch (error) {
                     console.error('Error fetching search group list:', error);
                 }
+
             };
 
             getSearchGroupList();

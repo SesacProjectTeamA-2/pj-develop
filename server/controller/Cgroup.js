@@ -703,7 +703,7 @@ exports.deleteGroup = async (req, res) => {
     const uEmail = user.uEmail;
     const uName = user.uName;
 
-    const { gSeq } = req.body;
+    const { gSeq, newLeaderUSeq } = req.body;
 
     // 1) 현재 삭제하는 사람이 모임장인지 확인
     const selectOneGroupUser = await GroupUser.findOne({
@@ -720,9 +720,25 @@ exports.deleteGroup = async (req, res) => {
           gSeq,
         },
       });
-
-      // 모임원이 2명 이상이면 모임장 위임하는 화면으로 이동
-      if (countGroupUser > 1) {
+      if (countGroupUser === 2) {
+        if (newLeaderUSeq) {
+          const changeLeaderResult = await changeGroupLeader(
+            uSeq,
+            gSeq,
+            newLeaderUSeq
+          );
+          res.send({
+            isSuccess: true,
+            msg: '모임 탈퇴에 성공했습니다',
+            changeLeaderResult,
+            uSeq: uSeq,
+            uEmail: uEmail,
+            uName: uName,
+          });
+        }
+      }
+      // 모임원이 3명 이상이면 모임장 위임하는 화면으로 이동
+      else if (countGroupUser > 2) {
         res.send({ isSuccess: false, msg: '모임장 위임을 해야합니다.' });
 
         // 모임장인데, 모임원이 모임장 혼자인 경우는 모임 관련 데이터 삭제
@@ -769,127 +785,131 @@ exports.getGroupDetail = async (req, res) => {
     // 모임 정보
     const groupInfo = await Group.findOne({ where: { gSeq: groupSeq } });
 
-    const { gName, gDesc, gDday, gMaxMem, gCategory, gCoverImg } = groupInfo;
+    if (groupInfo !== null) {
+      const { gName, gDesc, gDday, gMaxMem, gCategory, gCoverImg } = groupInfo;
 
-    const groupDday = calculateDDay(gDday);
+      const groupDday = calculateDDay(gDday);
 
-    const groupMission = await Mission.findAll({
-      where: { gSeq: groupSeq, isExpired: { [Op.is]: null } },
-    });
+      const groupMission = await Mission.findAll({
+        where: { gSeq: groupSeq, isExpired: { [Op.is]: null } },
+      });
 
-    const memberArray = await User.findAll({
-      attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
-      include: [
-        {
-          model: GroupUser,
-          where: {
-            gSeq: groupSeq,
-            guIsLeader: { [Op.is]: null },
-            guIsBlackUser: { [Op.is]: null },
+      const memberArray = await User.findAll({
+        attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
+        include: [
+          {
+            model: GroupUser,
+            where: {
+              gSeq: groupSeq,
+              guIsLeader: { [Op.is]: null },
+              guIsBlackUser: { [Op.is]: null },
+            },
+            attributes: ['guSeq'],
           },
-          attributes: ['guSeq'],
-        },
-      ],
-    });
-
-    const leaderInfo = await User.findOne({
-      attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
-      include: [
-        {
-          model: GroupUser,
-          where: { gSeq: groupSeq, guIsLeader: 'y' },
-          attributes: ['guSeq'],
-        },
-      ],
-    });
-
-    const groupRanking = await ranking.groupRanking(groupSeq);
-
-    const nowScoreUserInfo = groupRanking.nowRanking.map(
-      (user) => user.tb_user
-    );
-
-    const nowRanking = groupRanking.nowRanking.map((item) => {
-      return {
-        uSeq: item.uSeq,
-        guNowScore: item.guNowScore,
-      };
-    });
-
-    const totalScoreUserInfo = groupRanking.totalRanking.map(
-      (user) => user.tb_user
-    );
-
-    const totalRanking = groupRanking.totalRanking.map((item) => {
-      return {
-        uSeq: item.uSeq,
-        guTotalScore: item.guTotalScore,
-      };
-    });
-
-    const doneRates = groupRanking.doneRates;
-
-    // 회원인 경우
-    if (req.headers.authorization) {
-      let token = req.headers.authorization.split(' ')[1];
-      const user = await jwt.verify(token);
-
-      // 모임에 가입한 경우
-      let isLeader;
-      let isJoin;
-
-      const groupUser = await GroupUser.findOne({
-        attributes: ['guSeq', 'guIsLeader'],
-        where: { gSeq: groupSeq, uSeq: user.uSeq },
+        ],
       });
 
-      if (groupUser) {
-        isJoin = true;
-        // 모임장여부 : true/false
-        isLeader = groupUser && groupUser.guIsLeader === 'y' ? true : false;
+      const leaderInfo = await User.findOne({
+        attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
+        include: [
+          {
+            model: GroupUser,
+            where: { gSeq: groupSeq, guIsLeader: 'y' },
+            attributes: ['guSeq'],
+          },
+        ],
+      });
+
+      const groupRanking = await ranking.groupRanking(groupSeq);
+
+      const nowScoreUserInfo = groupRanking.nowRanking.map(
+        (user) => user.tb_user
+      );
+
+      const nowRanking = groupRanking.nowRanking.map((item) => {
+        return {
+          uSeq: item.uSeq,
+          guNowScore: item.guNowScore,
+        };
+      });
+
+      const totalScoreUserInfo = groupRanking.totalRanking.map(
+        (user) => user.tb_user
+      );
+
+      const totalRanking = groupRanking.totalRanking.map((item) => {
+        return {
+          uSeq: item.uSeq,
+          guTotalScore: item.guTotalScore,
+        };
+      });
+
+      const doneRates = groupRanking.doneRates;
+
+      // 회원인 경우
+      if (req.headers.authorization) {
+        let token = req.headers.authorization.split(' ')[1];
+        const user = await jwt.verify(token);
+
+        // 모임에 가입한 경우
+        let isLeader;
+        let isJoin;
+
+        const groupUser = await GroupUser.findOne({
+          attributes: ['guSeq', 'guIsLeader'],
+          where: { gSeq: groupSeq, uSeq: user.uSeq },
+        });
+
+        if (groupUser) {
+          isJoin = true;
+          // 모임장여부 : true/false
+          isLeader = groupUser && groupUser.guIsLeader === 'y' ? true : false;
+        } else {
+          // 모임 가입하지 않은 경우
+          isJoin = false;
+          isLeader = false;
+        }
+
+        res.send({
+          result: true,
+          isJoin,
+          isLeader,
+          groupMission,
+          nowRanking,
+          totalRanking,
+          nowScoreUserInfo,
+          totalScoreUserInfo,
+          doneRates,
+          groupName: gName,
+          groupMaxMember: gMaxMem,
+          grInformation: gDesc,
+          groupDday: groupDday,
+          groupCategory: gCategory,
+          groupCoverImg: gCoverImg,
+          memberArray,
+          leaderInfo,
+        });
+        // 비회원인경우
       } else {
-        // 모임 가입하지 않은 경우
-        isJoin = false;
-        isLeader = false;
+        res.send({
+          result: false,
+          groupMission,
+          nowRanking,
+          totalRanking,
+          nowScoreUserInfo,
+          totalScoreUserInfo,
+          doneRates,
+          groupName: gName,
+          grInformation: gDesc,
+          groupDday: groupDday,
+          groupCategory: gCategory,
+          groupCoverImg: gCoverImg,
+          memberArray,
+          leaderInfo,
+        });
       }
-
-      res.send({
-        result: true,
-        isJoin,
-        isLeader,
-        groupMission,
-        nowRanking,
-        totalRanking,
-        nowScoreUserInfo,
-        totalScoreUserInfo,
-        doneRates,
-        groupName: gName,
-        groupMaxMember: gMaxMem,
-        grInformation: gDesc,
-        groupDday: groupDday,
-        groupCategory: gCategory,
-        groupCoverImg: gCoverImg,
-        memberArray,
-        leaderInfo,
-      });
-      // 비회원인경우
     } else {
-      res.send({
-        result: false,
-        groupMission,
-        nowRanking,
-        totalRanking,
-        nowScoreUserInfo,
-        totalScoreUserInfo,
-        doneRates,
-        groupName: gName,
-        grInformation: gDesc,
-        groupDday: groupDday,
-        groupCategory: gCategory,
-        groupCoverImg: gCoverImg,
-        memberArray,
-        leaderInfo,
-      });
+      res.send({ result: false, msg: '모임정보가 없어요' });
     }
   } catch (err) {
     console.error(err);
@@ -1207,14 +1227,24 @@ exports.complainUser = async (req, res) => {
       const user = await jwt.verify(token);
       const cuSeq = user.uSeq;
 
-      await Complain.create({
-        guSeq,
-        gSeq,
-        cuSeq,
-        cDetail,
+      const isAlready = await Complain.findOne({
+        where: { guSeq, cuSeq },
       });
 
-      res.send({ isSuccess: true, msg: '신고가 접수되었습니다.' });
+      if (isAlready !== null) {
+        await Complain.create({
+          guSeq,
+          gSeq,
+          cuSeq,
+          cDetail,
+        });
+        res.send({ isSuccess: true, msg: '신고가 접수되었습니다.' });
+      } else {
+        res.send({
+          isSuccess: false,
+          msg: '이미 신고처리된 유저입니다.',
+        });
+      }
     } else {
       res.send({ result: false, message: '먼저 로그인 해주세요.' });
     }
