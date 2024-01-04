@@ -276,6 +276,7 @@ exports.editMission = async (req, res) => {
   try {
     const gSeq = req.params.gSeq;
     const { missionArray, deleteList } = req.body;
+    console.log('missionArray>>>>>>>>>>>>>>>>>', missionArray);
     // 로그인 여부 확인
     if (req.headers.authorization) {
       let token = req.headers.authorization.split(' ')[1];
@@ -300,7 +301,6 @@ exports.editMission = async (req, res) => {
               where: { mSeq: missionInfo.mSeq },
               attributes: ['mLevel'],
             });
-
             const seqs = await GroupBoard.findAll({
               where: {
                 gSeq,
@@ -309,8 +309,7 @@ exports.editMission = async (req, res) => {
               },
               attributes: ['guSeq'],
             });
-
-            if (missionInfo.mLevel > currentLevel) {
+            if (missionInfo.mLevel > currentLevel.mLevel) {
               score.groupTotalScore(gSeq, 0, 2);
               console.log('모임 총점수 증가');
 
@@ -320,7 +319,7 @@ exports.editMission = async (req, res) => {
               }
 
               console.log('모임원 현재 점수 증가');
-            } else if (missionInfo.mLevel === currentLevel) {
+            } else if (missionInfo.mLevel === currentLevel.mLevel) {
               console.log('수정된 점수가 동일하여 점수 변동 없음.');
             } else {
               score.groupTotalScore(gSeq, 1, 2);
