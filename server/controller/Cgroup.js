@@ -819,21 +819,6 @@ exports.getGroupDetail = async (req, res) => {
         ],
       });
 
-      const others = await User.findAll({
-        attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
-        where: { [Op.ne]: uSeq },
-        include: [
-          {
-            model: GroupUser,
-            where: {
-              gSeq: groupSeq,
-              guIsBlackUser: { [Op.is]: null },
-            },
-            attributes: ['guSeq'],
-          },
-        ],
-      });
-
       const leaderInfo = await User.findOne({
         attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
         include: [
@@ -883,6 +868,21 @@ exports.getGroupDetail = async (req, res) => {
         const groupUser = await GroupUser.findOne({
           attributes: ['guSeq', 'guIsLeader'],
           where: { gSeq: groupSeq, uSeq: user.uSeq },
+        });
+
+        const others = await User.findAll({
+          attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
+          where: { uSeq: { [Op.ne]: user.uSeq } },
+          include: [
+            {
+              model: GroupUser,
+              where: {
+                gSeq: groupSeq,
+                guIsBlackUser: { [Op.is]: null },
+              },
+              attributes: ['guSeq'],
+            },
+          ],
         });
 
         if (groupUser) {
