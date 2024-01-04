@@ -19,6 +19,12 @@ const Complain = (Sequelize, DataTypes) => {
         allowNull: false,
         comment: '신고한 사람',
       },
+      uName: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        unique: true, // 닉네임 중복 X
+        comment: '유저 닉네임',
+      },
     },
     {
       tableName: 'tb_complain',

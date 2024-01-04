@@ -140,8 +140,31 @@ GroupUser.hasMany(Complain, {
   foreignKey: 'guSeq',
   onUpdate: 'CASCADE',
 });
+
+Complain.belongsTo(GroupUser, {
+  foreignKey: 'guSeq',
+  onUpdate: 'CASCADE',
+});
+
 GroupUser.hasMany(Complain, {
   foreignKey: 'gSeq',
+  onUpdate: 'CASCADE',
+});
+
+Complain.belongsTo(GroupUser, {
+  foreignKey: 'gSeq',
+  onUpdate: 'CASCADE',
+});
+
+GroupUser.hasMany(Complain, {
+  foreignKey: 'uSeq',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
+
+Complain.belongsTo(GroupUser, {
+  foreignKey: 'uSeq',
+  onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
 });
 
