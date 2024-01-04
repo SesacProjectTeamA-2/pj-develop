@@ -85,6 +85,11 @@ module.exports = {
         where: { gSeq },
         attributes: ['gTotalScore'],
       });
+
+      if (missionTotal === null) {
+        console.log('모임의 미션 점수가 없음!');
+        return;
+      }
       if (missionTotal.gTotalScore === 0) {
         return 0;
       } else {
