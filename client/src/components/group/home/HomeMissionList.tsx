@@ -168,7 +168,7 @@ export default function HomeMissionList({
                                     {mission.mTitle}
                                 </div>
                                 <div>{mission.mContent}</div>
-                                <div>난이도 : {mission.mStar}</div>
+                                <div>난이도 {mission.mStar}</div>
                             </li>
                         );
                     })}

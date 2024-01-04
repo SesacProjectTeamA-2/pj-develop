@@ -84,6 +84,8 @@ export default function ModalMemberList({
         getGroup();
     }, []);
 
+    console.log('others', others);
+
     // id 추가
     for (let i = 0; i < memberArray?.length; i++) {
         memberArray.id = i;
@@ -101,9 +103,9 @@ export default function ModalMemberList({
 
     return (
         <div className="modal-member-list-container">
-            {action === '신고 ' ? (
+            {action === '신고' ? (
                 //=== 1. 신고하기  ===
-                // 모임장 제외 멤버 리스트
+                // 현재 유저 제외 (others)
                 others?.length > 0 ? (
                     others.map((member: any) => {
                         return (
@@ -216,7 +218,7 @@ export default function ModalMemberList({
                         </div>
                     </>
                 )
-            ) : // 현재 유저 제외 (others)
+            ) : //=== 2. 모임장 권한 넘기기===
             // 모임장 제외 멤버 리스트
             memberArray?.length > 0 ? (
                 memberArray.map((member: any) => {
@@ -235,17 +237,22 @@ export default function ModalMemberList({
                                     className="modal-member-list-label"
                                     style={{
                                         backgroundColor:
-                                            action === '신고' &&
+                                            // action === '신고' &&
+                                            // selectedMemberId === member.uSeq
+                                            //     ? '#cc0101'
+                                            //     : action === '강제 퇴장' &&
+                                            //       selectedMemberId ===
+                                            //           member.uSeq
+                                            //     ? '#cc0101'
+                                            //     : action === '미션인증 취소' &&
+                                            //       selectedMemberId ===
+                                            //           member.uSeq
+                                            //     ? '#cc0101'
+                                            //     :
+
+                                            action === '모임 위임 후 삭제' &&
                                             selectedMemberId === member.uSeq
-                                                ? '#cc0101'
-                                                : action === '강제 퇴장' &&
-                                                  selectedMemberId ===
-                                                      member.uSeq
-                                                ? '#cc0101'
-                                                : action === '미션인증 취소' &&
-                                                  selectedMemberId ===
-                                                      member.uSeq
-                                                ? '#cc0101'
+                                                ? '#94897c'
                                                 : action ===
                                                       '모임장 권한 넘기기' &&
                                                   selectedMemberId ===
