@@ -950,6 +950,9 @@ export default function Header(props: any) {
                                                 <Alarm
                                                     alarmHandler={alarmHandler}
                                                     alarmList={props.alarmList}
+                                                    setAlarmList={
+                                                        props.setAlarmList
+                                                    }
                                                     commentAlarm={
                                                         props.commentAlarm
                                                     }

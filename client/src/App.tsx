@@ -177,6 +177,7 @@ function App() {
                 alarmCount={alarmCount}
                 setAlarmCount={setAlarmCount}
                 alarmList={alarmList}
+                setAlarmList={setAlarmList}
                 commentAlarm={commentAlarm}
                 setRecentMsg={setRecentMsg} // 전역으로 실시간 최신 메세지 업데이트
                 isEnter={isEnter} // 퇴장할 때마다, unreadMsg 업데이트
