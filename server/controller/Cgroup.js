@@ -727,6 +727,12 @@ exports.deleteGroup = async (req, res) => {
             gSeq,
             newLeaderUSeq
           );
+
+          // 모임장 모임 탈퇴
+          await GroupUser.destroy({
+            where: { uSeq, gSeq },
+          });
+
           res.send({
             isSuccess: true,
             msg: '모임 탈퇴에 성공했습니다',
