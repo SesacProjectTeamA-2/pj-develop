@@ -54,7 +54,7 @@ export default function Header(props: any) {
 
             props.setSocket(newSocket);
         }
-    }, []);
+    }, [props.socket]);
 
     // -- 2. sse
     useEffect(() => {
@@ -76,7 +76,7 @@ export default function Header(props: any) {
                 console.log('sse connected :::', e);
             });
         }
-    }, []);
+    }, [props.sse]);
 
     const updateUnreadMsg = async () => {
         const res = await axios
@@ -940,7 +940,7 @@ export default function Header(props: any) {
                                                         </span>
                                                     )}
                                                 </div>
-                                                <span id="logout-text">
+                                                <span id="alarm-text">
                                                     Alarm
                                                 </span>
                                             </div>

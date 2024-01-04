@@ -75,10 +75,11 @@ export default function SideBarGroupLeader({
         //-- 남은 인원 2명 이상
         if (memberArray?.length >= 2) {
             warningModalSwitchHandler('모임 위임 후 삭제');
-        } else {
-            //-- 남은 인원 1명 / 0명
-            warningModalSwitchHandler('모임 삭제');
-        }
+        } else if (memberArray?.length === 1) {
+            //-- 남은 인원 1명
+            warningModalSwitchHandler('모임 자동위임');
+        } else warningModalSwitchHandler('모임 삭제');
+        //-- 남은 인원 0명
     };
 
     return (
