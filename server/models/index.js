@@ -15,6 +15,7 @@ const GroupBoardComment = require('./GroupBoardComment')(sequelize, Sequelize);
 const GroupBoardIcon = require('./GroupBoardIcon')(sequelize, Sequelize);
 const GroupUser = require('./GroupUser')(sequelize, Sequelize);
 const Mission = require('./Mission')(sequelize, Sequelize);
+const Complain = require('./Complain')(sequelize, Sequelize);
 
 //=== Relation 설정 ===
 
@@ -70,39 +71,31 @@ GroupBoard.belongsTo(Mission, {
 GroupUser.hasMany(GroupBoard, {
   foreignKey: 'gSeq',
   sourceKey: 'gSeq',
-  onDelete: 'CASCADE',
-  onUpdate: 'CASCADE',
 });
 GroupBoard.belongsTo(GroupUser, {
   foreignKey: 'gSeq',
   targetKey: 'gSeq',
-  onDelete: 'CASCADE',
-  onUpdate: 'CASCADE',
 });
 
 // 6. GroupUser 1 - GroupBoard 다
 GroupUser.hasMany(GroupBoard, {
   foreignKey: 'uSeq',
   sourceKey: 'uSeq',
-  onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
 });
 GroupBoard.belongsTo(GroupUser, {
   foreignKey: 'uSeq',
   targetKey: 'uSeq',
-  onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
 });
 
 // 7. GroupUser 1 - GroupBoard 다
 GroupUser.hasMany(GroupBoard, {
   foreignKey: 'guSeq',
-  onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
 });
 GroupBoard.belongsTo(GroupUser, {
   foreignKey: 'guSeq',
-  onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
 });
 
@@ -142,6 +135,39 @@ GroupBoardIcon.belongsTo(GroupBoard, {
   onUpdate: 'CASCADE',
 });
 
+// 11. GroupUser 1 - Complain 다
+GroupUser.hasMany(Complain, {
+  foreignKey: 'guSeq',
+  onUpdate: 'CASCADE',
+});
+
+Complain.belongsTo(GroupUser, {
+  foreignKey: 'guSeq',
+  onUpdate: 'CASCADE',
+});
+
+GroupUser.hasMany(Complain, {
+  foreignKey: 'gSeq',
+  onUpdate: 'CASCADE',
+});
+
+Complain.belongsTo(GroupUser, {
+  foreignKey: 'gSeq',
+  onUpdate: 'CASCADE',
+});
+
+GroupUser.hasMany(Complain, {
+  foreignKey: 'uSeq',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
+
+Complain.belongsTo(GroupUser, {
+  foreignKey: 'uSeq',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+});
+
 db.User = User;
 db.Group = Group;
 db.GroupBoard = GroupBoard;
@@ -149,6 +175,7 @@ db.GroupBoardComment = GroupBoardComment;
 db.GroupBoardIcon = GroupBoardIcon;
 db.GroupUser = GroupUser;
 db.Mission = Mission;
+db.Complain = Complain;
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

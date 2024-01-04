@@ -42,6 +42,12 @@
 
 .post-list-main {
     padding: 1rem 1rem;
+
+    img {
+        max-width: 40vw;
+        padding: 2rem;
+        margin: 0 auto;
+    }
 }
 
 .post-list-footer {
@@ -117,6 +123,27 @@
     height: 100px;
     cursor: pointer;
     border-radius: 50%;
+
+    .moon-write-text {
+        color: #929292;
+        right: 16%;
+        position: relative;
+        top: -80%;
+        // background: white;
+        // border-radius: 14%;
+        padding: 0.5rem;
+        width: 6rem;
+        text-align: center;
+        box-shadow: none;
+        // box-shadow: 3px 3px 3px;
+        border: none;
+        z-index: -1;
+    }
+
+    svg {
+        right: 26%;
+        bottom: 26%;
+    }
 }
 
 .moon-icon.md {
@@ -184,5 +211,49 @@
 //         right: 10%;
 //         bottom: 20%;
 //         @include box(70px);
+//     }
+// }
+
+// .bubbles {
+//     position: absolute;
+//     top: -20%;
+//     left: 0;
+//     bottom: 0;
+//     right: 0;
+
+//     .bubble {
+//         background-color: white;
+//         border-radius: 100%;
+//         position: absolute;
+//         top: 0;
+//         left: 0;
+//         display: block;
+//         z-index: -1;
+
+//         @for $bubble from 1 through 10 {
+//             &:nth-child(#{$bubble}) {
+//                 $size: 30px;
+//                 left: (random(90) + 10) + px;
+//                 width: $size;
+//                 height: $size;
+//                 animation: move-#{$bubble} #{3 + $bubble * 0.02}s infinite;
+//                 animation-delay: #{$bubble * 0.2}s;
+//             }
+//         }
+//     }
+// }
+
+// @for $bubble from 1 through 10 {
+//     @keyframes move-#{$bubble} {
+//         0% {
+//             transform: translate(0, 0);
+//         }
+//         99% {
+//             transform: translate(0, -(random(80) + 50)) + px;
+//         }
+//         100% {
+//             transform: translate(0, 0);
+//             opacity: 0;
+//         }
 //     }
 // }

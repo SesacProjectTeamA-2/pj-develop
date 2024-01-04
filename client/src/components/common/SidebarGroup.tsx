@@ -13,6 +13,8 @@ export default function SideBarGroup({
     isShrinkView,
     setIsShrinkView,
     socket,
+    key,
+    setKey,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -21,6 +23,8 @@ export default function SideBarGroup({
 
     const [groupMissions, setGroupMissions] = useState<GroupMissionsType[]>([]);
     const [groupName, setGroupName] = useState<GroupMissionsType[]>([]);
+    const [leftMember, setLeftMember] = useState<any>([]);
+    const [memberArray, setMemberArray] = useState<any>([]);
 
     useEffect(() => {
         const getGroup = async () => {
@@ -40,10 +44,15 @@ export default function SideBarGroup({
             setIsJoin(res.data.isJoin);
 
             setLeaderName(res.data.leaderInfo.uName);
+            // setLeftMember(res.data.memberArray[0]?.uSeq);
+            setLeftMember(res.data.memberArray[0]); // 남은 인원이 1명일 경우
+            setMemberArray(res.data.memberArray);
         };
 
         getGroup();
     }, []);
+
+    // console.log(leftMember);
 
     //-- 모임장 / 멤버
     const [isLeader, setIsLeader] = useState(false);
@@ -94,7 +103,7 @@ export default function SideBarGroup({
     };
 
     return (
-        <div className="sidebar-all">
+        <div className="sidebar-all" key={key}>
             {/* <div
                 style={{
                     height: '230px',
@@ -442,6 +451,9 @@ export default function SideBarGroup({
                                     }
                                     menu={menu}
                                     setMenu={setMenu}
+                                    setKey={setKey}
+                                    leftMember={leftMember}
+                                    memberArray={memberArray}
                                 />
                             ) : (
                                 <SideBarGroupMember

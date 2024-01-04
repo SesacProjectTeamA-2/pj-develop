@@ -220,11 +220,18 @@
     left: 30%;
 }
 
+#alarm-text {
+    opacity: 0;
+    position: absolute;
+    bottom: -5%;
+    left: 35%;
+}
+
 #logout-text {
     opacity: 0;
     position: absolute;
     bottom: -5%;
-    left: 20%;
+    left: 23%;
 }
 
 #mypage-text {
@@ -246,8 +253,8 @@
     cursor: pointer;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    margin-right: 1rem;
-    margin-left: 1.2rem;
+    margin-right: 0.5rem;
+    margin-left: 1.5rem;
 }
 
 .alarm-icon-container:hover {

@@ -168,10 +168,10 @@ export default function GroupMission() {
                 <div className="moon-icon-wrapper">
                     <Link to={`/board/create/${gSeq}/mission/${mSeq}`}>
                         {/* <img
-                        src="/asset/icons/plus.svg"
-                        className="plus-fixed"
-                        alt="plus-fixed"
-                    /> */}
+                            src="/asset/icons/plus.svg"
+                            className="plus-fixed"
+                            alt="plus-fixed"
+                        /> */}
                         {/* <Fab color="secondary" aria-label="edit">
                         <EditIcon />
                     </Fab> */}
@@ -193,18 +193,39 @@ export default function GroupMission() {
                                               'linear-gradient(8deg, #bdb1b1, #ffc1c7)',
                                       }
                             }
-                        ></div>
-                        {/* <svg
-                            fill="white"
-                            viewBox="0 0 16 16"
-                            height="3em"
-                            width="3em"
                         >
-                            <path
-                                fillRule="evenodd"
-                                d="M2 12.5a.5.5 0 01.5-.5h7a.5.5 0 010 1h-7a.5.5 0 01-.5-.5zm0-3a.5.5 0 01.5-.5h11a.5.5 0 010 1h-11a.5.5 0 01-.5-.5zm0-3a.5.5 0 01.5-.5h11a.5.5 0 010 1h-11a.5.5 0 01-.5-.5zm4-3a.5.5 0 01.5-.5h7a.5.5 0 010 1h-7a.5.5 0 01-.5-.5z"
-                            />
-                        </svg> */}
+                            <button className="moon-write-text">
+                                미션 {missionTitle}
+                                <br />
+                                인증하기 !
+                                {/* <span className="bubbles">
+                                    <span className="bubble"></span>
+                                    <span className="bubble"></span>
+                                    <span className="bubble"></span>
+                                    <span className="bubble"></span>
+                                    <span className="bubble"></span>
+                                    <span className="bubble"></span>
+                                    <span className="bubble"></span>
+                                    <span className="bubble"></span>
+                                    <span className="bubble"></span>
+                                    <span className="bubble"></span>
+                                </span> */}
+                            </button>
+
+                            <svg
+                                fill="none"
+                                stroke="white"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                viewBox="0 0 24 24"
+                                height="3em"
+                                width="3em"
+                                className="moon-write-svg"
+                            >
+                                <path d="M12 5v14M5 12h14" />
+                            </svg>
+                        </div>
                     </Link>
                 </div>
             </div>

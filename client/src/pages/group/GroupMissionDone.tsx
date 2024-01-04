@@ -131,9 +131,6 @@ export default function GroupMissionDone() {
 
     const rows = reversedRows;
 
-    // 페이지 이동
-    const navigate = useNavigate();
-
     // const handleRowClick = (rowId: number) => {
     //     navigate('/group/idti/1/' + rowId);
     // };

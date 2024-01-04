@@ -6,7 +6,7 @@
     width: 100vw;
     padding: 30px;
     gap: 3rem;
-    margin: 0 auto;
+    margin: 0 auto 3rem 0;
     position: relative;
 
     height: fit-content;
@@ -27,6 +27,13 @@
     font-weight: normal;
 }
 
+.group-create-content-category-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
 .group-create-content {
     display: flex;
     gap: 1.6rem;
@@ -42,7 +49,7 @@
     }
 
     label {
-        height: 2rem;
+        height: 3rem;
     }
 }
 .group-category {
@@ -171,10 +178,15 @@ input {
     position: sticky;
     bottom: 4%;
     z-index: 10;
-    width: 60%;
+    width: 40%;
     margin: auto;
 
     @include media('<900px') {
         width: 55%;
+    }
+
+    @include media('<550px') {
+        width: 79%;
+        height: 4.5vh;
     }
 }

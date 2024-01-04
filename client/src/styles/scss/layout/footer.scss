@@ -118,6 +118,12 @@ body {
         display: flex;
         // flex-direction: column;
     }
+
+    @include media('<1024px') {
+        .profile-hover {
+            flex-direction: column;
+        }
+    }
 }
 
 .text-big h1 {
@@ -166,6 +172,41 @@ body {
         .origin-team-wrapper {
             display: none;
         }
+
+        gap: 3rem;
+        width: 80vw;
+    }
+
+    @include media('<940px') {
+        gap: 3rem;
+        width: 90vw;
+    }
+
+    @include media('<840px') {
+        gap: 2rem;
+        width: 90vw;
+    }
+
+    @include media('<600px') {
+        .team-wrapper {
+            display: none;
+        }
+
+        .frame {
+            display: none;
+        }
+
+        gap: 1rem;
+    }
+
+    @include media('<360px') {
+        .email-wrapper {
+            display: none;
+        }
+
+        .logo-wrapper {
+            margin: auto;
+        }
     }
 
     // 공통 제목
@@ -176,9 +217,6 @@ body {
         margin-top: 2rem;
     }
 
-    // 로고 참고 스타일링
-    // https://codepen.io/muhammed-anas/pen/ExQGXyQ
-
     .logo-wrapper {
         width: 65%;
 
@@ -186,6 +224,10 @@ body {
             width: 70%;
             margin: 5rem 0 1rem 0;
             opacity: 0.7;
+
+            @include media('<1024px') {
+                width: 120%;
+            }
         }
 
         span {

@@ -45,8 +45,9 @@ exports.alarming = async (req, res) => {
       // 댓글 작성시 메세지 전송
       await sub.subscribe('comment-alarm', (data) => {
         const datas = JSON.parse(data);
+        console.log('datas>>>>>>>>>>', datas);
         res.write(
-          'event: commentAlarm\n' + `data:${JSON.stringify(datas.message)}\n\n`
+          'event: commentAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
         res.write(
           'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
@@ -58,7 +59,7 @@ exports.alarming = async (req, res) => {
         console.log('message', message);
         const datas = JSON.parse(data);
         res.write(
-          'event: groupAlarm\n' + `data:${JSON.stringify(datas.message)}\n\n`
+          'event: groupAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
         res.write(
           'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
@@ -100,9 +101,15 @@ exports.delAlarm = async (req, res) => {
     const result = await redisCli.lRem(`user${uSeq}`, 0, JSON.stringify(value));
     console.log('redis 데이터 삭제 완료', result);
 
+    const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
+
     // 해당 페이지 이동위한 gbSeq
     if (value.gbSeq) {
-      return res.send({ isSuccess: true, gbSeq: value.gbSeq });
+      return res.send({
+        isSuccess: true,
+        gbSeq: value.gbSeq,
+        alarmList: JSON.stringify(allAlarm),
+      });
     } else {
       return res.send({
         isSuccess: true,

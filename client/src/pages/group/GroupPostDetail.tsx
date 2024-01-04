@@ -9,7 +9,7 @@ import GroupHeader from '../../components/group/content/GroupHeader';
 import GroupContentFooter from '../../components/group/content/GroupContentFooter';
 import WarningModal from '../../components/common/modal/WarningModal';
 
-export default function GroupPostDetail() {
+export default function GroupPostDetail({ key }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -74,23 +74,26 @@ export default function GroupPostDetail() {
                 }
             )
             .then((res) => {
-                console.log('getBoardNoti=======', res.data);
+                console.log('getBoardNoti=======', res);
 
                 setFreeList(res.data.groupInfo);
 
-                const userInfo = res.data.groupInfo.tb_groupUser.tb_user;
+                const userInfo = res.data.groupInfo?.tb_groupUser.tb_user;
                 SetUserInfo(userInfo);
 
-                const boardComments = res.data.groupInfo.tb_groupBoardComments;
+                const boardComments = res.data.groupInfo?.tb_groupBoardComments;
                 setBoardComments(boardComments);
 
-                setBoardUName(userInfo.uName);
+                setBoardUName(userInfo?.uName);
             });
     };
 
     useEffect(() => {
+        // if (gSeq) {
+        console.log('getBoardNoti 수행 !!!');
         getBoardNoti();
-    }, []);
+        // }
+    }, [gSeq, gCategory, gbSeq, key]);
 
     // 작성자인지 조회
     let isBoardWriter = false;
@@ -229,7 +232,7 @@ export default function GroupPostDetail() {
 
     return (
         <div className="section section-group">
-            <div className="post-detail-container">
+            <div className="post-detail-container" key={key}>
                 <div className="post-detail-header-container">
                     <div className="post-detail-header">
                         <div className="post-detail-profile">
@@ -241,7 +244,7 @@ export default function GroupPostDetail() {
 
                             <div>
                                 <div className="title4">
-                                    {freeList.gbTitle}{' '}
+                                    {freeList?.gbTitle}{' '}
                                 </div>
                                 <div>{userInfo?.uName}</div>
                             </div>
@@ -289,7 +292,9 @@ export default function GroupPostDetail() {
                     {/* 댓글 수, 반응 수 */}
                     <GroupContentFooter
                         commentCount={
-                            boardComments.length <= 0 ? 0 : boardComments.length
+                            boardComments?.length <= 0
+                                ? 0
+                                : boardComments?.length
                         }
                     />
 
@@ -297,7 +302,7 @@ export default function GroupPostDetail() {
                         <textarea
                             className="comment-textarea"
                             onChange={commentOnChange}
-                            value={commentInput.gbcContent}
+                            value={commentInput?.gbcContent}
                         ></textarea>
                         <button
                             className="btn-md done-btn"
@@ -309,17 +314,17 @@ export default function GroupPostDetail() {
 
                     <div className="comment-list">
                         <ul>
-                            {boardComments.length <= 0
+                            {boardComments?.length <= 0
                                 ? ''
-                                : boardComments.map(
+                                : boardComments?.map(
                                       (comment: any, idx: number) => {
                                           const isWriter =
-                                              comment.tb_groupUser.tb_user
-                                                  .uName === userNickname;
+                                              comment?.tb_groupUser.tb_user
+                                                  ?.uName === userNickname;
 
                                           const isEditing =
                                               editingCommentId ===
-                                              comment.gbcSeq;
+                                              comment?.gbcSeq;
                                           return (
                                               <li key={idx}>
                                                   {/* START */}
@@ -329,7 +334,7 @@ export default function GroupPostDetail() {
                                                               className="comment-img"
                                                               src={
                                                                   comment
-                                                                      .tb_groupUser
+                                                                      ?.tb_groupUser
                                                                       .tb_user
                                                                       .uImg ||
                                                                   '/asset/images/user.svg'
@@ -339,16 +344,16 @@ export default function GroupPostDetail() {
                                                           <div className="title5">
                                                               {
                                                                   comment
-                                                                      .tb_groupUser
+                                                                      ?.tb_groupUser
                                                                       .tb_user
-                                                                      .uName
+                                                                      ?.uName
                                                               }
                                                           </div>
                                                       </div>
                                                       <div>
                                                           <div className="date">
                                                               {
-                                                                  comment.createdAt
+                                                                  comment?.createdAt
                                                               }
                                                           </div>
 
@@ -369,12 +374,12 @@ export default function GroupPostDetail() {
                                                                                           isEditing
                                                                                       ) {
                                                                                           commentEditHandler(
-                                                                                              comment.gbcSeq,
+                                                                                              comment?.gbcSeq,
                                                                                               idx
                                                                                           );
                                                                                       } else {
                                                                                           setEditingCommentId(
-                                                                                              comment.gbcSeq
+                                                                                              comment?.gbcSeq
                                                                                           );
                                                                                       }
                                                                                   }}
@@ -391,7 +396,7 @@ export default function GroupPostDetail() {
                                                                                   }}
                                                                                   onClick={() =>
                                                                                       commentDeleteHandler(
-                                                                                          comment.gbcSeq
+                                                                                          comment?.gbcSeq
                                                                                       )
                                                                                   }
                                                                                   //   className="cmt-del-btn"
@@ -417,7 +422,7 @@ export default function GroupPostDetail() {
                                                               ]
                                                           }
                                                           defaultValue={
-                                                              comment.gbcContent
+                                                              comment?.gbcContent
                                                           }
                                                           onChange={(e) =>
                                                               commentEditOnChange(
@@ -435,7 +440,7 @@ export default function GroupPostDetail() {
                                                                       .isComposing
                                                               ) {
                                                                   commentEditHandler(
-                                                                      comment.gbcSeq,
+                                                                      comment?.gbcSeq,
                                                                       idx
                                                                   );
                                                               }
@@ -443,7 +448,7 @@ export default function GroupPostDetail() {
                                                       />
                                                   ) : (
                                                       <div>
-                                                          {comment.gbcContent}
+                                                          {comment?.gbcContent}
                                                       </div>
                                                   )}
                                               </li>

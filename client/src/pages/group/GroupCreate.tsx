@@ -316,7 +316,7 @@ export default function GroupCreate(socket: any) {
 
                 {/* </form> */}
             </div>
-            <div className="group-create-content">
+            <div className="group-create-content-category-wrapper">
                 <div className="title5">분야</div>
                 <div className="group-create-category">
                     {interestedArr.map((interest: Interested) => {
@@ -328,6 +328,7 @@ export default function GroupCreate(socket: any) {
                                     }
                                     className="tag-btn"
                                     style={{
+                                        padding: '0.4rem 0.6rem',
                                         background:
                                             selectedInterestId === interest.id
                                                 ? '#94897c'
@@ -399,7 +400,14 @@ export default function GroupCreate(socket: any) {
                         className="mission-plus-wrapper"
                         onClick={missionAddHandler}
                     >
-                        <img src="/asset/icons/plus.svg" alt="plus mission" />
+                        <svg
+                            viewBox="0 0 512 512"
+                            fill="#94897c"
+                            height="3em"
+                            width="3em"
+                        >
+                            <path d="M256 48C141.31 48 48 141.31 48 256s93.31 208 208 208 208-93.31 208-208S370.69 48 256 48zm80 224h-64v64a16 16 0 01-32 0v-64h-64a16 16 0 010-32h64v-64a16 16 0 0132 0v64h64a16 16 0 010 32z" />
+                        </svg>
                     </div>
 
                     <div className="mission-list-container">

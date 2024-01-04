@@ -37,10 +37,21 @@ export default function Footer() {
                                 href="https://github.com/loveflora"
                                 className="link-none profile-hover"
                                 target="_blank"
+                                style={{
+                                    display: 'flex',
+                                    gap: '0.1rem',
+                                }}
                             >
-                                <span> Front </span>
-                                <span>| </span>
-                                <span>김세화 (Project Leader)</span>
+                                <div>
+                                    <span> Front </span>
+                                    <span>| </span>
+                                    <span>김세화</span>
+                                </div>
+                                <div>
+                                    <span className="text-pl">
+                                        (Project Leader)
+                                    </span>
+                                </div>
                             </a>
                             <div>
                                 <a
@@ -48,9 +59,11 @@ export default function Footer() {
                                     className="link-none profile-hover"
                                     target="_blank"
                                 >
-                                    <span> Back </span>
-                                    <span>| </span>
-                                    <span>최태영</span>
+                                    <div>
+                                        <span> Back </span>
+                                        <span>| </span>
+                                        <span>최태영</span>
+                                    </div>
                                 </a>
                             </div>
                         </div>

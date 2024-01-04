@@ -71,6 +71,11 @@
     width: 100%;
     margin-bottom: 3rem;
     white-space: normal; // 꼭 넣어야 해요 ...!
+
+    img {
+        max-width: 50vw;
+        padding: 1rem;
+    }
 }
 
 .comment-create {

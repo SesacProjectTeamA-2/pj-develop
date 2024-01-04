@@ -9,6 +9,7 @@ const {
   GroupBoardComment,
   GroupBoardIcon,
   Mission,
+  Complain,
 } = require('../models');
 const Op = require('sequelize').Op;
 const sequelize = require('sequelize');
@@ -35,46 +36,112 @@ function calculateDDay(targetDate) {
 // 모임 조회 (검색어 검색 / 카테고리 검색)
 exports.getGroups = async (req, res) => {
   try {
-    let { search, category } = req.query;
-    if (!search) search = '';
-    if (!category || (Array.isArray(category) && category.length === 0)) {
-      category = ['ex', 're', 'st', 'eco', 'lan', 'cert', 'it', 'etc'];
-    } else {
-      category = category.split(',');
-    }
+    // 회원일 경우
+    if (req.headers.authorization) {
+      let token = req.headers.authorization.split(' ')[1];
+      const user = await jwt.verify(token);
+      const uSeq = user.uSeq;
 
-    const selectGroups = await Group.findAndCountAll({
-      where: {
-        [Op.or]: [
-          {
-            gName: { [Op.like]: `%${search}%` },
-          },
-          {
-            gDesc: { [Op.like]: `%${search}%` },
-          },
-        ],
-        [Op.and]: [
-          {
-            gCategory: { [Op.in]: category },
-          },
-        ],
-      },
-    });
+      let { search, category } = req.query;
+      if (!search) search = '';
+      if (!category || (Array.isArray(category) && category.length === 0)) {
+        category = ['ex', 're', 'st', 'eco', 'lan', 'cert', 'it', 'etc'];
+      } else {
+        category = category.split(',');
+      }
 
-    const guNumber = await GroupUser.count({
-      attributes: ['gSeq'],
-      include: [{ model: Group }],
-      group: ['gSeq'],
-    });
-
-    if (selectGroups.count > 0) {
-      res.send({
-        count: selectGroups.count,
-        groupMember: guNumber,
-        groupArray: selectGroups.rows,
+      const selectGroups = await Group.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {
+              gName: { [Op.like]: `%${search}%` },
+            },
+            {
+              gDesc: { [Op.like]: `%${search}%` },
+            },
+          ],
+          [Op.and]: [
+            {
+              gCategory: { [Op.in]: category },
+            },
+          ],
+        },
       });
+
+      const guNumber = await GroupUser.count({
+        attributes: ['gSeq'],
+        include: [{ model: Group }],
+        group: ['gSeq'],
+      });
+
+      // 리더/멤버 여부
+      const isJoin = await GroupUser.findAll({
+        where: { uSeq, guIsBlackUser: { [Op.is]: null } },
+        attributes: ['gSeq', 'guIsLeader'],
+      });
+
+      if (selectGroups.count > 0) {
+        if (isJoin.length === 0) {
+          res.send({
+            count: selectGroups.count,
+            groupMember: guNumber,
+            groupArray: selectGroups.rows,
+            isJoin: '참여그룹 없음',
+          });
+        } else {
+          res.send({
+            count: selectGroups.count,
+            groupMember: guNumber,
+            groupArray: selectGroups.rows,
+            isJoin,
+          });
+        }
+      } else {
+        res.send({ isSuccess: true, msg: '해당하는 모임이 없습니다.' });
+      }
     } else {
-      res.send({ isSuccess: true, msg: '해당하는 모임이 없습니다.' });
+      // 비회원일경우
+      let { search, category } = req.query;
+      if (!search) search = '';
+      if (!category || (Array.isArray(category) && category.length === 0)) {
+        category = ['ex', 're', 'st', 'eco', 'lan', 'cert', 'it', 'etc'];
+      } else {
+        category = category.split(',');
+      }
+
+      const selectGroups = await Group.findAndCountAll({
+        where: {
+          [Op.or]: [
+            {
+              gName: { [Op.like]: `%${search}%` },
+            },
+            {
+              gDesc: { [Op.like]: `%${search}%` },
+            },
+          ],
+          [Op.and]: [
+            {
+              gCategory: { [Op.in]: category },
+            },
+          ],
+        },
+      });
+
+      const guNumber = await GroupUser.count({
+        attributes: ['gSeq'],
+        include: [{ model: Group }],
+        group: ['gSeq'],
+      });
+
+      if (selectGroups.count > 0) {
+        res.send({
+          count: selectGroups.count,
+          groupMember: guNumber,
+          groupArray: selectGroups.rows,
+        });
+      } else {
+        res.send({ isSuccess: true, msg: '해당하는 모임이 없습니다.' });
+      }
     }
   } catch (err) {
     console.error(err);
@@ -109,7 +176,11 @@ exports.getJoined = async (req, res) => {
 
     // uSeq로 GroupUser 테이블에서 모임에 참여 중인 gSeq 찾기
     const groupUserList = await GroupUser.findAll({
-      where: { uSeq, guIsLeader: { [Op.is]: null } }, // 모임장은 제외 -> 생성한 모임에서 보여주도록
+      where: {
+        uSeq,
+        guIsLeader: { [Op.is]: null },
+        guIsBlackUser: { [Op.is]: null },
+      }, // 모임장은 제외 -> 생성한 모임에서 보여주도록
       attributes: ['gSeq'],
     });
 
@@ -336,6 +407,10 @@ exports.deleteQuitGroup = async (req, res) => {
             await GroupUser.destroy({
               where: { uSeq, gSeq },
             });
+
+            // 토큰값에서 삭제
+            user.gSeq = user.gSeq.filter((item) => item.gSeq !== gSeq);
+
             res.status(200).send({
               success: true,
               msg: '모임 탈퇴 및 모임장 위임 성공',
@@ -365,6 +440,7 @@ exports.deleteQuitGroup = async (req, res) => {
     await GroupUser.destroy({
       where: { uSeq, gSeq },
     });
+    user.gSeq = user.gSeq.filter((item) => item.gSeq !== gSeq);
 
     res.status(200).send({
       success: true,
@@ -455,6 +531,9 @@ exports.postGroup = async (req, res) => {
         }
 
         if (missionArray.length === mCnt) {
+          // 토큰값 추가
+          user.gSeq = [...insertOneGroup.gSeq];
+
           res.status(200).send({
             isSuccess: true,
             msg: '모임 생성에 성공했습니다.',
@@ -624,12 +703,14 @@ exports.deleteGroup = async (req, res) => {
     const uEmail = user.uEmail;
     const uName = user.uName;
 
-    const { gSeq } = req.body;
+    const { gSeq, newLeaderUSeq } = req.body;
 
+    console.log('req.body>>>>>>>>>>>>>', req.body);
     // 1) 현재 삭제하는 사람이 모임장인지 확인
     const selectOneGroupUser = await GroupUser.findOne({
       where: {
         gSeq,
+        uSeq,
       },
     });
 
@@ -641,9 +722,31 @@ exports.deleteGroup = async (req, res) => {
           gSeq,
         },
       });
+      if (countGroupUser === 2) {
+        if (newLeaderUSeq) {
+          const changeLeaderResult = await changeGroupLeader(
+            uSeq,
+            gSeq,
+            newLeaderUSeq
+          );
 
-      // 모임원이 2명 이상이면 모임장 위임하는 화면으로 이동
-      if (countGroupUser > 1) {
+          // 모임장 모임 탈퇴
+          await GroupUser.destroy({
+            where: { uSeq, gSeq },
+          });
+
+          res.send({
+            isSuccess: true,
+            msg: '모임 탈퇴에 성공했습니다',
+            changeLeaderResult,
+            uSeq: uSeq,
+            uEmail: uEmail,
+            uName: uName,
+          });
+        }
+      }
+      // 모임원이 3명 이상이면 모임장 위임하는 화면으로 이동
+      else if (countGroupUser > 2) {
         res.send({ isSuccess: false, msg: '모임장 위임을 해야합니다.' });
 
         // 모임장인데, 모임원이 모임장 혼자인 경우는 모임 관련 데이터 삭제
@@ -690,123 +793,147 @@ exports.getGroupDetail = async (req, res) => {
     // 모임 정보
     const groupInfo = await Group.findOne({ where: { gSeq: groupSeq } });
 
-    const { gName, gDesc, gDday, gMaxMem, gCategory, gCoverImg } = groupInfo;
+    if (groupInfo !== null) {
+      const { gName, gDesc, gDday, gMaxMem, gCategory, gCoverImg } = groupInfo;
 
-    const groupDday = calculateDDay(gDday);
+      const groupDday = calculateDDay(gDday);
 
-    const groupMission = await Mission.findAll({
-      where: { gSeq: groupSeq, isExpired: { [Op.is]: null } },
-    });
-
-    const memberArray = await User.findAll({
-      attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
-      include: [
-        {
-          model: GroupUser,
-          where: { gSeq: groupSeq, guIsLeader: { [Op.is]: null } },
-          attributes: ['guSeq'],
-        },
-      ],
-    });
-
-    const leaderInfo = await User.findOne({
-      attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
-      include: [
-        {
-          model: GroupUser,
-          where: { gSeq: groupSeq, guIsLeader: 'y' },
-          attributes: ['guSeq'],
-        },
-      ],
-    });
-
-    const groupRanking = await ranking.groupRanking(groupSeq);
-
-    const nowScoreUserInfo = groupRanking.nowRanking.map(
-      (user) => user.tb_user
-    );
-
-    const nowRanking = groupRanking.nowRanking.map((item) => {
-      return {
-        uSeq: item.uSeq,
-        guNowScore: item.guNowScore,
-      };
-    });
-
-    const totalScoreUserInfo = groupRanking.totalRanking.map(
-      (user) => user.tb_user
-    );
-
-    const totalRanking = groupRanking.totalRanking.map((item) => {
-      return {
-        uSeq: item.uSeq,
-        guTotalScore: item.guTotalScore,
-      };
-    });
-
-    const doneRates = groupRanking.doneRates;
-
-    // 회원인 경우
-    if (req.headers.authorization) {
-      let token = req.headers.authorization.split(' ')[1];
-      const user = await jwt.verify(token);
-
-      // 모임에 가입한 경우
-      let isLeader;
-      let isJoin;
-
-      const groupUser = await GroupUser.findOne({
-        attributes: ['guSeq', 'guIsLeader'],
-        where: { gSeq: groupSeq, uSeq: user.uSeq },
+      const groupMission = await Mission.findAll({
+        where: { gSeq: groupSeq, isExpired: { [Op.is]: null } },
       });
 
-      if (groupUser) {
-        isJoin = true;
-        // 모임장여부 : true/false
-        isLeader = groupUser && groupUser.guIsLeader === 'y' ? true : false;
+      const memberArray = await User.findAll({
+        attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
+        include: [
+          {
+            model: GroupUser,
+            where: {
+              gSeq: groupSeq,
+              guIsLeader: { [Op.is]: null },
+              guIsBlackUser: { [Op.is]: null },
+            },
+            attributes: ['guSeq'],
+          },
+        ],
+      });
+
+      const leaderInfo = await User.findOne({
+        attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
+        include: [
+          {
+            model: GroupUser,
+            where: { gSeq: groupSeq, guIsLeader: 'y' },
+            attributes: ['guSeq'],
+          },
+        ],
+      });
+
+      const groupRanking = await ranking.groupRanking(groupSeq);
+
+      const nowScoreUserInfo = groupRanking.nowRanking.map(
+        (user) => user.tb_user
+      );
+
+      const nowRanking = groupRanking.nowRanking.map((item) => {
+        return {
+          uSeq: item.uSeq,
+          guNowScore: item.guNowScore,
+        };
+      });
+
+      const totalScoreUserInfo = groupRanking.totalRanking.map(
+        (user) => user.tb_user
+      );
+
+      const totalRanking = groupRanking.totalRanking.map((item) => {
+        return {
+          uSeq: item.uSeq,
+          guTotalScore: item.guTotalScore,
+        };
+      });
+
+      const doneRates = groupRanking.doneRates;
+
+      // 회원인 경우
+      if (req.headers.authorization) {
+        let token = req.headers.authorization.split(' ')[1];
+        const user = await jwt.verify(token);
+
+        // 모임에 가입한 경우
+        let isLeader;
+        let isJoin;
+
+        const groupUser = await GroupUser.findOne({
+          attributes: ['guSeq', 'guIsLeader'],
+          where: { gSeq: groupSeq, uSeq: user.uSeq },
+        });
+
+        const others = await User.findAll({
+          attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
+          where: { uSeq: { [Op.ne]: user.uSeq } },
+          include: [
+            {
+              model: GroupUser,
+              where: {
+                gSeq: groupSeq,
+                guIsBlackUser: { [Op.is]: null },
+              },
+              attributes: ['guSeq'],
+            },
+          ],
+        });
+
+        if (groupUser) {
+          isJoin = true;
+          // 모임장여부 : true/false
+          isLeader = groupUser && groupUser.guIsLeader === 'y' ? true : false;
+        } else {
+          // 모임 가입하지 않은 경우
+          isJoin = false;
+          isLeader = false;
+        }
+
+        res.send({
+          result: true,
+          isJoin,
+          isLeader,
+          groupMission,
+          nowRanking,
+          totalRanking,
+          nowScoreUserInfo,
+          totalScoreUserInfo,
+          doneRates,
+          groupName: gName,
+          groupMaxMember: gMaxMem,
+          grInformation: gDesc,
+          groupDday: groupDday,
+          groupCategory: gCategory,
+          groupCoverImg: gCoverImg,
+          memberArray,
+          others,
+          leaderInfo,
+        });
+        // 비회원인경우
       } else {
-        // 모임 가입하지 않은 경우
-        isJoin = false;
-        isLeader = false;
+        res.send({
+          result: false,
+          groupMission,
+          nowRanking,
+          totalRanking,
+          nowScoreUserInfo,
+          totalScoreUserInfo,
+          doneRates,
+          groupName: gName,
+          grInformation: gDesc,
+          groupDday: groupDday,
+          groupCategory: gCategory,
+          groupCoverImg: gCoverImg,
+          memberArray,
+          leaderInfo,
+        });
       }
-
-      res.send({
-        result: true,
-        isJoin,
-        isLeader,
-        groupMission,
-        nowRanking,
-        totalRanking,
-        nowScoreUserInfo,
-        totalScoreUserInfo,
-        doneRates,
-        groupName: gName,
-        groupMaxMember: gMaxMem,
-        grInformation: gDesc,
-        groupDday: groupDday,
-        groupCategory: gCategory,
-        groupCoverImg: gCoverImg,
-        memberArray,
-        leaderInfo,
-      });
-      // 비회원인경우
     } else {
-      res.send({
-        result: false,
-        groupMission,
-        nowRanking,
-        totalRanking,
-        nowScoreUserInfo,
-        totalScoreUserInfo,
-        doneRates,
-        groupName: gName,
-        grInformation: gDesc,
-        groupDday: groupDday,
-        groupCategory: gCategory,
-        groupCoverImg: gCoverImg,
-        memberArray,
-        leaderInfo,
-      });
+      res.send({ result: false, msg: '모임정보가 없어요' });
     }
   } catch (err) {
     console.error(err);
@@ -829,7 +956,10 @@ exports.joinGroup = async (req, res) => {
       gSeq: groupSeq,
       uSeq: user.uSeq,
     });
-    // 참여 요청-알림-수락의 경우 레디스/웹소켓이 필요할것으로 생각됨
+    // 참여 요청 - 모임장 알림 - 수락
+
+    // 토큰에 gSeq 추가
+    user.gSeq = [...groupSeq];
   } else {
     res.send({ result: false, message: '먼저 로그인 해주세요.' });
   }
@@ -926,6 +1056,9 @@ exports.postJoinByLink = async (req, res) => {
     });
 
     if (result) {
+      // 토큰값 추가
+      user.gSeq = [...group.gSeq];
+
       res.status(200).send({
         success: true,
         msg: '모임 참여에 성공했습니다.',
@@ -975,6 +1108,14 @@ exports.postJoin = async (req, res) => {
     });
 
     if (alreadyJoined) {
+      if (alreadyJoined.guIsBlackUser === 'y') {
+        res.send({
+          success: false,
+          msg: '사용자는 모임에서 추방되었습니다.',
+        });
+        return;
+      }
+
       res.send({
         success: false,
         msg: '사용자는 이미 그룹에 속해 있습니다.',
@@ -989,6 +1130,9 @@ exports.postJoin = async (req, res) => {
     });
 
     if (result) {
+      // 토큰값 추가
+      user.gSeq = [...gSeq];
+
       res.status(200).send({
         success: true,
         msg: '모임 참여에 성공했습니다.',
@@ -1096,73 +1240,41 @@ exports.patchLeader = async (req, res) => {
   }
 };
 
-exports.blackUser = async (req, res) => {
+exports.complainUser = async (req, res) => {
   try {
+    const guSeq = req.params.guSeq;
+    const { cDetail, gSeq, uSeq, uName } = req.body;
+
+    // 로그인상태
     if (req.headers.authorization) {
-      const token = req.headers.authorization.split(' ')[1];
+      let token = req.headers.authorization.split(' ')[1];
       const user = await jwt.verify(token);
-      const uSeq = user.uSeq;
+      const cuSeq = user.uSeq;
 
-      const guSeq = req.params.guSeq;
-      const { guBanReason, gSeq } = req.body;
-      // 모임장 여부
-      const result = await GroupUser.findOne({
-        where: { uSeq, gSeq },
-        attributes: ['guIsLeader'],
+      const isAlready = await Complain.findOne({
+        where: { guSeq, cuSeq },
       });
-      if (result.guIsLeader === 'y') {
-        // DB update
-        await GroupUser.update(
-          {
-            guBanReason,
-            guIsLeader: 'y',
-          },
-          { where: { guSeq } }
-        );
 
-        // redis 연동
-        const blackUser = await GroupUser.findOne({ where: { guSeq } });
-        const blackTime = new Date();
-        const receiver = blackUser.uSeq;
-        const result = await redisCli.lPush(
-          `user${receiver}`,
-          JSON.stringify({
-            type: 'groupAlarm',
-            gSeq,
-            guBanReason,
-            blackTime,
-          })
-        );
-
-        // 만료시간 조회
-        const expirationTime = await redisCli.ttl(`user${receiver}`);
-        // 유효시간 7일
-        if (expirationTime > 0) {
-          console.log('이미 만료시간 설정되어 있음!');
-        } else {
-          await redisCli.expire(`user${receiver}`, 604800);
-        }
-
-        // redis pub 처리
-        await redisCli.publish(
-          'group-alarm',
-          JSON.stringify({
-            alarmCount: result,
-            message: {
-              type: 'groupAlarm',
-              gSeq,
-              uName,
-              blackTime,
-            },
-          })
-        );
+      if (isAlready === null) {
+        await Complain.create({
+          guSeq,
+          gSeq,
+          uName,
+          uSeq,
+          cuSeq,
+          cDetail,
+        });
+        res.send({ isSuccess: true, msg: '신고가 접수되었습니다.' });
       } else {
-        res.send({ result: false, message: '권한이 없어요!' });
+        res.send({
+          isSuccess: false,
+          msg: '이미 신고처리된 유저입니다.',
+        });
       }
     } else {
-      res.send({ result: false, message: '로그인 해주세요!' });
+      res.send({ isSuccess: false, msg: '먼저 로그인 해주세요.' });
     }
   } catch (err) {
-    console.error('유저 블랙 서버 error!!', err);
+    console.error('complain error', err);
   }
 };

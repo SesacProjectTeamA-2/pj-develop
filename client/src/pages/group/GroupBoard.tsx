@@ -112,7 +112,27 @@ export default function GroupBoard() {
                                               'linear-gradient(8deg, #bdb1b1, #ffc1c7)',
                                       }
                             }
-                        ></div>
+                        >
+                            <button className="moon-write-text">
+                                {' '}
+                                자유/질문
+                                <br />
+                                작성하기 !
+                            </button>
+                            <svg
+                                fill="none"
+                                stroke="white"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                viewBox="0 0 24 24"
+                                height="3em"
+                                width="3em"
+                                className="moon-write-svg"
+                            >
+                                <path d="M12 5v14M5 12h14" />
+                            </svg>
+                        </div>
                     </Link>
                 </div>
             </div>

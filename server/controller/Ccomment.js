@@ -91,11 +91,9 @@ exports.createComment = async (req, res) => {
     });
 
     // 게시판 카테고리
-    const boardCategory = await GroupBoard.findOne({
-      where: { gbSeq },
-      attribute: ['gbCategory'],
-    });
-    const category = boardCategory.gbCategory;
+
+    const category = groupBoard.gbCategory;
+    const title = groupBoard.gbTitle;
 
     // redis에 캐시로 저장(알림 - hash)
     // (hash) 받는사람 : 게시글 작성자(gbSeq - uSeq)
@@ -109,6 +107,7 @@ exports.createComment = async (req, res) => {
         type: 'comment',
         gbSeq,
         uName,
+        title,
         gSeq,
         category,
         commentTime,
@@ -125,21 +124,17 @@ exports.createComment = async (req, res) => {
     }
 
     // redis pub 처리
-    const result2 = await redisCli.publish(
+    // 모든 알람 리스트
+    const alarms = await redisCli.lRange(`user${receiver}`, 0, -1);
+
+    await redisCli.publish(
       'comment-alarm',
       JSON.stringify({
         alarmCount: result,
-        message: {
-          type: 'comment',
-          gbSeq,
-          uName,
-          gSeq,
-          category,
-          commentTime,
-        },
+        allAlarm: alarms,
       })
     );
-    console.log(result2);
+
     // 정상 처리
     res.status(200).send({
       success: true,

@@ -17,7 +17,11 @@ export default function ModalMemberList({
     selectedMemberId,
     setSelectedMemberName,
     selectedMemberName,
+    setComplainData,
 }: any) {
+    //-- 1. 모임장 위임 (memberArray)
+    //-- 2. 신고하기 (others)
+
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
     const { gSeq } = useParams();
@@ -59,6 +63,9 @@ export default function ModalMemberList({
         }
     }, []);
 
+    const [memberArray, setMemberArray] = useState<any>([]);
+    const [others, setOthers] = useState<any>([]);
+
     const getGroup = async () => {
         const res = await axios
             .get(`${process.env.REACT_APP_DB_HOST}/group/detail/${gSeq}`, {
@@ -69,6 +76,7 @@ export default function ModalMemberList({
             .then((res) => {
                 console.log(res.data);
                 setMemberArray(res.data.memberArray);
+                setOthers(res.data.others);
             });
     };
 
@@ -76,21 +84,143 @@ export default function ModalMemberList({
         getGroup();
     }, []);
 
-    const [memberArray, setMemberArray] = useState<any>([]);
+    console.log('others', others);
+
     // id 추가
     for (let i = 0; i < memberArray?.length; i++) {
         memberArray.id = i;
     }
 
-    const listClickHandler = (uSeq: number, uName: string) => {
+    const listClickHandler = (guSeq: number, uSeq: number, uName: string) => {
         setSelectedMemberId(uSeq);
         setSelectedMemberName(uName);
+        console.log('guSeq::::::', guSeq);
+        console.log('uSeq 클릭 ::::::', uSeq);
+        setComplainData((prev: any) => ({ ...prev, guSeq, uSeq, uName }));
     };
+
+    console.log('memberArray::::::', memberArray);
 
     return (
         <div className="modal-member-list-container">
-            {/* 모임장 제외 멤버 리스트 */}
-            {memberArray?.length > 0 ? (
+            {action === '신고' ? (
+                //=== 1. 신고하기  ===
+                // 현재 유저 제외 (others)
+                others?.length > 0 ? (
+                    others.map((member: any) => {
+                        return (
+                            <div>
+                                <ul className="list-unstyled modal-member-list-ul">
+                                    <label
+                                        key={member.uSeq}
+                                        onClick={() =>
+                                            listClickHandler(
+                                                member.tb_groupUsers[0].guSeq,
+                                                member.uSeq,
+                                                member.uName
+                                            )
+                                        }
+                                        className="modal-member-list-label"
+                                        style={{
+                                            backgroundColor:
+                                                action === '신고' &&
+                                                selectedMemberId === member.uSeq
+                                                    ? '#cc0101'
+                                                    : action === '강제 퇴장' &&
+                                                      selectedMemberId ===
+                                                          member.uSeq
+                                                    ? '#cc0101'
+                                                    : action ===
+                                                          '미션인증 취소' &&
+                                                      selectedMemberId ===
+                                                          member.uSeq
+                                                    ? '#cc0101'
+                                                    : action ===
+                                                          '모임장 권한 넘기기' &&
+                                                      selectedMemberId ===
+                                                          member.uSeq
+                                                    ? '#94897c'
+                                                    : 'white',
+
+                                            color:
+                                                selectedMemberId === member.uSeq
+                                                    ? 'white'
+                                                    : 'black',
+
+                                            cursor: 'pointer',
+
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        <input
+                                            className="mission-cancel-modal-memeber-input"
+                                            type="radio"
+                                            name="missionType"
+                                        />
+                                        <div className="ranking-list modal-member-list">
+                                            <img
+                                                src={
+                                                    member.uImg ||
+                                                    '/asset/images/user.svg'
+                                                }
+                                                alt="userImg"
+                                                style={{
+                                                    // width: '40px',
+                                                    // height: '40px',
+                                                    width: '100%',
+                                                }}
+                                            />
+                                            <div className="cur-ranking-content">
+                                                <div className="title4 name">
+                                                    {member.uName}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    {/* <Divider /> */}
+                                </ul>
+                                <div>
+                                    <Box
+                                        component="form"
+                                        sx={{
+                                            '& .MuiTextField-root': {
+                                                width: '67ch',
+                                            },
+                                        }}
+                                        noValidate
+                                        autoComplete="off"
+                                    ></Box>
+                                </div>
+                            </div>
+                        );
+                    })
+                ) : (
+                    <>
+                        <div
+                            className="title2"
+                            style={{
+                                height: '14rem',
+                                margin: 'auto',
+                                // textAlign: 'center',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                        >
+                            멤버가 없습니다.
+                        </div>
+                        <div className="mission-cancel-btn-container">
+                            <button
+                                onClick={closeModalHandler}
+                                className="btn-md mission-cancel-back-btn"
+                            >
+                                돌아가기
+                            </button>
+                        </div>
+                    </>
+                )
+            ) : //=== 2. 모임장 권한 넘기기===
+            // 모임장 제외 멤버 리스트
+            memberArray?.length > 0 ? (
                 memberArray.map((member: any) => {
                     return (
                         <div>
@@ -99,6 +229,7 @@ export default function ModalMemberList({
                                     key={member.uSeq}
                                     onClick={() =>
                                         listClickHandler(
+                                            member.tb_groupUsers[0].guSeq,
                                             member.uSeq,
                                             member.uName
                                         )
@@ -106,13 +237,22 @@ export default function ModalMemberList({
                                     className="modal-member-list-label"
                                     style={{
                                         backgroundColor:
-                                            action === '강제 퇴장' &&
+                                            // action === '신고' &&
+                                            // selectedMemberId === member.uSeq
+                                            //     ? '#cc0101'
+                                            //     : action === '강제 퇴장' &&
+                                            //       selectedMemberId ===
+                                            //           member.uSeq
+                                            //     ? '#cc0101'
+                                            //     : action === '미션인증 취소' &&
+                                            //       selectedMemberId ===
+                                            //           member.uSeq
+                                            //     ? '#cc0101'
+                                            //     :
+
+                                            action === '모임 위임 후 삭제' &&
                                             selectedMemberId === member.uSeq
-                                                ? '#e20606'
-                                                : action === '미션인증 취소' &&
-                                                  selectedMemberId ===
-                                                      member.uSeq
-                                                ? '#e20606'
+                                                ? '#94897c'
                                                 : action ===
                                                       '모임장 권한 넘기기' &&
                                                   selectedMemberId ===
@@ -126,6 +266,8 @@ export default function ModalMemberList({
                                                 : 'black',
 
                                         cursor: 'pointer',
+
+                                        fontWeight: 'bold',
                                     }}
                                 >
                                     <input
@@ -140,6 +282,11 @@ export default function ModalMemberList({
                                                 '/asset/images/user.svg'
                                             }
                                             alt="userImg"
+                                            style={{
+                                                // width: '40px',
+                                                // height: '40px',
+                                                width: '100%',
+                                            }}
                                         />
                                         <div className="cur-ranking-content">
                                             <div className="title4 name">

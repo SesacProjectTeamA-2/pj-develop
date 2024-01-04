@@ -64,7 +64,8 @@ body {
     border-radius: 50px;
     background: #e0e0e0;
     box-shadow: -11px 11px 22px #bebebe, 11px -11px 22px #ffffff;
-    height: 35rem;
+    // height: 35rem; // 구글, 카카오 포함
+    height: 24rem; // 구글, 카카오 포함
 
     button {
         font-family: 'Comfortaa', cursive !important;

@@ -22,6 +22,7 @@ export default function HomeMissionList({
     gDday,
     isLeader,
     groupDetail,
+    setKey,
 }: any) {
     const [addModalSwitch, setAddModalSwitch] = useState(false);
     const missionAddHandler = () => {
@@ -95,6 +96,30 @@ export default function HomeMissionList({
     };
     console.log('missionList HOME', missionList);
 
+    // 난이도 계산
+    for (let mission of missionList) {
+        switch (mission.mLevel) {
+            case 5: {
+                mission.mStar = '⭐️⭐️⭐️';
+                break;
+            }
+            case 3: {
+                mission.mStar = '⭐️⭐️';
+                break;
+            }
+            case '1': {
+                mission.mStar = '⭐️';
+                break;
+            }
+            case 1: {
+                mission.mStar = '⭐️';
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
     return (
         <div className="wrapper">
             <div className="upper-content">
@@ -127,23 +152,23 @@ export default function HomeMissionList({
                         setMissionList={setMissionList}
                         gDday={gDday}
                         groupDetail={groupDetail}
+                        setKey={setKey}
                     />
                 ) : null}
                 <div className="title5">
-                    {/* {useDdayCount(dummyGroupState.gDday)} */}
                     {gDday > 0 ? 'D-' + gDday : gDday === 0 ? 'D-DAY' : ''}
                 </div>
             </div>
             <div className="main-content">
                 <ul>
-                    {missionList?.map((mission: MissionType, idx: number) => {
+                    {missionList?.map((mission: any, idx: number) => {
                         return (
                             <li key={idx} className="mission-li">
                                 <div className="mission-element">
                                     {mission.mTitle}
                                 </div>
                                 <div>{mission.mContent}</div>
-                                <div>난이도 : {mission.mLevel}</div>
+                                <div>난이도 {mission.mStar}</div>
                             </li>
                         );
                     })}

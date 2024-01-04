@@ -146,28 +146,42 @@ export default function SwiperTest({
                                                 background: `linear-gradient(-45deg, ${color1},${color2})`,
                                             }}
                                         >
-                                            <div className="title">
-                                                <h1> {categories[idx]}</h1>
-                                                <h2> {data.gName}</h2>
+                                            <div>
+                                                <li>
+                                                    <h2> {categories[idx]}</h2>
+                                                </li>
+
+                                                <li className="title-card swiper-title-text">
+                                                    {data.gName}
+                                                </li>
                                             </div>
-                                            <div className="price">
-                                                <h4>
-                                                    {/* <sup>$</sup> */}
-                                                    {/* [추후] 디데이 형식으로 수정 */}
-                                                    {data.gDday}
-                                                </h4>
-                                            </div>
+                                            <li className="swiper-dday-text">
+                                                {/* <div className="price"> */}
+                                                <svg
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                    height="1.4em"
+                                                    width="1.4em"
+                                                >
+                                                    <path d="M7 10h5v5H7m12 4H5V8h14m0-5h-1V1h-2v2H8V1H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2z" />
+                                                </svg>
+                                                {data.gDday}
+                                                {/* </div> */}
+                                            </li>
 
                                             <div className="option">
                                                 <ul>
-                                                    <li>
-                                                        <i
-                                                            className="fa fa-check"
-                                                            aria-hidden="true"
-                                                        ></i>
-                                                        참석인원
-                                                        {countArray[idx]}/
-                                                        {data.gMaxMem}
+                                                    <li className="attend-member-count">
+                                                        {/* <i
+                                                  className="fa fa-check"
+                                                  aria-hidden="true"
+                                              ></i> */}
+                                                        참석 인원&nbsp;
+                                                        <b>
+                                                            {countArray[idx]}
+                                                            &nbsp;/&nbsp;
+                                                            {data.gMaxMem}
+                                                        </b>
                                                     </li>
                                                     <li>
                                                         {/* <div
@@ -182,13 +196,13 @@ export default function SwiperTest({
                                                     </li>
                                                 </ul>
                                             </div>
-
-                                            {data.gMaxMem - countArray[idx] >
+                                            {/* --- 이미 참여한 상태이므로 필요 없음 --- */}
+                                            {/* {data.gMaxMem - countArray[idx] >
                                             0 ? (
                                                 <button>참석 가능</button>
                                             ) : (
                                                 <button>마감</button>
-                                            )}
+                                            )} */}
                                         </div>
                                     </div>
                                 </Link>

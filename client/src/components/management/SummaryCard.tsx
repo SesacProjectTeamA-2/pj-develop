@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 
 import '../../styles/scss/pages/management/summarycard.scss';
 
-export default function SummaryCard({ allUser, allGroup }: any) {
+export default function SummaryCard({ allUser, allGroup, allComplain }: any) {
     return (
         <div className="summary-card-layout">
             <Paper elevation={3} className="summary-paper">
@@ -36,7 +36,7 @@ export default function SummaryCard({ allUser, allGroup }: any) {
                     </svg>
                 </div>
                 <div className="summary-title-content">
-                    <div className="title5">100</div>
+                    <div className="title5">{allGroup?.length}</div>
                     <div className="summary-title">Groups</div>
                 </div>
             </Paper>
@@ -55,7 +55,7 @@ export default function SummaryCard({ allUser, allGroup }: any) {
                     </svg>
                 </div>
                 <div className="summary-title-content">
-                    <div className="title5">100</div>
+                    <div className="title5">{allComplain?.length}</div>
                     <div className="summary-title">Reports</div>
                 </div>
             </Paper>

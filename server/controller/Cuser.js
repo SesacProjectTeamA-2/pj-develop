@@ -195,6 +195,14 @@ exports.getLoginNaverRedirect = async (req, res) => {
 
       // db에 값 있으면 이미 회원가입 한 유저
       if (alreadyUser) {
+        // 블랙유저
+        if (alreadyUser.isUse === null) {
+          res.send({
+            isSuccess: false,
+            msg: '접근이 제한된 유저입니다.',
+          });
+          return;
+        }
         // 해당 3개의 값 가지는 토큰 생성
         const userGroups = await GroupUser.findAll({
           where: { uSeq: alreadyUser.uSeq },

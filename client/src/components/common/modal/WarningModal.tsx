@@ -9,6 +9,7 @@ import { Cookies } from 'react-cookie';
 import '../../../styles/scss/components/modal.scss';
 import { GroupMissionsType } from 'src/types/types';
 import toast, { Toaster } from 'react-hot-toast';
+import ChoiceModal from './ChoiceModal';
 
 export default function WarningModal({
     warningModalSwitch,
@@ -17,6 +18,11 @@ export default function WarningModal({
     gbSeq,
     mSeq,
     socket,
+    setKey,
+    selectedUSeq, // 관리자가 삭제하려는 uSeq List
+    selectedGSeq, // 관리자가 삭제하려는 gSeq List
+    leftMember, // 2명그룹 : 모임장이 모임 삭제할 경우 자동 위임되는 --> .uSeq: "남아있는 한 명의 uSeq" (숫자 하나만 보냄)
+    memberArray, // 3명이상그룹 : 모임장이 모임 삭제할 경우 위임창 뜨게
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser'); // 토큰 값
@@ -25,7 +31,7 @@ export default function WarningModal({
 
     const [groupName, setGroupName] = useState<GroupMissionsType[]>([]);
 
-    console.log('warningModal socket >>>', socket);
+    // console.log('warningModal socket >>>', socket);
 
     const getGroup = async () => {
         const res = await axios
@@ -54,6 +60,13 @@ export default function WarningModal({
 
     const [leaveGroupSuccess, setLeaveGroupSuccess] = useState(false);
 
+    //] 멤버 선택하는 공통 모달
+    const [choiceModalSwitch, setChoiceModalSwitch] = useState(false);
+
+    const choiceModalSwitchHandler = () => {
+        setChoiceModalSwitch(!choiceModalSwitch);
+    };
+
     //=== 모달창 '확인' 버튼 클릭 시 ===
     const doneHandler = () => {
         if (action === '회원 탈퇴') {
@@ -70,23 +83,76 @@ export default function WarningModal({
                     logoutHandler();
                 });
         } else if (action === '모임 삭제') {
+            //) 남은 인원 0명일 경우 : 모임 완전 삭제
             const deleteGroupHandler = async () => {
                 const res = await axios
                     .delete(`${process.env.REACT_APP_DB_HOST}/group`, {
-                        data: { gSeq },
+                        data: {
+                            gSeq: Number(gSeq),
+                            newLeaderUSeq: leftMember?.uSeq,
+                        },
                         headers: {
                             Authorization: `Bearer ${uToken}`,
                         },
                     })
                     .then((res) => {
                         console.log(res.data);
-                        // toast.success(
-                        //     `${groupName} 모임을 ${action}하셨습니다.`
-                        // );
+                        toast.success(
+                            `${groupName} 모임을 ${action}하셨습니다.`
+                        );
+                        //-- 남은 인원 0명 : 모임 완전 삭제
+                        alert(`${groupName} 모임을 삭제하셨습니다.`);
                         nvg('/group');
+
+                        //_ [참고] 위임 모달창 (choiceModal)에서 위임 후 삭제 처리하도록 수정했습니다.
+                        // //-- 남은 인원 2명 이상 : 위임 모달창
+                        // if (memberArray?.length >= 2) {
+                        //     // console.log('modal 떠라...!', memberArray?.length);
+                        //     setWarningModalSwitch(false); // 모임 삭제 모달창 닫기
+                        //     return choiceModalSwitchHandler(); // 위임 모달창 실행
+                        // if (memberArray?.length === 1) {
+                        //-- 남은 인원 1명 : 자동 위임
+                        // nvg('/group');
+                        // } else nvg('/group');
                     });
             };
             deleteGroupHandler();
+        } else if (action === '모임 자동위임') {
+            //) 남은 인원 1명이 있을 경우 : 0명과 마찬가지 ?
+            const deleteGroupHandler = async () => {
+                const res = await axios
+                    .delete(`${process.env.REACT_APP_DB_HOST}/group`, {
+                        data: {
+                            gSeq: Number(gSeq),
+                            newLeaderUSeq: leftMember?.uSeq,
+                        },
+                        headers: {
+                            Authorization: `Bearer ${uToken}`,
+                        },
+                    })
+                    .then((res) => {
+                        console.log(res.data);
+
+                        alert(`${groupName} 모임을 나가셨습니다.`);
+                        nvg('/group');
+
+                        //_ [참고] 위임 모달창 (choiceModal)에서 위임 후 삭제 처리하도록 수정했습니다.
+                        // //-- 남은 인원 2명 이상 : 위임 모달창
+                        // if (memberArray?.length >= 2) {
+                        //     // console.log('modal 떠라...!', memberArray?.length);
+                        //     setWarningModalSwitch(false); // 모임 삭제 모달창 닫기
+                        //     return choiceModalSwitchHandler(); // 위임 모달창 실행
+                        // if (memberArray?.length === 1) {
+                        //-- 남은 인원 1명 : 자동 위임
+                        // nvg('/group');
+                        // } else nvg('/group');
+                    });
+            };
+            deleteGroupHandler();
+        } else if (action === '모임 위임 후 삭제') {
+            //) 남은 인원 2명 이상 : 위임 모달창
+            setWarningModalSwitch(false); // 모임 삭제 모달창 닫기
+            choiceModalSwitchHandler(); // 위임 모달창 실행
         } else if (action === '모임 탈퇴') {
             const quitGroupHandler = async () => {
                 const res = await axios
@@ -132,6 +198,64 @@ export default function WarningModal({
                     });
             };
             boardDeleteHandler(gbSeq);
+        } else if (action === '관리자 유저 삭제') {
+            const adminDeleteUserHandler = async () => {
+                // selected uSeq 배열 반복
+                for (const uSeq of selectedUSeq) {
+                    try {
+                        // 각 uSeq에 대한 삭제 요청
+                        //-- 유저 완전 추방 !!
+                        const res = await axios.patch(
+                            `${process.env.REACT_APP_DB_HOST}/admin/users/${uSeq}`
+                        );
+                        window.location.reload();
+                        console.log(`deleteUser ${uSeq}`, res.data);
+                    } catch (err) {
+                        console.log(`error 발생 for uSeq ${uSeq}: `, err);
+                    }
+                }
+            };
+            adminDeleteUserHandler();
+        } else if (action === '관리자 그룹 삭제') {
+            const adminDeleteGroupHandler = async () => {
+                // selected gSeq 배열 반복
+                for (const gSeq of selectedGSeq) {
+                    try {
+                        // 각 gSeq에 대한 삭제 요청
+                        const res = await axios.delete(
+                            `${process.env.REACT_APP_DB_HOST}/admin/groups/${gSeq}`
+                        );
+                        window.location.reload();
+                        console.log(`deleteUser ${gSeq}`, res.data);
+                    } catch (err) {
+                        console.log(`error 발생 for gSeq ${gSeq}: `, err);
+                    }
+                }
+            };
+            adminDeleteGroupHandler();
+        } else if (action === '관리자 모임 추방') {
+            const adminBlackGroupHandler = async () => {
+                console.log('uSeq>>>>>>', selectedUSeq);
+                // selected gSeq 배열 반복
+                for (const uSeq of selectedUSeq) {
+                    try {
+                        // 각 gSeq에 대한 삭제 요청
+                        const res = await axios.patch(
+                            `${process.env.REACT_APP_DB_HOST}/admin/black/${uSeq}`
+                        );
+                        // window.location.reload();
+                        console.log(`adminBlackGroupHandler ${uSeq}`, res.data);
+                    } catch (err) {
+                        console.log(
+                            `error 발생 adminBlackGroupHandler ${uSeq}: `,
+                            err
+                        );
+                    }
+                }
+            };
+            adminBlackGroupHandler();
+        } else if (action === '로그인 이동') {
+            nvg('/login');
         }
     };
 
@@ -159,72 +283,217 @@ export default function WarningModal({
     };
 
     return (
-        <div className="modal-mission-add-container">
-            <Modal
-                className="warning-modal-style"
-                overlayClassName="overlay"
-                isOpen={warningModalSwitch}
-                onRequestClose={() => setWarningModalSwitch(false)}
-                ariaHideApp={false}
-            >
-                <div onClick={closeModalHandler}>
-                    <img
-                        className="modal-mission-add-close-icon"
-                        src="/asset/icons/close.svg"
-                        alt="close-icon"
-                    />
-                </div>
-                <div className="modal-mission-cancel-content leave-modal-content">
-                    <div className="modal-cancel-title-container leave-modal-container">
-                        <div className="title1">🚨</div>
-                        <div className="title3">
-                            {action === '삭제'
-                                ? `게시글을 ${action}하시겠습니까 ?`
-                                : action === '탈퇴'
-                                ? `${groupName}  모임을 정말 ${action}하시겠습니까 ?`
-                                : action === '회원 탈퇴'
-                                ? `정말 ${action}하시겠습니까 ?`
-                                : `정말 ${action}하시겠습니까 ?`}
+        <>
+            {/* 멤버 선택하는 공통 모달 */}
+            <ChoiceModal
+                choiceModalSwitch={choiceModalSwitch}
+                setChoiceModalSwitch={setChoiceModalSwitch}
+                choiceModalSwitchHandler={choiceModalSwitchHandler}
+                action={'모임 위임 후 삭제'}
+                setKey={setKey}
+            />
+            <div className="modal-mission-add-container">
+                <Modal
+                    className="warning-modal-style"
+                    overlayClassName="overlay"
+                    isOpen={warningModalSwitch}
+                    onRequestClose={() => setWarningModalSwitch(false)}
+                    ariaHideApp={false}
+                >
+                    <div onClick={closeModalHandler}>
+                        <img
+                            className="modal-mission-add-close-icon"
+                            src="/asset/icons/close.svg"
+                            alt="close-icon"
+                        />
+                    </div>
+                    <div className="modal-mission-cancel-content leave-modal-content">
+                        <div className="modal-cancel-title-container leave-modal-container">
+                            <div className="title1">🚨</div>
+                            <div
+                                className="title3"
+                                style={{ textAlign: 'center' }}
+                            >
+                                {action === '삭제'
+                                    ? `게시글을 ${action}하시겠습니까 ?`
+                                    : action === '탈퇴'
+                                    ? `${groupName}  모임을 정말 ${action}하시겠습니까 ?`
+                                    : action === '회원 탈퇴'
+                                    ? `정말 ${action}하시겠습니까 ?`
+                                    : action === '관리자 유저 삭제'
+                                    ? `강제 퇴장시키겠습니까 ?`
+                                    : action === '관리자 그룹 삭제'
+                                    ? `그룹을 강제 삭제하겠습니까 ?`
+                                    : action === '로그인 이동'
+                                    ? `로그인이 필요한 서비스입니다.`
+                                    : action === '모임 위임 후 삭제' // 남은 인원 2명이상
+                                    ? `${groupName} 모임을 나가시겠습니까 ?`
+                                    : action === '모임 자동위임' // 남은 인원 1명
+                                    ? `${groupName} 모임을 나가시겠습니까 ?`
+                                    : action === '모임 삭제' // 남은 인원 0명
+                                    ? `${groupName} 모임을 삭제하시겠습니까 ?`
+                                    : action === '관리자 모임 추방'
+                                    ? `모임에서 강제 추방하겠습니까 ?`
+                                    : `정말 ${action}하시겠습니까 ?`}
+                            </div>
+
+                            {action === '회원 탈퇴' ? (
+                                <div className="title5 cancel-modal-description">
+                                    Motimate 활동 정보가 모두 사라지며 복구되지
+                                    않습니다.
+                                </div>
+                            ) : action === '게시글을 삭제' ? (
+                                <div className="title5 cancel-modal-description">
+                                    게시글 내용이 모두 사라지며 복구되지
+                                    않습니다.{' '}
+                                </div>
+                            ) : action === '댓글 삭제' ? (
+                                ''
+                            ) : action === '관리자 유저 삭제' ? (
+                                <div
+                                    className="title5 cancel-modal-description"
+                                    style={{ textAlign: 'center' }}
+                                >
+                                    관리자 권한으로{' '}
+                                    {selectedUSeq.map(
+                                        (userUSeq: number, index: number) => (
+                                            <span
+                                                key={userUSeq}
+                                                style={{
+                                                    color: '#d01e1e',
+                                                    display: 'inline',
+                                                }}
+                                            >
+                                                {index > 0 && ', '}
+                                                {`${userUSeq}번`}
+                                            </span>
+                                        )
+                                    )}{' '}
+                                    회원을 강제 퇴장시킵니다. <br />
+                                </div>
+                            ) : action === '관리자 모임 추방' ? (
+                                <div
+                                    className="title5 cancel-modal-description"
+                                    style={{ textAlign: 'center' }}
+                                >
+                                    관리자 권한으로{' '}
+                                    {selectedUSeq.map(
+                                        (userUSeq: number, index: number) => (
+                                            <span
+                                                key={userUSeq}
+                                                style={{
+                                                    color: '#d01e1e',
+                                                    display: 'inline',
+                                                }}
+                                            >
+                                                {index > 0 && ', '}
+                                                {`${userUSeq}번`}
+                                            </span>
+                                        )
+                                    )}{' '}
+                                    회원을 <br />
+                                    모임에서 강제 퇴장시킵니다. <br />
+                                </div>
+                            ) : action === '관리자 그룹 삭제' ? (
+                                <div className="title5 cancel-modal-description">
+                                    관리자 권한으로{' '}
+                                    {selectedGSeq.map(
+                                        (userGSeq: number, index: number) => (
+                                            <span
+                                                key={userGSeq}
+                                                style={{
+                                                    color: '#d01e1e',
+                                                    display: 'inline',
+                                                }}
+                                            >
+                                                {index > 0 && ', '}
+                                                {`${userGSeq}번`}
+                                            </span>
+                                        )
+                                    )}{' '}
+                                    그룹을 강제 삭제합니다. <br />
+                                    <div style={{ color: '#9a9a9a' }}>
+                                        모임의 활동 정보가 모두 사라지며
+                                        복구되지 않습니다.
+                                    </div>{' '}
+                                </div>
+                            ) : action === '로그인 이동' ? (
+                                <div className="title5 cancel-modal-description">
+                                    로그인 페이지로 이동하시겠습니까?
+                                </div>
+                            ) : action === '모임 위임 후 삭제' ? ( // 남은 인원 2명 이상
+                                <div className="title5 cancel-modal-description">
+                                    모임의 활동 정보가 모두 사라지며 복구되지
+                                    않습니다.
+                                </div>
+                            ) : action === '모임 자동위임' ? ( // 남은 인원 1명
+                                <div
+                                    className="title5 cancel-modal-description"
+                                    style={{ textAlign: 'center' }}
+                                >
+                                    <span
+                                        style={{
+                                            color: 'gray',
+                                            display: 'inline',
+                                        }}
+                                    >
+                                        {leftMember?.uName}
+                                    </span>
+                                    &nbsp;님에게 모임장 권한 위임 후, <br />
+                                    모임의 활동 정보가 모두 사라지며 복구되지
+                                    않습니다.
+                                </div>
+                            ) : action === '회원 탈퇴' || '탈퇴' ? (
+                                <div className="title5 cancel-modal-description">
+                                    모임의 활동 정보가 모두 사라지며 복구되지
+                                    않습니다.
+                                </div>
+                            ) : (
+                                ''
+                            )}
                         </div>
 
-                        {action === '회원 탈퇴' ? (
-                            <div className="title5 cancel-modal-description">
-                                Motimate 활동 정보가 모두 사라지며 복구되지
-                                않습니다.
-                            </div>
-                        ) : action === '게시글을 삭제' ? (
-                            <div className="title5 cancel-modal-description">
-                                게시글 내용이 모두 사라지며 복구되지 않습니다.{' '}
-                            </div>
-                        ) : action === '댓글 삭제' ? (
-                            ''
-                        ) : action === '회원 탈퇴' || '탈퇴' ? (
-                            <div className="title5 cancel-modal-description">
-                                모임의 활동 정보가 모두 사라지며 복구되지
-                                않습니다.
-                            </div>
-                        ) : (
-                            ''
-                        )}
-                    </div>
+                        <div className="mission-cancel-btn-container">
+                            {action === '로그인 이동' ? (
+                                <button
+                                    onClick={doneHandler}
+                                    className="btn-md move-to-login-btn"
+                                >
+                                    로그인 이동
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={doneHandler}
+                                    className="btn-md mission-cancel-done-btn"
+                                    // style={action === '로그인 이동' ? buttonStyle : {}}
+                                >
+                                    {action === '게시글을 삭제'
+                                        ? '삭 제'
+                                        : action === '관리자 유저 삭제'
+                                        ? '강제 퇴장'
+                                        : action === '관리자 그룹 삭제'
+                                        ? '강제 삭제'
+                                        : action === '모임 위임 후 삭제'
+                                        ? '탈 퇴'
+                                        : action === '모임 자동위임'
+                                        ? '탈 퇴'
+                                        : action === '관리자 모임 추방'
+                                        ? '모임에서 추방'
+                                        : action}
+                                </button>
+                            )}
 
-                    <div className="mission-cancel-btn-container">
-                        <button
-                            onClick={doneHandler}
-                            className="btn-md mission-cancel-done-btn"
-                        >
-                            {action === '게시글을 삭제' ? '삭제' : action}
-                        </button>
-                        <button
-                            onClick={closeModalHandler}
-                            className="btn-md mission-cancel-back-btn"
-                        >
-                            취 소
-                        </button>
+                            <button
+                                onClick={closeModalHandler}
+                                className="btn-md mission-cancel-back-btn"
+                            >
+                                취 소
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <Toaster />
-            </Modal>
-        </div>
+                    <Toaster />
+                </Modal>
+            </div>
+        </>
     );
 }
