@@ -705,6 +705,7 @@ exports.deleteGroup = async (req, res) => {
 
     const { gSeq, newLeaderUSeq } = req.body;
 
+    console.log('req.body>>>>>>>>>>>>>', req.body);
     // 1) 현재 삭제하는 사람이 모임장인지 확인
     const selectOneGroupUser = await GroupUser.findOne({
       where: {
@@ -720,6 +721,7 @@ exports.deleteGroup = async (req, res) => {
           gSeq,
         },
       });
+      console.log('>>>>>>>>>>>>>>>>', countGroupUser);
       if (countGroupUser === 2) {
         if (newLeaderUSeq) {
           const changeLeaderResult = await changeGroupLeader(
@@ -727,6 +729,8 @@ exports.deleteGroup = async (req, res) => {
             gSeq,
             newLeaderUSeq
           );
+
+          console.log('>>>>>>>>>>>>>>>>', changeLeaderResult);
 
           // 모임장 모임 탈퇴
           await GroupUser.destroy({
@@ -815,6 +819,21 @@ exports.getGroupDetail = async (req, res) => {
         ],
       });
 
+      const others = await User.findAll({
+        attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
+        where: { [Op.ne]: uSeq },
+        include: [
+          {
+            model: GroupUser,
+            where: {
+              gSeq: groupSeq,
+              guIsBlackUser: { [Op.is]: null },
+            },
+            attributes: ['guSeq'],
+          },
+        ],
+      });
+
       const leaderInfo = await User.findOne({
         attributes: ['uSeq', 'uName', 'uImg', 'uCharImg'],
         include: [
@@ -893,6 +912,7 @@ exports.getGroupDetail = async (req, res) => {
           groupCategory: gCategory,
           groupCoverImg: gCoverImg,
           memberArray,
+          others,
           leaderInfo,
         });
         // 비회원인경우
