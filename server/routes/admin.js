@@ -11,7 +11,9 @@ router.get("/users", controller.allUsers);
 router.patch("/users/:uSeq", controller.outUsers);
 
 // 모임 추방
-router.patch("/black/:uSeq", controller.blackUser);
+
+router.patch('/black/:uSeq', controller.blackUser);
+
 
 // 모든 모임 조회
 router.get("/groups", controller.allGroup);

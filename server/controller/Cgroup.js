@@ -1254,13 +1254,13 @@ exports.complainUser = async (req, res) => {
       const isAlready = await Complain.findOne({
         where: { guSeq, cuSeq },
       });
-      console.log();
+
       if (isAlready === null) {
         await Complain.create({
           guSeq,
           gSeq,
-          uSeq,
           uName,
+          uSeq,
           cuSeq,
           cDetail,
         });
@@ -1272,7 +1272,7 @@ exports.complainUser = async (req, res) => {
         });
       }
     } else {
-      res.send({ result: false, message: '먼저 로그인 해주세요.' });
+      res.send({ isSuccess: false, msg: '먼저 로그인 해주세요.' });
     }
   } catch (err) {
     console.error('complain error', err);
