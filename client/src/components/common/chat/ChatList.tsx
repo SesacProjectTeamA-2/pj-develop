@@ -742,6 +742,8 @@ export default function ChatList({
                                                                 backgroundColor:
                                                                     '#848f9b',
                                                                 // color: '#444444',
+                                                                width: '5rem',
+                                                                height: '3rem',
                                                             }}
                                                         >
                                                             {group.tb_group.gName.slice(
