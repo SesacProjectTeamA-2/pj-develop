@@ -103,22 +103,11 @@ export default function WarningModal({
                         //-- 남은 인원 0명 : 모임 완전 삭제
                         alert(`${groupName} 모임을 삭제하셨습니다.`);
                         nvg('/group');
-
-                        //_ [참고] 위임 모달창 (choiceModal)에서 위임 후 삭제 처리하도록 수정했습니다.
-                        // //-- 남은 인원 2명 이상 : 위임 모달창
-                        // if (memberArray?.length >= 2) {
-                        //     // console.log('modal 떠라...!', memberArray?.length);
-                        //     setWarningModalSwitch(false); // 모임 삭제 모달창 닫기
-                        //     return choiceModalSwitchHandler(); // 위임 모달창 실행
-                        // if (memberArray?.length === 1) {
-                        //-- 남은 인원 1명 : 자동 위임
-                        // nvg('/group');
-                        // } else nvg('/group');
                     });
             };
             deleteGroupHandler();
         } else if (action === '모임 자동위임') {
-            //) 남은 인원 1명이 있을 경우 : 0명과 마찬가지 ?
+            //) 남은 인원 1명이 있을 경우 : 0명과 마찬가지
             const deleteGroupHandler = async () => {
                 const res = await axios
                     .delete(`${process.env.REACT_APP_DB_HOST}/group`, {
