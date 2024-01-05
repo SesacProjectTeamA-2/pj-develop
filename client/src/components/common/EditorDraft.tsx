@@ -43,20 +43,12 @@ export default function EditorDraft({
 
         if (blocksFromHtml) {
             const { contentBlocks, entityMap } = blocksFromHtml;
-            // https://draftjs.org/docs/api-reference-content-state/#createfromblockarray
             const contentState = ContentState.createFromBlockArray(
                 contentBlocks
                 // entityMap
             );
 
-            // const contentState = ContentState.createFromBlockArray({
-            //     contentBlocks:
-            //         blocksFromHtml.contentBlocks as Draft.Model.ImmutableData.ContentBlock[],
-            //     entityMap: blocksFromHtml.entityMap,
-            // });
-
             // ContentState를 EditorState기반으로 새 개체를 반환.
-            // https://draftjs.org/docs/api-reference-editor-state/#createwithcontent
             const editorState = EditorState.createWithContent(contentState);
             setEditorState(editorState);
         }

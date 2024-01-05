@@ -485,8 +485,10 @@ export default function ChatList({
                                                         className="list-img-circle"
                                                         style={{
                                                             backgroundColor:
-                                                                '#f5df60',
-                                                            color: '#444444',
+                                                                '#2a2a2a',
+                                                            color: '#f5df60',
+                                                            width: '5rem',
+                                                            height: '3rem',
                                                         }}
                                                     >
                                                         {group.gName.slice(
@@ -604,6 +606,8 @@ export default function ChatList({
                                                 className="list-img-circle"
                                                 style={{
                                                     backgroundColor: '#f88c99',
+                                                    width: '7rem',
+                                                    height: '3rem',
                                                 }}
                                             >
                                                 {group.gName.slice(0, 1)}

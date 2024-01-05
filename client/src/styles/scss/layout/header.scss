@@ -57,6 +57,12 @@
         align-items: start;
         margin-top: 5rem;
     }
+
+    button {
+        @include media('<600px') {
+            margin-bottom: 1rem;
+        }
+    }
 }
 
 .pcMode {
