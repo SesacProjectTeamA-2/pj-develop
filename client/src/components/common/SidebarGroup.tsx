@@ -83,7 +83,7 @@ export default function SideBarGroup({
 
     let mSeqList = [];
 
-    for (let i = 1; i <= groupMissions.length; i++) {
+    for (let i = 1; i <= groupMissions?.length; i++) {
         mSeqList.push(i);
     }
 
