@@ -308,7 +308,11 @@ any) {
         // key 값을 변경하여 리렌더링 유도
         setKey((prevKey: any) => prevKey + 1);
 
-        nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`);
+        //~[추후] 추가
+        // category === 'free'
+        //     ? nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`)
+        //     : nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`);
+        // /board/:gSeq/mission/:mSeq/:gbSeq"
     };
 
     return (
