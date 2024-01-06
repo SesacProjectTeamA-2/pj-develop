@@ -94,6 +94,7 @@ exports.createComment = async (req, res) => {
 
     const category = groupBoard.gbCategory;
     const title = groupBoard.gbTitle;
+    const mSeq = groupBoard.mSeq;
 
     // redis에 캐시로 저장(알림 - hash)
     // (hash) 받는사람 : 게시글 작성자(gbSeq - uSeq)
@@ -108,6 +109,7 @@ exports.createComment = async (req, res) => {
         gbSeq,
         uName,
         title,
+        mSeq,
         gSeq,
         category,
         commentTime,
