@@ -196,6 +196,7 @@ any) {
     const uToken = cookie.get('isUser');
 
     const [alarmNone, setAlarmNone] = useState(false);
+    const [isDeleted, setIsDeleted] = useState<any>(''); // 삭제 처리되는 alarmList의 idx 값
 
     const deleteAlarm = async (commentInfo: any) => {
         const res = await axios
@@ -208,16 +209,64 @@ any) {
             })
             .then((res) => {
                 console.log('읽음 처리 delete >>>>>>', res.data);
+                console.log('읽음 처리 delete >>>>>>', res.data.alarmList);
 
-                let updateData = [];
-                for (let i = 0; i < res.data?.length; i++) {
-                    updateData.push(JSON.parse(res.data[i]));
-                }
+                // let updateData = [];
+                // for (let i = 0; i < res.data.alarmList?.length; i++) {
+                //     updateData.push(JSON.parse(res.data.alarmList[i]));
+                // }
 
-                console.log('parsedData:::::', updateData);
-                setAlarmList([...updateData]);
+                // console.log('parsedData:::::', updateData);
+                // console.log(
+                //     'parsedData>>>>>>>',
+                //     JSON.parse(res.data.alarmList)
+                // );
+
+                // setAlarmList([...updateData]);
+                setAlarmList([...res.data.alarmList]);
             });
     };
+
+    //] 프론트에서 해당 데이터 삭제
+    useEffect(() => {
+        if (isDeleted !== '') {
+            //-- 2. 프론트에서 해당 데이터 삭제
+            // const noti = document.querySelector('notification');
+
+            // noti의 자식 요소들을 NodeList로 가져오기
+            const notiItems = document.querySelectorAll('.notification');
+
+            // 해당 인덱스의 .notification 요소를 선택
+            const specificNotification = notiItems[isDeleted]; // idx
+
+            if (specificNotification) {
+                // 선택된 .notification 요소의 모든 자식 요소를 제거
+                while (specificNotification.firstChild) {
+                    const firstChild = specificNotification.firstChild;
+                    if (firstChild) {
+                        specificNotification.removeChild(firstChild);
+                    }
+                }
+            }
+
+            //-- 3. 알람 수 -1
+            const currentAlarmCount = localStorage.getItem('alarmCount');
+
+            if (currentAlarmCount) {
+                // 현재 알람 수를 1 감소시키고 문자열로 변환하여 다시 저장
+                const newAlarmCount = (
+                    Number(currentAlarmCount) - 1
+                ).toString();
+                localStorage.setItem('alarmCount', newAlarmCount);
+                setAlarmCount(localStorage.getItem('alarmCount')); // 알람 수 업데이트
+
+                // 현재 알람이 없습니다.
+                if (newAlarmCount === '0') {
+                    setAlarmNone(true);
+                }
+            }
+        }
+    }, [isDeleted]);
 
     const readHandler = async (idx: number) => {
         // 기존 알람 중 클릭한 데이터
@@ -226,39 +275,7 @@ any) {
         //-- 1. 서버에 데이터 삭제 요청
         deleteAlarm(alarmList[idx]);
 
-        //-- 2. 프론트에서 해당 데이터 삭제
-        // const noti = document.querySelector('notification');
-
-        // noti의 자식 요소들을 NodeList로 가져오기
-        const notiItems = document.querySelectorAll('.notification');
-
-        // 해당 인덱스의 .notification 요소를 선택
-        const specificNotification = notiItems[idx];
-
-        if (specificNotification) {
-            // 선택된 .notification 요소의 모든 자식 요소를 제거
-            while (specificNotification.firstChild) {
-                const firstChild = specificNotification.firstChild;
-                if (firstChild) {
-                    specificNotification.removeChild(firstChild);
-                }
-            }
-        }
-
-        //-- 3. 알람 수 -1
-        const currentAlarmCount = localStorage.getItem('alarmCount');
-
-        if (currentAlarmCount) {
-            // 현재 알람 수를 1 감소시키고 문자열로 변환하여 다시 저장
-            const newAlarmCount = (Number(currentAlarmCount) - 1).toString();
-            localStorage.setItem('alarmCount', newAlarmCount);
-            setAlarmCount(localStorage.getItem('alarmCount')); // 알람 수 업데이트
-
-            // 현재 알람이 없습니다.
-            if (newAlarmCount === '0') {
-                setAlarmNone(true);
-            }
-        }
+        setIsDeleted(alarmList[idx]);
 
         console.log('삭제되었나요 ????', alarmList);
     };
