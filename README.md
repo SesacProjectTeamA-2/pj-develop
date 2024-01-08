@@ -11,16 +11,16 @@ Motimates 팀프로젝트 디벨롭
 
 ## 🌐 웹 사이트 주소
 
-[React App](http://motimates.xyz/)
+[React App](http://www.motimates.link/)
 
 # 프로젝트 소개
 
-[발표자료](https://docs.google.com/presentation/d/1-889w-hx7lc29qffDdI8is45T3xxHF-RqPEXBAd9i2I/edit#slide=id.g298a1fc9f63_2_0)
+[발표자료](https://docs.google.com/presentation/d/1UivNxBP8XjSI-RzhUDjz8jncA31Cnq1xG4xU3MldGts/edit#slide=id.g4dfce81f19_0_45)
 [Notion](https://polydactyl-cello-2db.notion.site/Motimates-4617b0dbabe640deb5336bb2dddcd54a?pvs=4)
 
 ## ⏰ 제작 기간
 
-December 11, 2023 ~ December 27, 2023
+December 08, 2023 ~ January 04, 2023
 
 ## **🧑‍🤝‍🧑** Team Crew
 
@@ -66,7 +66,7 @@ December 11, 2023 ~ December 27, 2023
 <!-- - 추가... -->
 
 ```bash
-$ git clone https://github.com/SesacProjectTeamA-2/pj-front.git
+$ git clone https://github.com/SesacProjectTeamA-2/pj-develop
 ```
 
 ```
@@ -145,6 +145,13 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 - 마이페이지 연결
 - 로그인 여부 및 업로드 여부에 따른 헤더 프로필사진 변경
 - 모바일 헤더 추가에 따른 반응형 적용
+
+✅ 관리자 페이지
+
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/c51dd519-8d68-4b49-957e-a05f482c21d5' width='300px' height='200px' />
+
+- Chart.js 라이브러리를 활용하여 데이터 시각화
+- 관리자 권한으로 특정 유저 및 그룹 삭제 가능
 
 ✅ 인트로 페이지
 
@@ -231,7 +238,7 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 # 🚢 화면 설계서
 
-![image](https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/2c36d5f3-dde3-4ff3-96f2-ece216ae3b87)
+![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/4f9d5688-f4c7-48f0-a73c-3e9aadfbc5c1)
 
 # 🎨 와이어 프레임
 
