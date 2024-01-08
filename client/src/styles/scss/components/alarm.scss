@@ -62,7 +62,7 @@ $white: #e6e6e6;
 
 .panel {
     position: absolute;
-    z-index: 2;
+    z-index: 99999;
     // height: 500px;
     width: 300px;
     top: 80%;
@@ -72,6 +72,15 @@ $white: #e6e6e6;
     overflow: hidden;
     box-shadow: 0.5rem 0.5rem 1rem 0 rgba(0, 0, 0, 0.4);
     transition: all 0.5s ease-in-out;
+
+    @media (min-width: 200px) and (max-width: 600px) {
+        right: -10rem;
+        top: -0.5rem;
+    }
+    @media (min-width: 600px) and (max-width: 800px) {
+        right: -1rem;
+        top: -0.5rem;
+    }
 }
 
 .panel .header .menu-icon .dash-top,
