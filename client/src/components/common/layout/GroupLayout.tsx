@@ -127,13 +127,14 @@ export default function GroupLayout({
                             </Item>
                         </Grid>
 
-                        <Grid md={8} sm={7} xs={4} className="section-wrapper">
-                            {' '}
+                        <Grid md={8} sm={8} xs={8} className="section-wrapper">
                             <Item
                                 style={{
                                     paddingLeft: 0,
                                     paddingRight: 0,
-                                    paddingTop: '5rem',
+                                    // paddingTop: '5rem',
+                                    paddingTop: '4rem',
+                                    justifyContent: 'center',
                                 }}
                             >
                                 {children}
@@ -143,9 +144,9 @@ export default function GroupLayout({
                         {/* 채팅 컴포넌트 들어갈 곳 */}
                         <Grid
                             container
-                            md={2}
-                            sm={1}
-                            xs={1}
+                            md={0}
+                            sm={0}
+                            xs={0}
                             className="chatting-div"
                         >
                             <Item

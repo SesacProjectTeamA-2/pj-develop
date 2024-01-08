@@ -1082,7 +1082,6 @@ export default function Header(props: any) {
                                             </button>
                                         </Link>
                                     </li>
-
                                     {!props.isIntro && (
                                         <div className="chat-icon-container">
                                             <img
@@ -1116,7 +1115,7 @@ export default function Header(props: any) {
                                         </div>
                                     )}
 
-                                    {/* <div className="alarm-icon-container">
+                                    <div className="alarm-icon-container">
                                         <img
                                             src="/asset/icons/Bell.svg"
                                             alt="alarm"
@@ -1139,7 +1138,19 @@ export default function Header(props: any) {
                                             )}
                                         </div>
                                         <span id="alarm-text">Alarm</span>
-                                    </div> */}
+                                    </div>
+
+                                    {isAlarm && (
+                                        <Alarm
+                                            alarmHandler={alarmHandler}
+                                            alarmList={props.alarmList}
+                                            setAlarmList={props.setAlarmList}
+                                            commentAlarm={props.commentAlarm}
+                                            setAlarmCount={props.setAlarmCount}
+                                            setKey={props.setKey}
+                                            // key={props.key}
+                                        />
+                                    )}
 
                                     <div className="logout-icon-container">
                                         <img
