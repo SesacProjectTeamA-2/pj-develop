@@ -149,10 +149,11 @@
     padding: 5px;
     margin: 0;
     width: 5rem;
+    box-shadow: none;
+
     @include media('<800px') {
         border: none;
-        margin: 0rem 0.4rem;
-        box-shadow: none;
+        margin: 0.98rem;
     }
 }
 .menu-button:focus {
