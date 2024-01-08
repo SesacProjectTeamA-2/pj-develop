@@ -300,18 +300,29 @@ any) {
 
     // const [key, setKey] = useState(0); // key 상태 추가
 
-    const linkToHandler = (gSeq: any, category: string, gbSeq: any) => {
+    const linkToHandler = (
+        gSeq: any,
+        category: string,
+        gbSeq: any,
+        mSeq: any
+    ) => {
         console.log('gSeq', gSeq);
         console.log('category', category);
         console.log('gbSeq', gbSeq);
+        console.log('mSeq', mSeq);
 
         // key 값을 변경하여 리렌더링 유도
         setKey((prevKey: any) => prevKey + 1);
 
         //~[추후] 추가
-        // category === 'free'
-        //     ? nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`)
-        //     : nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`);
+        category === 'mission'
+            ? nvg(
+                  `/board/${Number(gSeq)}/${category}/${Number(mSeq)}/${Number(
+                      gbSeq
+                  )}`
+              )
+            : nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`);
+
         // /board/:gSeq/mission/:mSeq/:gbSeq"
     };
 
@@ -374,7 +385,8 @@ any) {
                                                 linkToHandler(
                                                     alarm.gSeq,
                                                     alarm.category,
-                                                    alarm.gbSeq
+                                                    alarm.gbSeq,
+                                                    alarm.mSeq
                                                 )
                                             }
                                         >
