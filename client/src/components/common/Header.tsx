@@ -301,7 +301,9 @@ export default function Header(props: any) {
         return () => {
             props.socket?.off('newMsg', socketNewMsg);
         };
-    }, [props.socket, props.allGroupInfo]);
+    }, [props.socket, props.allGroupInfo, props.isEnter]);
+
+    console.log('isEnter#########', props.isEnter);
 
     useEffect(() => {
         getRecentMsg(); // axios
