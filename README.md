@@ -282,6 +282,8 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 ![image](https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/3515f133-f7b3-4ecb-9e0b-0eb4d8f44503)
 
 # 🗄️ ERD
-
+- 신고기능을 위한 complain table 추가
+  
 [ERD](https://www.erdcloud.com/d/koATx2ojGQyH5Y62S)
-![image](https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/887bcebc-2966-4f5e-a2fa-a0033377fe8c)
+![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/107044870/bee84bec-fb96-4ddb-9e2f-f75c7a893209)
+
