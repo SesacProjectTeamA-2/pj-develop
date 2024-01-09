@@ -59,7 +59,27 @@ December 08, 2023 ~ January 04, 2023
 
 **최태영**
 
-- 담당 역할 ...
+- 아키텍쳐 설계
+  - DBMS 추가, socket.io 통신 추가, route53, redisLabs 사용
+- 서버 배포 및 DB 관리
+- 채팅 기능
+  - 소켓 통신시 JWT 토큰으로 회원 인증
+  - 로그인시 모임별 채팅방 입장
+    - 현재 로그인되어 있는 유저 보여주기
+    - 로그인 이후 모든 메세지 Load
+  - 모임 가입시 채팅방 입장 및 채팅 리스트 추가
+- 실시간 알림 기능
+  - 게시판 댓글 작성, 모임추방시 실시간 알림 생성
+  - 읽음처리시 삭제기능
+- 랭킹 관련 기능
+  - scheduling (mission, d-day, score)
+    - 모임 디데이 만료시, 누적 점수 업데이트, 디데이 초기화, 미션 초기화, 현재 점수 초기화 기능
+  - 미션 인증시 점수 및 랭킹 업데이트
+    - 게시판 미션 인증시 현재 점수 업데이트 및 랭킹 업데이트 기능
+- 관리자 페이지 관련 api
+  - 신고 기능
+  - 모임 추방 or 회원 추방 기능
+  - 유저 관리, 모임 관리 기능
 
 # 시작 가이드
 
@@ -78,6 +98,7 @@ $ npm start
 
 ## Front
 
+<p>
 <img src="https://img.shields.io/badge/HTML-E34F26?style=flat-square&logo=HTML5&logoColor=white"/>
 <img src="https://img.shields.io/badge/CSS-1572B6?style=flat-square&logo=CSS3&logoColor=white"/>
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=JavaScript&logoColor=white"/>
@@ -87,12 +108,26 @@ $ npm start
 <img src="https://img.shields.io/badge/Sass-CC6699?style=flat-square&logo=CSS3&logoColor=white"/>
 <img src="https://img.shields.io/badge/Github-000000?style=flat-square&logo=Github&logoColor=white"/>
 <img src="https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=Figma&logoColor=white"/>
+</p>
 
 ## Back
 
+<p>
+<img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white"/>
+<img src="https://img.shields.io/badge/socket.io-010101?style=flat-square&logo=socket.io&logoColor=white">
+<img src="https://img.shields.io/badge/node.js-339933?style=flat-square&logo=Node.js&logoColor=white">
+<img src="https://img.shields.io/badge/express-000000?style=flat-square&logo=express&logoColor=white">
+<img src="https://img.shields.io/badge/mysql-4479A1?style=flat-square&logo=mysql&logoColor=white"> 
+<img src="https://img.shields.io/badge/Sequelize-4B0082.svg?style=flat-square&logo=sequelize&logoColor=white"/>
+<img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=flat-square&logo=amazonaws&logoColor=white"/>
+<img src="https://img.shields.io/badge/nginx-%23009639.svg?style=flat-square&logo=nginx&logoColor=white"/>
+</p>
+
+
+
 # API 명세서
 
-<img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=white">
+<img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=Swagger&logoColor=white">
 
 Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값을 참조해 개발 및 소통
 
@@ -108,7 +143,7 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 | 회의                                                                                                           | 칸반보드                                                                                                       | 트러블 슈팅                                                                                                    |
 | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| ![image](https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/c22c6762-0db7-4603-bbf5-b3852e0e8d5b) | ![image](https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/a26fdae4-dfc5-46d4-8a36-e772c556dd66) | ![image](https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/5e36491d-d0da-4f1c-9bc3-7d175480c4d9) |
+| ![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/107044870/5c3d7670-3c9d-42f7-9ca4-1e61a81ca6ba) | ![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/107044870/b804b087-cded-4bdb-b4a6-4015cfa61cd2) | ![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/107044870/2e97c160-a247-456a-92ac-167c4057911d) |
 
 # Functions
 
