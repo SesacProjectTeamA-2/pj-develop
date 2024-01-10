@@ -2,25 +2,34 @@
 
 Motimates 팀프로젝트 디벨롭
 
+<br/>
+
 # Motimates 란 ?
 
-## " Motivation + Mates "
-
+**"Motivation + Mates"**
 서로 동기부여를 주는 메이트들
-모임 멤버들과 함께 목표를 달성하는 커뮤니티 사이트
+그룹 멤버들과 함께 목표를 달성하는 커뮤니티 사이트
+
+<br/>
 
 ## 🌐 웹 사이트 주소
 
-[React App](http://www.motimates.link/)
+[Motimates](http://www.motimates.link/)
+
+<br/>
 
 # 프로젝트 소개
 
 [발표자료](https://docs.google.com/presentation/d/1UivNxBP8XjSI-RzhUDjz8jncA31Cnq1xG4xU3MldGts/edit#slide=id.g4dfce81f19_0_45)
 [Notion](https://polydactyl-cello-2db.notion.site/Motimates-4617b0dbabe640deb5336bb2dddcd54a?pvs=4)
 
+<br/>
+
 ## ⏰ 제작 기간
 
 December 08, 2023 ~ January 04, 2023
+
+<br/>
 
 ## **🧑‍🤝‍🧑** Team Crew
 
@@ -28,15 +37,18 @@ December 08, 2023 ~ January 04, 2023
 | -------------------------------------- | ------------------------------------- |
 | [김세화](https://github.com/loveflora) | [최태영](https://github.com/chitty12) |
 
+<br/>
+
 ## 담당 역할
 
 **김세화**
 
-- UI
-  - 페이지 : 모임 관련 페이지(생성 및 수정, 홈, 검색), 게시판 관련 페이지(공지, 자유, 미션, 완료, 댓글)
-  - 공통 컴포넌트 : 모달창(성공, 경고, 선택), 멤버 리스트, 디데이, 크기별 버튼
-- 기능
-
+- ## 기능
+  - 실시간 그룹별 채팅
+    - socket 연결 요청 및 종료
+    - 미확인 메세지 개수 데이터 관리
+    - 채팅방 목록 정렬하는 토글 기능 구현
+  - 실시간 알람
   - 모임 CRUD
     - 모임 생성, 수정, 삭제
     - 모임 상세화면 조회
@@ -53,9 +65,11 @@ December 08, 2023 ~ January 04, 2023
   - 댓글 CRUD
     - 모임 공지사항, 자유, 미션별 게시글에 대한 댓글 조회
     - 댓글 생성 수정, 삭제
-  - 유저별 미션 조회
-  - 모임별 미션 조회
+  - 유저 및 모임별 미션 조회
   - 유효성 검사 (모임 및 게시판 생성 및 수정 시)
+- UI
+  - 페이지 : 헤더, 인트로, 메인, 마이 페이지, 모임 관련 페이지(생성 및 수정, 홈, 검색), 게시판 관련 페이지(공지, 자유, 미션, 완료, 댓글)
+  - 공통 컴포넌트 : 모달창(성공, 경고, 선택), 멤버 리스트, 디데이, 크기별 버튼
 
 **최태영**
 
@@ -82,8 +96,6 @@ December 08, 2023 ~ January 04, 2023
   - 유저 관리, 모임 관리 기능
 
 # 시작 가이드
-
-<!-- - 추가... -->
 
 ```bash
 $ git clone https://github.com/SesacProjectTeamA-2/pj-develop

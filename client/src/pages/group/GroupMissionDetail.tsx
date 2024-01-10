@@ -139,10 +139,13 @@ export default function GroupMissionDetail() {
         );
 
         console.log(res.data);
-        // window.location.reload();
+
         getBoardMission();
 
-        // setFreeList(res.data.groupInfo);
+        setCommentInput({
+            ...commentInput,
+            gbcContent: '',
+        });
     };
 
     const [commentEditInput, setCommentEditInput] = useState({
@@ -294,6 +297,7 @@ export default function GroupMissionDetail() {
                         <textarea
                             className="comment-textarea"
                             onChange={commentOnChange}
+                            value={commentInput?.gbcContent}
                         ></textarea>
                         <button
                             className="btn-md done-btn"

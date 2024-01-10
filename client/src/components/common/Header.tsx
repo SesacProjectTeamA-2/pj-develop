@@ -151,64 +151,6 @@ export default function Header(props: any) {
                 }));
 
                 props.setRecentMsg(formattedData);
-
-                //~ 삭제예정
-                //; 최신순으로 allGroupInfo 정렬
-                // if (props.allGroupInfo?.length > 0) {
-                //     const sortedAllGroupInfo = [...props.allGroupInfo]
-                //         .sort((a, b) => {
-                //             const getTimeStamp = (data: any) =>
-                //                 roomInfoArray.find(
-                //                     (item: any) => item.gSeq === data.gSeq
-                //                 )?.msg.timeStamp;
-
-                //             const timeStampA = roomInfoArray.some(
-                //                 (data: any) => data.gSeq === a.gSeq && data.msg
-                //             )
-                //                 ? getTimeStamp(a)
-                //                 : undefined;
-
-                //             const timeStampB = roomInfoArray.some(
-                //                 (data: any) => data.gSeq === b.gSeq && data.msg
-                //             )
-                //                 ? getTimeStamp(b)
-                //                 : undefined;
-
-                //             // gSeq가 recentMsg에 있는 경우를 먼저 정렬
-                //             return (
-                //                 (timeStampB &&
-                //                     timeStampA &&
-                //                     new Date(timeStampB).getTime() -
-                //                         new Date(timeStampA).getTime()) ||
-                //                 (timeStampB ? -1 : timeStampA ? 1 : 0)
-                //             );
-                //         })
-                //         .sort((a, b) => {
-                //             const hasTimeStampA = roomInfoArray.some(
-                //                 (data: any) => data.gSeq === a.gSeq && data.msg
-                //             );
-                //             const hasTimeStampB = roomInfoArray.some(
-                //                 (data: any) => data.gSeq === b.gSeq && data.msg
-                //             );
-
-                //             // gSeq가 recentMsg에 있는 경우를 먼저 정렬
-                //             return hasTimeStampA && hasTimeStampB
-                //                 ? 0
-                //                 : hasTimeStampA
-                //                 ? -1
-                //                 : hasTimeStampB
-                //                 ? 1
-                //                 : 0;
-                //         });
-
-                //     props.setAllGroupInfo(sortedAllGroupInfo);
-
-                //     // 정렬된 allGroupInfo
-                //     console.log(
-                //         'sortedAllGroupInfo>>>>>>>',
-                //         sortedAllGroupInfo
-                //     );
-                // }
             });
     };
 
@@ -478,45 +420,49 @@ export default function Header(props: any) {
             if (window.confirm('로그아웃하시겠습니까 ?')) {
                 // console.log('uSeqData ::::::', uSeqData);
 
-                // 채팅 종료
-                // props.socket?.emit('logout', uSeqData);
-                // props.socket.emit('logout', { uSeq: 8 });
-
                 props.setAdminUser(false);
                 localStorage.removeItem('adminUser');
 
-                nvg('/login');
+                console.log('logout');
+
+                // nvg('/login');
+
+                return;
+            } else {
+                console.log('ggggggg$$$$');
+                nvg('/management');
+                return;
+            }
+        } else {
+            //; 2. 유저
+            if (window.confirm('로그아웃하시겠습니까 ?')) {
+                // console.log('uSeqData ::::::', uSeqData);
+
+                //-- 0) 채팅창 끄기
+                props.setShowChat(false);
+                // 로컬 스토리지에 값을 저장하기
+                localStorage.setItem('showChat', JSON.stringify(false));
+
+                //-- 1) 채팅 종료
+                props.socket?.emit('logout', uSeqData);
+                // props.socket.emit('logout', { uSeq: 8 });
+
+                localStorage.setItem('showChat', JSON.stringify(false));
+
+                //-- 2) 로컬스토리지 삭제
+                // localStorage.removeItem(`gSeq${gSeq}`);
+
+                //-- 3) 실시간 알람 종료
+                props.sse?.addEventListener('close', (event: any) => {
+                    console.log('logout >>> 실시간 알람 종료');
+                    // props.sse.close();
+                });
+
+                // logout 확정
+                setLogoutConfirm(true);
             } else {
                 return;
             }
-            //; 2. 유저
-        } else if (window.confirm('로그아웃하시겠습니까 ?')) {
-            // console.log('uSeqData ::::::', uSeqData);
-
-            //-- 0) 채팅창 끄기
-            props.setShowChat(false);
-            // 로컬 스토리지에 값을 저장하기
-            localStorage.setItem('showChat', JSON.stringify(false));
-
-            //-- 1) 채팅 종료
-            props.socket?.emit('logout', uSeqData);
-            // props.socket.emit('logout', { uSeq: 8 });
-
-            localStorage.setItem('showChat', JSON.stringify(false));
-
-            //-- 2) 로컬스토리지 삭제
-            // localStorage.removeItem(`gSeq${gSeq}`);
-
-            //-- 3) 실시간 알람 종료
-            props.sse?.addEventListener('close', (event: any) => {
-                console.log('logout >>> 실시간 알람 종료');
-                // props.sse.close();
-            });
-
-            // logout 확정
-            setLogoutConfirm(true);
-        } else {
-            return;
         }
     };
 
