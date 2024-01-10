@@ -123,8 +123,6 @@ $ npm start
 <img src="https://img.shields.io/badge/nginx-%23009639.svg?style=flat-square&logo=nginx&logoColor=white"/>
 </p>
 
-
-
 # API 명세서
 
 <img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=Swagger&logoColor=white">
@@ -141,8 +139,8 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 노션 내 회의 / 칸반보드 / 트러블 슈팅 등 문서화
 
-| 회의                                                                                                           | 칸반보드                                                                                                       | 트러블 슈팅                                                                                                    |
-| -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| 회의                                                                                                              | 칸반보드                                                                                                          | 트러블 슈팅                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | ![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/107044870/5c3d7670-3c9d-42f7-9ca4-1e61a81ca6ba) | ![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/107044870/b804b087-cded-4bdb-b4a6-4015cfa61cd2) | ![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/107044870/2e97c160-a247-456a-92ac-167c4057911d) |
 
 # Functions
@@ -170,16 +168,36 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 # 주요 기능
 
 ✅ 헤더
-![image](https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/d11f906c-5272-4396-a240-074c02df2380)
-![image](https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/42836b14-9363-4345-a7c2-ad04081a8d99)
+![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/2a80a778-b24a-49ff-84ea-2895aded4787)
+![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/222d21b1-62d8-4c74-b82a-85801f7a53ed)
 
 - 로고
 - 초대 링크 input
-- 메인 페이지 연결
-- 모임 페이지 연결
-- 마이페이지 연결
+- 메인, 그룹, 마이 페이지 연결
 - 로그인 여부 및 업로드 여부에 따른 헤더 프로필사진 변경
 - 모바일 헤더 추가에 따른 반응형 적용
+
+✅ 실시간 그룹 채팅
+
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/9d237855-7b0a-4708-a4cc-3959994a85d1' width='300px' height='200px' />
+
+- Socket.io-client를 통한 실시간 그룹 채팅방 구현
+- local storage에 그룹 시퀀스별로 미확인 메세지 개수 저장
+- 최신순 및 리더순으로 채팅방 정렬하는 토글 기능 구현
+- 채팅방 참여 시 메세지 읽음 처리, 현재 접속한 유저 확인 가능, 메세지 내역 load
+- 메세지 전송 시, 클라이언트 측에서 이벤트를 emit하여 서버 측으로 데이터 전송
+- 로그아웃 시, 소켓 연결 종료
+
+✅ 실시간 알람
+
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/ac6e2a55-7060-48ad-b24d-ce475de76ac6' width='300px' height='200px' />
+
+- SSE(Server-Sent Event)를 통한 실시간 알람 구현
+- 최초 로그인 시, 토큰 값을 전송하여 SSE 연결 요청
+- local storage에 미확인 메세지 개수 저장
+- 미확인 알람 전체 리스트를 state로 관리
+- 실시간으로 알람 수신 시, useState 함수를 활용하여 업데이트
+- `읽음` 버튼 클릭 시, Axios를 통한 REST API의 **`DELETE`** 요청으로 해당 알람 삭제 처리
 
 ✅ 관리자 페이지
 
@@ -196,7 +214,9 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 메인페이지
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/e8a6c282-7d47-4051-8ca6-c4abbb110baa' width='300px' height='200px' />
+<img width="686" alt="메인" src="https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/31fcbb9d-5af7-46a5-91ed-b12abde414f6">
+
+<img width="686" alt="메인" src="https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/24c39ba2-c1c4-4fa5-a72c-3c0036c84981">
 
 - 사용자/모임별 미션 조회
 - 마이페이지 정보 반영
@@ -204,16 +224,14 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 소셜 로그인 & 회원가입
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/fc4fb772-2765-4b17-9ee9-bb79587c07bd' width='300px' height='200px' />
+<img width="373" alt="로그인" src="https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/08ae5c0d-2c76-4598-a10c-9e5f2841a0bf">
 
-- Google 로그인
-- Kakao 로그인
 - Naver 로그인
 - 쿠키를 통한 로그인 여부 구분
 
 ✅ 마이페이지
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/b4e859ef-29ac-4cd4-ade7-3f8efc6ce432' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/8bcab75b-2562-4b32-a613-9daf0764bb4e' width='300px' height='200px' />
 
 - 프로필 사진 설정
 - 닉네임 & 자기소개 설정
@@ -224,14 +242,14 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 모임 검색
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/6ed72434-8939-4045-b8b3-b0aad13bba84' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/15e522f2-de95-430d-835c-319483e59fce' width='300px' height='200px' />
 
 - 카테고리 필터링
 - 전체 검색
 
 ✅ 모임 CRUD
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/e542b279-277b-4a2a-8724-500067ff3783' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/e0e1c417-0d30-4e47-ab31-3b9c4700cfb3' width='300px' height='200px' />
 
 - 모임 생성
 - 모임 정보 수정
@@ -241,13 +259,13 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 모임 가입 & 탈퇴
 
- <img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/39e5b4da-c393-499c-a3a7-c2b2f9011e0b' width='300px' height='200px' />
+ <img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/d9c28c82-7442-4141-9c2c-f785b2fed467' width='300px' height='200px' />
 
 - 링크 초대 가입 기능 추가
 
 ✅ 모임 게시판 CRUD
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/c12e1964-b288-474f-a26d-fc10a0490042' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/a3f7cca0-2e34-40db-8ca3-a0f66e3e9d00' width='300px' height='200px' />
 
 - 미션 게시판
 - 인증 시 랭킹 반
@@ -257,7 +275,7 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 댓글 CRUD
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/bf758276-15f9-4401-9986-d4315a27dddd' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/867972bd-931d-44a8-abcb-3340ab0c5a53' width='300px' height='200px' />
 
 - 댓글 추가
 - 댓글 수정
@@ -282,8 +300,8 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 ![image](https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/3515f133-f7b3-4ecb-9e0b-0eb4d8f44503)
 
 # 🗄️ ERD
+
 - 신고기능을 위한 complain table 추가
-  
+
 [ERD](https://www.erdcloud.com/d/koATx2ojGQyH5Y62S)
 ![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/107044870/bee84bec-fb96-4ddb-9e2f-f75c7a893209)
-
