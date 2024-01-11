@@ -47,22 +47,26 @@ exports.alarming = async (req, res) => {
         const datas = JSON.parse(data);
         console.log('datas>>>>>>>>>>', datas);
         res.write(
-          'event: commentAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
+          `event: commentAlarm${parseInt(datas.receiver)}\n` +
+            `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
         res.write(
-          'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
+          `event: alarmCount${parseInt(datas.receiver)}\n` +
+            `data: ${parseInt(datas.alarmCount)}\n\n`
         );
       });
 
       // 모임 추방시 메세지 전송
-      await sub.subscribe('group-alarm', (data) => {
+      await sub.subscribe(`group-alarm${uSeq}`, (data) => {
         console.log('message', message);
         const datas = JSON.parse(data);
         res.write(
-          'event: groupAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
+          `event: groupAlarm${parseInt(datas.receiver)}\n` +
+            `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
         res.write(
-          'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
+          `event: alarmCount${parseInt(datas.receiver)}\n` +
+            `data: ${parseInt(datas.alarmCount)}\n\n`
         );
       });
       // });
