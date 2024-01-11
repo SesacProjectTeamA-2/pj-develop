@@ -107,12 +107,14 @@ exports.delAlarm = async (req, res) => {
 
     const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
 
+    const alarmArray = JSON.parse(allAlarm);
+
     // 해당 페이지 이동위한 gbSeq
     if (value.gbSeq) {
       return res.send({
         isSuccess: true,
         gbSeq: value.gbSeq,
-        alarmList: JSON.stringify(allAlarm),
+        alarmList: alarmArray,
       });
     } else {
       return res.send({
