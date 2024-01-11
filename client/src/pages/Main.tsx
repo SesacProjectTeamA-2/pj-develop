@@ -129,33 +129,36 @@ export default function Main({
             });
 
             //-- 메세지
-            eventSource.addEventListener('commentAlarm', (event: any) => {
-                // console.log('commentAlarm ::::', event);
-                // console.log('commentAlarm event.data ::::', event.data);
+            eventSource.addEventListener(
+                `commentAlarm${uSeq}`,
+                (event: any) => {
+                    // console.log('commentAlarm ::::', event);
+                    // console.log('commentAlarm event.data ::::', event.data);
 
-                const eventData = JSON.parse(event.data);
+                    const eventData = JSON.parse(event.data);
 
-                let updateData = [];
-                for (let i = 0; i < eventData.length; i++) {
-                    updateData.push(JSON.parse(eventData[i]));
+                    let updateData = [];
+                    for (let i = 0; i < eventData.length; i++) {
+                        updateData.push(JSON.parse(eventData[i]));
+                    }
+
+                    setAlarmList([...updateData]);
+
+                    // setCommentAlarm([...updateData]);
+
+                    // key 값을 변경하여 리렌더링 유도
+                    // setKey((prevKey: any) => prevKey + 1);
+
+                    console.log('commentAlarm 이벤트 받아옴 >>>>>', uSeq);
+                    // commentTime: '2023-12-29T02:34:19.680Z';
+                    // gSeq: '3';
+                    // gbSeq: '22';
+                    // type: 'comment';
+                    // uName: '테스트111111';
+
+                    // setCommentAlarm(eventData);
                 }
-
-                setAlarmList([...updateData]);
-
-                // setCommentAlarm([...updateData]);
-
-                // key 값을 변경하여 리렌더링 유도
-                // setKey((prevKey: any) => prevKey + 1);
-
-                // console.log('commentAlarm 이벤트 받아옴 >>>>>', commentAlarm);
-                // commentTime: '2023-12-29T02:34:19.680Z';
-                // gSeq: '3';
-                // gbSeq: '22';
-                // type: 'comment';
-                // uName: '테스트111111';
-
-                // setCommentAlarm(eventData);
-            });
+            );
 
             //-- 댓글 수신 시, 카운트 업데이트
             eventSource.addEventListener('alarmCount', (event: any) => {
