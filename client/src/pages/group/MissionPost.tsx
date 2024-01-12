@@ -10,7 +10,6 @@ import '../../styles/scss/pages/group/post.scss';
 
 import GroupHeader from '../../components/group/content/GroupHeader';
 import EditorDraft from '../../components/common/EditorDraft';
-// import Editor from './Editor';
 import { GroupDetailType, MissionType } from 'src/types/types';
 import SuccessModal from 'src/components/common/modal/SuccessModal';
 import {
