@@ -428,8 +428,6 @@ export default function Header(props: any) {
         } else {
             //; 2. 유저
             if (window.confirm('로그아웃하시겠습니까 ?')) {
-                // console.log('uSeqData ::::::', uSeqData);
-
                 //-- 0) 채팅창 끄기
                 props.setShowChat(false);
                 // 로컬 스토리지에 값을 저장하기
@@ -439,8 +437,12 @@ export default function Header(props: any) {
                 props.socket?.emit('logout', uSeqData);
                 // props.socket.emit('logout', { uSeq: 8 });
 
-                //~[추후] joinRoom 재확인
-                props.socket?.emit('joinRoom');
+                // console.log('********** updatedGSeqList **********', gSeqList);
+
+                props.socket?.emit('joinRoom', {
+                    isSignup: false,
+                    gSeq: gSeqList,
+                });
 
                 localStorage.setItem('showChat', JSON.stringify(false));
 

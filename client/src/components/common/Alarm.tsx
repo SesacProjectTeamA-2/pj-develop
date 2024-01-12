@@ -315,8 +315,6 @@ any) {
     //] 링크 이동
     const nvg = useNavigate();
 
-    // const [key, setKey] = useState(0); // key 상태 추가
-
     const linkToHandler = (
         gSeq: any,
         category: string,
@@ -331,25 +329,14 @@ any) {
         // key 값을 변경하여 리렌더링 유도
         setKey((prevKey: any) => prevKey + 1);
 
-        //~[추후] 추가
         category === 'mission'
-            ? nvg(
-                  `/board/${Number(gSeq)}/${category}/${Number(mSeq)}/${Number(
-                      gbSeq
-                  )}`
-              )
-            : nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`);
-
-        // /board/:gSeq/mission/:mSeq/:gbSeq"
+            ? nvg(`/board/${gSeq}/${category}/${Number(mSeq)}/${Number(gbSeq)}`)
+            : nvg(`/board/${gSeq}/${category}/${Number(gbSeq)}`);
     };
 
     return (
         <div className="alarm-wrapper">
             <div className="panel">
-                {/* <div className="header flex">
-                    <span className="title">Notifications</span>
-                </div> */}
-
                 <div className="notifications clearfix">
                     <div className="line"></div>
                     <svg
@@ -407,15 +394,6 @@ any) {
                                                 )
                                             }
                                         >
-                                            {/* <Link
-                                                to={`/board/${Number(
-                                                    alarm.gSeq
-                                                )}/${alarm.category}/${Number(
-                                                    alarm.gbSeq
-                                                )}`}
-                                                className="alarm-link"
-                                                key={`${alarm.gSeq}-${alarm.category}-${alarm.gbSeq}`}
-                                            > */}
                                             <div className="alarm-title-text-wrapper">
                                                 <span className="alarm-title-text">
                                                     {alarm.title}
@@ -426,7 +404,6 @@ any) {
                                                 <b>{alarm.uName}</b> 님이 댓글을
                                                 남겼습니다.
                                             </span>
-                                            {/* </Link> */}
                                         </p>
                                     ) : (
                                         <></>
