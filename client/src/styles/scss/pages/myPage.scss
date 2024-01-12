@@ -27,9 +27,64 @@ button {
     position: relative;
     margin-bottom: 10%;
     width: 100%;
+
     @include media('<740px') {
         flex-direction: column;
         align-items: center;
+
+        #profilePic-user {
+            width: 23vw;
+            height: 12vh;
+            margin-bottom: 2rem;
+        }
+    }
+
+    @include media('<650px') {
+        #profilePic-user {
+            width: 25vw;
+            height: 12vh;
+            margin-bottom: 2rem;
+        }
+    }
+
+    @include media('<550px') {
+        #profilePic-user {
+            width: 30vw;
+            height: 12vh;
+            margin-bottom: 2rem;
+        }
+    }
+
+    @include media('<450px') {
+        #profilePic-user {
+            width: 33vw;
+            height: 12vh;
+            margin-bottom: 2rem;
+        }
+    }
+
+    @include media('<400px') {
+        #profilePic-user {
+            width: 38vw;
+            height: 12vh;
+            margin-bottom: 2rem;
+        }
+    }
+
+    @include media('<350px') {
+        #profilePic-user {
+            width: 42vw;
+            height: 12vh;
+            margin-bottom: 2rem;
+        }
+    }
+
+    @include media('<300px') {
+        #profilePic-user {
+            width: 50vw;
+            height: 10vh;
+            margin-bottom: 2rem;
+        }
     }
 }
 
@@ -165,10 +220,18 @@ button {
 .input-label {
     display: flex;
     flex-direction: row;
-    align-items: start;
-    width: 35vw;
+    // align-items: start;
+    width: 47vw;
     justify-content: start;
     margin: 5%;
+
+    @include media('<550px') {
+        width: 57vw;
+    }
+
+    @include media('<350px') {
+        width: 65vw;
+    }
 }
 // nickname
 #input-area {
@@ -179,7 +242,7 @@ button {
 #text-area {
     height: 100%;
     font-size: large;
-    height: 20vh;
+    height: 12vh;
 }
 // phrase
 #text-area2 {
@@ -314,7 +377,7 @@ button {
     background-color: $color-gray2;
     color: $color-gray7;
     width: fit-content;
-    height: 5vh;
+    height: 3vh;
     border-radius: 5px;
     font-weight: light;
     text-align: center;
@@ -333,13 +396,14 @@ button {
     flex-direction: row;
     @include media('<800px') {
         font-size: 12px;
+        width: 100%;
     }
 }
 #phraseMode-btn1,
 #phraseMode-btn2 {
     margin: 5%;
     text-align: center;
-    padding: 0 10px;
+    padding: 0 20px;
 }
 // Phrase END
 
@@ -404,9 +468,9 @@ td {
     background-color: white;
     color: #acacac;
     width: 20vw;
-    height: 5vh;
+    height: 4vh;
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     margin-bottom: 3%;
     display: flex;
     justify-content: center;
@@ -432,4 +496,8 @@ td {
     bottom: 4%;
     z-index: 10;
     width: 100%;
+}
+
+#myPage-edit-btn {
+    width: 20rem;
 }
