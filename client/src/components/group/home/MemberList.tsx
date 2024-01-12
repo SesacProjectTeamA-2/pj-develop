@@ -66,7 +66,10 @@ export default function MemberList({
                     </span>
                 </div>
             </div>
-            <div className="main-content  bottom-group-home">
+            <div
+                className="main-content bottom-group-home"
+                style={{ alignItems: 'start' }}
+            >
                 <ul className="list-unstyled">
                     {/* 모임장 */}
                     <li>

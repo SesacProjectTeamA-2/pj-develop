@@ -203,6 +203,13 @@
         align-items: center;
         color: white;
         // font-weight: bold;
+
+        @media (min-width: 1700px) and (max-width: 2000px) {
+            width: 4rem !important;
+        }
+        @media (min-width: 2000px) {
+            width: 3rem !important;
+        }
     }
 
     img {

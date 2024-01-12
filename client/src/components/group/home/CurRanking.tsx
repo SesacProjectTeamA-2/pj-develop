@@ -8,23 +8,6 @@ export default function CurRanking({
     userImgSrc,
     isLeader,
 }: any) {
-    // // 랜덤 색상을 선택하는 함수
-    // const getRandomColor = () => {
-    //     const colors = [
-    //         '#ff6d59',
-    //         '#ffcc77',
-    //         '#83cb77',
-    //         '#ff7373',
-    //         '#7fbeeb',
-    //         '#f399ca',
-    //         '#b78be3',
-    //         '#c4c4c4',
-    //     ];
-
-    //     const randomIndex = Math.floor(Math.random() * colors.length);
-    //     return colors[randomIndex];
-    // };
-
     return (
         <div className="wrapper">
             <div className="upper-content">

@@ -57,7 +57,7 @@ export default function SideBarGroupLeader({
             if (response.data.success) {
                 // API로부터 gLink를 받아서 inviteCode에 설정
                 setInviteCode(response.data.gLink);
-                // console.log('inviteCode:', inviteCode); // 이 줄을 추가
+                console.log('######inviteCode:', inviteCode);
             } else {
                 // 에러 메시지 처리
                 toast.error('초대코드를 가져오는 데 실패했습니다.', {
@@ -91,7 +91,10 @@ export default function SideBarGroupLeader({
                     Menu
                 </span>
                 <div className="drop-down-menu-box">
-                    <a className="drop-down-menu-container">
+                    <a
+                        className="drop-down-menu-container"
+                        onClick={onClickInviteButton}
+                    >
                         <CopyToClipboard
                             text={inviteCode}
                             onCopy={() =>
@@ -116,15 +119,6 @@ export default function SideBarGroupLeader({
                                     초대
                                 </span>
                             </div>
-                            {/* <svg
-                                        viewBox="0 0 866 1000"
-                                        fill="currentColor"
-                                        height="1em"
-                                        width="1em"
-                                        className="open-icon"
-                                    >
-                                        <path d="M63 280l370 356 372-356c14.667-17.333 30.667-17.333 48 0 17.333 14.667 17.333 30.667 0 48L457 720c-14.667 14.667-30.667 14.667-48 0L13 328c-17.333-17.333-17.333-33.333 0-48 16-16 32.667-16 50 0" />
-                                    </svg> */}
                         </CopyToClipboard>
                     </a>
                 </div>
