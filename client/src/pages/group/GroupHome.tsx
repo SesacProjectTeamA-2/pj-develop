@@ -148,53 +148,59 @@ export default function GroupHome({ socket, setKey, key }: any) {
         getGroup();
     }, []);
 
-    //] 모임 가입하기
-    const postGroupJoin = async () => {
-        const input = { gSeq };
-        const res = await axios
-            .post(`${process.env.REACT_APP_DB_HOST}/group/join`, input, {
-                headers: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            })
-            .then((res) => {
-                console.log(res.data);
-                const { success, msg } = res.data;
-
-                if (!success) {
-                    toast.error(msg, {
-                        duration: 2000,
-                    });
-                } else {
-                    toast.success(msg, {
-                        duration: 2000,
-                    });
-
-                    //-- localStorage 채팅방 미확인 메세지 수 0으로 세팅
-                    localStorage.setItem(`gSeq${gSeq}`, '0');
-
-                    setJoinSuccess(true);
-
-                    // window.location.reload(); 대신에,
-                    // key 값을 변경하여 리렌더링 유도
-                    setKey((prevKey: any) => prevKey + 1);
-                }
-            });
-    };
-
     //] 가입 성공 시, 채팅방 입장
     const [joinSuccess, setJoinSuccess] = useState(false);
 
+    //] 모임 가입하기
+    const postGroupJoin = async () => {
+        const input = { gSeq };
+
+        try {
+            const res = await axios.post(
+                `${process.env.REACT_APP_DB_HOST}/group/join`,
+                input,
+                {
+                    headers: {
+                        Authorization: `Bearer ${uToken}`,
+                    },
+                }
+            );
+
+            const { success, msg } = res.data;
+
+            console.log('success', success);
+
+            if (success) {
+                toast.success(msg, {
+                    duration: 2000,
+                });
+
+                //-- localStorage 채팅방 미확인 메세지 수 0으로 세팅
+                localStorage.setItem(`gSeq${gSeq}`, '0');
+
+                setJoinSuccess(true);
+            } else {
+                toast.error(msg, {
+                    duration: 2000,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    console.log(joinSuccess);
+
     useEffect(() => {
         if (joinSuccess) {
-            console.log('joinRoom gSeq :::::', gSeq);
-            console.log('joinRoom에 전송할 데이터 >>>', {
+            console.log('joinSuccess gSeq :::::', gSeq);
+            console.log('joinSuccess 전송할 데이터 ######', {
                 gSeq: Number(gSeq),
                 isSignup: 'true',
             });
 
             socket?.emit('joinRoom', {
-                gSeq: gSeq,
+                gSeq: Number(gSeq),
                 isSignup: 'true',
             });
 
@@ -202,6 +208,10 @@ export default function GroupHome({ socket, setKey, key }: any) {
             socket?.on('loginNotice', (data: any) => {
                 console.log('joinRoom event received on client', data);
             }); // {msg: '테스트1님이 모임에 참여하셨어요!'}
+
+            // window.location.reload(); 대신에,
+            // key 값을 변경하여 리렌더링 유도
+            setKey((prevKey: any) => prevKey + 1);
         }
     }, [joinSuccess]);
 
