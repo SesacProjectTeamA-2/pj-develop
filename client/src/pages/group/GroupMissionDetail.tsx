@@ -117,6 +117,7 @@ export default function GroupMissionDetail() {
     const [commentInput, setCommentInput] = useState({
         gbSeq,
         gbcContent: '',
+        gSeq: Number(gSeq),
     });
 
     const commentOnChange = (e: any) => {
