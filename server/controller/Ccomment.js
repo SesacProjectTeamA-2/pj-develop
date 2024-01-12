@@ -103,6 +103,7 @@ exports.createComment = async (req, res) => {
     const commentTime = new Date();
     const receiver = groupBoard.uSeq;
 
+    console.log('gSeq>>>>>>>>>>>>>>>', gSeq);
     // 자기 게시판에 댓글을 달았을 경우는 제외함.
     if (receiver !== uSeq) {
       const result = await redisCli.lPush(
@@ -131,6 +132,9 @@ exports.createComment = async (req, res) => {
       // redis pub 처리
       // 모든 알람 리스트
       const alarms = await redisCli.lRange(`user${receiver}`, 0, -1);
+
+      // 1. mission 일때, gSeq
+      // 2. delete , list가 안받아짐
 
       await redisCli.publish(
         'comment-alarm',
