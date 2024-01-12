@@ -163,7 +163,11 @@ $background: #f7f7f7;
 
     transition: transform 500ms;
 
-    @media (max-width: 800px) {
+    @media (max-width: 400px) {
+        left: -16rem;
+    }
+
+    @media (min-width: 400px) and (max-width: 800px) {
         left: -18rem;
     }
 
@@ -255,9 +259,14 @@ $background: #f7f7f7;
     box-shadow: 0 0 8rem 0 rgba(black, 0.1),
         0rem 2rem 4rem -3rem rgba(black, 0.5);
 
-    @media (max-width: 400px) {
+    @media (max-width: 300px) {
         width: 70vw;
         right: 18.4rem;
+    }
+
+    @media (min-width: 300px) and (max-width: 400px) {
+        width: 70vw;
+        right: 16rem;
     }
 
     @media (min-width: 400px) and (max-width: 500px) {
