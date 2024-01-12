@@ -45,21 +45,28 @@ exports.alarming = async (req, res) => {
         const datas = JSON.parse(data);
 
         res.write(
-          'event: commentAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
+          `event: commentAlarm${parseInt(datas.receiver)}\n` +
+            `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
         res.write(
-          'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
+          `event: alarmCount${parseInt(datas.receiver)}\n` +
+            `data: ${parseInt(datas.alarmCount)}\n\n`
         );
       });
 
       // 모임 추방시 메세지 전송
-      await sub.subscribe('group-alarm', (data) => {
+
+      await sub.subscribe(`group-alarm${uSeq}`, (data) => {
+        console.log('message', message);
+
         const datas = JSON.parse(data);
         res.write(
-          'event: groupAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
+          `event: groupAlarm${parseInt(datas.receiver)}\n` +
+            `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
         res.write(
-          'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
+          `event: alarmCount${parseInt(datas.receiver)}\n` +
+            `data: ${parseInt(datas.alarmCount)}\n\n`
         );
       });
       // });
@@ -100,12 +107,14 @@ exports.delAlarm = async (req, res) => {
 
     const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
 
+    const alarmArray = JSON.parse(allAlarm);
+
     // 해당 페이지 이동위한 gbSeq
     if (value.gbSeq) {
       return res.send({
         isSuccess: true,
         gbSeq: value.gbSeq,
-        alarmList: JSON.stringify(allAlarm),
+        alarmList: alarmArray,
       });
     } else {
       return res.send({

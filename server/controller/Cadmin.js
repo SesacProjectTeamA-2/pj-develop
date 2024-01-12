@@ -90,10 +90,13 @@ exports.blackUser = async (req, res) => {
     const allAlarm = await redisCli.lRange(`user${receiver}`, 0, -1);
 
     await redisCli.publish(
-      'group-alarm',
+
+      `group-alarm${receiver}`,
       JSON.stringify({
         alarmCount: result,
         allAlarm,
+        receiver,
+
       })
     );
 
