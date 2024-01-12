@@ -208,10 +208,10 @@
 }
 
 .ranking-list {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    // display: grid;
+    // grid-template-columns: repeat(2, 1fr);
     display: flex;
-    justify-content: start;
+    // justify-content: start;
 
     img {
         @include box(40px);
@@ -360,7 +360,8 @@
 .bottom-group-home {
     margin-bottom: 3rem;
     justify-content: center;
-    align-items: center;
+    align-items: start;
+    display: flex;
 
     .cur-ranking-content {
         @include media('<600px') {
