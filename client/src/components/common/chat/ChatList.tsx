@@ -136,7 +136,7 @@ export default function ChatList({
             }
 
             setGSeqList(updatedGSeqList);
-            console.log('ggggggg>>>>>>>', updatedGSeqList);
+            // console.log('ggggggg>>>>>>>', updatedGSeqList);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -347,7 +347,7 @@ export default function ChatList({
 
     useEffect(() => {
         if (gSeqList?.length > 0) {
-            console.log('********** updatedGSeqList **********', gSeqList);
+            // console.log('********** updatedGSeqList **********', gSeqList);
 
             socket?.emit('joinRoom', { gSeq: gSeqList });
         }
