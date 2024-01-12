@@ -90,9 +90,6 @@ exports.chatSocket = async (io, socket) => {
         // 모임별 채팅방 입장시
         socket.on('joinRoom', async (data) => {
           try {
-            console.log('joinroom data>>>>>>>>>', data);
-
-            console.log(groupChat.adapter.rooms.get(`room${data.gSeq}`));
             // 1. 모임가입/ 모임생성시 : 방참여/ gSeq 추가
             if (data.isSignup === 'true') {
               // gSeq 배열 추가
@@ -139,7 +136,6 @@ exports.chatSocket = async (io, socket) => {
 
               userDatas = await Promise.all(userDatasPromises);
 
-              console.log(userDatas);
               const uNameInRoom = userDatas.map((user) => user.uName);
 
               console.log(`room${gSeq}에 접속된 아이디 목록`, uNameInRoom);
@@ -150,19 +146,19 @@ exports.chatSocket = async (io, socket) => {
               if (listLength !== 0) {
                 const messages = await redisCli.lRange(`room${gSeq}`, 0, -1);
                 // 가져온 메시지를 파싱
-                console.log(messages);
-                console.log(userInfo.loginTime);
                 const parsedMessages = messages
                   .map((message) => JSON.parse(message))
                   .filter(
                     (parsedMessage) =>
                       new Date(parsedMessage.timeStamp) >= userInfo.loginTime
                   );
-                console.log('파싱된 메세지', parsedMessages);
+
+                socket.emit('loginUser', {
+                  loginUser: userDatas,
+                });
 
                 socket.emit('joinRoom', {
                   allMsg: parsedMessages,
-                  loginUser: userDatas,
                 });
               } else {
                 //room data가 없는경우
@@ -247,8 +243,6 @@ exports.chatSocket = async (io, socket) => {
             const datas = JSON.parse(data);
             const gSeq = datas.gSeq;
             const content = datas.content;
-
-            console.log('#########', datas);
 
             socket.emit('newMsg', { gSeq, content });
           });

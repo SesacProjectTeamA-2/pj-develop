@@ -54,9 +54,6 @@ exports.blackUser = async (req, res) => {
     const uSeq = req.params.uSeq;
     const { guBanReason, gSeq } = req.body;
 
-    console.log('uSEQ>>>>>>>>', uSeq);
-    console.log('gSEQ>>>>>>>>', gSeq);
-
     // 블랙 유저 data 처리
     await GroupUser.update(
       {
@@ -93,11 +90,13 @@ exports.blackUser = async (req, res) => {
     const allAlarm = await redisCli.lRange(`user${receiver}`, 0, -1);
 
     await redisCli.publish(
+
       `group-alarm${receiver}`,
       JSON.stringify({
         alarmCount: result,
         allAlarm,
         receiver,
+
       })
     );
 

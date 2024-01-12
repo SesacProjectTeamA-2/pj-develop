@@ -441,7 +441,6 @@ exports.createBoard = async (req, res) => {
     // 클라이언트에서 요청 보낼때 body로 mSeq, gSeq, gbCategory, imageUrl  값 넣어서 보내주기
     const gSeq = req.body.gSeq;
     const gbCategory = req.body.gbCategory;
-    console.log('gbImg', req.body);
     if (!token) {
       res.send({
         success: false,
@@ -536,7 +535,6 @@ exports.boardImg = async (req, res) => {
   try {
     if (req.file.location) {
       const imageUrl = req.file.location; // 업로드된 이미지의 S3 URL
-      console.log(imageUrl);
 
       res.send({ result: true, message: '이미지 업로드 성공', imageUrl });
     } else {

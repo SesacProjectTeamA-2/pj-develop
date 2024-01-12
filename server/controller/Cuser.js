@@ -196,7 +196,6 @@ exports.getLoginNaverRedirect = async (req, res) => {
             uEmail: userEmail,
           },
         });
-        console.log('>>>>>>>>>>>>>>>>', alreadyUser);
 
         // db에 값 있으면 이미 회원가입 한 유저
         if (alreadyUser) {
