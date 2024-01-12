@@ -130,7 +130,7 @@ export default function ChatRoom({
         //-- localStorage 에서 해당 채팅방 메세지 읽음 처리
         localStorage.setItem(`gSeq${nowGSeq}`, '0');
 
-        //-- [추후] loginUser 이벤트에 대한 리스너 추가
+        //-- loginUser 이벤트에 대한 리스너 추가
         socket?.on('loginUser', (data: any) => {
             console.log('loginUser #########', data); // 서버에서 보낸 data)
 
