@@ -705,7 +705,6 @@ exports.deleteGroup = async (req, res) => {
 
     const { gSeq, newLeaderUSeq } = req.body;
 
-    console.log('req.body>>>>>>>>>>>>>', req.body);
     // 1) 현재 삭제하는 사람이 모임장인지 확인
     const selectOneGroupUser = await GroupUser.findOne({
       where: {

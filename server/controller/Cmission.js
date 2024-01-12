@@ -276,7 +276,7 @@ exports.editMission = async (req, res) => {
   try {
     const gSeq = req.params.gSeq;
     const { missionArray, deleteList } = req.body;
-    console.log('missionArray>>>>>>>>>>>>>>>>>', missionArray);
+
     // 로그인 여부 확인
     if (req.headers.authorization) {
       let token = req.headers.authorization.split(' ')[1];
