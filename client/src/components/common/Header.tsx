@@ -439,6 +439,9 @@ export default function Header(props: any) {
                 props.socket?.emit('logout', uSeqData);
                 // props.socket.emit('logout', { uSeq: 8 });
 
+                //~[추후] joinRoom 재확인
+                props.socket?.emit('joinRoom');
+
                 localStorage.setItem('showChat', JSON.stringify(false));
 
                 //-- 2) 로컬스토리지 삭제
