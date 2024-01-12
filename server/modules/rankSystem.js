@@ -106,6 +106,9 @@ module.exports = {
               (userScore.guNowScore / missionTotal.gTotalScore) * 100;
             userDoneRates.push(userDoneRate);
           }
+
+          userDoneRates.sort((a, b) => b - a);
+
           return userDoneRates;
         } else {
           const userScore = await GroupUser.findOne({
