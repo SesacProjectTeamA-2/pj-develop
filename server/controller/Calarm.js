@@ -44,6 +44,7 @@ exports.alarming = async (req, res) => {
       await sub.subscribe('comment-alarm', (data) => {
         const datas = JSON.parse(data);
 
+        console.log('>>>>>>>>>>>', datas);
         res.write(
           `event: commentAlarm${parseInt(datas.receiver)}\n` +
             `data:${JSON.stringify(datas.allAlarm)}\n\n`
@@ -106,8 +107,10 @@ exports.delAlarm = async (req, res) => {
     console.log('redis 데이터 삭제 완료', result);
 
     const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
+    console.log(allAlarm);
+    const alarmArray = allAlarm.map((item) => JSON.parse(item));
 
-    const alarmArray = JSON.parse(allAlarm);
+    console.log(alarmArray);
 
     // 해당 페이지 이동위한 gbSeq
     if (value.gbSeq) {

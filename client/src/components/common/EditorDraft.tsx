@@ -44,8 +44,8 @@ export default function EditorDraft({
         if (blocksFromHtml) {
             const { contentBlocks, entityMap } = blocksFromHtml;
             const contentState = ContentState.createFromBlockArray(
-                contentBlocks
-                // entityMap
+                contentBlocks,
+                entityMap
             );
 
             // ContentState를 EditorState기반으로 새 개체를 반환.
