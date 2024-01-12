@@ -49,6 +49,9 @@ December 08, 2023 ~ January 04, 2023
     - 미확인 메세지 개수 데이터 관리
     - 채팅방 목록 정렬하는 토글 기능 구현
   - 실시간 알람
+    - sse 연결 요청 및 종료
+    - 미확인 알람 개수 데이터 관리
+    - 읽음 처리
   - 모임 CRUD
     - 모임 생성, 수정, 삭제
     - 모임 상세화면 조회
@@ -181,7 +184,7 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 헤더
 ![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/2a80a778-b24a-49ff-84ea-2895aded4787)
-![image](https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/222d21b1-62d8-4c74-b82a-85801f7a53ed)
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/222d21b1-62d8-4c74-b82a-85801f7a53ed' width='500px' height='350px' />
 
 - 로고
 - 초대 링크 input
@@ -191,7 +194,7 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 실시간 그룹 채팅
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/9d237855-7b0a-4708-a4cc-3959994a85d1' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/9d237855-7b0a-4708-a4cc-3959994a85d1' width='500px' height='350px' />
 
 - Socket.io-client를 통한 실시간 그룹 채팅방 구현
 - local storage에 그룹 시퀀스별로 미확인 메세지 개수 저장
@@ -202,7 +205,7 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 실시간 알람
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/ac6e2a55-7060-48ad-b24d-ce475de76ac6' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/ac6e2a55-7060-48ad-b24d-ce475de76ac6' width='500px' height='350px' />
 
 - SSE(Server-Sent Event)를 통한 실시간 알람 구현
 - 최초 로그인 시, 토큰 값을 전송하여 SSE 연결 요청
@@ -213,22 +216,22 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 관리자 페이지
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/c51dd519-8d68-4b49-957e-a05f482c21d5' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/c51dd519-8d68-4b49-957e-a05f482c21d5' width='400px' height='300px' />
 
 - Chart.js 라이브러리를 활용하여 데이터 시각화
 - 관리자 권한으로 특정 유저 및 그룹 삭제 가능
 
 ✅ 인트로 페이지
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/4cfa54b6-2c05-40ae-8768-7d67784bbdfa' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/dc3f7efb-35f5-4dbe-a0a5-064198db9f3a' width='300px' height='200px' />
 
 - 동기 부여를 위한 영상/이미지 소스/글귀 첨부
 
 ✅ 메인페이지
 
-<img width="686" alt="메인" src="https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/31fcbb9d-5af7-46a5-91ed-b12abde414f6">
+<img width="450" alt="메인" src="https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/31fcbb9d-5af7-46a5-91ed-b12abde414f6">
 
-<img width="686" alt="메인" src="https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/24c39ba2-c1c4-4fa5-a72c-3c0036c84981">
+<img width="450" alt="메인" src="https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/24c39ba2-c1c4-4fa5-a72c-3c0036c84981">
 
 - 사용자/모임별 미션 조회
 - 마이페이지 정보 반영
@@ -243,7 +246,7 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 마이페이지
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/8bcab75b-2562-4b32-a613-9daf0764bb4e' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/8bcab75b-2562-4b32-a613-9daf0764bb4e' width='400px' height='300px' />
 
 - 프로필 사진 설정
 - 닉네임 & 자기소개 설정
@@ -254,14 +257,14 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 모임 검색
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/15e522f2-de95-430d-835c-319483e59fce' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/15e522f2-de95-430d-835c-319483e59fce' width='400px' height='300px' />
 
 - 카테고리 필터링
 - 전체 검색
 
 ✅ 모임 CRUD
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/e0e1c417-0d30-4e47-ab31-3b9c4700cfb3' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/e0e1c417-0d30-4e47-ab31-3b9c4700cfb3' width='400px' height='300px' />
 
 - 모임 생성
 - 모임 정보 수정
@@ -271,13 +274,13 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 모임 가입 & 탈퇴
 
- <img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/d9c28c82-7442-4141-9c2c-f785b2fed467' width='300px' height='200px' />
+ <img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/d9c28c82-7442-4141-9c2c-f785b2fed467' width='400px' height='300px' />
 
 - 링크 초대 가입 기능 추가
 
 ✅ 모임 게시판 CRUD
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/a3f7cca0-2e34-40db-8ca3-a0f66e3e9d00' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-develop/assets/95282021/a3f7cca0-2e34-40db-8ca3-a0f66e3e9d00' width='400px' height='300px' />
 
 - 미션 게시판
 - 인증 시 랭킹 반
@@ -296,7 +299,7 @@ Swagger 를 통해 개인별 Token 할당 후, api 전송 정보 및 결과값�
 
 ✅ 404 페이지
 
-<img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/a9f95b61-a7cc-42d8-b2d3-906b109d1232' width='300px' height='200px' />
+<img src='https://github.com/SesacProjectTeamA-2/pj-front/assets/86273626/a9f95b61-a7cc-42d8-b2d3-906b109d1232' width='400px' height='300px' />
 
 - 에러 상태 공지
 - 돌아가기 버튼 추가
