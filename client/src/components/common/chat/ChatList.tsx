@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Cookies } from 'react-cookie';
-import axios from 'axios';
+import axios, { all } from 'axios';
 import { Link } from 'react-router-dom';
 
 import '../../../styles/scss/components/chatlist.scss';
@@ -22,6 +22,8 @@ export default function ChatList({
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
+
+    const [gSeqList, setGSeqList] = useState<any>([]); // 참여 모임
 
     //=== 기존 방법
     // 1. axios 요청으로 LeaderGroup, memberGroup 모임 => 2개 state
@@ -88,7 +90,7 @@ export default function ChatList({
 
             setRecentMsg(formattedData);
 
-            console.log('roomInfoArray???????', roomInfoArray);
+            // console.log('roomInfoArray???????', roomInfoArray);
 
             const sortedAllGroupInfo = [...groupInfo].sort((a, b) => {
                 let unreadMsgCountA = localStorage.getItem(`gSeq${a.gSeq}`);
@@ -126,6 +128,15 @@ export default function ChatList({
 
             setAllGroupInfo(sortedAllGroupInfo);
             console.log('sortedAllGroupInfo>>>>>>>', sortedAllGroupInfo);
+
+            let updatedGSeqList: any = [];
+
+            for (let i = 0; i < sortedAllGroupInfo?.length; i++) {
+                updatedGSeqList.push(sortedAllGroupInfo[i].gSeq);
+            }
+
+            setGSeqList(updatedGSeqList);
+            console.log('ggggggg>>>>>>>', updatedGSeqList);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -299,6 +310,9 @@ export default function ChatList({
         setIsEnter(true);
     };
 
+    console.log('allGroupInfo>>>>>>', allGroupInfo);
+    console.log('isEnter>>>>>>', isEnter);
+
     useEffect(() => {
         if (!isEnter) {
             socket?.emit('roomInfo', { isOut: '' });
@@ -327,7 +341,17 @@ export default function ChatList({
                 // console.log('formattedData', formattedData);
             }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
         }
+
+        console.log('gSeqList>>>>>>>>>', gSeqList);
     }, []);
+
+    useEffect(() => {
+        if (gSeqList?.length > 0) {
+            console.log('********** updatedGSeqList **********', gSeqList);
+
+            socket?.emit('joinRoom', { gSeq: gSeqList });
+        }
+    }, [gSeqList]);
 
     console.log('ChatList에서 recentMsg', recentMsg);
 

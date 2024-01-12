@@ -6,6 +6,10 @@
     // top: 0;
     // left: 8rem;
 
+    @media (max-width: 300px) {
+        display: none;
+    }
+
     select,
     input,
     button {
