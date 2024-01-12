@@ -110,7 +110,6 @@ exports.chatSocket = async (io, socket) => {
             } else {
               // 2. 이미 가입되어 있는 경우 채팅방 입장.
               const gSeq = data.gSeq;
-
               console.log('rooms목록: ', groupChat.adapter.rooms);
               // 룸에 접속중인 소켓 로드 (접속중인 소켓 없을 때는 빈 배열 반환)
               const result = groupChat.adapter.rooms.get(`room${gSeq}`);
@@ -152,7 +151,6 @@ exports.chatSocket = async (io, socket) => {
                     (parsedMessage) =>
                       new Date(parsedMessage.timeStamp) >= userInfo.loginTime
                   );
-
                 socket.emit('loginUser', {
                   loginUser: userDatas,
                 });
@@ -164,6 +162,9 @@ exports.chatSocket = async (io, socket) => {
                 //room data가 없는경우
                 socket.emit('joinRoom', {
                   allMsg: '모임방 메세지 없음!',
+                });
+
+                socket.emit('loginUser', {
                   loginUser: userDatas,
                 });
               }

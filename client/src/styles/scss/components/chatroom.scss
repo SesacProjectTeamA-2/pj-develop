@@ -163,6 +163,10 @@ $background: #f7f7f7;
 
     transition: transform 500ms;
 
+    @media (max-width: 800px) {
+        left: -18rem;
+    }
+
     @media (min-width: 800px) and (max-width: 900px) {
         transform: translate(-22rem, -50%);
     }
@@ -197,6 +201,10 @@ $background: #f7f7f7;
 
     &:hover {
         transform: translate(-15rem, -50%);
+
+        @media (max-width: 800px) {
+            transform: translate(-5rem, -50%);
+        }
 
         @media (min-width: 800px) and (max-width: 900px) {
             transform: translate(-32rem, -50%);
@@ -247,13 +255,38 @@ $background: #f7f7f7;
     box-shadow: 0 0 8rem 0 rgba(black, 0.1),
         0rem 2rem 4rem -3rem rgba(black, 0.5);
 
+    @media (max-width: 400px) {
+        width: 70vw;
+        right: 18.4rem;
+    }
+
+    @media (min-width: 400px) and (max-width: 500px) {
+        width: 50vw;
+        right: 18rem;
+    }
+
+    @media (min-width: 500px) and (max-width: 700px) {
+        width: 38vw;
+        right: 18rem;
+    }
+
+    @media (min-width: 700px) and (max-width: 800px) {
+        width: 33vw;
+        right: 18rem;
+    }
+
     @media (min-width: 800px) and (max-width: 900px) {
         width: 30vw;
         right: 18rem;
     }
 
-    @media (min-width: 900px) and (max-width: 1400px) {
-        width: 19vw;
+    @media (min-width: 900px) and (max-width: 1000px) {
+        width: 22vw;
+        right: 30%;
+    }
+
+    @media (min-width: 1000px) and (max-width: 1400px) {
+        width: 20vw;
         right: 25%;
     }
 
@@ -408,19 +441,3 @@ $background: #f7f7f7;
         opacity: 1;
     }
 }
-
-// .pic.stark {
-//     background-image: url('https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/7/73/SMH_Mentor_6.png');
-// }
-// .pic.banner {
-//     background-image: url('https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/4/4f/BruceHulk-Endgame-TravelingCapInPast.jpg');
-// }
-// .pic.thor {
-//     background-image: url('https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/9/98/ThorFliesThroughTheAnus.jpg');
-// }
-// .pic.danvers {
-//     background-image: url('https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/0/05/HeyPeterParker.png');
-// }
-// .pic.rogers {
-//     background-image: url('https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/7/7c/Cap.America_%28We_Don%27t_Trade_Lives_Vision%29.png');
-// }

@@ -225,6 +225,7 @@ function App() {
                                     initialLogin={initialLogin}
                                     setInitialLogin={setInitialLogin}
                                     setSocket={setSocket}
+                                    socket={socket}
                                     setSse={setSse}
                                     setAlarmCount={setAlarmCount}
                                     setAlarmList={setAlarmList}

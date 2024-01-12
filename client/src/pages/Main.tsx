@@ -25,6 +25,7 @@ export default function Main({
     setAlarmList,
     setCommentAlarm,
     setKey,
+    socket,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -390,26 +391,37 @@ export default function Main({
 
     const [madeGroupInfo, setMadeGroupInfo] = useState<any>([]);
 
+    //_ 아래 코드 socket 이벤트가 안됨...
     useEffect(() => {
         if (
-            newSocket &&
+            socket &&
             loginData.uSeq !== 0 &&
             loginData.uName !== '' &&
             loginData.uName !== undefined &&
             !initialLogin
         ) {
-            newSocket.emit('login', loginData);
+            console.log('=============', socket);
+            socket?.emit('login', loginData);
+            // socket?.emit('login', { gSeq: [1, 2, 3, 4] });
+            console.log('????????????');
 
-            newSocket.on('loginSuccess', (data: any) => {
-                console.log('loginSuccess !!!!!!!!!!', data.msg); // Log the success message
+            socket?.on('loginSuccess', (data: any) => {
+                console.log(
+                    '!!!!!!!!!!!!!!!! loginSuccess !!!!!!!!!!',
+                    data.msg
+                ); // Log the success message
             });
 
             setInitialLogin(true);
+
+            console.log('gSeqList######', gSeqList);
+
+            //-- joinRoom 이벤트
+            socket.emit('joinRoom', { gSeq: gSeqList });
         }
     }, [loginData]);
 
     //=== 달성률에 따른 캐릭터 이미지 변경 ===
-
     // let charNum = selectedCharacter?.slice(-5, -4); // 2
     let charNum = selectedCharacter?.slice(-5); // 2.svg
     // .jpeg

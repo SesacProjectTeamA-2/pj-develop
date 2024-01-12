@@ -245,8 +245,6 @@ export default function Header(props: any) {
         };
     }, [props.socket, props.allGroupInfo, props.isEnter]);
 
-    console.log('isEnter#########', props.isEnter);
-
     useEffect(() => {
         getRecentMsg(); // axios
         //_ newMsg 최신 메세지 받아오면 실행 X
@@ -423,14 +421,8 @@ export default function Header(props: any) {
                 props.setAdminUser(false);
                 localStorage.removeItem('adminUser');
 
-                console.log('logout');
-
-                // nvg('/login');
-
-                return;
+                nvg('/login');
             } else {
-                console.log('ggggggg$$$$');
-                nvg('/management');
                 return;
             }
         } else {
@@ -794,18 +786,16 @@ export default function Header(props: any) {
                                                 <ThemeProvider theme={theme}>
                                                     {/* <Link to="/login">Login</Link> */}
 
-                                                    <Link to="/login">
-                                                        <Button
-                                                            aria-label="outlined button group"
-                                                            variant="outlined"
-                                                            className="menu-button"
-                                                            onClick={
-                                                                logoutHandler
-                                                            }
-                                                        >
-                                                            Logout
-                                                        </Button>
-                                                    </Link>
+                                                    {/* <Link to="/login"> */}
+                                                    <Button
+                                                        aria-label="outlined button group"
+                                                        variant="outlined"
+                                                        className="menu-button"
+                                                        onClick={logoutHandler}
+                                                    >
+                                                        Logout
+                                                    </Button>
+                                                    {/* </Link> */}
                                                 </ThemeProvider>
                                             </li>
                                         ) : (
