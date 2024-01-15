@@ -178,14 +178,16 @@ export default function SideBarGroup({
                         </svg>
                     </button>
 
-                    <div className="sidebar-wrapper">
+                    <div
+                        className="sidebar-wrapper"
+                        style={{ paddingTop: '3rem' }}
+                    >
                         <div
                             className="sidebar-themeContainer"
                             style={
                                 isLeader
                                     ? { backgroundColor: '#f5e060' }
                                     : { backgroundColor: '#ffc8cd' }
-                                // : { backgroundColor: '#ffe3e6' }  // 연한 핑크
                             }
                         >
                             {isLeader ? (
