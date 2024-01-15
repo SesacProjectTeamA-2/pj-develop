@@ -13,16 +13,15 @@ export default function ChatRoom({
     socket,
     uName,
     setRecentMsg,
+    loginUser,
+    setLoginUser,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
+    const [loginUName, setLoginUName] = useState<any>([]);
 
     // 받아올 채팅 1️
     const [allMsg, setAllMsg] = useState<any>([]);
-
-    const [loginUser, setLoginUser] = useState<any>([]);
-
-    const [loginUName, setLoginUName] = useState<any>([]);
 
     // 내가 서버에 전송할 데이터 2
     const [msgData, setMsgData] = useState<any>({

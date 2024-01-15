@@ -444,6 +444,13 @@ export default function Header(props: any) {
                     gSeq: gSeqList,
                 });
 
+                //-- loginUser 이벤트에 대한 리스너 추가
+                props.socket?.on('loginUser', (data: any) => {
+                    if (data.loginUser?.length > 0) {
+                        props.setLoginUser(data.loginUser);
+                    }
+                });
+
                 localStorage.setItem('showChat', JSON.stringify(false));
 
                 //-- 2) 로컬스토리지 삭제

@@ -18,7 +18,13 @@ import MemberList from '../../components/group/home/MemberList';
 
 import { GroupDetailType, RootStateType } from '../../../src/types/types'; // Redux 스토어 전체 타입을 가져옵니다.
 
-export default function GroupHome({ socket, setKey, key }: any) {
+export default function GroupHome({
+    socket,
+    setKey,
+    key,
+    loginUser,
+    setLoginUser,
+}: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -202,6 +208,13 @@ export default function GroupHome({ socket, setKey, key }: any) {
             socket?.emit('joinRoom', {
                 gSeq: Number(gSeq),
                 isSignup: 'true',
+            });
+
+            //-- loginUser 이벤트에 대한 리스너 추가
+            socket?.on('loginUser', (data: any) => {
+                if (data.loginUser?.length > 0) {
+                    setLoginUser(data.loginUser);
+                }
             });
 
             // 서버에서 보낸 data

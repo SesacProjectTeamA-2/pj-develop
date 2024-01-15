@@ -49,7 +49,7 @@ export default function Footer() {
                                 </div>
                                 <div>
                                     <span className="text-pl">
-                                        (Project Leader)
+                                        &nbsp; (Project Leader)
                                     </span>
                                 </div>
                             </a>
@@ -70,6 +70,30 @@ export default function Footer() {
                     </p>
 
                     <p className="origin-team-wrapper">
+                        <div className="team-title">
+                            <a
+                                href="http://motimates.xyz/"
+                                className="link-none profile-hover"
+                                target="_blank"
+                            >
+                                참고
+                            </a>
+                        </div>
+                        {/* <div className="team-member">
+                            <div>
+                                <a
+                                    href="https://github.com/chitty12"
+                                    className="link-none profile-hover"
+                                    target="_blank"
+                                >
+                                    {' '}
+                                    <span> 참고 </span>
+                                </a>
+                            </div>
+                        </div> */}
+                    </p>
+
+                    {/* <p className="origin-team-wrapper">
                         <div className="team-title">Origin</div>
                         <div className="team-member">
                             <div>
@@ -83,7 +107,7 @@ export default function Footer() {
                                 <span>최태영, 문영민, 문효진</span>
                             </div>
                         </div>
-                    </p>
+                    </p> */}
                 </div>
 
                 {/* LINK */}

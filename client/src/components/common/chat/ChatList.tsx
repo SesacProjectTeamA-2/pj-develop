@@ -19,6 +19,8 @@ export default function ChatList({
     setRecentMsg,
     allGroupInfo,
     setAllGroupInfo,
+    loginUser,
+    setLoginUser,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -350,6 +352,13 @@ export default function ChatList({
             // console.log('********** updatedGSeqList **********', gSeqList);
 
             socket?.emit('joinRoom', { gSeq: gSeqList });
+
+            //-- loginUser 이벤트에 대한 리스너 추가
+            socket?.on('loginUser', (data: any) => {
+                if (data.loginUser?.length > 0) {
+                    setLoginUser(data.loginUser);
+                }
+            });
         }
     }, [gSeqList]);
 
@@ -422,11 +431,7 @@ export default function ChatList({
         setLeaderSorted((prevLeaderSorted) => !prevLeaderSorted);
     };
 
-    // const toggleClickHandler = () => {
-    //     setLeaderSorted((prevLeaderSorted) => !prevLeaderSorted);
-    // };
-
-    console.log('leaderSorted', leaderSorted);
+    // console.log('leaderSorted', leaderSorted);
 
     return (
         <div className="chat-list-wrapper" key={key}>
@@ -442,8 +447,6 @@ export default function ChatList({
                     <path d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z" />
                 </svg>
             </div>
-
-            {/* <div></div> */}
 
             <div className="list-sort-toggle-wrapper">
                 <span>최신순</span>
@@ -500,11 +503,6 @@ export default function ChatList({
                                                 }
                                             >
                                                 <div className="list-content-wrapper">
-                                                    {/* <img
-                                                        src="/asset/images/leader.gif"
-                                                        alt=""
-                                                    /> */}
-                                                    {/* [추후변경] 그룹명의 앞글자만 따옴 */}
                                                     <div
                                                         className="list-img-circle"
                                                         style={{
@@ -595,14 +593,20 @@ export default function ChatList({
                                                         {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
                                                         {localStorage.getItem(
                                                             `gSeq${group.gSeq}`
-                                                        ) !== '0' && (
-                                                            <span className="chat-list-count">
-                                                                {/* 미확인 메세지 개수 */}
-                                                                {localStorage.getItem(
-                                                                    `gSeq${group.gSeq}`
-                                                                )}
-                                                            </span>
-                                                        )}
+                                                        ) &&
+                                                            localStorage.getItem(
+                                                                `gSeq${group.gSeq}`
+                                                            ) !== '' &&
+                                                            localStorage.getItem(
+                                                                `gSeq${group.gSeq}`
+                                                            ) !== '0' && (
+                                                                <span className="chat-list-count">
+                                                                    {/* 미확인 메세지 개수 */}
+                                                                    {localStorage.getItem(
+                                                                        `gSeq${group.gSeq}`
+                                                                    )}
+                                                                </span>
+                                                            )}
                                                     </div>
                                                 </div>
                                             </li>
@@ -627,7 +631,7 @@ export default function ChatList({
                                                 alt=""
                                             /> */}
                                             <div
-                                                className="list-img-circle"
+                                                className="member-list-img-circle"
                                                 style={{
                                                     backgroundColor: '#f88c99',
                                                     width: '7rem',
@@ -703,14 +707,20 @@ export default function ChatList({
                                                 {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
                                                 {localStorage.getItem(
                                                     `gSeq${group.gSeq}`
-                                                ) !== '0' && (
-                                                    <span className="chat-list-count">
-                                                        {/* 미확인 메세지 개수 */}
-                                                        {localStorage.getItem(
-                                                            `gSeq${group.gSeq}`
-                                                        )}
-                                                    </span>
-                                                )}
+                                                ) &&
+                                                    localStorage.getItem(
+                                                        `gSeq${group.gSeq}`
+                                                    ) !== '' &&
+                                                    localStorage.getItem(
+                                                        `gSeq${group.gSeq}`
+                                                    ) !== '0' && (
+                                                        <span className="chat-list-count">
+                                                            {/* 미확인 메세지 개수 */}
+                                                            {localStorage.getItem(
+                                                                `gSeq${group.gSeq}`
+                                                            )}
+                                                        </span>
+                                                    )}
                                             </div>
                                         </div>
                                     </li>
@@ -854,14 +864,20 @@ export default function ChatList({
                                                             {/* 0이 아닌 경우, 미확인 메세지 수 확인 가능 */}
                                                             {localStorage.getItem(
                                                                 `gSeq${group.gSeq}`
-                                                            ) !== '0' && (
-                                                                <span className="chat-list-count">
-                                                                    {/* 미확인 메세지 개수 */}
-                                                                    {localStorage.getItem(
-                                                                        `gSeq${group.gSeq}`
-                                                                    )}
-                                                                </span>
-                                                            )}
+                                                            ) &&
+                                                                localStorage.getItem(
+                                                                    `gSeq${group.gSeq}`
+                                                                ) !== '' &&
+                                                                localStorage.getItem(
+                                                                    `gSeq${group.gSeq}`
+                                                                ) !== '0' && (
+                                                                    <span className="chat-list-count">
+                                                                        {/* 미확인 메세지 개수 */}
+                                                                        {localStorage.getItem(
+                                                                            `gSeq${group.gSeq}`
+                                                                        )}
+                                                                    </span>
+                                                                )}
                                                         </div>
                                                     </div>
                                                 </li>
