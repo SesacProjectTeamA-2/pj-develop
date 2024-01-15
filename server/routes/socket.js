@@ -319,6 +319,40 @@ exports.chatSocket = async (io, socket) => {
 
             // userSocketMap 객체에서 특정 uSeq 키값을 삭제
             delete userSocketMap[uSeq];
+
+            for (const gSeq of data.gSeq) {
+              let userDatas = [];
+              console.log('rooms목록: ', groupChat.adapter.rooms);
+              // 룸에 접속중인 소켓 로드 (접속중인 소켓 없을 때는 빈 배열 반환)
+              const result = groupChat.adapter.rooms.get(`room${gSeq}`);
+              console.log('룸 소켓 목록>>>>>>>>>>>>>>>', result);
+
+              const socketsInRoom = Array.from(
+                groupChat.adapter.rooms.get(`room${gSeq}`) || []
+              );
+              console.log(socketsInRoom);
+              // for (let id of socketsInRoom) {
+              //   userDatas.push(await redisCli.hGetAll(`${id}`));
+              // }
+              // 일치하는 uSeq 찾기.
+              const uSeqs = socketsInRoom.map((socketId) =>
+                Object.keys(userSocketMap).find(
+                  (uSeq) => userSocketMap[uSeq] === socketId
+                )
+              );
+              // room에 참가하고 있는 소켓의 정보를 담은 배열(forEach의 경우에는 배열의 모든 값에 대해 await 해주지않음!)
+              const userDatasPromises = uSeqs.map(
+                async (uSeq) => await redisCli.hGetAll(`socket${uSeq}`)
+              );
+              userDatas = await Promise.all(userDatasPromises);
+
+              const uNameInRoom = userDatas.map((user) => user.uName);
+              console.log(`room${gSeq}에 접속된 아이디 목록`, uNameInRoom);
+              socket.emit('loginUser', {
+                loginUser: userDatas,
+              });
+            }
+
             socket.disconnect();
             console.log('남은 유저', userSocketMap);
           } catch (err) {
