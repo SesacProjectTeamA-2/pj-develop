@@ -240,6 +240,8 @@ export default function Header(props: any) {
 
         props.socket?.on('newMsg', socketNewMsg);
 
+        /////////////////////////////////
+
         const loginUserSocket = (data: any) => {
             console.log('loginUser #########', data); // 서버에서 보낸 data
 
@@ -248,9 +250,7 @@ export default function Header(props: any) {
             }
         };
 
-        //-- loginUser 이벤트에 대한 리스너 추가
         props.socket?.on('loginUser', loginUserSocket);
-
         return () => {
             props.socket?.off('newMsg', socketNewMsg);
             props.socket?.off('loginUser', loginUserSocket);
@@ -272,7 +272,7 @@ export default function Header(props: any) {
 
     const nvg = useNavigate();
 
-    const [uSeqData, setUSeqData] = useState({ uSeq: 0 });
+    const [uSeqData, setUSeqData] = useState({ uSeq: 0, gSeq: [] });
 
     //] 프로필 사진 가져오기
     const [userImgSrc, setUserImgSrc] = useState<any>('/asset/images/user.svg'); // 문자열 변수
@@ -311,30 +311,10 @@ export default function Header(props: any) {
                 setIsUser(true); //로그인 상태
                 await getUserData();
             };
+
             loginProfileLoad();
         } else setIsCookie(false);
     }, [cookie]);
-
-    // ] disconnect 시, uSeq 데이터 전송
-    const getJoinedGroup = async () => {
-        const res = await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/group/joined`, {
-                headers: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            })
-            .then((res) => {
-                const { uSeq } = res.data;
-
-                setUSeqData({
-                    uSeq,
-                });
-            });
-    };
-
-    useEffect(() => {
-        getJoinedGroup(); // uSeq 데이터 update
-    }, []);
 
     //] 로그아웃 시, gSeqList 전송
     // --> localStorage 채팅방 모임 리스트 전체 삭제
@@ -343,6 +323,9 @@ export default function Header(props: any) {
     //] localStorage 합산 (미확인 메세지 수)
     //--> gSeqList 활용
     const [unreadMsg, setUnreadMsg] = useState(0);
+
+    // logout 시, uSeqData 업데이트 이후 ---> socket의 logout 이벤트에 담아, 서버에 전송하기 위해 사용
+    const [updated, setUpdated] = useState(false);
 
     //; logout 시 실행
     const getMissionMain = async () => {
@@ -355,7 +338,7 @@ export default function Header(props: any) {
             .then((res) => {
                 // console.log('유저 미션 조회 >> ', res.data);
 
-                const { groupInfo } = res.data;
+                const { groupInfo, uSeq } = res.data;
 
                 let updatedGSeqList: any = [];
 
@@ -367,57 +350,19 @@ export default function Header(props: any) {
 
                 console.log('updatedGSeqList', updatedGSeqList);
 
+                setUSeqData({ uSeq, gSeq: updatedGSeqList });
+
                 updatedGSeqList?.map((gSeq: any) => {
                     localStorage.removeItem(`gSeq${gSeq}`);
                 });
+
+                setUpdated(true);
             });
     };
-
-    // useEffect(() => {
-    //     // 새로운 메세지가 오면 unreadMsg 업데이트
-    //     let accumulatedUnreadMsg = 0;
-
-    //     for (let i = 0; i < gSeqList?.length; i++) {
-    //         const currentUnreadMsg = localStorage.getItem(`gSeq${gSeqList[i]}`);
-    //         const parsedUnreadMsg = parseInt(currentUnreadMsg || '0', 10);
-    //         accumulatedUnreadMsg += parsedUnreadMsg;
-    //     }
-
-    //     setUnreadMsg(accumulatedUnreadMsg);
-
-    //     console.log('accumulatedUnreadMsg', accumulatedUnreadMsg);
-    // }, [gSeqList, props.socket]);
 
     useEffect(() => {
         updateUnreadMsg();
     }, [props.socket, props.isEnter]);
-
-    //     console.log('111111');
-    //     const updateUnreadMsg = async () => {
-    //         let accumulatedUnreadMsg = 0;
-    //         console.log('gSeqList', gSeqList);
-
-    //         for (let i = 0; i < gSeqList?.length; i++) {
-    //             const currentUnreadMsg = localStorage.getItem(
-    //                 `gSeq${gSeqList[i]}`
-    //             );
-    //             const parsedUnreadMsg = parseInt(currentUnreadMsg || '0', 10);
-    //             accumulatedUnreadMsg += parsedUnreadMsg;
-    //             console.log('currentUnreadMsg', currentUnreadMsg);
-    //             console.log('parsedUnreadMsg', parsedUnreadMsg);
-    //         }
-
-    //         setUnreadMsg(accumulatedUnreadMsg);
-
-    //         console.log('accumulatedUnreadMsg', accumulatedUnreadMsg);
-    //     };
-
-    //     // getMissionMain 호출이 완료될 때까지 기다리기
-    //     getMissionMain().then(() => {
-    //         updateUnreadMsg();
-    //     });
-
-    // console.log('unreadMsg', unreadMsg);
 
     const [logoutConfirm, setLogoutConfirm] = useState(false);
 
@@ -445,16 +390,15 @@ export default function Header(props: any) {
                 // 로컬 스토리지에 값을 저장하기
                 localStorage.setItem('showChat', JSON.stringify(false));
 
-                //-- 1) 채팅 종료
-                props.socket?.emit('logout', uSeqData);
-                // props.socket.emit('logout', { uSeq: 8 });
+                console.log('********** uSeqData **********', uSeqData);
 
                 // console.log('********** updatedGSeqList **********', gSeqList);
 
-                props.socket?.emit('joinRoom', {
-                    isSignup: false,
-                    gSeq: gSeqList,
-                });
+                // [임시] 주석처리
+                // props.socket?.emit('joinRoom', {
+                //     isSignup: false,
+                //     gSeq: gSeqList,
+                // });
 
                 // // [추후] 제거해도 무방 확인
                 // //-- loginUser 이벤트에 대한 리스너 추가
@@ -468,12 +412,6 @@ export default function Header(props: any) {
 
                 //-- 2) 로컬스토리지 삭제
                 // localStorage.removeItem(`gSeq${gSeq}`);
-
-                //-- 3) 실시간 알람 종료
-                props.sse?.addEventListener('close', (event: any) => {
-                    console.log('logout >>> 실시간 알람 종료');
-                    // props.sse.close();
-                });
 
                 // logout 확정
                 setLogoutConfirm(true);
@@ -505,10 +443,27 @@ export default function Header(props: any) {
     //; 로그아웃 확정되면
     useEffect(() => {
         if (logoutConfirm) {
-            postLogOut();
             getMissionMain(); //--> localStorage 채팅방 모임 리스트 전체 삭제
+
+            postLogOut();
         }
     }, [logoutConfirm]);
+
+    //_ logout 시, socket의 logout 이벤트에 uSeqData 업데이트하여 전송
+    useEffect(() => {
+        if (updated) {
+            console.log('********** uSeqData **********', uSeqData);
+            //-- 1) 채팅 종료
+            props.socket?.emit('logout', uSeqData);
+            // props.socket.emit('logout', { uSeq: 8 });
+
+            //-- 3) 실시간 알람 종료
+            props.sse?.addEventListener('close', (event: any) => {
+                console.log('logout >>> 실시간 알람 종료');
+                // props.sse.close();
+            });
+        }
+    }, [updated]);
 
     //] 초대장 링크 입력 후 버튼 클릭 시 그 그룹으로 이동
     const [grpInput, setGrpInput] = useState<string>('');
@@ -593,6 +548,8 @@ export default function Header(props: any) {
     //     };
     // }, []); // 빈 배열을 전달하여 마운트 및 언마운트 시에만 실행되도록 함
     //_ [ END ]
+
+    // console.log('********** uSeqData **********', uSeqData);
 
     return (
         <>

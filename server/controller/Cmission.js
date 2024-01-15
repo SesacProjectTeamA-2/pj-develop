@@ -168,6 +168,7 @@ exports.getMission = async (req, res) => {
           result: true,
           mainGroup: true,
           uName,
+          uSeq,
           uCharImg,
           groupInfo,
           groupArray,
@@ -187,6 +188,7 @@ exports.getMission = async (req, res) => {
           groupArray,
           missionArray,
           doneRates: groupDoneRates,
+          uSeq,
         });
       }
     } else {
