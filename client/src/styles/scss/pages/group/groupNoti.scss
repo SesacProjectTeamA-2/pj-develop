@@ -24,6 +24,12 @@
     display: flex;
     align-items: center;
     // font-weight: bold;
+
+    @media (min-width: 200px) and (max-width: 700px) {
+        padding: 1rem;
+        text-align: center;
+        display: none;
+    }
 }
 
 .noti-table {
@@ -58,9 +64,42 @@
     @include media('<800px') {
         padding: 0.5rem 2rem;
     }
+    @include media('<600px') {
+        flex-direction: column;
+        min-width: 11rem;
+    }
     @include media('<500px') {
         padding: 0.5rem 2rem;
-        font-size: 1.2rem;
+        font-size: 1rem;
+    }
+}
+
+.noti-container-wrapper-sec {
+    width: 90%;
+    height: fit-content;
+    margin: 1rem 5rem;
+    border-radius: 10px;
+    height: 50vh;
+    height: 100%;
+    @include media('<800px') {
+        position: relative;
+        margin: 1rem;
+        min-width: 23rem;
+        right: 2rem;
+    }
+
+    @include media('<700px') {
+        margin: 1rem;
+        position: relative;
+        min-width: 23rem;
+        right: -1rem;
+    }
+    @include media('<600px') {
+        // margin: 1rem 2rem;
+        margin: 1rem;
+        position: relative;
+        min-width: 23rem;
+        right: -5rem;
     }
 }
 
@@ -73,7 +112,18 @@
     height: 100%;
 
     @include media('<800px') {
-        margin: 1rem 2rem;
+        // margin: 1rem 2rem;
+        margin: 1rem;
+        position: relative;
+        min-width: 23rem;
+        right: 4rem;
+    }
+    @include media('<600px') {
+        // margin: 1rem 2rem;
+        margin: 1rem;
+        position: relative;
+        min-width: 23rem;
+        right: 9rem;
     }
 }
 

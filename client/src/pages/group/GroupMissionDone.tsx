@@ -155,7 +155,7 @@ export default function GroupMissionDone() {
     return (
         <div className="section section-group">
             <GroupHeader title={'완료된 미션'} groupName={groupMission.gName} />
-            <div className="noti-container">
+            <div className="noti-container-wrapper-sec">
                 <div className="noti-header mission-done-header">
                     <div
                         className="noti-container-done"

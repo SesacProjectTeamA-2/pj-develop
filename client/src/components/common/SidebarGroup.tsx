@@ -25,6 +25,7 @@ export default function SideBarGroup({
     const [groupName, setGroupName] = useState<GroupMissionsType[]>([]);
     const [leftMember, setLeftMember] = useState<any>([]);
     const [memberArray, setMemberArray] = useState<any>([]);
+    const [uName, setUName] = useState<any>('');
 
     useEffect(() => {
         const getGroup = async () => {
@@ -52,7 +53,25 @@ export default function SideBarGroup({
         getGroup();
     }, []);
 
-    // console.log(leftMember);
+    //] 1. 유저 미션 조회
+    const getMissionMain = async () => {
+        const res = await axios
+            .get(`${process.env.REACT_APP_DB_HOST}/mission/user`, {
+                headers: {
+                    Authorization: `Bearer ${uToken}`,
+                },
+            })
+            .then((res) => {
+                console.log('유저 미션 조회 >> ', res.data);
+
+                const { uName } = res.data;
+                setUName(uName);
+            });
+    };
+
+    useEffect(() => {
+        getMissionMain();
+    }, []);
 
     //-- 모임장 / 멤버
     const [isLeader, setIsLeader] = useState(false);
@@ -64,7 +83,7 @@ export default function SideBarGroup({
 
     let mSeqList = [];
 
-    for (let i = 1; i <= groupMissions.length; i++) {
+    for (let i = 1; i <= groupMissions?.length; i++) {
         mSeqList.push(i);
     }
 
@@ -159,14 +178,16 @@ export default function SideBarGroup({
                         </svg>
                     </button>
 
-                    <div className="sidebar-wrapper">
+                    <div
+                        className="sidebar-wrapper"
+                        style={{ paddingTop: '3rem' }}
+                    >
                         <div
                             className="sidebar-themeContainer"
                             style={
                                 isLeader
                                     ? { backgroundColor: '#f5e060' }
                                     : { backgroundColor: '#ffc8cd' }
-                                // : { backgroundColor: '#ffe3e6' }  // 연한 핑크
                             }
                         >
                             {isLeader ? (
@@ -210,7 +231,7 @@ export default function SideBarGroup({
                                             MEMBER
                                         </span>
                                         <br />
-                                        <span>{leaderName}</span>
+                                        <span>{uName}</span>
                                     </div>
                                 </div>
                             )}

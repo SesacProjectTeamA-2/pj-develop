@@ -94,6 +94,7 @@ exports.createComment = async (req, res) => {
 
     const category = groupBoard.gbCategory;
     const title = groupBoard.gbTitle;
+    const mSeq = groupBoard.mSeq;
 
     // redis에 캐시로 저장(알림 - hash)
     // (hash) 받는사람 : 게시글 작성자(gbSeq - uSeq)
@@ -101,40 +102,49 @@ exports.createComment = async (req, res) => {
     // (value) gbSeq, uName, date
     const commentTime = new Date();
     const receiver = groupBoard.uSeq;
-    const result = await redisCli.lPush(
-      `user${receiver}`,
-      JSON.stringify({
-        type: 'comment',
-        gbSeq,
-        uName,
-        title,
-        gSeq,
-        category,
-        commentTime,
-      })
-    );
 
-    // 만료시간 조회
-    const expirationTime = await redisCli.ttl(`user${receiver}`);
-    // 유효시간 7일
-    if (expirationTime > 0) {
-      console.log('이미 만료시간 설정되어 있음!');
-    } else {
-      await redisCli.expire(`user${receiver}`, 604800);
+    console.log('gSeq>>>>>>>>>>>>>>>', gSeq);
+    // 자기 게시판에 댓글을 달았을 경우는 제외함.
+    if (receiver !== uSeq) {
+      const result = await redisCli.lPush(
+        `user${receiver}`,
+        JSON.stringify({
+          type: 'comment',
+          gbSeq,
+          uName,
+          title,
+          mSeq,
+          gSeq,
+          category,
+          commentTime,
+        })
+      );
+
+      // 만료시간 조회
+      const expirationTime = await redisCli.ttl(`user${receiver}`);
+      // 유효시간 7일
+      if (expirationTime > 0) {
+        console.log('이미 만료시간 설정되어 있음!');
+      } else {
+        await redisCli.expire(`user${receiver}`, 604800);
+      }
+
+      // redis pub 처리
+      // 모든 알람 리스트
+      const alarms = await redisCli.lRange(`user${receiver}`, 0, -1);
+
+      // 1. mission 일때, gSeq
+      // 2. delete , list가 안받아짐
+
+      await redisCli.publish(
+        'comment-alarm',
+        JSON.stringify({
+          alarmCount: result,
+          allAlarm: alarms,
+          receiver,
+        })
+      );
     }
-
-    // redis pub 처리
-    // 모든 알람 리스트
-    const alarms = await redisCli.lRange(`user${receiver}`, 0, -1);
-
-    await redisCli.publish(
-      'comment-alarm',
-      JSON.stringify({
-        alarmCount: result,
-        allAlarm: alarms,
-      })
-    );
-
     // 정상 처리
     res.status(200).send({
       success: true,

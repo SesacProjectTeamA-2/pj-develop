@@ -25,6 +25,9 @@ export default function Main({
     setAlarmList,
     setCommentAlarm,
     setKey,
+    socket,
+    loginUser,
+    setLoginUser,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -129,33 +132,36 @@ export default function Main({
             });
 
             //-- 메세지
-            eventSource.addEventListener('commentAlarm', (event: any) => {
-                // console.log('commentAlarm ::::', event);
-                // console.log('commentAlarm event.data ::::', event.data);
+            eventSource.addEventListener(
+                `commentAlarm${uSeq}`,
+                (event: any) => {
+                    // console.log('commentAlarm ::::', event);
+                    // console.log('commentAlarm event.data ::::', event.data);
 
-                const eventData = JSON.parse(event.data);
+                    const eventData = JSON.parse(event.data);
 
-                let updateData = [];
-                for (let i = 0; i < eventData.length; i++) {
-                    updateData.push(JSON.parse(eventData[i]));
+                    let updateData = [];
+                    for (let i = 0; i < eventData.length; i++) {
+                        updateData.push(JSON.parse(eventData[i]));
+                    }
+
+                    setAlarmList([...updateData]);
+
+                    // setCommentAlarm([...updateData]);
+
+                    // key 값을 변경하여 리렌더링 유도
+                    // setKey((prevKey: any) => prevKey + 1);
+
+                    console.log('commentAlarm 이벤트 받아옴 >>>>>', uSeq);
+                    // commentTime: '2023-12-29T02:34:19.680Z';
+                    // gSeq: '3';
+                    // gbSeq: '22';
+                    // type: 'comment';
+                    // uName: '테스트111111';
+
+                    // setCommentAlarm(eventData);
                 }
-
-                setAlarmList([...updateData]);
-
-                // setCommentAlarm([...updateData]);
-
-                // key 값을 변경하여 리렌더링 유도
-                // setKey((prevKey: any) => prevKey + 1);
-
-                // console.log('commentAlarm 이벤트 받아옴 >>>>>', commentAlarm);
-                // commentTime: '2023-12-29T02:34:19.680Z';
-                // gSeq: '3';
-                // gbSeq: '22';
-                // type: 'comment';
-                // uName: '테스트111111';
-
-                // setCommentAlarm(eventData);
-            });
+            );
 
             //-- 댓글 수신 시, 카운트 업데이트
             eventSource.addEventListener('alarmCount', (event: any) => {
@@ -387,26 +393,44 @@ export default function Main({
 
     const [madeGroupInfo, setMadeGroupInfo] = useState<any>([]);
 
+    //_ 아래 코드 socket 이벤트가 안됨...
     useEffect(() => {
         if (
-            newSocket &&
+            socket &&
             loginData.uSeq !== 0 &&
             loginData.uName !== '' &&
             loginData.uName !== undefined &&
             !initialLogin
         ) {
-            newSocket.emit('login', loginData);
+            console.log('=============', socket);
+            socket?.emit('login', loginData);
+            // socket?.emit('login', { gSeq: [1, 2, 3, 4] });
+            console.log('????????????');
 
-            newSocket.on('loginSuccess', (data: any) => {
-                console.log('loginSuccess !!!!!!!!!!', data.msg); // Log the success message
+            socket?.on('loginSuccess', (data: any) => {
+                console.log(
+                    '!!!!!!!!!!!!!!!! loginSuccess !!!!!!!!!!',
+                    data.msg
+                ); // Log the success message
             });
 
             setInitialLogin(true);
+
+            console.log('gSeqList######', gSeqList);
+
+            //-- joinRoom 이벤트
+            socket.emit('joinRoom', { gSeq: gSeqList });
+
+            //-- loginUser 이벤트에 대한 리스너 추가
+            socket?.on('loginUser', (data: any) => {
+                if (data.loginUser?.length > 0) {
+                    setLoginUser(data.loginUser);
+                }
+            });
         }
     }, [loginData]);
 
     //=== 달성률에 따른 캐릭터 이미지 변경 ===
-
     // let charNum = selectedCharacter?.slice(-5, -4); // 2
     let charNum = selectedCharacter?.slice(-5); // 2.svg
     // .jpeg

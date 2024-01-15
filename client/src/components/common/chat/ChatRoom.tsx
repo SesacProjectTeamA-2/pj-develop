@@ -13,16 +13,15 @@ export default function ChatRoom({
     socket,
     uName,
     setRecentMsg,
+    loginUser,
+    setLoginUser,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
+    const [loginUName, setLoginUName] = useState<any>([]);
 
     // 받아올 채팅 1️
     const [allMsg, setAllMsg] = useState<any>([]);
-
-    const [loginUser, setLoginUser] = useState<any>([]);
-
-    const [loginUName, setLoginUName] = useState<any>([]);
 
     // 내가 서버에 전송할 데이터 2
     const [msgData, setMsgData] = useState<any>({
@@ -130,7 +129,16 @@ export default function ChatRoom({
         //-- localStorage 에서 해당 채팅방 메세지 읽음 처리
         localStorage.setItem(`gSeq${nowGSeq}`, '0');
 
-        // joinRoom 이벤트에 대한 리스너 추가
+        //-- loginUser 이벤트에 대한 리스너 추가
+        socket?.on('loginUser', (data: any) => {
+            console.log('loginUser #########', data); // 서버에서 보낸 data
+
+            if (data.loginUser?.length > 0) {
+                setLoginUser(data.loginUser);
+            }
+        });
+
+        //-- joinRoom 이벤트에 대한 리스너 추가
         socket?.on('joinRoom', (data: any) => {
             console.log('joinRoom event received on client', data); // 서버에서 보낸 data
 
@@ -152,16 +160,27 @@ export default function ChatRoom({
 
                 setAllMsg(formattedData);
             }
-
-            if (data.loginUser?.length > 0) {
-                setLoginUser(data.loginUser);
-            }
         });
     }, []);
 
     //; allMsg, data.loginUser 변경될 때마다
     useEffect(() => {
-        // joinRoom 이벤트에 대한 리스너 추가
+        //-- loginUser 이벤트
+        socket?.on('loginUser', (data: any) => {
+            console.log('loginUser ##########', data); // 서버에서 보낸 data)
+
+            if (data.loginUser.length > 0) {
+                // setLoginUser(data.loginUser);
+
+                let updatedLoginUName = [];
+                for (let i = 0; i < data.loginUser.length; i++) {
+                    updatedLoginUName.push(data.loginUser[i]?.uName);
+                }
+                setLoginUName(updatedLoginUName);
+            }
+        });
+
+        //-- joinRoom 이벤트에 대한 리스너 추가
         socket?.on('joinRoom', (data: any) => {
             console.log('joinRoom event received on client', data); // 서버에서 보낸 data
 
@@ -181,16 +200,6 @@ export default function ChatRoom({
                 }));
 
                 setAllMsg(formattedData);
-            }
-
-            if (data.loginUser.length > 0) {
-                // setLoginUser(data.loginUser);
-
-                let updatedLoginUName = [];
-                for (let i = 0; i < data.loginUser.length; i++) {
-                    updatedLoginUName.push(data.loginUser[i]?.uName);
-                }
-                setLoginUName(updatedLoginUName);
             }
         });
 
@@ -407,8 +416,20 @@ export default function ChatRoom({
         // 서버에서 데이터 받아오기
         socket?.on('msg', socketMsg);
 
+        const loginUserSocket = (data: any) => {
+            console.log('loginUser #########', data); // 서버에서 보낸 data
+
+            if (data.loginUser?.length > 0) {
+                setLoginUser(data.loginUser);
+            }
+        };
+
+        //-- loginUser 이벤트에 대한 리스너 추가
+        socket?.on('loginUser', loginUserSocket);
+
         return () => {
             socket?.off('msg', socketMsg);
+            socket?.off('loginUser', loginUserSocket);
         };
     }, [socket]);
 

@@ -57,6 +57,12 @@
         align-items: start;
         margin-top: 5rem;
     }
+
+    button {
+        @include media('<600px') {
+            margin-bottom: 1rem;
+        }
+    }
 }
 
 .pcMode {
@@ -75,7 +81,7 @@
 }
 
 .logo-text {
-    margin: 1rem;
+    margin: 2rem;
 }
 
 .logo-container {
@@ -143,10 +149,11 @@
     padding: 5px;
     margin: 0;
     width: 5rem;
+    box-shadow: none;
+
     @include media('<800px') {
         border: none;
-        margin: 0rem 0.4rem;
-        box-shadow: none;
+        margin: 0.98rem;
     }
 }
 .menu-button:focus {

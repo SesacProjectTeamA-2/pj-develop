@@ -32,7 +32,6 @@ exports.alarming = async (req, res) => {
       const alarmCount = await redisCli.lLen(`user${uSeq}`);
       const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
 
-      console.log(allAlarm);
       // 처음 연결시 보낼 알림목록 및 숫자
 
       // 기존 알람 load (connection)
@@ -40,29 +39,35 @@ exports.alarming = async (req, res) => {
       res.write('event: connected\n' + `data: ${alarmCount}\n\n`);
 
       res.write('event: allAlarm\n' + `data: ${JSON.stringify(allAlarm)}\n\n`);
-      console.log('>>>>>>>>>>>>>>>', alarmCount);
 
       // 댓글 작성시 메세지 전송
       await sub.subscribe('comment-alarm', (data) => {
         const datas = JSON.parse(data);
-        console.log('datas>>>>>>>>>>', datas);
+
+        console.log('>>>>>>>>>>>', datas);
         res.write(
-          'event: commentAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
+          `event: commentAlarm${parseInt(datas.receiver)}\n` +
+            `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
         res.write(
-          'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
+          `event: alarmCount${parseInt(datas.receiver)}\n` +
+            `data: ${parseInt(datas.alarmCount)}\n\n`
         );
       });
 
       // 모임 추방시 메세지 전송
-      await sub.subscribe('group-alarm', (data) => {
+
+      await sub.subscribe(`group-alarm${uSeq}`, (data) => {
         console.log('message', message);
+
         const datas = JSON.parse(data);
         res.write(
-          'event: groupAlarm\n' + `data:${JSON.stringify(datas.allAlarm)}\n\n`
+          `event: groupAlarm${parseInt(datas.receiver)}\n` +
+            `data:${JSON.stringify(datas.allAlarm)}\n\n`
         );
         res.write(
-          'event: alarmCount\n' + `data: ${parseInt(datas.alarmCount)}\n\n`
+          `event: alarmCount${parseInt(datas.receiver)}\n` +
+            `data: ${parseInt(datas.alarmCount)}\n\n`
         );
       });
       // });
@@ -97,18 +102,22 @@ exports.delAlarm = async (req, res) => {
     }
 
     const value = req.body;
-    console.log('댓글 정보', value);
+
     const result = await redisCli.lRem(`user${uSeq}`, 0, JSON.stringify(value));
     console.log('redis 데이터 삭제 완료', result);
 
     const allAlarm = await redisCli.lRange(`user${uSeq}`, 0, -1);
+    console.log(allAlarm);
+    const alarmArray = allAlarm.map((item) => JSON.parse(item));
+
+    console.log(alarmArray);
 
     // 해당 페이지 이동위한 gbSeq
     if (value.gbSeq) {
       return res.send({
         isSuccess: true,
         gbSeq: value.gbSeq,
-        alarmList: JSON.stringify(allAlarm),
+        alarmList: alarmArray,
       });
     } else {
       return res.send({

@@ -30,7 +30,7 @@ exports.roomList = async (req, res) => {
 
             console.log('roomInfoArray>>>', roomInfoArray);
           } else {
-            console.log(`gSeq is not Array!`);
+            console.log(`room${info}에 메세지 없음!`);
           }
         }
         res.send({ isSuccess: true, roomInfoArray });

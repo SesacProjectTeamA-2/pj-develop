@@ -242,8 +242,8 @@ export default function GroupPostDetail({ key }: any) {
                                 alt="profile"
                             />
 
-                            <div>
-                                <div className="title4">
+                            <div style={{ overflow: 'hidden' }}>
+                                <div className="title4 group-post-detail-title-text">
                                     {freeList?.gbTitle}{' '}
                                 </div>
                                 <div>{userInfo?.uName}</div>

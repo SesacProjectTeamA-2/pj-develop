@@ -196,6 +196,7 @@ any) {
     const uToken = cookie.get('isUser');
 
     const [alarmNone, setAlarmNone] = useState(false);
+    const [isDeleted, setIsDeleted] = useState<any>(''); // 삭제 처리되는 alarmList의 idx 값
 
     const deleteAlarm = async (commentInfo: any) => {
         const res = await axios
@@ -208,57 +209,73 @@ any) {
             })
             .then((res) => {
                 console.log('읽음 처리 delete >>>>>>', res.data);
+                console.log('읽음 처리 delete >>>>>>', res.data.alarmList);
 
-                let updateData = [];
-                for (let i = 0; i < res.data?.length; i++) {
-                    updateData.push(JSON.parse(res.data[i]));
-                }
+                // let updateData = [];
+                // for (let i = 0; i < res.data.alarmList?.length; i++) {
+                //     updateData.push(JSON.parse(res.data.alarmList[i]));
+                // }
 
-                console.log('parsedData:::::', updateData);
-                setAlarmList([...updateData]);
+                // console.log('parsedData:::::', updateData);
+                // console.log(
+                //     'parsedData>>>>>>>',
+                //     JSON.parse(res.data.alarmList)
+                // );
+
+                // setAlarmList([...updateData]);
+                setAlarmList([...res.data.alarmList]);
             });
     };
 
-    const readHandler = async (idx: number) => {
-        // 기존 알람 중 클릭한 데이터
-        // console.log(formattedAlarms[idx]);
+    //] 프론트에서 해당 데이터 삭제
+    useEffect(() => {
+        if (isDeleted !== '') {
+            //-- 2. 프론트에서 해당 데이터 삭제
+            // const noti = document.querySelector('notification');
 
-        //-- 1. 서버에 데이터 삭제 요청
-        deleteAlarm(alarmList[idx]);
+            // noti의 자식 요소들을 NodeList로 가져오기
+            const notiItems = document.querySelectorAll('.notification');
 
-        //-- 2. 프론트에서 해당 데이터 삭제
-        // const noti = document.querySelector('notification');
+            // 해당 인덱스의 .notification 요소를 선택
+            const specificNotification = notiItems[isDeleted]; // idx
 
-        // noti의 자식 요소들을 NodeList로 가져오기
-        const notiItems = document.querySelectorAll('.notification');
+            if (specificNotification) {
+                // 선택된 .notification 요소의 모든 자식 요소를 제거
+                while (specificNotification.firstChild) {
+                    const firstChild = specificNotification.firstChild;
+                    if (firstChild) {
+                        specificNotification.removeChild(firstChild);
+                    }
+                }
+            }
 
-        // 해당 인덱스의 .notification 요소를 선택
-        const specificNotification = notiItems[idx];
+            //-- 3. 알람 수 -1
+            const currentAlarmCount = Number(
+                localStorage.getItem('alarmCount')
+            );
 
-        if (specificNotification) {
-            // 선택된 .notification 요소의 모든 자식 요소를 제거
-            while (specificNotification.firstChild) {
-                const firstChild = specificNotification.firstChild;
-                if (firstChild) {
-                    specificNotification.removeChild(firstChild);
+            // 0 이면 더이상 내려가지 않게
+            if (currentAlarmCount === 0) {
+                return;
+            } else if (currentAlarmCount > 0) {
+                // 현재 알람 수를 1 감소시키고 문자열로 변환하여 다시 저장
+                const newAlarmCount = (currentAlarmCount - 1).toString();
+                localStorage.setItem('alarmCount', newAlarmCount);
+                setAlarmCount(localStorage.getItem('alarmCount')); // 알람 수 업데이트
+
+                // 현재 알람이 없습니다.
+                if (newAlarmCount === '0') {
+                    setAlarmNone(true);
                 }
             }
         }
+    }, [isDeleted]);
 
-        //-- 3. 알람 수 -1
-        const currentAlarmCount = localStorage.getItem('alarmCount');
+    const readHandler = async (idx: number) => {
+        //-- 1. 서버에 데이터 삭제 요청
+        deleteAlarm(alarmList[idx]);
 
-        if (currentAlarmCount) {
-            // 현재 알람 수를 1 감소시키고 문자열로 변환하여 다시 저장
-            const newAlarmCount = (Number(currentAlarmCount) - 1).toString();
-            localStorage.setItem('alarmCount', newAlarmCount);
-            setAlarmCount(localStorage.getItem('alarmCount')); // 알람 수 업데이트
-
-            // 현재 알람이 없습니다.
-            if (newAlarmCount === '0') {
-                setAlarmNone(true);
-            }
-        }
+        setIsDeleted(alarmList[idx]);
 
         console.log('삭제되었나요 ????', alarmList);
     };
@@ -298,26 +315,28 @@ any) {
     //] 링크 이동
     const nvg = useNavigate();
 
-    // const [key, setKey] = useState(0); // key 상태 추가
-
-    const linkToHandler = (gSeq: any, category: string, gbSeq: any) => {
+    const linkToHandler = (
+        gSeq: any,
+        category: string,
+        gbSeq: any,
+        mSeq: any
+    ) => {
         console.log('gSeq', gSeq);
         console.log('category', category);
         console.log('gbSeq', gbSeq);
+        console.log('mSeq', mSeq);
 
         // key 값을 변경하여 리렌더링 유도
         setKey((prevKey: any) => prevKey + 1);
 
-        nvg(`/board/${Number(gSeq)}/${category}/${Number(gbSeq)}`);
+        category === 'mission'
+            ? nvg(`/board/${gSeq}/${category}/${Number(mSeq)}/${Number(gbSeq)}`)
+            : nvg(`/board/${gSeq}/${category}/${Number(gbSeq)}`);
     };
 
     return (
         <div className="alarm-wrapper">
             <div className="panel">
-                {/* <div className="header flex">
-                    <span className="title">Notifications</span>
-                </div> */}
-
                 <div className="notifications clearfix">
                     <div className="line"></div>
                     <svg
@@ -370,19 +389,11 @@ any) {
                                                 linkToHandler(
                                                     alarm.gSeq,
                                                     alarm.category,
-                                                    alarm.gbSeq
+                                                    alarm.gbSeq,
+                                                    alarm.mSeq
                                                 )
                                             }
                                         >
-                                            {/* <Link
-                                                to={`/board/${Number(
-                                                    alarm.gSeq
-                                                )}/${alarm.category}/${Number(
-                                                    alarm.gbSeq
-                                                )}`}
-                                                className="alarm-link"
-                                                key={`${alarm.gSeq}-${alarm.category}-${alarm.gbSeq}`}
-                                            > */}
                                             <div className="alarm-title-text-wrapper">
                                                 <span className="alarm-title-text">
                                                     {alarm.title}
@@ -393,7 +404,6 @@ any) {
                                                 <b>{alarm.uName}</b> 님이 댓글을
                                                 남겼습니다.
                                             </span>
-                                            {/* </Link> */}
                                         </p>
                                     ) : (
                                         <></>

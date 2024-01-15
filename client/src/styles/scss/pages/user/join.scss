@@ -34,14 +34,10 @@
 
 .interested-div {
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    width: 100%;
-    margin: 30px 0;
-    // display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    // gap: 16px;
+    margin: 30px;
+    width: 80%;
 }
 .interested-div-one {
     display: flex;

@@ -199,6 +199,10 @@ canvas {
 .char-img {
     position: relative;
     z-index: 999;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
     img {
         width: 200px;
         height: 200px;

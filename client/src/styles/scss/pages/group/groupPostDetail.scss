@@ -13,6 +13,9 @@
     @include media('<500px') {
         width: 60%;
     }
+    @include media('<900px') {
+        margin: 2rem 0 0 4rem;
+    }
 }
 
 .post-detail-header-container {
@@ -49,6 +52,10 @@
 .date {
     color: $color-gray4;
     text-align: right;
+
+    @include media('<700px') {
+        display: none;
+    }
 }
 
 .profile-img {
@@ -86,6 +93,14 @@
     margin-top: 1rem;
     @include media('<500px') {
         height: 80%;
+    }
+
+    @include media('<600px') {
+        flex-direction: column;
+
+        button {
+            width: 100%;
+        }
     }
 
     .comment-textarea {

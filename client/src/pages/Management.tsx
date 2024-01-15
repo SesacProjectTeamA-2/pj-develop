@@ -368,7 +368,7 @@ export default function Management() {
                     <div className="graph-container">
                         <PolarArea data={areaData} />
                     </div>
-                    <h4 style={{ marginTop: '6rem' }}>참가 인원</h4>
+                    <h4 style={{ marginTop: '6rem' }}>그룹별 참가 인원</h4>
                     <div
                         className="graph-container"
                         style={{ paddingBottom: '4rem' }}

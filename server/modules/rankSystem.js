@@ -85,6 +85,11 @@ module.exports = {
         where: { gSeq },
         attributes: ['gTotalScore'],
       });
+
+      if (missionTotal === null) {
+        console.log('모임의 미션 점수가 없음!');
+        return;
+      }
       if (missionTotal.gTotalScore === 0) {
         return 0;
       } else {
@@ -101,6 +106,9 @@ module.exports = {
               (userScore.guNowScore / missionTotal.gTotalScore) * 100;
             userDoneRates.push(userDoneRate);
           }
+
+          userDoneRates.sort((a, b) => b - a);
+
           return userDoneRates;
         } else {
           const userScore = await GroupUser.findOne({

@@ -125,121 +125,128 @@ exports.getKakao = async (req, res) => {
 // #################################################
 // 네이버 url로 연결.
 exports.getLoginNaver = (req, res) => {
-  const NaverClientId = naverClientId;
-  const RedirectUri = encodeURI(
-    `${serverUrl}:${serverPort}/api/user/login/naver/callback`
-  );
-  const State = 'test';
-  const NaverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NaverClientId}&state=${State}&redirect_uri=${RedirectUri}`;
-  res.redirect(NaverAuthUrl);
+  try {
+    const NaverClientId = naverClientId;
+    const RedirectUri = encodeURI(
+      `${serverUrl}:${serverPort}/api/user/login/naver/callback`
+    );
+    const State = 'test';
+    const NaverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${NaverClientId}&state=${State}&redirect_uri=${RedirectUri}`;
+    res.redirect(NaverAuthUrl);
+  } catch (err) {
+    console.error('naver login error', err);
+  }
 };
 
 // 로그인하여 정보처리 동의시, redirectUri 로 code 발급.
 exports.getLoginNaverRedirect = async (req, res) => {
-  // 회원정보에 동일한 email이 있으면, session 생성
-  // 없으면 회원가입위해 {nickname, email, profile Img} send
+  try {
+    // 회원정보에 동일한 email이 있으면, session 생성
+    // 없으면 회원가입위해 {nickname, email, profile Img} send
 
-  const NaverClientId = naverClientId;
-  const NaverClientIdSecret = naverClientSecret;
-  const RedirectUri = encodeURI(
-    `${serverUrl}:${serverPort}/api/user/login/naver/callback`
-  );
-  // 발급된 code 변수할당.
-  // code 값은 토큰 발급 요청에 사용됨.
-  let code = req.query.code;
-  let callbackState = req.query.state;
+    const NaverClientId = naverClientId;
+    const NaverClientIdSecret = naverClientSecret;
+    const RedirectUri = encodeURI(
+      `${serverUrl}:${serverPort}/api/user/login/naver/callback`
+    );
+    // 발급된 code 변수할당.
+    // code 값은 토큰 발급 요청에 사용됨.
+    let code = req.query.code;
+    let callbackState = req.query.state;
 
-  // 토큰발급 요청 url
-  let api_url =
-    'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=' +
-    NaverClientId +
-    '&client_secret=' +
-    NaverClientIdSecret +
-    '&code=' +
-    code +
-    '&state=' +
-    callbackState;
+    // 토큰발급 요청 url
+    let api_url =
+      'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=' +
+      NaverClientId +
+      '&client_secret=' +
+      NaverClientIdSecret +
+      '&code=' +
+      code +
+      '&state=' +
+      callbackState;
 
-  // 토큰 발급 요청
-  axios({
-    method: 'get',
-    url: api_url,
-    headers: {
-      'X-Naver-Client-Id': NaverClientId,
-      'X-Naver-Client-Secret': NaverClientIdSecret,
-    },
-  })
-    .then((tokenRes) => {
-      return axios({
-        method: 'get',
-        url: 'https://openapi.naver.com/v1/nid/me',
-        // 프로필 api url
-        headers: {
-          Authorization:
-            tokenRes.data.token_type + ' ' + tokenRes.data.access_token,
-        },
-      });
+    // 토큰 발급 요청
+    axios({
+      method: 'get',
+      url: api_url,
+      headers: {
+        'X-Naver-Client-Id': NaverClientId,
+        'X-Naver-Client-Secret': NaverClientIdSecret,
+      },
     })
+      .then((tokenRes) => {
+        return axios({
+          method: 'get',
+          url: 'https://openapi.naver.com/v1/nid/me',
+          // 프로필 api url
+          headers: {
+            Authorization:
+              tokenRes.data.token_type + ' ' + tokenRes.data.access_token,
+          },
+        });
+      })
 
-    .then(async (userRes) => {
-      const userEmail = userRes.data.response.email;
-      const userName = userRes.data.response.nickname;
-      const userImg = userRes.data.response.profile_image;
+      .then(async (userRes) => {
+        const userEmail = userRes.data.response.email;
+        const userName = userRes.data.response.nickname;
+        const userImg = userRes.data.response.profile_image;
 
-      const alreadyUser = await User.findOne({
-        where: {
-          uEmail: userEmail,
-        },
-      });
-      console.log('>>>>>>>>>>>>>>>>', alreadyUser);
+        const alreadyUser = await User.findOne({
+          where: {
+            uEmail: userEmail,
+          },
+        });
 
-      // db에 값 있으면 이미 회원가입 한 유저
-      if (alreadyUser) {
-        // 블랙유저
-        if (alreadyUser.isUse === null) {
-          res.send({
-            isSuccess: false,
-            msg: '접근이 제한된 유저입니다.',
+        // db에 값 있으면 이미 회원가입 한 유저
+        if (alreadyUser) {
+          // 블랙유저
+          if (alreadyUser.isUse === null) {
+            res.send({
+              isSuccess: false,
+              msg: '접근이 제한된 유저입니다.',
+            });
+            return;
+          }
+          // 해당 3개의 값 가지는 토큰 생성
+          const userGroups = await GroupUser.findAll({
+            where: { uSeq: alreadyUser.uSeq },
+            attribute: ['gSeq'],
           });
-          return;
-        }
-        // 해당 3개의 값 가지는 토큰 생성
-        const userGroups = await GroupUser.findAll({
-          where: { uSeq: alreadyUser.uSeq },
-          attribute: ['gSeq'],
-        });
-        const result = userGroups.map((user) => user.gSeq);
-        const jwtToken = await jwt.sign({
-          uSeq: alreadyUser.uSeq,
-          userName: userName,
-          userEmail: userEmail,
-          gSeq: result,
-        });
-        console.log('jwtToken>>>>>>>>>>>>', jwtToken.token);
-        res.cookie('token', jwtToken.token, {
-          httpOnly: true,
-          path: '/',
-          // secure: true,
-          // sameSite: 'None',
-        });
+          const result = userGroups.map((user) => user.gSeq);
+          const jwtToken = await jwt.sign({
+            uSeq: alreadyUser.uSeq,
+            userName: userName,
+            userEmail: userEmail,
+            gSeq: result,
+          });
+          console.log('jwtToken>>>>>>>>>>>>', jwtToken.token);
+          res.cookie('token', jwtToken.token, {
+            httpOnly: true,
+            path: '/',
+            // secure: true,
+            // sameSite: 'None',
+          });
 
-        // ****************** 토큰을 들고 메인 페이지로 렌더링해야함
-        let redirectUrl = `${serverUrl}:${frontPort}/main`;
-        redirectUrl += `?userImg=${userImg}`;
-        redirectUrl += `&userName=${userName}`;
-        redirectUrl += `&userEmail=${userEmail}`;
-        redirectUrl += `&token=${jwtToken.token}`;
-        res.redirect(redirectUrl);
-      } else {
-        // 최초 로그인 하는 유저
-        // *************** 토큰 발급 없이 회원가입 창으로 렌더링 필요
-        let redirectUrl = `${serverUrl}:${frontPort}/join`;
-        redirectUrl += `?userImg=${userImg}`;
-        redirectUrl += `&userName=${userName}`;
-        redirectUrl += `&userEmail=${userEmail}`;
-        res.redirect(redirectUrl);
-      }
-    });
+          // ****************** 토큰을 들고 메인 페이지로 렌더링해야함
+          let redirectUrl = `${serverUrl}:${frontPort}/main`;
+          redirectUrl += `?userImg=${userImg}`;
+          redirectUrl += `&userName=${userName}`;
+          redirectUrl += `&userEmail=${userEmail}`;
+          redirectUrl += `&token=${jwtToken.token}`;
+          res.redirect(redirectUrl);
+        } else {
+          // 최초 로그인 하는 유저
+          // *************** 토큰 발급 없이 회원가입 창으로 렌더링 필요
+          let redirectUrl = `${serverUrl}:${frontPort}/join`;
+          redirectUrl += `?userImg=${userImg}`;
+          redirectUrl += `&userName=${userName}`;
+          redirectUrl += `&userEmail=${userEmail}`;
+          res.redirect(redirectUrl);
+        }
+      });
+  } catch (err) {
+    console.error('naver login error', err);
+  }
 };
 
 // #################################################

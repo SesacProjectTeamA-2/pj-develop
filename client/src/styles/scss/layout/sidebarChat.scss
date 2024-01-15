@@ -2,6 +2,13 @@
     width: 90%;
     z-index: 10;
     padding-top: 5rem;
+    position: relative;
+    // top: 0;
+    // left: 8rem;
+
+    @media (max-width: 300px) {
+        display: none;
+    }
 
     select,
     input,

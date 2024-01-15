@@ -13,12 +13,6 @@ export default function Intro(props: any) {
     useEffect(() => {
         props.setIsIntro(true);
 
-        // 페이지를 벗어날 때 이벤트 핸들러 등록
-        // const handleLeavePage = () => {
-        //     // 페이지를 벗어날 때 setIsIntro(false) 호출
-        //     props.setIsIntro(false);
-        // };
-
         // 컴포넌트가 마운트될 때 이벤트 핸들러 등록
         const unmountHandler = () => {
             props.setIsIntro(false);
@@ -28,7 +22,7 @@ export default function Intro(props: any) {
         return () => {
             unmountHandler();
         };
-    }, [navigate, props]);
+    }, [navigate]);
 
     //HTML Canvas 요소를 생성하여 페이지에 추가
     const jsConfetti = new JSConfetti();

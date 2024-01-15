@@ -28,15 +28,22 @@
     overflow: visible;
 }
 
+// .chat-container {
+//     @media (min-width: 500px) and (max-width: 900px) {
+//         padding-left: 4rem;
+//     }
+// }
+
 .chat-list-wrapper {
     position: relative;
 
     display: flex;
     flex-direction: column;
-
+    top: -2rem;
     width: 100%;
+    min-width: 15rem;
     // max-height: 60rem;
-    min-height: 800px;
+    min-height: 50rem;
     overflow-y: auto;
 
     z-index: 2;
@@ -57,20 +64,52 @@
     //     padding: 15px 5px;
     //     left: 50%;
     // }
-
-    @media (min-width: 800px) and (max-width: 900px) {
-        width: 30vw;
-        right: 18rem;
+    @media (max-width: 500px) {
+        width: 15vw;
+        right: 17rem;
+        top: 0rem;
     }
 
-    @media (min-width: 900px) and (max-width: 1400px) {
-        width: 19vw;
-        right: 25%;
+    @media (min-width: 500px) and (max-width: 900px) {
+        width: 15vw;
+        right: 16rem;
+        top: 0rem;
     }
 
-    @media (min-width: 1400px) {
+    @media (min-width: 900px) and (max-width: 1000px) {
+        width: 15vw;
+        right: 6rem;
+        top: 0;
+    }
+
+    @media (min-width: 1000px) and (max-width: 1200px) {
+        width: 15vw;
+        right: 6rem;
+        top: 0;
+    }
+
+    @media (min-width: 1200px) and (max-width: 1400px) {
+        width: 15vw;
+        right: 2rem;
+        top: 0;
+    }
+
+    @media (min-width: 1400px) and (max-width: 1600px) {
+        width: 15vw;
+        right: 9%;
+        top: 0rem;
+    }
+
+    @media (min-width: 1600px) and (max-width: 1800px) {
         width: 15vw;
         right: -3%;
+        top: 0;
+    }
+
+    @media (min-width: 1800px) {
+        width: 15vw;
+        right: -3%;
+        top: 0;
     }
 }
 
@@ -164,15 +203,20 @@
         align-items: center;
         color: white;
         // font-weight: bold;
+
+        @media (min-width: 1700px) and (max-width: 2000px) {
+            width: 4.5rem !important;
+        }
+        @media (min-width: 2000px) {
+            width: 3.5rem !important;
+        }
     }
 
     img {
-        // float: left;
         width: 40px;
         height: 40px;
         margin-right: 12px;
         border-radius: 50%;
-        // object-fit: cover;
     }
 
     .preview {
@@ -183,6 +227,25 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         color: var(--grey);
+    }
+}
+
+.member-list-img-circle {
+    border-radius: 50%;
+    width: 5rem;
+    height: 2.2rem;
+    background-color: #162c4287;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+
+    @media (min-width: 1700px) and (max-width: 2000px) {
+        width: 7rem !important;
+    }
+    @media (min-width: 2000px) {
+        width: 6rem !important;
     }
 }
 

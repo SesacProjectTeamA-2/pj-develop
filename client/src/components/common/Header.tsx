@@ -151,64 +151,6 @@ export default function Header(props: any) {
                 }));
 
                 props.setRecentMsg(formattedData);
-
-                //~ 삭제예정
-                //; 최신순으로 allGroupInfo 정렬
-                // if (props.allGroupInfo?.length > 0) {
-                //     const sortedAllGroupInfo = [...props.allGroupInfo]
-                //         .sort((a, b) => {
-                //             const getTimeStamp = (data: any) =>
-                //                 roomInfoArray.find(
-                //                     (item: any) => item.gSeq === data.gSeq
-                //                 )?.msg.timeStamp;
-
-                //             const timeStampA = roomInfoArray.some(
-                //                 (data: any) => data.gSeq === a.gSeq && data.msg
-                //             )
-                //                 ? getTimeStamp(a)
-                //                 : undefined;
-
-                //             const timeStampB = roomInfoArray.some(
-                //                 (data: any) => data.gSeq === b.gSeq && data.msg
-                //             )
-                //                 ? getTimeStamp(b)
-                //                 : undefined;
-
-                //             // gSeq가 recentMsg에 있는 경우를 먼저 정렬
-                //             return (
-                //                 (timeStampB &&
-                //                     timeStampA &&
-                //                     new Date(timeStampB).getTime() -
-                //                         new Date(timeStampA).getTime()) ||
-                //                 (timeStampB ? -1 : timeStampA ? 1 : 0)
-                //             );
-                //         })
-                //         .sort((a, b) => {
-                //             const hasTimeStampA = roomInfoArray.some(
-                //                 (data: any) => data.gSeq === a.gSeq && data.msg
-                //             );
-                //             const hasTimeStampB = roomInfoArray.some(
-                //                 (data: any) => data.gSeq === b.gSeq && data.msg
-                //             );
-
-                //             // gSeq가 recentMsg에 있는 경우를 먼저 정렬
-                //             return hasTimeStampA && hasTimeStampB
-                //                 ? 0
-                //                 : hasTimeStampA
-                //                 ? -1
-                //                 : hasTimeStampB
-                //                 ? 1
-                //                 : 0;
-                //         });
-
-                //     props.setAllGroupInfo(sortedAllGroupInfo);
-
-                //     // 정렬된 allGroupInfo
-                //     console.log(
-                //         'sortedAllGroupInfo>>>>>>>',
-                //         sortedAllGroupInfo
-                //     );
-                // }
             });
     };
 
@@ -230,15 +172,15 @@ export default function Header(props: any) {
                 }),
             };
 
-            console.log('newMsg Event newMsgData ::::', newMsgData);
-            console.log('newMsg Event gSeq, content ::::', gSeq, content);
+            // console.log('newMsg Event newMsgData ::::', newMsgData);
+            // console.log('newMsg Event gSeq, content ::::', gSeq, content);
 
-            console.log('formattedData', formattedData);
+            // console.log('formattedData', formattedData);
 
-            console.log(
-                '+++++++newMsg - props.allGroupInfo>>>>>>>',
-                props.allGroupInfo
-            );
+            // console.log(
+            //     '+++++++newMsg - props.allGroupInfo>>>>>>>',
+            //     props.allGroupInfo
+            // );
 
             //; 최신순으로 allGroupInfo 정렬
             //) 주의할 점 ! --> newMsgData는 배열이 아닌, 객체 형태 (하나만 전송)
@@ -298,10 +240,22 @@ export default function Header(props: any) {
 
         props.socket?.on('newMsg', socketNewMsg);
 
+        /////////////////////////////////
+
+        const loginUserSocket = (data: any) => {
+            console.log('loginUser #########', data); // 서버에서 보낸 data
+
+            if (data.loginUser?.length > 0) {
+                props.setLoginUser(data.loginUser);
+            }
+        };
+
+        props.socket?.on('loginUser', loginUserSocket);
         return () => {
             props.socket?.off('newMsg', socketNewMsg);
+            props.socket?.off('loginUser', loginUserSocket);
         };
-    }, [props.socket, props.allGroupInfo]);
+    }, [props.socket, props.allGroupInfo, props.isEnter]);
 
     useEffect(() => {
         getRecentMsg(); // axios
@@ -318,7 +272,7 @@ export default function Header(props: any) {
 
     const nvg = useNavigate();
 
-    const [uSeqData, setUSeqData] = useState({ uSeq: 0 });
+    const [uSeqData, setUSeqData] = useState({ uSeq: 0, gSeq: [] });
 
     //] 프로필 사진 가져오기
     const [userImgSrc, setUserImgSrc] = useState<any>('/asset/images/user.svg'); // 문자열 변수
@@ -357,30 +311,10 @@ export default function Header(props: any) {
                 setIsUser(true); //로그인 상태
                 await getUserData();
             };
+
             loginProfileLoad();
         } else setIsCookie(false);
     }, [cookie]);
-
-    // ] disconnect 시, uSeq 데이터 전송
-    const getJoinedGroup = async () => {
-        const res = await axios
-            .get(`${process.env.REACT_APP_DB_HOST}/group/joined`, {
-                headers: {
-                    Authorization: `Bearer ${uToken}`,
-                },
-            })
-            .then((res) => {
-                const { uSeq } = res.data;
-
-                setUSeqData({
-                    uSeq,
-                });
-            });
-    };
-
-    useEffect(() => {
-        getJoinedGroup(); // uSeq 데이터 update
-    }, []);
 
     //] 로그아웃 시, gSeqList 전송
     // --> localStorage 채팅방 모임 리스트 전체 삭제
@@ -389,6 +323,9 @@ export default function Header(props: any) {
     //] localStorage 합산 (미확인 메세지 수)
     //--> gSeqList 활용
     const [unreadMsg, setUnreadMsg] = useState(0);
+
+    // logout 시, uSeqData 업데이트 이후 ---> socket의 logout 이벤트에 담아, 서버에 전송하기 위해 사용
+    const [updated, setUpdated] = useState(false);
 
     //; logout 시 실행
     const getMissionMain = async () => {
@@ -401,7 +338,7 @@ export default function Header(props: any) {
             .then((res) => {
                 // console.log('유저 미션 조회 >> ', res.data);
 
-                const { groupInfo } = res.data;
+                const { groupInfo, uSeq } = res.data;
 
                 let updatedGSeqList: any = [];
 
@@ -413,57 +350,19 @@ export default function Header(props: any) {
 
                 console.log('updatedGSeqList', updatedGSeqList);
 
+                setUSeqData({ uSeq, gSeq: updatedGSeqList });
+
                 updatedGSeqList?.map((gSeq: any) => {
                     localStorage.removeItem(`gSeq${gSeq}`);
                 });
+
+                setUpdated(true);
             });
     };
-
-    // useEffect(() => {
-    //     // 새로운 메세지가 오면 unreadMsg 업데이트
-    //     let accumulatedUnreadMsg = 0;
-
-    //     for (let i = 0; i < gSeqList?.length; i++) {
-    //         const currentUnreadMsg = localStorage.getItem(`gSeq${gSeqList[i]}`);
-    //         const parsedUnreadMsg = parseInt(currentUnreadMsg || '0', 10);
-    //         accumulatedUnreadMsg += parsedUnreadMsg;
-    //     }
-
-    //     setUnreadMsg(accumulatedUnreadMsg);
-
-    //     console.log('accumulatedUnreadMsg', accumulatedUnreadMsg);
-    // }, [gSeqList, props.socket]);
 
     useEffect(() => {
         updateUnreadMsg();
     }, [props.socket, props.isEnter]);
-
-    //     console.log('111111');
-    //     const updateUnreadMsg = async () => {
-    //         let accumulatedUnreadMsg = 0;
-    //         console.log('gSeqList', gSeqList);
-
-    //         for (let i = 0; i < gSeqList?.length; i++) {
-    //             const currentUnreadMsg = localStorage.getItem(
-    //                 `gSeq${gSeqList[i]}`
-    //             );
-    //             const parsedUnreadMsg = parseInt(currentUnreadMsg || '0', 10);
-    //             accumulatedUnreadMsg += parsedUnreadMsg;
-    //             console.log('currentUnreadMsg', currentUnreadMsg);
-    //             console.log('parsedUnreadMsg', parsedUnreadMsg);
-    //         }
-
-    //         setUnreadMsg(accumulatedUnreadMsg);
-
-    //         console.log('accumulatedUnreadMsg', accumulatedUnreadMsg);
-    //     };
-
-    //     // getMissionMain 호출이 완료될 때까지 기다리기
-    //     getMissionMain().then(() => {
-    //         updateUnreadMsg();
-    //     });
-
-    // console.log('unreadMsg', unreadMsg);
 
     const [logoutConfirm, setLogoutConfirm] = useState(false);
 
@@ -476,10 +375,6 @@ export default function Header(props: any) {
             if (window.confirm('로그아웃하시겠습니까 ?')) {
                 // console.log('uSeqData ::::::', uSeqData);
 
-                // 채팅 종료
-                // props.socket?.emit('logout', uSeqData);
-                // props.socket.emit('logout', { uSeq: 8 });
-
                 props.setAdminUser(false);
                 localStorage.removeItem('adminUser');
 
@@ -487,34 +382,42 @@ export default function Header(props: any) {
             } else {
                 return;
             }
-            //; 2. 유저
-        } else if (window.confirm('로그아웃하시겠습니까 ?')) {
-            // console.log('uSeqData ::::::', uSeqData);
-
-            //-- 0) 채팅창 끄기
-            props.setShowChat(false);
-            // 로컬 스토리지에 값을 저장하기
-            localStorage.setItem('showChat', JSON.stringify(false));
-
-            //-- 1) 채팅 종료
-            props.socket?.emit('logout', uSeqData);
-            // props.socket.emit('logout', { uSeq: 8 });
-
-            localStorage.setItem('showChat', JSON.stringify(false));
-
-            //-- 2) 로컬스토리지 삭제
-            // localStorage.removeItem(`gSeq${gSeq}`);
-
-            //-- 3) 실시간 알람 종료
-            props.sse?.addEventListener('close', (event: any) => {
-                console.log('logout >>> 실시간 알람 종료');
-                // props.sse.close();
-            });
-
-            // logout 확정
-            setLogoutConfirm(true);
         } else {
-            return;
+            //; 2. 유저
+            if (window.confirm('로그아웃하시겠습니까 ?')) {
+                //-- 0) 채팅창 끄기
+                props.setShowChat(false);
+                // 로컬 스토리지에 값을 저장하기
+                localStorage.setItem('showChat', JSON.stringify(false));
+
+                console.log('********** uSeqData **********', uSeqData);
+
+                // console.log('********** updatedGSeqList **********', gSeqList);
+
+                // [임시] 주석처리
+                // props.socket?.emit('joinRoom', {
+                //     isSignup: false,
+                //     gSeq: gSeqList,
+                // });
+
+                // // [추후] 제거해도 무방 확인
+                // //-- loginUser 이벤트에 대한 리스너 추가
+                // props.socket?.on('loginUser', (data: any) => {
+                //     if (data.loginUser?.length > 0) {
+                //         props.setLoginUser(data.loginUser);
+                //     }
+                // });
+
+                localStorage.setItem('showChat', JSON.stringify(false));
+
+                //-- 2) 로컬스토리지 삭제
+                // localStorage.removeItem(`gSeq${gSeq}`);
+
+                // logout 확정
+                setLogoutConfirm(true);
+            } else {
+                return;
+            }
         }
     };
 
@@ -540,10 +443,27 @@ export default function Header(props: any) {
     //; 로그아웃 확정되면
     useEffect(() => {
         if (logoutConfirm) {
-            postLogOut();
             getMissionMain(); //--> localStorage 채팅방 모임 리스트 전체 삭제
+
+            postLogOut();
         }
     }, [logoutConfirm]);
+
+    //_ logout 시, socket의 logout 이벤트에 uSeqData 업데이트하여 전송
+    useEffect(() => {
+        if (updated) {
+            console.log('********** uSeqData **********', uSeqData);
+            //-- 1) 채팅 종료
+            props.socket?.emit('logout', uSeqData);
+            // props.socket.emit('logout', { uSeq: 8 });
+
+            //-- 3) 실시간 알람 종료
+            props.sse?.addEventListener('close', (event: any) => {
+                console.log('logout >>> 실시간 알람 종료');
+                // props.sse.close();
+            });
+        }
+    }, [updated]);
 
     //] 초대장 링크 입력 후 버튼 클릭 시 그 그룹으로 이동
     const [grpInput, setGrpInput] = useState<string>('');
@@ -628,6 +548,8 @@ export default function Header(props: any) {
     //     };
     // }, []); // 빈 배열을 전달하여 마운트 및 언마운트 시에만 실행되도록 함
     //_ [ END ]
+
+    // console.log('********** uSeqData **********', uSeqData);
 
     return (
         <>
@@ -846,18 +768,16 @@ export default function Header(props: any) {
                                                 <ThemeProvider theme={theme}>
                                                     {/* <Link to="/login">Login</Link> */}
 
-                                                    <Link to="/login">
-                                                        <Button
-                                                            aria-label="outlined button group"
-                                                            variant="outlined"
-                                                            className="menu-button"
-                                                            onClick={
-                                                                logoutHandler
-                                                            }
-                                                        >
-                                                            Logout
-                                                        </Button>
-                                                    </Link>
+                                                    {/* <Link to="/login"> */}
+                                                    <Button
+                                                        aria-label="outlined button group"
+                                                        variant="outlined"
+                                                        className="menu-button"
+                                                        onClick={logoutHandler}
+                                                    >
+                                                        Logout
+                                                    </Button>
+                                                    {/* </Link> */}
                                                 </ThemeProvider>
                                             </li>
                                         ) : (
@@ -871,6 +791,9 @@ export default function Header(props: any) {
                                                             aria-label="outlined button group"
                                                             variant="outlined"
                                                             className="menu-button"
+                                                            style={{
+                                                                color: 'black',
+                                                            }}
                                                         >
                                                             Login
                                                         </Button>
@@ -1021,7 +944,7 @@ export default function Header(props: any) {
                     </div>
                 </div>
 
-                {/* 모바일일 때 메뉴 바*/}
+                {/* ======  모바일일 때 메뉴 바 ====== */}
                 <div className="header-divTwo mobMode">
                     <nav className="header-nav ">
                         <ul
@@ -1030,61 +953,167 @@ export default function Header(props: any) {
                                 display: isVisibleMobile ? 'flex' : 'none',
                             }}
                         >
-                            <li>
-                                <Link to="/main">
-                                    <button className="menu-button">
-                                        MAIN
-                                    </button>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/group">
-                                    <button className="menu-button">
-                                        GROUP
-                                    </button>
-                                </Link>
-                            </li>
-
-                            {/* 관리자만 보이는 버튼 */}
-                            {/* <li>
-                            <Link to="/management/users">
-                                <button className="menu-button">
-                                    Management
-                                </button>
-                            </Link>
-                        </li> */}
+                            {/* 회원가입 페이지 */}
 
                             {/* 로그인/비로그인 구분 */}
                             {!isCookie ? (
-                                <li>
-                                    {/* 비로그인 시 */}
-                                    <Link to="/login">
-                                        <button className="menu-button">
-                                            Login
-                                        </button>
-                                    </Link>
-                                </li>
+                                // props.adminUser ? (
+                                localStorage.getItem('adminUser') === 'true' ? (
+                                    // === admin 경우 ===
+                                    <li>
+                                        <ThemeProvider theme={theme}>
+                                            {/* <Link to="/login">Login</Link> */}
+
+                                            <Link to="/login">
+                                                <Button
+                                                    aria-label="outlined button group"
+                                                    variant="outlined"
+                                                    className="menu-button"
+                                                    onClick={logoutHandler}
+                                                >
+                                                    Logout
+                                                </Button>
+                                            </Link>
+                                        </ThemeProvider>
+                                    </li>
+                                ) : (
+                                    <li>
+                                        {/* 비로그인 시 */}
+                                        <Link to="/login">
+                                            <button className="menu-button">
+                                                Login
+                                            </button>
+                                        </Link>
+                                    </li>
+                                )
                             ) : (
                                 <>
-                                    <li
+                                    <li>
+                                        <Link to="/main">
+                                            <button className="menu-button">
+                                                MAIN
+                                            </button>
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/group">
+                                            <button className="menu-button">
+                                                GROUP
+                                            </button>
+                                        </Link>
+                                    </li>
+                                    {!props.isIntro && (
+                                        <div className="chat-icon-container">
+                                            <img
+                                                src="/asset/icons/chat.svg"
+                                                style={{
+                                                    width: '40px',
+                                                    height: '40px',
+                                                }}
+                                                alt="chatImg"
+                                                onClick={() =>
+                                                    props.showChatting()
+                                                }
+                                                id="chat-btn"
+                                            />
+                                            <div
+                                                className="noti-chat-count-wrapper"
+                                                onClick={() =>
+                                                    props.showChatting()
+                                                }
+                                            >
+                                                {unreadMsg == 0 ? (
+                                                    <></>
+                                                ) : (
+                                                    <span className="notification-chat-count">
+                                                        {/* 합산 */}
+                                                        {unreadMsg}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <span id="chat-text">Chat</span>
+                                        </div>
+                                    )}
+
+                                    <div className="alarm-icon-container">
+                                        <img
+                                            src="/asset/icons/Bell.svg"
+                                            alt="alarm"
+                                            onClick={alarmHandler}
+                                            id="alarm-btn"
+                                        />
+                                        <div
+                                            className="noti-count-wrapper"
+                                            onClick={alarmHandler}
+                                        >
+                                            {props.alarmCount === '0' ? (
+                                                ''
+                                            ) : (
+                                                <span className="notification-count">
+                                                    {Number(props.alarmCount) <
+                                                    100
+                                                        ? props.alarmCount
+                                                        : '99+'}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <span id="alarm-text">Alarm</span>
+                                    </div>
+
+                                    {isAlarm && (
+                                        <Alarm
+                                            alarmHandler={alarmHandler}
+                                            alarmList={props.alarmList}
+                                            setAlarmList={props.setAlarmList}
+                                            commentAlarm={props.commentAlarm}
+                                            setAlarmCount={props.setAlarmCount}
+                                            setKey={props.setKey}
+                                            // key={props.key}
+                                        />
+                                    )}
+
+                                    <div className="logout-icon-container">
+                                        <img
+                                            src="/asset/icons/logout.svg"
+                                            alt="logout"
+                                            onClick={logoutHandler}
+                                            id="logout-btn"
+                                        />
+                                        <span id="logout-text">Logout</span>
+                                    </div>
+                                    <li>
+                                        {/* <div className="mypage-icon-container"> */}
+                                        <Link to="/mypage">
+                                            <img
+                                                src={userImgSrc}
+                                                style={{
+                                                    width: '40px',
+                                                    height: '40px',
+                                                }}
+                                                alt="userImg"
+                                                className="myPage-btn"
+                                            />
+                                        </Link>
+                                    </li>
+                                    {/* <li
                                         style={{
                                             display: 'flex',
                                             flexDirection: 'column',
                                             width: '100%',
                                             alignItems: 'center',
                                         }}
-                                    >
-                                        {/* 로그인 시 */}
-                                        {/* 모바일에서 - 채팅 컴포넌트 */}
-                                        {/* <li id="chat-li"> */}
-                                        {/* <img
+                                    > */}
+                                    {/* 로그인 시 */}
+                                    {/* 모바일에서 - 채팅 컴포넌트 */}
+                                    {/* <li id="chat-li"> */}
+                                    {/* <img
                                             src="/asset/icons/chat.svg"
                                             alt="chatImg"
                                             onClick={() => props.showChatting()}
                                             id="chat-btn"
                                         /> */}
-                                        {/* </li> */}
-                                        <img
+                                    {/* </li> */}
+                                    {/* <img
                                             src="/asset/icons/logout.svg"
                                             alt="logout"
                                             onClick={logoutHandler}
@@ -1100,8 +1129,7 @@ export default function Header(props: any) {
                                                 className="myPage-btn"
                                                 alt="userImg"
                                             ></img>
-                                        </Link>
-                                    </li>
+                                        </Link> */}
                                 </>
                             )}
                         </ul>
