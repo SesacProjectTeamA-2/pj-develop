@@ -172,15 +172,15 @@ export default function Header(props: any) {
                 }),
             };
 
-            console.log('newMsg Event newMsgData ::::', newMsgData);
-            console.log('newMsg Event gSeq, content ::::', gSeq, content);
+            // console.log('newMsg Event newMsgData ::::', newMsgData);
+            // console.log('newMsg Event gSeq, content ::::', gSeq, content);
 
-            console.log('formattedData', formattedData);
+            // console.log('formattedData', formattedData);
 
-            console.log(
-                '+++++++newMsg - props.allGroupInfo>>>>>>>',
-                props.allGroupInfo
-            );
+            // console.log(
+            //     '+++++++newMsg - props.allGroupInfo>>>>>>>',
+            //     props.allGroupInfo
+            // );
 
             //; 최신순으로 allGroupInfo 정렬
             //) 주의할 점 ! --> newMsgData는 배열이 아닌, 객체 형태 (하나만 전송)
@@ -240,8 +240,20 @@ export default function Header(props: any) {
 
         props.socket?.on('newMsg', socketNewMsg);
 
+        const loginUserSocket = (data: any) => {
+            console.log('loginUser #########', data); // 서버에서 보낸 data
+
+            if (data.loginUser?.length > 0) {
+                props.setLoginUser(data.loginUser);
+            }
+        };
+
+        //-- loginUser 이벤트에 대한 리스너 추가
+        props.socket?.on('loginUser', loginUserSocket);
+
         return () => {
             props.socket?.off('newMsg', socketNewMsg);
+            props.socket?.off('loginUser', loginUserSocket);
         };
     }, [props.socket, props.allGroupInfo, props.isEnter]);
 
@@ -444,12 +456,13 @@ export default function Header(props: any) {
                     gSeq: gSeqList,
                 });
 
-                //-- loginUser 이벤트에 대한 리스너 추가
-                props.socket?.on('loginUser', (data: any) => {
-                    if (data.loginUser?.length > 0) {
-                        props.setLoginUser(data.loginUser);
-                    }
-                });
+                // // [추후] 제거해도 무방 확인
+                // //-- loginUser 이벤트에 대한 리스너 추가
+                // props.socket?.on('loginUser', (data: any) => {
+                //     if (data.loginUser?.length > 0) {
+                //         props.setLoginUser(data.loginUser);
+                //     }
+                // });
 
                 localStorage.setItem('showChat', JSON.stringify(false));
 

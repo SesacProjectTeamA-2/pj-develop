@@ -416,8 +416,20 @@ export default function ChatRoom({
         // 서버에서 데이터 받아오기
         socket?.on('msg', socketMsg);
 
+        const loginUserSocket = (data: any) => {
+            console.log('loginUser #########', data); // 서버에서 보낸 data
+
+            if (data.loginUser?.length > 0) {
+                setLoginUser(data.loginUser);
+            }
+        };
+
+        //-- loginUser 이벤트에 대한 리스너 추가
+        socket?.on('loginUser', loginUserSocket);
+
         return () => {
             socket?.off('msg', socketMsg);
+            socket?.off('loginUser', loginUserSocket);
         };
     }, [socket]);
 
