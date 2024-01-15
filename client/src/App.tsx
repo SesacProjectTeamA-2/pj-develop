@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { Cookies } from 'react-cookie';
-import axios from 'axios';
 
 import './styles/scss/base/reset.scss';
 
@@ -34,13 +32,9 @@ import BoardEdit from './pages/group/BoardEdit';
 import GroupMissionDetail from './pages/group/GroupMissionDetail';
 import MissionPost from './pages/group/MissionPost';
 import BoardMissionEdit from './pages/group/BoardMissionEdit';
-import GroupList from './pages/group/GroupList';
 import GroupSearchAll from './pages/group/GroupSearchAll';
 
 function App() {
-    const cookie = new Cookies();
-    const uToken = cookie.get('isUser');
-
     //] socket 전역으로 관리
     const [socket, setSocket] = useState<any>();
 
@@ -55,14 +49,6 @@ function App() {
         return storedShowChat ? JSON.parse(storedShowChat) : false;
     });
 
-    const [alarmCount, setAlarmCount] = useState(0);
-    const [alarmList, setAlarmList] = useState<any>();
-    const [commentAlarm, setCommentAlarm] = useState<any>();
-
-    console.log('alarmCount', alarmCount);
-    console.log('실시간 commentAlarm >>>>>>', commentAlarm);
-    console.log('업데이트 여부 alarmList >>>>>>', alarmList);
-
     //-- Header 채팅 아이콘 클릭 시 실행하는 함수
     const showChatting = (): void => {
         //     setShowChat(!showChat); // 채팅 사이드바 유무
@@ -73,26 +59,24 @@ function App() {
         });
     };
 
-    //] 알람 설정 시, 리렌더링
-    const [key, setKey] = useState(0); // key 상태 추가
-
     const [isIntro, setIsIntro] = useState<boolean>(false);
     const [isLogin, setIsLogin] = useState<boolean>(false);
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
     const [initialLogin, setInitialLogin] = useState<any>(false);
+    // admin 인증
+    const [adminUser, setAdminUser] = useState(false);
+    // key 상태 추가
+    const [key, setKey] = useState(0); // 알람 설정 시, 리렌더링
 
     const [allGroupInfo, setAllGroupInfo] = useState<any>([]); // 모든 모임(리더+멤버) 관리
-
     // console.log('allGroupInfo APP >>>>', allGroupInfo);
 
     const [recentMsg, setRecentMsg] = useState<any>(); // 방 나갈 때, 최신 메세지
     const [isEnter, setIsEnter] = useState(false); // 입장/나가기
-
-    console.log('전역 recentMsg ::::', recentMsg);
+    const [loginUser, setLoginUser] = useState<any>([]); // joinRoom 이후 접속한 유저 리스트 업데이트
 
     //++ Header 채팅 아이콘 클릭 시, socket roomInfo 이벤트
     // 모임별 채팅 최신 정보 (최신 메세지, 안읽은 메세지)
-
     useEffect(() => {
         if (showChat) {
             socket?.emit('roomInfo', { isOut: '' });
@@ -123,38 +107,12 @@ function App() {
         }
     }, [showChat]);
 
-    // useEffect(() => {
-    //     socket?.emit('roomInfo', { isOut: '' });
-
-    //     console.log('###### 채팅방 !!!');
-
-    //     // 서버에서 보낸 data
-    //     socket?.on('roomInfo', (data: any) => {
-    //         console.log('roomInfo event received on client :::', data);
-
-    //         // 시간 변환
-    //         const formattedData = data?.map((msgObj: any) => ({
-    //             ...msgObj,
-    //             msg: {
-    //                 ...msgObj.msg,
-    //                 timeStamp: new Date(
-    //                     msgObj.msg.timeStamp
-    //                 ).toLocaleTimeString([], {
-    //                     hour: 'numeric',
-    //                     minute: '2-digit',
-    //                     hour12: true,
-    //                 }),
-    //             },
-    //         }));
-
-    //         setRecentMsg(formattedData);
-
-    //         // console.log('formattedData', formattedData);
-    //     }); // 최신 메세지, 안읽은 메세지 없으면 : [] 빈 배열
-    // }, []);
-
-    // admin 인증
-    const [adminUser, setAdminUser] = useState(false);
+    const [alarmCount, setAlarmCount] = useState(0);
+    const [alarmList, setAlarmList] = useState<any>();
+    const [commentAlarm, setCommentAlarm] = useState<any>();
+    // console.log('alarmCount', alarmCount);
+    // console.log('실시간 commentAlarm >>>>>>', commentAlarm);
+    // console.log('업데이트 여부 alarmList >>>>>>', alarmList);
 
     return (
         <div className="App">
@@ -186,6 +144,8 @@ function App() {
                 setAllGroupInfo={setAllGroupInfo}
                 setKey={setKey}
                 key={key}
+                loginUser={loginUser}
+                setLoginUser={setLoginUser}
             />
 
             <Routes>
@@ -231,6 +191,8 @@ function App() {
                                     setAlarmList={setAlarmList}
                                     setCommentAlarm={setCommentAlarm}
                                     setKey={setKey}
+                                    loginUser={loginUser}
+                                    setLoginUser={setLoginUser}
                                 />
                             }
                             showChat={showChat}
@@ -242,6 +204,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -260,6 +224,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -278,6 +244,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -286,7 +254,13 @@ function App() {
                     path="/group/create"
                     element={
                         <BasicLayout
-                            children={<GroupCreate socket={socket} />}
+                            children={
+                                <GroupCreate
+                                    socket={socket}
+                                    loginUser={loginUser}
+                                    setLoginUser={setLoginUser}
+                                />
+                            }
                             showChat={showChat}
                             showChatting={showChatting}
                             socket={socket}
@@ -296,6 +270,8 @@ function App() {
                             setIsEnter={setIsEnter}
                             allGroupInfo={allGroupInfo}
                             setAllGroupInfo={setAllGroupInfo}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -310,6 +286,8 @@ function App() {
                                     socket={socket}
                                     key={key}
                                     setKey={setKey}
+                                    loginUser={loginUser}
+                                    setLoginUser={setLoginUser}
                                 />
                             }
                             showChat={showChat}
@@ -323,6 +301,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -343,6 +323,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -363,6 +345,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -383,6 +367,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -402,6 +388,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -424,6 +412,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -446,6 +436,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -468,6 +460,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -488,6 +482,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -508,6 +504,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -529,6 +527,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -550,6 +550,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -571,6 +573,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />
@@ -593,6 +597,8 @@ function App() {
                             setAllGroupInfo={setAllGroupInfo}
                             setKey={setKey}
                             key={key}
+                            loginUser={loginUser}
+                            setLoginUser={setLoginUser}
                         />
                     }
                 />

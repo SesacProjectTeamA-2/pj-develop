@@ -26,6 +26,8 @@ export default function Main({
     setCommentAlarm,
     setKey,
     socket,
+    loginUser,
+    setLoginUser,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -418,6 +420,13 @@ export default function Main({
 
             //-- joinRoom 이벤트
             socket.emit('joinRoom', { gSeq: gSeqList });
+
+            //-- loginUser 이벤트에 대한 리스너 추가
+            socket?.on('loginUser', (data: any) => {
+                if (data.loginUser?.length > 0) {
+                    setLoginUser(data.loginUser);
+                }
+            });
         }
     }, [loginData]);
 

@@ -27,6 +27,8 @@ export default function GroupLayout({
     setAllGroupInfo,
     key,
     setKey,
+    loginUser,
+    setLoginUser,
 }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
@@ -167,6 +169,8 @@ export default function GroupLayout({
                                         setIsEnter={setIsEnter}
                                         allGroupInfo={allGroupInfo}
                                         setAllGroupInfo={setAllGroupInfo}
+                                        loginUser={loginUser}
+                                        setLoginUser={setLoginUser}
                                     />
                                 ) : null}
                             </Item>

@@ -14,7 +14,7 @@ import MissionAddModal from '../../components/common/modal/MissionAddModal';
 import { Divider, ListItem, ListItemText } from '@mui/material';
 import SuccessModal from 'src/components/common/modal/SuccessModal';
 
-export default function GroupCreate(socket: any) {
+export default function GroupCreate({ socket, loginUser, setLoginUser }: any) {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
@@ -120,6 +120,13 @@ export default function GroupCreate(socket: any) {
             });
 
             socket.socket?.emit('joinRoom', { gSeq: gSeq, isSignup: 'true' });
+
+            //-- loginUser 이벤트에 대한 리스너 추가
+            socket?.on('loginUser', (data: any) => {
+                if (data.loginUser?.length > 0) {
+                    setLoginUser(data.loginUser);
+                }
+            });
 
             // 서버에서 보낸 data
             socket.socket?.on('loginNotice', (data: any) => {

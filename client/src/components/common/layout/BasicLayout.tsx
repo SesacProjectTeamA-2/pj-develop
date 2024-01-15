@@ -21,6 +21,8 @@ export default function BasicLayout({
     setIsEnter,
     allGroupInfo,
     setAllGroupInfo,
+    loginUser,
+    setLoginUser,
 }: any) {
     return (
         <>
@@ -77,6 +79,8 @@ export default function BasicLayout({
                                         setIsEnter={setIsEnter}
                                         allGroupInfo={allGroupInfo}
                                         setAllGroupInfo={setAllGroupInfo}
+                                        loginUser={loginUser}
+                                        setLoginUser={setLoginUser}
                                     />
                                 ) : null}
                             </Item>
