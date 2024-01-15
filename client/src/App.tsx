@@ -63,8 +63,10 @@ function App() {
     const [isLogin, setIsLogin] = useState<boolean>(false);
     const [isJoinPage, setIsJoinPage] = useState<boolean>(false);
     const [initialLogin, setInitialLogin] = useState<any>(false);
+
     // admin 인증
     const [adminUser, setAdminUser] = useState(false);
+
     // key 상태 추가
     const [key, setKey] = useState(0); // 알람 설정 시, 리렌더링
 
