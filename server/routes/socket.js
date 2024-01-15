@@ -198,7 +198,7 @@ exports.chatSocket = async (io, socket) => {
 
                   const uNameInRoom = userDatas.map((user) => user.uName);
                   console.log(`room${gSeq}에 접속된 아이디 목록`, uNameInRoom);
-                  socket.emit('loginUser', {
+                  socket.to(`room${gSeq}`).emit('loginUser', {
                     loginUser: userDatas,
                   });
                 }
@@ -313,10 +313,8 @@ exports.chatSocket = async (io, socket) => {
         socket.on('logout', async (data) => {
           try {
             console.log('User logged out:', socketId);
-
             // 유저 캐시 삭제
             await redisCli.del(`socket${uSeq}`);
-
             // userSocketMap 객체에서 특정 uSeq 키값을 삭제
             delete userSocketMap[uSeq];
 
@@ -347,8 +345,11 @@ exports.chatSocket = async (io, socket) => {
               userDatas = await Promise.all(userDatasPromises);
 
               const uNameInRoom = userDatas.map((user) => user.uName);
-              console.log(`room${gSeq}에 접속된 아이디 목록`, uNameInRoom);
-              socket.emit('loginUser', {
+              console.log(
+                `room${gSeq}에 접속된 아이디 목록>>>>>>>>>>>>>>>>`,
+                uNameInRoom
+              );
+              socket.to(`room${gSeq}`).emit('loginUser', {
                 loginUser: userDatas,
               });
             }
