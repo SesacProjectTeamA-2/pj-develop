@@ -132,7 +132,7 @@ export default function ChatRoom({
 
         //-- loginUser 이벤트에 대한 리스너 추가
         socket?.on('loginUser', (data: any) => {
-            console.log('loginUser #########', data); // 서버에서 보낸 data)
+            console.log('loginUser #########', data); // 서버에서 보낸 data
 
             if (data.loginUser?.length > 0) {
                 setLoginUser(data.loginUser);

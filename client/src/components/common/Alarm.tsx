@@ -250,13 +250,16 @@ any) {
             }
 
             //-- 3. 알람 수 -1
-            const currentAlarmCount = localStorage.getItem('alarmCount');
+            const currentAlarmCount = Number(
+                localStorage.getItem('alarmCount')
+            );
 
-            if (currentAlarmCount) {
+            // 0 이면 더이상 내려가지 않게
+            if (currentAlarmCount === 0) {
+                return;
+            } else if (currentAlarmCount > 0) {
                 // 현재 알람 수를 1 감소시키고 문자열로 변환하여 다시 저장
-                const newAlarmCount = (
-                    Number(currentAlarmCount) - 1
-                ).toString();
+                const newAlarmCount = (currentAlarmCount - 1).toString();
                 localStorage.setItem('alarmCount', newAlarmCount);
                 setAlarmCount(localStorage.getItem('alarmCount')); // 알람 수 업데이트
 
@@ -269,9 +272,6 @@ any) {
     }, [isDeleted]);
 
     const readHandler = async (idx: number) => {
-        // 기존 알람 중 클릭한 데이터
-        // console.log(formattedAlarms[idx]);
-
         //-- 1. 서버에 데이터 삭제 요청
         deleteAlarm(alarmList[idx]);
 
