@@ -145,7 +145,7 @@ exports.complain = async (req, res) => {
     const gSeqArray = result.map((item) => item.gSeq);
 
     const gNameArray = await Group.findAll({
-      where: { [Op.in]: gSeqArray },
+      where: { gSeq: { [Op.in]: gSeqArray } },
       attributes: ['gSeq', 'gName'],
     });
 
