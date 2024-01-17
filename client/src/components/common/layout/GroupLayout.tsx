@@ -131,13 +131,16 @@ export default function GroupLayout({
 
                         <Grid md={8} sm={8} xs={8} className="section-wrapper">
                             <Item
-                                style={{
-                                    paddingLeft: 0,
-                                    paddingRight: 0,
-                                    // paddingTop: '5rem',
-                                    paddingTop: '4rem',
-                                    justifyContent: 'center',
-                                }}
+                                style={
+                                    isShrinkView
+                                        ? { left: '-7rem' }
+                                        : {
+                                              paddingLeft: 0,
+                                              paddingRight: 0,
+                                              paddingTop: '4rem',
+                                              justifyContent: 'center',
+                                          }
+                                }
                             >
                                 {children}
                             </Item>

@@ -67,6 +67,10 @@
     @include media('<600px') {
         flex-direction: column;
         min-width: 11rem;
+        position: relative;
+        top: 2rem;
+        left: 0rem;
+        width: 1rem;
     }
     @include media('<500px') {
         padding: 0.5rem 2rem;

@@ -11,6 +11,11 @@ export default function MainMission() {
     const cookie = new Cookies();
     const uToken = cookie.get('isUser');
 
+    const [uName, setUName] = useState('');
+    const [uCharImg, setCharImg] = useState('');
+    const [missionArray, setMissionArray] = useState([]);
+    const [groupArray, setGroupInfo] = useState<any>([]);
+
     const getMissionMain = async () => {
         const res = await axios
             .get(`${process.env.REACT_APP_DB_HOST}/mission/user`, {
@@ -19,7 +24,7 @@ export default function MainMission() {
                 },
             })
             .then((res) => {
-                // console.log(res.data);
+                console.log('*************', res.data);
 
                 const { missionArray, groupArray, uName, uCharImg } = res.data;
                 setMissionArray(missionArray);
@@ -30,15 +35,10 @@ export default function MainMission() {
     };
 
     useEffect(() => {
-        if (cookie.get('isUser')) {
-            getMissionMain();
-        }
-    }, []);
-
-    const [uName, setUName] = useState('');
-    const [uCharImg, setCharImg] = useState('');
-    const [missionArray, setMissionArray] = useState([]);
-    const [groupArray, setGroupInfo] = useState<any>([]);
+        // if (cookie.get('isUser')) {
+        getMissionMain();
+        // }
+    }, [uToken]);
 
     return (
         <Paper elevation={3} className="content-grid-box">
