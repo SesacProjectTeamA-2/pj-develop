@@ -861,9 +861,11 @@ exports.getGroupDetail = async (req, res) => {
         // 모임에 가입한 경우
         let isLeader;
         let isJoin;
+        let isBlack;
+        let banReason;
 
         const groupUser = await GroupUser.findOne({
-          attributes: ['guSeq', 'guIsLeader'],
+          attributes: ['guSeq', 'guIsLeader', 'guIsBlackUser', 'guBanReason'],
           where: { gSeq: groupSeq, uSeq: user.uSeq },
         });
 
@@ -886,6 +888,10 @@ exports.getGroupDetail = async (req, res) => {
           isJoin = true;
           // 모임장여부 : true/false
           isLeader = groupUser && groupUser.guIsLeader === 'y' ? true : false;
+          isBlack = groupUser && groupUser.guIsBlackUser === 'y' ? true : false;
+          banReason = groupUser.guBanReason
+            ? groupUser.guBanReason
+            : '가입 가능';
         } else {
           // 모임 가입하지 않은 경우
           isJoin = false;
@@ -896,6 +902,8 @@ exports.getGroupDetail = async (req, res) => {
           result: true,
           isJoin,
           isLeader,
+          isBlack,
+          banReason,
           groupMission,
           nowRanking,
           totalRanking,
