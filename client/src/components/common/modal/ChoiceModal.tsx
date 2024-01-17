@@ -157,6 +157,7 @@ export default function ChoiceModal({
         cDetail: '',
         uSeq: 0,
         uName: '',
+        // gName: '', //~[추후] 추가해야할수도
     });
 
     console.log('complainData:::::::', complainData);

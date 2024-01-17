@@ -26,8 +26,14 @@ any) {
 
         // alarmList 배열을 순회하면서 데이터 가공
         const formattedAlarmsData = alarmList?.map((alarm: any) => {
+            let date: Date | any = ''; // date 변수의 타입을 Date 또는 string으로 지정
+
             // 각 알람 항목에서 commentTime을 Date 객체로 변환
-            const date = new Date(alarm?.commentTime);
+            if (alarm.commentTime) {
+                date = new Date(alarm?.commentTime);
+            } else if (alarm.blackTime) {
+                date = new Date(alarm?.blackTime);
+            }
 
             // 시간을 24시간 형식으로 변환
             const formattedTime = date.toLocaleTimeString('en-US', {
@@ -63,12 +69,19 @@ any) {
 
     console.log('formattedAlarms :::', formattedAlarms);
 
+    //_ 게시판 댓글
     // {
     //     commentTime: '2023-12-26T05:32:39.378Z';
     //     gbSeq: '18';
     //     type: 'comment';
     //     uName: 'TTTest222222';
     // }
+
+    //_ 게시판
+    // blackTime: '2024-01-17T08:36:40.201Z';
+    // gSeq: 2;
+    // guBanReason: '신고합니다 !!!!!!!!!!!';
+    // type: 'groupAlarm';
 
     //] 새로 추가된 알람 읽음 처리
     // const newAddedMsgReadHandler = async () => {
@@ -403,6 +416,30 @@ any) {
                                             <span>
                                                 <b>{alarm.uName}</b> 님이 댓글을
                                                 남겼습니다.
+                                            </span>
+                                        </p>
+                                    ) : alarm.type === 'groupAlarm' ? (
+                                        <p
+                                            onClick={() =>
+                                                linkToHandler(
+                                                    alarm.gSeq,
+                                                    // alarm.gName,
+                                                    //~[추후] 추가
+                                                    alarm.category,
+                                                    alarm.gbSeq,
+                                                    alarm.mSeq
+                                                )
+                                            }
+                                        >
+                                            <div className="alarm-title-text-wrapper">
+                                                <span className="alarm-title-text">
+                                                    {alarm.title}
+                                                </span>{' '}
+                                                <span> 모임에서</span>
+                                            </div>
+                                            <span>
+                                                <b>{alarm.guBanReason}</b>{' '}
+                                                사유로 추방 당하셨습니다.
                                             </span>
                                         </p>
                                     ) : (
