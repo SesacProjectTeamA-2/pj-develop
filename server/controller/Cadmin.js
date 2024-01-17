@@ -9,6 +9,7 @@ const {
   Complain,
 } = require('../models');
 const Op = require('sequelize').Op;
+const redisCli = require('../models/redis').redis_Cli;
 
 exports.allUsers = async (req, res) => {
   try {
@@ -90,13 +91,11 @@ exports.blackUser = async (req, res) => {
     const allAlarm = await redisCli.lRange(`user${receiver}`, 0, -1);
 
     await redisCli.publish(
-
       `group-alarm${receiver}`,
       JSON.stringify({
         alarmCount: result,
         allAlarm,
         receiver,
-
       })
     );
 
@@ -143,7 +142,14 @@ exports.complain = async (req, res) => {
   try {
     const result = await Complain.findAll();
 
-    res.send({ result });
+    const gSeqArray = result.map((item) => item.gSeq);
+
+    const gNameArray = await Group.findAll({
+      where: { [Op.in]: gSeqArray },
+      attributes: ['gSeq', 'gName'],
+    });
+
+    res.send({ result, gNameArray });
   } catch (err) {
     console.error('complain error', err);
   }
