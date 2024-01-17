@@ -58,7 +58,7 @@ const headCells: readonly HeadCell[] = [
         id: 'id',
         numeric: false,
         disablePadding: true,
-        label: '고유 번호',
+        label: '그룹번호',
     },
     {
         id: 'name',

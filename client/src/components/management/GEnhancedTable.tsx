@@ -266,8 +266,11 @@ export default function GEnhancedTable() {
                                             id={labelId}
                                             scope="row"
                                             padding="none"
-                                            align="center"
-                                            style={{ minWidth: '6rem' }}
+                                            align="left"
+                                            style={{
+                                                minWidth: '3rem',
+                                                paddingLeft: '1.6rem',
+                                            }}
                                         >
                                             {row.id}
                                         </TableCell>

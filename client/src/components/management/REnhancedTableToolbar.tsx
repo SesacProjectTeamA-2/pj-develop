@@ -15,7 +15,7 @@ export default function REnhancedTableToolbar(
     props: EnhancedTableToolbarProps
 ) {
     const { numSelected, selected } = props;
-    console.log(selected);
+    console.log('selected>>>>>>>', selected);
 
     // selectedGSeq={selectedGSeq}
     // selectedCDetail={selectedCDetail}
@@ -108,7 +108,7 @@ export default function REnhancedTableToolbar(
                 setWarningModalSwitch={setWarningModalSwitch}
                 warningModalSwitchHandler={warningModalSwitchHandler}
                 action={'관리자 모임 추방'}
-                selectedUSeq={selected}
+                selectedRSeq={selected}
                 // selectedGSeq={selectedGSeq}
                 // selectedCDetail={selectedCDetail}
             />

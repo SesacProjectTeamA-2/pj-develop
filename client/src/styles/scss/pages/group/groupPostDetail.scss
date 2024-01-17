@@ -10,10 +10,13 @@
     width: 80%;
     margin: 2rem;
     height: 100%;
-    @include media('<500px') {
+
+    @media (max-width: 600px) {
         width: 60%;
+        margin: 2rem 0 0 10rem;
     }
-    @include media('<900px') {
+
+    @media (min-width: 900px) {
         margin: 2rem 0 0 4rem;
     }
 }
