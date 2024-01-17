@@ -402,10 +402,9 @@ export default function Main({
             loginData.uName !== undefined &&
             !initialLogin
         ) {
-            console.log('=============', socket);
+            // console.log('=============', socket);
             socket?.emit('login', loginData);
             // socket?.emit('login', { gSeq: [1, 2, 3, 4] });
-            console.log('????????????');
 
             socket?.on('loginSuccess', (data: any) => {
                 console.log(
