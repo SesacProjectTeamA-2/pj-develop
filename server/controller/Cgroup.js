@@ -884,14 +884,16 @@ exports.getGroupDetail = async (req, res) => {
           ],
         });
 
-        if (groupUser) {
+        if (!groupUser.guIsBlackUser) {
           isJoin = true;
           // 모임장여부 : true/false
           isLeader = groupUser && groupUser.guIsLeader === 'y' ? true : false;
-          isBlack = groupUser && groupUser.guIsBlackUser === 'y' ? true : false;
-          banReason = groupUser.guBanReason
-            ? groupUser.guBanReason
-            : '가입 가능';
+          isBlack = false;
+        } else if (groupUser.guIsBlackUser) {
+          isJoin = false;
+          isLeader = false;
+          isBlack = true;
+          banReason = groupUser.guBanReason;
         } else {
           // 모임 가입하지 않은 경우
           isJoin = false;
