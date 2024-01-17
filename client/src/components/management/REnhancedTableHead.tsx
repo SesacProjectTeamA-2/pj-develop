@@ -58,7 +58,7 @@ const headCells: readonly HeadCell[] = [
         id: 'id',
         numeric: false,
         disablePadding: true,
-        label: '고유 번호',
+        label: '유저번호',
     },
     {
         id: 'name',
@@ -68,15 +68,21 @@ const headCells: readonly HeadCell[] = [
     },
     {
         id: 'createdAt',
+        numeric: false,
+        disablePadding: false,
+        label: '날짜',
+    },
+    {
+        id: 'gSeq',
         numeric: true,
         disablePadding: false,
-        label: '신고 날짜',
+        label: '그룹명(번호)',
     },
     {
         id: 'cDetail',
         numeric: true,
         disablePadding: false,
-        label: '내용',
+        label: '사유',
     },
 ];
 
@@ -123,7 +129,7 @@ export default function REnhancedTableHead(props: EnhancedTableProps) {
                     <TableCell
                         style={{ padding: '6px' }}
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
+                        align={headCell.numeric ? 'right' : 'center'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}
                         sortDirection={orderBy === headCell.id ? order : false}
                     >

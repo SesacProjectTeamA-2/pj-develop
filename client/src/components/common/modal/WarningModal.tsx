@@ -21,6 +21,7 @@ export default function WarningModal({
     setKey,
     selectedUSeq, // 관리자가 삭제하려는 uSeq List
     selectedGSeq, // 관리자가 삭제하려는 gSeq List
+    selectedRSeq, // 모임에서 추방 : 서버에 보내줄 {gSeq, guBanReason}
     leftMember, // 2명그룹 : 모임장이 모임 삭제할 경우 자동 위임되는 --> .uSeq: "남아있는 한 명의 uSeq" (숫자 하나만 보냄)
     memberArray, // 3명이상그룹 : 모임장이 모임 삭제할 경우 위임창 뜨게
 }: any) {
@@ -32,6 +33,7 @@ export default function WarningModal({
     const [groupName, setGroupName] = useState<GroupMissionsType[]>([]);
 
     // console.log('warningModal socket >>>', socket);
+    console.log('warningModal selectedRSeq >>>', selectedRSeq);
 
     const getGroup = async () => {
         const res = await axios
@@ -224,16 +226,20 @@ export default function WarningModal({
             adminDeleteGroupHandler();
         } else if (action === '관리자 모임 추방') {
             const adminBlackGroupHandler = async () => {
-                console.log('uSeq>>>>>>', selectedUSeq);
+                console.log('uSeq>>>>>>', selectedRSeq);
+                console.log('guBanReason, gSeq >>>>>>', selectedRSeq);
                 // selected gSeq 배열 반복
-                for (const uSeq of selectedUSeq) {
+                for (const uSeq of selectedRSeq) {
                     try {
                         // 각 gSeq에 대한 삭제 요청
                         const res = await axios.patch(
-                            `${process.env.REACT_APP_DB_HOST}/admin/black/${uSeq}`
+                            `${process.env.REACT_APP_DB_HOST}/admin/black/${uSeq.id}`,
+                            { guBanReason: uSeq.guBanReason, gSeq: uSeq.gSeq }
                         );
-                        // window.location.reload();
-                        console.log(`adminBlackGroupHandler ${uSeq}`, res.data);
+                        console.log(
+                            `adminBlackGroupHandler ${uSeq.id}`,
+                            res.data
+                        );
                     } catch (err) {
                         console.log(
                             `error 발생 adminBlackGroupHandler ${uSeq}: `,
@@ -366,17 +372,17 @@ export default function WarningModal({
                                     style={{ textAlign: 'center' }}
                                 >
                                     관리자 권한으로{' '}
-                                    {selectedUSeq.map(
-                                        (userUSeq: number, index: number) => (
+                                    {selectedRSeq.map(
+                                        (userUSeq: any, index: number) => (
                                             <span
-                                                key={userUSeq}
+                                                key={userUSeq.id}
                                                 style={{
                                                     color: '#d01e1e',
                                                     display: 'inline',
                                                 }}
                                             >
                                                 {index > 0 && ', '}
-                                                {`${userUSeq}번`}
+                                                {`${userUSeq.id}번`}
                                             </span>
                                         )
                                     )}{' '}

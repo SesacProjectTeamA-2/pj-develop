@@ -120,6 +120,7 @@ export default function GroupHome({
 
                 setIsLeader(res.data.isLeader);
                 setIsJoin(res.data.isJoin);
+                setIsBlack(res.data.isBlack);
 
                 switch (res.data.groupCategory) {
                     case 'ex':
@@ -233,6 +234,7 @@ export default function GroupHome({
     // 모임장 / 멤버
     const [isLeader, setIsLeader] = useState(false);
     const [isJoin, setIsJoin] = useState(false);
+    const [isBlack, setIsBlack] = useState(false);
 
     // 현재 점수 리스트
     const [nowScoreRanking, setNowScoreRanking] = useState([]);
@@ -322,7 +324,7 @@ export default function GroupHome({
                 memberArray={groupDetail.memberArray}
             />
 
-            {isJoin ? (
+            {isJoin || isBlack ? (
                 ''
             ) : groupDetail.groupMaxMember !== null &&
               groupDetail.memberArray.length + 1 <

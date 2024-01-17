@@ -9,7 +9,6 @@ import KakaoLoginBtn from '../../components/login/KakaoLoginBtn';
 import TesterLoginBtn1 from 'src/components/login/TesterLoginBtn1';
 import TesterLoginBtn2 from 'src/components/login/TesterLoginBtn2';
 import { IconButton, TextField } from '@mui/material';
-import toast from 'react-hot-toast';
 
 export default function Login(props: any) {
     // 로그인 버튼
@@ -21,13 +20,14 @@ export default function Login(props: any) {
         window.location.href = `${process.env.REACT_APP_DB_HOST}/user/login/test?testNum=${testNum}`;
     };
 
-    const googleLogin = (): void => {
-        window.location.href = `${process.env.REACT_APP_DB_HOST}/user/login/google`;
-    };
+    // const googleLogin = (): void => {
+    //     window.location.href = `${process.env.REACT_APP_DB_HOST}/user/login/google`;
+    // };
 
-    const kakaoLogin = (): void => {
-        window.location.href = `${process.env.REACT_APP_DB_HOST}/user/login/kakao/authorize`;
-    };
+    // const kakaoLogin = (): void => {
+    //     window.location.href = `${process.env.REACT_APP_DB_HOST}/user/login/kakao/authorize`;
+    // };
+
     const naverLogin = (): void => {
         window.location.href = `${process.env.REACT_APP_DB_HOST}/user/login/naver`;
     };
