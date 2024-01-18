@@ -214,60 +214,61 @@ exports.chatSocket = async (io, socket) => {
           try {
             // 자료구조 : lists (데이터를 순서대로 저장)
             // 추가 / 삭제 / 조회하는 것은 O(1)의 속도
-            // 닉네임(socketId)/시간/룸/targetSeq 가 0 일경우에는 전체
+            // 닉네임(socketId)/시간/룸/targetSeq 가 null 일경우에는 전체
             const { uSeq, uName, timeStamp, msg, gSeq, targetSeq } = data;
-            const result = JSON.stringify({ msg, timeStamp, uSeq });
-            // 메세지 정보 redis에 저장
-            await redisCli.lPush(
-              `room${gSeq}`,
-              JSON.stringify({ msg, timeStamp, uSeq, gSeq, uName })
-            );
+            if (!targetSeq) {
+              // 메세지 정보 redis에 저장
+              await redisCli.lPush(
+                `room${gSeq}`,
+                JSON.stringify({ msg, timeStamp, uSeq, gSeq, uName })
+              );
 
-            // publisher setting
-            await redisCli.publish(
-              `newMsg${gSeq}`,
-              JSON.stringify({
-                gSeq,
-                content: {
-                  msg,
-                  timeStamp,
-                  uName,
-                },
-              })
-            );
-            // 만료시간 조회
-            const expirationTime = await redisCli.ttl(`room${gSeq}`);
-            // 메세지 유효시간 : 12시간
-            if (expirationTime > 0) {
-              console.log('이미 만료시간 설정되어 있음!');
+              // publisher setting
+              await redisCli.publish(
+                `newMsg${gSeq}`,
+                JSON.stringify({
+                  gSeq,
+                  content: {
+                    msg,
+                    timeStamp,
+                    uName,
+                  },
+                })
+              );
+              // 만료시간 조회
+              const expirationTime = await redisCli.ttl(`room${gSeq}`);
+              // 메세지 유효시간 : 12시간
+              if (expirationTime > 0) {
+                console.log('이미 만료시간 설정되어 있음!');
+              } else {
+                await redisCli.expire(`room${gSeq}`, 43200);
+              }
+
+              socket
+                .to(`room${gSeq}`)
+                .emit('msg', { uName, uSeq, timeStamp, msg });
             } else {
-              await redisCli.expire(`room${gSeq}`, 43200);
+              // 귓속말인 경우(자료구조: 리스트로 저장)
+              const targetId = userSocketMap[targetSeq];
+              console.log('targetId>>>>>>>>>', targetId);
+
+              await redisCli.lPush(
+                `${targetSeq}from${uSeq}`,
+                JSON.stringify({ msg, timeStamp, gSeq, uName })
+              );
+              await redisCli.lPush(
+                `${uSeq}to${targetSeq}`,
+                JSON.stringify({ msg, timeStamp, gSeq, uName })
+              );
+
+              io.to(targetId).emit('whisper', {
+                uName,
+                uSeq,
+                timeStamp,
+                msg,
+              });
+              console.log('Whisper sent successfully to', targetSeq);
             }
-
-            socket
-              .to(`room${gSeq}`)
-              .emit('msg', { uName, uSeq, timeStamp, msg });
-
-            // 귓속말인 경우(자료구조: 리스트로 저장)
-            // if (targetSeq !== 0) {
-            //   const targetId = userSocketMap[targetSeq]
-
-            //     io.to(targetId).emit('whisper', {
-            //       uName,
-            //       uSeq,
-            //       timeStamp,
-            //       msg,
-            //     });
-            //     console.log('Whisper sent successfully to', targetSeq);
-
-            //     await redisCli.hSet(``)
-
-            //   } else {
-            //     console.log('Target user is not online or does not exist');
-            //   }
-            // }
-
-            console.log('msg 전송 성공 !!!! ', result);
           } catch (err) {
             console.error('sendMsg error', err);
           }
