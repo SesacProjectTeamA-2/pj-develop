@@ -6,12 +6,8 @@ import axios from 'axios';
 
 import GroupContentFooter from './GroupContentFooter';
 
-//=== 공통 컴포넌트 ===
-//-- 1. GroupBoard.tsx
+//-- roupBoard.tsx
 // action={"자유게시글"}
-
-//-- 2. GroupMission.tsx
-// action={"미션게시글"}
 
 export default function GroupContent({ action }: any) {
     const cookie = new Cookies();
@@ -40,18 +36,11 @@ export default function GroupContent({ action }: any) {
                     setUserImgSrc('/asset/images/user.svg');
                     // console.log('userImgSrc 없음', userImgSrc);
                 }
-                // else if (userImg) {
-                //     setUserImgSrc('/asset/images/user.svg');
-                //     console.log('userImgSrc 없음', userImgSrc);
-                // } else {
-                //     console.log('암것도 아님', userImgSrc);
-                // }
             })
             .catch((err) => {
                 console.log('error 발생: ', err);
             });
     };
-    // console.log(window.location.pathname);
 
     useEffect(() => {
         if (cookie.get('isUser')) {
@@ -95,26 +84,26 @@ export default function GroupContent({ action }: any) {
     // console.log('---------', freeList);
     // console.log('>>>>>>>>>>', commentCount);
 
-    // //] 2. 미션게시글
-    const [missionList, setMissionList] = useState([]);
+    // // //] 2. 미션게시글
+    // const [missionList, setMissionList] = useState([]);
 
-    // 미션 게시글 조회
-    if (mSeq) {
-        const getBoardMission = async () => {
-            const res = await axios.get(
-                `${process.env.REACT_APP_DB_HOST}/board/${gSeq}/mission/${mSeq}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${uToken}`,
-                    },
-                }
-            );
+    // // 미션 게시글 조회
+    // if (mSeq) {
+    //     const getBoardMission = async () => {
+    //         const res = await axios.get(
+    //             `${process.env.REACT_APP_DB_HOST}/board/${gSeq}/mission/${mSeq}`,
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${uToken}`,
+    //                 },
+    //             }
+    //         );
 
-            setMissionList(res.data.groupInfo);
-        };
-        getBoardMission();
-    }
-    useEffect(() => {}, []);
+    //         setMissionList(res.data.groupInfo);
+    //     };
+    //     getBoardMission();
+    // }
+    // useEffect(() => {}, []);
 
     return (
         <div className="noti-container post-list-container">
@@ -124,7 +113,7 @@ export default function GroupContent({ action }: any) {
 
                     {freeList?.length <= 0
                         ? '작성된 게시물이 없습니다.'
-                        : freeList?.map((free: any, idx: number) => {
+                        : freeList?.reverse().map((free: any, idx: number) => {
                               return (
                                   <li key={idx}>
                                       {/* [ START ] */}

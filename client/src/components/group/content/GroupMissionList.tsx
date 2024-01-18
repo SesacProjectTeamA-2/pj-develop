@@ -7,10 +7,7 @@ import axios from 'axios';
 import GroupContentFooter from './GroupContentFooter';
 
 //=== 공통 컴포넌트 ===
-//-- 1. GroupBoard.tsx
-// action={"자유게시글"}
-
-//-- 2. GroupMission.tsx
+//-- GroupMission.tsx
 // action={"미션게시글"}
 
 export default function GroupMissionList({
@@ -50,7 +47,6 @@ any) {
                 console.log('error 발생: ', err);
             });
     };
-    // console.log(window.location.pathname);
 
     useEffect(() => {
         if (cookie.get('isUser')) {
@@ -78,14 +74,14 @@ any) {
             }
         );
 
-        console.log('--------', res.data);
+        console.log('게시글 조회 ::::', res.data);
 
         setMissionBoard(res.data.groupInfo);
     };
 
-    console.log('missionList', missionList);
-    console.log('groupDetail', groupDetail);
-    console.log('missionBoard', missionBoard);
+    // console.log('missionList', missionList);
+    // console.log('groupDetail', groupDetail);
+    // console.log('missionBoard', missionBoard);
 
     useEffect(() => {
         getBoardMission();
@@ -96,59 +92,87 @@ any) {
             <ul>
                 {missionBoard?.length <= 0
                     ? '작성된 미션 인증글이 없습니다. '
-                    : missionBoard?.map((mission: any, idx: number) => {
-                          return (
-                              <Link
-                                  to={`/board/${gSeq}/mission/${mSeq}/${mission.gbSeq}`}
-                                  className="link-none"
-                              >
-                                  {/* [ START ] */}
-                                  <li>
-                                      <div className="post-list-content">
-                                          <div className="post-list-header">
-                                              <div className="post-list-title">
-                                                  {/* 프로필 이미지 */}
-                                                  <img
-                                                      className="profile-img"
-                                                      src={
-                                                          userImgSrc ||
-                                                          '/asset/images/user.svg'
-                                                      }
-                                                      alt="profile"
-                                                  />
+                    : missionBoard
+                          ?.reverse()
+                          .map((mission: any, idx: number) => {
+                              return (
+                                  <Link
+                                      to={`/board/${gSeq}/mission/${mSeq}/${mission.gbSeq}`}
+                                      className="link-none"
+                                  >
+                                      {/* [ START ] */}
+                                      <li>
+                                          <div className="post-list-content">
+                                              <div className="post-list-header">
+                                                  <div className="post-list-title">
+                                                      {/* 프로필 이미지 */}
+                                                      <img
+                                                          className="profile-img"
+                                                          src={
+                                                              mission
+                                                                  .tb_groupUser
+                                                                  .tb_user
+                                                                  .uImg ||
+                                                              '/asset/images/user.svg'
+                                                          }
+                                                          alt="profile"
+                                                      />
 
-                                                  {/* <div>달려라하니</div> */}
+                                                      <div
+                                                          style={{
+                                                              display: 'flex',
+                                                              flexDirection:
+                                                                  'column',
+                                                          }}
+                                                      >
+                                                          <div
+                                                              className="title4 cursor too-many-text"
+                                                              dangerouslySetInnerHTML={{
+                                                                  __html: mission.gbTitle,
+                                                              }}
+                                                              style={{
+                                                                  width: '30vw',
+                                                              }}
+                                                          />
+                                                          <div
+                                                              style={{
+                                                                  fontSize:
+                                                                      '0.8rem',
+                                                                  color: '#818181',
+                                                              }}
+                                                          >
+                                                              {
+                                                                  mission
+                                                                      .tb_groupUser
+                                                                      .tb_user
+                                                                      .uName
+                                                              }
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                  <div className="post-list-date">
+                                                      {mission.createdAt}
+                                                  </div>
+                                              </div>
 
-                                                  <div
-                                                      className="title4 cursor"
-                                                      dangerouslySetInnerHTML={{
-                                                          __html: mission.gbTitle,
-                                                      }}
-                                                  />
-                                              </div>
-                                              <div className="post-list-date">
-                                                  {mission.createdAt}
-                                              </div>
+                                              <div
+                                                  className="post-list-main cursor"
+                                                  dangerouslySetInnerHTML={{
+                                                      __html: mission.gbContent,
+                                                  }}
+                                              />
+
+                                              <GroupContentFooter
+                                                  commentCount={
+                                                      mission.commentCount
+                                                  }
+                                              />
                                           </div>
-
-                                          <div
-                                              className="post-list-main cursor"
-                                              dangerouslySetInnerHTML={{
-                                                  __html: mission.gbContent,
-                                              }}
-                                          />
-
-                                          <GroupContentFooter
-                                              commentCount={
-                                                  mission.commentCount
-                                              }
-                                          />
-                                      </div>
-                                  </li>
-                                  {/* [ END ] */}
-                              </Link>
-                          );
-                      })}
+                                      </li>
+                                      {/* [ END ] */}
+                                  </Link>
+                              );
+                          })}
             </ul>
         </div>
     );
