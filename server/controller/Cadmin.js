@@ -64,6 +64,14 @@ exports.blackUser = async (req, res) => {
       { where: { uSeq, gSeq } }
     );
 
+    // 신고 처리 update
+    await Complain.update(
+      { isDone: 1 },
+      {
+        where: { uSeq, gSeq },
+      }
+    );
+
     // redis 연동
     const blackUser = await GroupUser.findOne({ where: { uSeq, gSeq } });
     const blackTime = new Date();
