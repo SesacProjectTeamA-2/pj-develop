@@ -198,18 +198,6 @@ export default function GroupMission() {
                                 미션 {missionTitle}
                                 <br />
                                 인증하기 !
-                                {/* <span className="bubbles">
-                                    <span className="bubble"></span>
-                                    <span className="bubble"></span>
-                                    <span className="bubble"></span>
-                                    <span className="bubble"></span>
-                                    <span className="bubble"></span>
-                                    <span className="bubble"></span>
-                                    <span className="bubble"></span>
-                                    <span className="bubble"></span>
-                                    <span className="bubble"></span>
-                                    <span className="bubble"></span>
-                                </span> */}
                             </button>
 
                             <svg
