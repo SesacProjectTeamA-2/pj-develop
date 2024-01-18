@@ -24,6 +24,12 @@ const Complain = (Sequelize, DataTypes) => {
         allowNull: false,
         comment: '유저 닉네임',
       },
+      isDone: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+        comment: '신고 처리 여부(1: 처리 완료, 0 : 미처리)',
+      },
     },
     {
       tableName: 'tb_complain',
