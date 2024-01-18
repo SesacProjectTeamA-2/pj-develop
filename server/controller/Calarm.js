@@ -5,7 +5,6 @@ const sub = require('../models/redis').sub;
 
 exports.alarming = async (req, res) => {
   try {
-    req.socket.setTimeout(0);
     // const sse = req.app.get('sse');
     // console.log(sse.server);
     if (req.headers.authorization) {
@@ -58,17 +57,21 @@ exports.alarming = async (req, res) => {
       // 모임 추방시 메세지 전송
 
       await sub.subscribe(`group-alarm${uSeq}`, (data) => {
-        console.log('message', message);
+        try {
+          console.log('message', message);
 
-        const datas = JSON.parse(data);
-        res.write(
-          `event: groupAlarm${parseInt(datas.receiver)}\n` +
-            `data:${JSON.stringify(datas.allAlarm)}\n\n`
-        );
-        res.write(
-          `event: alarmCount${parseInt(datas.receiver)}\n` +
-            `data: ${parseInt(datas.alarmCount)}\n\n`
-        );
+          const datas = JSON.parse(data);
+          res.write(
+            `event: groupAlarm${parseInt(datas.receiver)}\n` +
+              `data:${JSON.stringify(datas.allAlarm)}\n\n`
+          );
+          res.write(
+            `event: alarmCount${parseInt(datas.receiver)}\n` +
+              `data: ${parseInt(datas.alarmCount)}\n\n`
+          );
+        } catch (err) {
+          console.error('group alarm error', err);
+        }
       });
       // });
     } else {

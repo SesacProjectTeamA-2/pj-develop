@@ -53,7 +53,7 @@ exports.outUsers = async (req, res) => {
 exports.blackUser = async (req, res) => {
   try {
     const uSeq = req.params.uSeq;
-    const { guBanReason, gSeq } = req.body;
+    const { guBanReason, gSeq, gName } = req.body;
 
     // 블랙 유저 data 처리
     await GroupUser.update(
@@ -73,6 +73,7 @@ exports.blackUser = async (req, res) => {
       JSON.stringify({
         type: 'groupAlarm',
         gSeq,
+        gName,
         guBanReason,
         blackTime,
       })
