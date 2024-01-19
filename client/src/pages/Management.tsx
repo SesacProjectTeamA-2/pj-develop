@@ -178,6 +178,29 @@ export default function Management() {
             .then((res) => {
                 console.log('getAllComplain', res.data);
                 setAllComplain(res.data.result);
+
+                //; 그룹별 신고건수
+                const gSeqCount: any = [];
+                //-- gSeq 세팅
+                for (let i = 0; i < res.data.gNameArray?.length; i++) {
+                    gSeqCount.push([
+                        res.data.gNameArray[i].gSeq,
+                        res.data.gNameArray[i].gName,
+                        0,
+                    ]);
+                }
+
+                console.log('gSeqCount 세팅 >>>>>', gSeqCount);
+
+                for (let i = 0; i < res.data.result?.length; i++) {
+                    for (let j = 0; j < gSeqCount.length; j++) {
+                        if (gSeqCount[j][0] === res.data.result[i].gSeq) {
+                            gSeqCount[j][2] += 1;
+                        }
+                    }
+                }
+
+                setGSeqCountArray(gSeqCount);
             })
             .catch((err) => {
                 console.log('error 발생: ', err);
@@ -253,17 +276,19 @@ export default function Management() {
 
     //] Area Chart
     //; 3. 그룹별 카테고리 수
+    const cateLabels = [
+        '운동',
+        '독서',
+        '언어',
+        '자격증',
+        '스터디',
+        '경제',
+        'IT',
+        '기타',
+    ];
+
     const areaData = {
-        labels: [
-            '운동',
-            '독서',
-            '언어',
-            '자격증',
-            '스터디',
-            '경제',
-            'IT',
-            '기타',
-        ],
+        cateLabels,
         datasets: [
             {
                 label: 'Category',
@@ -295,7 +320,6 @@ export default function Management() {
     };
 
     //; 4. 그룹별 참가인원 수
-
     const pieData = {
         labels: gSeqCountArray
             ? [...gSeqCountArray?.map((item: any) => item[1])]
@@ -339,6 +363,50 @@ export default function Management() {
         },
     };
 
+    //; 5. 그룹별 신고내역
+    const reportData = {
+        labels: gSeqCountArray
+            ? [...gSeqCountArray?.map((item: any) => item[1])]
+            : [],
+        datasets: [
+            {
+                label: '신고 건수',
+                data: gSeqCountArray
+                    ? [...gSeqCountArray?.map((item: any) => item[2])]
+                    : [],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)',
+                    'rgba(255, 206, 86, 0.5)',
+                    'rgba(75, 192, 192, 0.5)',
+                    'rgba(153, 102, 255, 0.5)',
+                    'rgba(255, 159, 64, 0.5)',
+                    'rgba(140, 182, 56, 0.5)',
+                    'rgba(56, 67, 182, 0.5)',
+                ],
+                borderWidth: 0,
+            },
+        ],
+    };
+
+    const reportOptions = {
+        plugins: {
+            legend: {
+                display: false, // 레전드를 감춤 (label 그룹명 너무 많아질 경우, 복잡해보일 수도 있기 때문)
+            },
+            tooltip: {
+                callbacks: {
+                    label: (context: any) => {
+                        // 호버할 때 레이블 표시
+                        const label = context.label || '';
+                        const value = context.parsed || 0;
+                        return `${label}: ${value}`;
+                    },
+                },
+            },
+        },
+    };
+
     return (
         <div>
             <h1>Welcome to DashBoard</h1>
@@ -364,7 +432,7 @@ export default function Management() {
                     <div className="group-line-graph-container">
                         <Line options={groupDateOptions} data={groupDateData} />
                     </div>
-                    <h4>Category</h4>
+                    <h4>카테고리</h4>
                     <div className="graph-container">
                         <PolarArea data={areaData} />
                     </div>
@@ -377,6 +445,24 @@ export default function Management() {
                             <Pie data={pieData} options={pieOptions} />
                         ) : (
                             <div>그룹에 참가한 인원이 없습니다. </div>
+                        )}
+                    </div>
+                </Paper>
+                <br />
+            </div>
+            <div className="paper-graph-container">
+                <Paper elevation={3}>
+                    <h2>Reports</h2>
+
+                    <h4>그룹별 신고 건수</h4>
+                    <div
+                        className="graph-container"
+                        style={{ paddingBottom: '4rem' }}
+                    >
+                        {allComplain?.length > 0 ? (
+                            <Pie data={reportData} options={reportOptions} />
+                        ) : (
+                            <div>신고내역이 없습니다. </div>
                         )}
                     </div>
                 </Paper>
