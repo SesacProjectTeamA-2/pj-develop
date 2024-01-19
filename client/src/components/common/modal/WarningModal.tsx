@@ -234,7 +234,7 @@ export default function WarningModal({
                         // 각 gSeq에 대한 삭제 요청
                         const res = await axios.patch(
                             `${process.env.REACT_APP_DB_HOST}/admin/black/${uSeq.id}`,
-                            { guBanReason: uSeq.guBanReason, gSeq: uSeq.gSeq }
+                            { guBanReason: uSeq.guBanReason, gSeq: uSeq.gSeq, gName: uSeq.gName }
                         );
                         console.log(
                             `adminBlackGroupHandler ${uSeq.id}`,

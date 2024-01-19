@@ -11,6 +11,15 @@ import TextField from '@mui/material/TextField';
 
 import '../../../styles/scss/components/modal.scss';
 import ModalMemberList from './ModalMemberList';
+import {
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    FormGroup,
+    FormHelperText,
+    FormLabel,
+} from '@mui/material';
+import { Line } from 'react-chartjs-2';
 
 export default function ChoiceModal({
     choiceModalSwitch,
@@ -163,6 +172,14 @@ export default function ChoiceModal({
     console.log('complainData:::::::', complainData);
 
     const reportDone = async () => {
+        if (!complainData.uSeq) {
+            alert('신고할 멤버를 선택해주세요 🚨');
+            return;
+        } else if (complainData.uDetail === '') {
+            alert('신고 사유를 기재해주세요.');
+            return;
+        }
+
         try {
             const res = await axios.post(
                 `${process.env.REACT_APP_DB_HOST}/group/complain/${complainData.guSeq}`,
@@ -194,6 +211,69 @@ export default function ChoiceModal({
             closeModalHandler();
         }
     };
+
+    const [state, setState] = React.useState<any>({
+        ad: false,
+        spam: false,
+        swear: false,
+        etc: false,
+    });
+
+    const [etcInput, setEtcInput] = useState('');
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        //) 다중 선택
+        // setState({
+        //     ...state,
+        //     [event.target.name]: event.target.checked,
+        // });
+
+        //) 단일 선택
+        setState({ [event.target.name]: event.target.checked });
+
+        switch (event.target.name) {
+            case 'ad':
+                setComplainData((prev: any) => ({
+                    ...prev,
+                    cDetail: '광고성 글 게시',
+                }));
+                break;
+            case 'spam':
+                setComplainData((prev: any) => ({
+                    ...prev,
+                    cDetail: '도배',
+                }));
+                break;
+            case 'swear':
+                setComplainData((prev: any) => ({
+                    ...prev,
+                    cDetail: '욕설',
+                }));
+                break;
+            case 'etc':
+                setComplainData((prev: any) => ({
+                    ...prev,
+                    cDetail: etcInput,
+                }));
+                break;
+        }
+    };
+
+    //_ 아무것도 선택 안했을 경우, 빈 값
+    useEffect(() => {
+        if (!Object.values(state)[0]) {
+            setComplainData((prev: any) => ({
+                ...prev,
+                cDetail: '',
+            }));
+        }
+    }, [state]);
+
+    const { ad, spam, swear, etc } = state;
+    const error = [ad, spam, swear, etc].filter((v) => v).length !== 2;
+
+    console.log('complainData>>>>>>>>>>>>>', complainData);
+    console.log('state>>>>>>>>>>>>>', Object.values(state));
 
     return (
         <div>
@@ -272,23 +352,90 @@ export default function ChoiceModal({
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'center',
+                                    flexDirection: 'column',
                                 }}
                                 noValidate
                                 autoComplete="off"
                             >
-                                <TextField
-                                    id="filled-multiline-flexible"
-                                    label="사유를 자세히 기재하면, 관리자가 적절한 조치를 취할 수 있습니다."
-                                    multiline
-                                    maxRows={4}
-                                    variant="filled"
-                                    onChange={(e) => {
-                                        setComplainData((prev: any) => ({
-                                            ...prev,
-                                            cDetail: e.target.value,
-                                        }));
-                                    }}
-                                />
+                                <FormControl
+                                    sx={{ m: 3 }}
+                                    component="fieldset"
+                                    variant="standard"
+                                >
+                                    <FormLabel component="legend">
+                                        사유를 기재하면, 관리자가 적절한 조치를
+                                        취할 수 있습니다.
+                                    </FormLabel>
+                                    <FormGroup>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={ad}
+                                                    onChange={handleChange}
+                                                    name="ad"
+                                                />
+                                            }
+                                            label="광고성 글 게시"
+                                        />
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={spam}
+                                                    onChange={handleChange}
+                                                    name="spam"
+                                                />
+                                            }
+                                            label="도배"
+                                        />
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={swear}
+                                                    onChange={handleChange}
+                                                    name="swear"
+                                                />
+                                            }
+                                            label="욕설"
+                                        />
+                                        <div style={{ display: 'flex' }}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={etc}
+                                                        onChange={handleChange}
+                                                        name="etc"
+                                                    />
+                                                }
+                                                style={{
+                                                    marginRight: '1rem',
+                                                    minWidth: '5rem',
+                                                }}
+                                                label="기타"
+                                            />
+                                            <TextField
+                                                id="filled-multiline-flexible"
+                                                label="30자 이내로 작성해주세요."
+                                                multiline
+                                                style={{
+                                                    width: '30rem',
+                                                }}
+                                                maxRows={4}
+                                                variant="filled"
+                                                onChange={(e) => {
+                                                    setComplainData(
+                                                        (prev: any) => ({
+                                                            ...prev,
+                                                            cDetail:
+                                                                e.target.value,
+                                                        })
+                                                    );
+
+                                                    setEtcInput(e.target.value);
+                                                }}
+                                            />
+                                        </div>
+                                    </FormGroup>
+                                </FormControl>
                             </Box>
                         </div>
                     ) : (
