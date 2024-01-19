@@ -151,14 +151,19 @@ exports.complain = async (req, res) => {
   try {
     const result = await Complain.findAll();
 
-    const gSeqArray = result.map((item) => item.gSeq);
+    const cuSeqArray = result.map((seq) => seq.cuSeq);
+    const cuNameArray = await User.findAll({
+      where: { uSeq: { [Op.in]: cuSeqArray } },
+      attributes: ['uSeq', 'uName'],
+    });
 
+    const gSeqArray = result.map((item) => item.gSeq);
     const gNameArray = await Group.findAll({
       where: { gSeq: { [Op.in]: gSeqArray } },
       attributes: ['gSeq', 'gName'],
     });
 
-    res.send({ result, gNameArray });
+    res.send({ result, gNameArray, cuNameArray });
   } catch (err) {
     console.error('complain error', err);
   }
