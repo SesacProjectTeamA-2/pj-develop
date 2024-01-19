@@ -884,12 +884,12 @@ exports.getGroupDetail = async (req, res) => {
           ],
         });
 
-        if (!groupUser.guIsBlackUser) {
+        if (groupUser && !groupUser.guIsBlackUser) {
           isJoin = true;
           // 모임장여부 : true/false
           isLeader = groupUser && groupUser.guIsLeader === 'y' ? true : false;
           isBlack = false;
-        } else if (groupUser.guIsBlackUser) {
+        } else if (groupUser && groupUser.guIsBlackUser) {
           isJoin = false;
           isLeader = false;
           isBlack = true;
