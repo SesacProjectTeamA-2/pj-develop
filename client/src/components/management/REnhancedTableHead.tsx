@@ -61,13 +61,13 @@ const headCells: readonly HeadCell[] = [
         label: 'No.',
     },
     {
-        id: 'name',
+        id: 'user',
         numeric: false,
         disablePadding: false,
         label: '신고자',
     },
     {
-        id: 'uname',
+        id: 'name',
         numeric: false,
         disablePadding: false,
         label: '피신고자',
@@ -77,7 +77,7 @@ const headCells: readonly HeadCell[] = [
         id: 'gSeq',
         numeric: true,
         disablePadding: false,
-        label: '그룹명(번호)',
+        label: '그룹명',
     },
     {
         id: 'cDetail',
@@ -87,7 +87,7 @@ const headCells: readonly HeadCell[] = [
     },
     {
         id: 'createdAt',
-        numeric: false,
+        numeric: true,
         disablePadding: false,
         label: '날짜',
     },
@@ -140,7 +140,7 @@ export default function REnhancedTableHead(props: EnhancedTableProps) {
                 </TableCell>
                 {headCells.map((headCell) => (
                     <TableCell
-                        style={{ padding: '6px' }}
+                        style={{ padding: '6px', fontWeight: 'bold' }}
                         key={headCell.id}
                         align={headCell.numeric ? 'right' : 'center'}
                         padding={headCell.disablePadding ? 'none' : 'normal'}

@@ -47,13 +47,14 @@ export default function HomeMissionList({
         mLevel: 1,
     });
 
-    const [missionInputs, setMissionInputs] = useState(
+    const [missionInputs, setMissionInputs] = useState<any>(
+        // Array.isArray(missionList) &&
         missionList?.map((mission: any) => ({
             id: mission.id,
             mTitle: mission.mTitle,
             mContent: mission.mContent,
             mLevel: mission.mLevel,
-        }))
+        })) || []
     );
 
     // 함수 추가한 부분
@@ -97,7 +98,7 @@ export default function HomeMissionList({
     console.log('missionList HOME', missionList);
 
     // 난이도 계산
-    for (let mission of missionList) {
+    for (let mission of missionList || []) {
         switch (mission.mLevel) {
             case 5: {
                 mission.mStar = '⭐️⭐️⭐️';
@@ -161,17 +162,18 @@ export default function HomeMissionList({
             </div>
             <div className="main-content">
                 <ul>
-                    {missionList?.map((mission: any, idx: number) => {
-                        return (
-                            <li key={idx} className="mission-li">
-                                <div className="mission-element">
-                                    {mission.mTitle}
-                                </div>
-                                <div>{mission.mContent}</div>
-                                <div>난이도 {mission.mStar}</div>
-                            </li>
-                        );
-                    })}
+                    {Array.isArray(missionList) &&
+                        missionList?.map((mission: any, idx: number) => {
+                            return (
+                                <li key={idx} className="mission-li">
+                                    <div className="mission-element">
+                                        {mission.mTitle}
+                                    </div>
+                                    <div>{mission.mContent}</div>
+                                    <div>난이도 {mission.mStar}</div>
+                                </li>
+                            );
+                        })}
                 </ul>
             </div>
         </div>

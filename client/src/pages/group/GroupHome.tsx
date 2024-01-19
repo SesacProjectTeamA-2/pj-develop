@@ -327,7 +327,7 @@ export default function GroupHome({
             {isJoin || isBlack ? (
                 ''
             ) : groupDetail.groupMaxMember !== null &&
-              groupDetail.memberArray.length + 1 <
+              groupDetail.memberArray?.length + 1 <
                   groupDetail.groupMaxMember ? (
                 <div className="btn-fixed-wrapper-join">
                     {/* <button className="btn-fixed" onClick={postGroupJoin}>

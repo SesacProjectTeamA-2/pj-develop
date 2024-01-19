@@ -233,9 +233,14 @@ export default function WarningModal({
                     try {
                         // 각 gSeq에 대한 삭제 요청
                         const res = await axios.patch(
-                            `${process.env.REACT_APP_DB_HOST}/admin/black/${uSeq.id}`,
-                            { guBanReason: uSeq.guBanReason, gSeq: uSeq.gSeq, gName: uSeq.gName }
+                            `${process.env.REACT_APP_DB_HOST}/admin/black/${uSeq.uSeq}`,
+                            {
+                                guBanReason: uSeq.guBanReason,
+                                gSeq: uSeq.gSeq,
+                                gName: uSeq.gName,
+                            }
                         );
+                        window.location.reload();
                         console.log(
                             `adminBlackGroupHandler ${uSeq.id}`,
                             res.data
@@ -375,14 +380,15 @@ export default function WarningModal({
                                     {selectedRSeq.map(
                                         (userUSeq: any, index: number) => (
                                             <span
-                                                key={userUSeq.id}
+                                                key={index}
                                                 style={{
                                                     color: '#d01e1e',
                                                     display: 'inline',
                                                 }}
                                             >
-                                                {index > 0 && ', '}
-                                                {`${userUSeq.id}번`}
+                                                {userUSeq.uName}
+                                                {/* {index > 0 && ', '}
+                                                {`${userUSeq.id}번`} */}
                                             </span>
                                         )
                                     )}{' '}
