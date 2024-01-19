@@ -395,7 +395,7 @@ any) {
                                         </button>
                                     </div>
 
-                                    {alarm.type == 'comment' ? (
+                                    {alarm?.type == 'comment' ? (
                                         <p
                                             // className="notification-message-wrapper-p"
                                             onClick={() =>
@@ -418,27 +418,26 @@ any) {
                                                 남겼습니다.
                                             </span>
                                         </p>
-                                    ) : alarm.type === 'groupAlarm' ? (
+                                    ) : alarm?.type === 'groupAlarm' ? (
                                         <p
-                                            onClick={() =>
-                                                linkToHandler(
-                                                    alarm.gSeq,
-                                                    // alarm.gName,
-                                                    //~[추후] 추가
-                                                    alarm.category,
-                                                    alarm.gbSeq,
-                                                    alarm.mSeq
-                                                )
-                                            }
+                                        // onClick={() =>
+                                        //     linkToHandler(
+                                        //         alarm.gSeq,
+                                        //         // alarm.gName,
+                                        //         alarm.category,
+                                        //         alarm.gbSeq,
+                                        //         alarm.mSeq
+                                        //     )
+                                        // }
                                         >
                                             <div className="alarm-title-text-wrapper">
                                                 <span className="alarm-title-text">
-                                                    {alarm.title}
+                                                    {alarm?.gName}
                                                 </span>{' '}
                                                 <span> 모임에서</span>
                                             </div>
                                             <span>
-                                                <b>{alarm.guBanReason}</b>{' '}
+                                                <b>{alarm?.guBanReason}</b>{' '}
                                                 사유로 추방 당하셨습니다.
                                             </span>
                                         </p>

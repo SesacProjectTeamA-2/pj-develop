@@ -31,33 +31,46 @@ export default function REnhancedTable() {
 
     interface Data {
         id: number;
-        name: string;
-        createdAt: any;
+        user: string; // 신고자
+        cuSeq: number; // 신고자의 번호
+        name: string; // 피신고자
+        uSeq: number; // 피신고자의 번호
+        gName: string;
         gSeq: any;
         cDetail: string;
+        createdAt: any;
         done: string;
     }
 
     function createData(
         id: number,
+        user: string,
+        cuSeq: number,
         name: string,
-        createdAt: any,
+        uSeq: number,
+        gName: string,
         gSeq: any,
         cDetail: string,
+        createdAt: any,
         done: string
     ): Data {
         return {
             id,
+            user,
+            cuSeq,
             name,
-            createdAt,
+            uSeq,
+            gName,
             gSeq,
             cDetail,
+            createdAt,
             done,
         };
     }
 
     const [allComplain, setAllComplain] = useState<any>();
     const [gNameComplain, setGNameComplain] = useState<any>();
+    const [cuNameComplain, setCuNameComplain] = useState<any>();
 
     //] 신고 GET
     const getAllComplain = async () => {
@@ -67,6 +80,7 @@ export default function REnhancedTable() {
                 console.log('getAllComplain', res.data);
                 setAllComplain(res.data.result);
                 setGNameComplain(res.data.gNameArray);
+                setCuNameComplain(res.data.cuNameArray);
             })
             .catch((err) => {
                 console.log('error 발생: ', err);
@@ -78,21 +92,25 @@ export default function REnhancedTable() {
     }, []);
 
     // console.log('gSeqCount 최종 >>>>>', gSeqCountArray);
-    console.log('setGNameComplain', gNameComplain);
+    // console.log('setGNameComplain', gNameComplain);
 
     //; 유저 데이터 들어오는 부분
     const rows = allComplain
         ? allComplain?.map((complain: any, idx: number) =>
               createData(
                   idx,
-                  //   complain.uSeq, // uSeq
-                  complain.uName, // 이름
+                  complain.cuSeq, // 신고자의 번호
+                  //   complain.uName, // 신고자
+                  complain.uName, // 피신고자
+                  complain.uName, // 피신고자
+                  complain.uSeq, // 피신고자의 번호
+                  complain.gName, // 모임명
+                  complain.gSeq,
+                  complain.cDetail, // 신고 내용
                   `${new Date(complain.createdAt).getFullYear()}/${
                       new Date(complain.createdAt).getMonth() + 1
                   }/${new Date(complain.createdAt).getDate()}`, // complain.createdAt,
-                  complain.gSeq, // 모임명 (gSeq)
-                  complain.cDetail, // 신고 내용
-                  complain.gName //~ [추후] 처리여부
+                  complain.isDone === 0 ? '미처리' : '완료' // 처리 여부
               )
           )
         : [];
@@ -124,9 +142,11 @@ export default function REnhancedTable() {
         if (event.target.checked) {
             const newSelected = rows?.map((n: any) => ({
                 id: n.id,
+                uSeq: n.uSeq, // 피신고자의 번호
+                uName: n.name, // 피신고자의 번호
                 guBanReason: n.cDetail,
                 gSeq: n.gSeq,
-                gName: n.gName,
+                gName: getGNameByGSeq(n.gSeq),
             }));
             setSelected(newSelected);
             return;
@@ -160,6 +180,8 @@ export default function REnhancedTable() {
         event: React.MouseEvent<unknown>,
         index: number,
         id: number,
+        uSeq: number,
+        uName: string,
         cDetail: string,
         gSeq: number,
         gName: string
@@ -176,7 +198,7 @@ export default function REnhancedTable() {
         if (selectedIndex === -1) {
             newSelected = [
                 ...selected,
-                { id: index, guBanReason: cDetail, gSeq, gName },
+                { id: index, uSeq, uName, guBanReason: cDetail, gSeq, gName },
             ];
             // newSelected = [
             //     { id: newSelected.concat(selected, id), guBanReason: cDetail },
@@ -269,6 +291,14 @@ export default function REnhancedTable() {
         return gNameInfo ? gNameInfo.gName : '';
     };
 
+    //-- uSeq에 해당하는 uName을 가져오는 함수
+    const getUNameByUSeq = (cuSeq: any) => {
+        const uNameInfo = cuNameComplain.find(
+            (item: any) => item.uSeq === cuSeq
+        );
+        return uNameInfo ? uNameInfo.uName : '';
+    };
+
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2, boxShadow: 'none' }}>
@@ -310,11 +340,12 @@ export default function REnhancedTable() {
                                     <TableRow
                                         hover
                                         onClick={(event) =>
-                                            // handleClick(event, row.id)
                                             handleClick(
                                                 event,
                                                 index,
                                                 row.id,
+                                                row.uSeq,
+                                                row.name,
                                                 row.cDetail,
                                                 row.gSeq,
                                                 getGNameByGSeq(row.gSeq)
@@ -328,13 +359,16 @@ export default function REnhancedTable() {
                                         sx={{ cursor: 'pointer' }}
                                     >
                                         <TableCell padding="checkbox">
-                                            <Checkbox
-                                                color="primary"
-                                                checked={isItemSelected}
-                                                inputProps={{
-                                                    'aria-labelledby': labelId,
-                                                }}
-                                            />
+                                            {row.isDone === 0 && (
+                                                <Checkbox
+                                                    color="primary"
+                                                    checked={isItemSelected}
+                                                    inputProps={{
+                                                        'aria-labelledby':
+                                                            labelId,
+                                                    }}
+                                                />
+                                            )}
                                         </TableCell>
                                         <TableCell
                                             component="th"
@@ -344,8 +378,8 @@ export default function REnhancedTable() {
                                             padding="none"
                                             align="left"
                                             style={{
-                                                minWidth: '4rem',
-                                                paddingLeft: '2rem',
+                                                // minWidth: '1rem',
+                                                paddingLeft: '0.8rem',
                                             }}
                                         >
                                             {/* {row.id} */}
@@ -353,32 +387,37 @@ export default function REnhancedTable() {
                                         </TableCell>
                                         <TableCell
                                             align="left"
-                                            // style={{
-                                            //     minWidth: '3rem',
-                                            //     // paddingLeft: '1rem',
-                                            // }}
+                                            // style={
+                                            //     {
+                                            //         // minWidth: '1rem',
+                                            //         //     // paddingLeft: '1rem',
+                                            //     }
+                                            // }
                                         >
-                                            {row.name}
+                                            {getUNameByUSeq(row.user)}
+                                            {/* 신고자 */}
                                         </TableCell>
                                         <TableCell
                                             align="left"
-                                            // style={{
-                                            //     minWidth: '3rem',
-                                            //     // paddingLeft: '1rem',
-                                            // }}
+                                            style={{
+                                                minWidth: '4rem',
+                                                //     // paddingLeft: '1rem',
+                                            }}
                                         >
                                             {row.name}
+                                            {/* 피신고자 */}
                                         </TableCell>
 
                                         <TableCell
                                             align="center"
                                             style={{
-                                                minWidth: '3rem',
-                                                paddingLeft: '3rem',
+                                                minWidth: '4.7rem',
+                                                // paddingRight: '1.6rem',
+                                                padding: '0',
                                             }}
                                         >
                                             {getGNameByGSeq(row.gSeq)}
-                                            {/* ({row.gSeq}) */}
+                                            {/* {row.gSeq}) */}
                                         </TableCell>
                                         <TableCell
                                             align="right"
@@ -388,13 +427,13 @@ export default function REnhancedTable() {
                                         </TableCell>
                                         <TableCell
                                             align="center"
-                                            // style={{ minWidth: '2rem' }}
+                                            style={{ padding: '0' }}
                                         >
                                             {row.createdAt}
                                         </TableCell>
                                         <TableCell
                                             align="right"
-                                            style={{ minWidth: '2rem' }}
+                                            style={{ minWidth: '4rem' }}
                                         >
                                             {row.done}
                                         </TableCell>
