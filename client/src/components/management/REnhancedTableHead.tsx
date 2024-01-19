@@ -58,20 +58,21 @@ const headCells: readonly HeadCell[] = [
         id: 'id',
         numeric: false,
         disablePadding: true,
-        label: '유저번호',
+        label: 'No.',
     },
     {
         id: 'name',
         numeric: false,
         disablePadding: false,
-        label: '성함',
+        label: '신고자',
     },
     {
-        id: 'createdAt',
+        id: 'uname',
         numeric: false,
         disablePadding: false,
-        label: '날짜',
+        label: '피신고자',
     },
+
     {
         id: 'gSeq',
         numeric: true,
@@ -83,6 +84,18 @@ const headCells: readonly HeadCell[] = [
         numeric: true,
         disablePadding: false,
         label: '사유',
+    },
+    {
+        id: 'createdAt',
+        numeric: false,
+        disablePadding: false,
+        label: '날짜',
+    },
+    {
+        id: 'done',
+        numeric: true,
+        disablePadding: false,
+        label: '처리여부',
     },
 ];
 

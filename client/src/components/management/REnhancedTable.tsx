@@ -35,6 +35,7 @@ export default function REnhancedTable() {
         createdAt: any;
         gSeq: any;
         cDetail: string;
+        done: string;
     }
 
     function createData(
@@ -42,7 +43,8 @@ export default function REnhancedTable() {
         name: string,
         createdAt: any,
         gSeq: any,
-        cDetail: string
+        cDetail: string,
+        done: string
     ): Data {
         return {
             id,
@@ -50,10 +52,12 @@ export default function REnhancedTable() {
             createdAt,
             gSeq,
             cDetail,
+            done,
         };
     }
 
     const [allComplain, setAllComplain] = useState<any>();
+    const [gNameComplain, setGNameComplain] = useState<any>();
 
     //] 신고 GET
     const getAllComplain = async () => {
@@ -62,6 +66,7 @@ export default function REnhancedTable() {
             .then((res) => {
                 console.log('getAllComplain', res.data);
                 setAllComplain(res.data.result);
+                setGNameComplain(res.data.gNameArray);
             })
             .catch((err) => {
                 console.log('error 발생: ', err);
@@ -73,18 +78,21 @@ export default function REnhancedTable() {
     }, []);
 
     // console.log('gSeqCount 최종 >>>>>', gSeqCountArray);
+    console.log('setGNameComplain', gNameComplain);
 
     //; 유저 데이터 들어오는 부분
     const rows = allComplain
         ? allComplain?.map((complain: any, idx: number) =>
               createData(
-                  complain.uSeq, // uSeq
+                  idx,
+                  //   complain.uSeq, // uSeq
                   complain.uName, // 이름
                   `${new Date(complain.createdAt).getFullYear()}/${
                       new Date(complain.createdAt).getMonth() + 1
                   }/${new Date(complain.createdAt).getDate()}`, // complain.createdAt,
                   complain.gSeq, // 모임명 (gSeq)
-                  complain.cDetail // 신고 내용
+                  complain.cDetail, // 신고 내용
+                  complain.gName //~ [추후] 처리여부
               )
           )
         : [];
@@ -118,6 +126,7 @@ export default function REnhancedTable() {
                 id: n.id,
                 guBanReason: n.cDetail,
                 gSeq: n.gSeq,
+                gName: n.gName,
             }));
             setSelected(newSelected);
             return;
@@ -152,7 +161,8 @@ export default function REnhancedTable() {
         index: number,
         id: number,
         cDetail: string,
-        gSeq: number
+        gSeq: number,
+        gName: string
     ) => {
         // const selectedIndex = selected.indexOf(id);
         const selectedIndex = selected.findIndex((item: any) => item.id === id);
@@ -160,10 +170,14 @@ export default function REnhancedTable() {
 
         console.log('selectedIndex', selectedIndex);
         console.log('id', id);
+        console.log('index', index);
 
         //) 선택되지 않은 경우, 선택된 배열에 새로운 항목 추가
         if (selectedIndex === -1) {
-            newSelected = [...selected, { id, guBanReason: cDetail, gSeq }];
+            newSelected = [
+                ...selected,
+                { id: index, guBanReason: cDetail, gSeq, gName },
+            ];
             // newSelected = [
             //     { id: newSelected.concat(selected, id), guBanReason: cDetail },
             // ];
@@ -249,6 +263,12 @@ export default function REnhancedTable() {
         [order, orderBy, page, rowsPerPage, rows]
     );
 
+    //-- gSeq에 해당하는 gName을 가져오는 함수
+    const getGNameByGSeq = (gSeq: any) => {
+        const gNameInfo = gNameComplain.find((item: any) => item.gSeq === gSeq);
+        return gNameInfo ? gNameInfo.gName : '';
+    };
+
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2, boxShadow: 'none' }}>
@@ -272,7 +292,8 @@ export default function REnhancedTable() {
                         />
                         <TableBody>
                             {visibleRows?.map((row: any, index: any) => {
-                                const isItemSelected = isSelected(row.id);
+                                // const isItemSelected = isSelected(row.id);
+                                const isItemSelected = isSelected(index);
                                 // const isItemSelected = isSelected({
                                 //     id: row.id,
                                 //     guBanReason: row.cDetail,
@@ -295,13 +316,14 @@ export default function REnhancedTable() {
                                                 index,
                                                 row.id,
                                                 row.cDetail,
-                                                row.gSeq
+                                                row.gSeq,
+                                                getGNameByGSeq(row.gSeq)
                                             )
                                         }
                                         role="checkbox"
                                         aria-checked={isItemSelected}
                                         tabIndex={-1}
-                                        key={row.id}
+                                        key={index}
                                         selected={isItemSelected}
                                         sx={{ cursor: 'pointer' }}
                                     >
@@ -316,6 +338,7 @@ export default function REnhancedTable() {
                                         </TableCell>
                                         <TableCell
                                             component="th"
+                                            // id={labelId}
                                             id={labelId}
                                             scope="row"
                                             padding="none"
@@ -325,7 +348,17 @@ export default function REnhancedTable() {
                                                 paddingLeft: '2rem',
                                             }}
                                         >
-                                            {row.id}
+                                            {/* {row.id} */}
+                                            {index + 1}
+                                        </TableCell>
+                                        <TableCell
+                                            align="left"
+                                            // style={{
+                                            //     minWidth: '3rem',
+                                            //     // paddingLeft: '1rem',
+                                            // }}
+                                        >
+                                            {row.name}
                                         </TableCell>
                                         <TableCell
                                             align="left"
@@ -339,24 +372,31 @@ export default function REnhancedTable() {
 
                                         <TableCell
                                             align="center"
-                                            // style={{ minWidth: '2rem' }}
-                                        >
-                                            {row.createdAt}
-                                        </TableCell>
-                                        <TableCell
-                                            align="center"
                                             style={{
-                                                // minWidth: '2rem',
+                                                minWidth: '3rem',
                                                 paddingLeft: '3rem',
                                             }}
                                         >
-                                            {row.gSeq}
+                                            {getGNameByGSeq(row.gSeq)}
+                                            {/* ({row.gSeq}) */}
                                         </TableCell>
                                         <TableCell
                                             align="right"
                                             style={{ minWidth: '6rem' }}
                                         >
                                             {row.cDetail}
+                                        </TableCell>
+                                        <TableCell
+                                            align="center"
+                                            // style={{ minWidth: '2rem' }}
+                                        >
+                                            {row.createdAt}
+                                        </TableCell>
+                                        <TableCell
+                                            align="right"
+                                            style={{ minWidth: '2rem' }}
+                                        >
+                                            {row.done}
                                         </TableCell>
                                     </TableRow>
                                 );
