@@ -18,8 +18,7 @@ exports.chatSocket = async (io, socket) => {
     groupChat.on('connection', async (socket) => {
       try {
         let userInfo = socket.userInfo;
-        // 모임별 안읽은 메세지 개수
-        const messageCount = [];
+        const personalMessage = {};
         const { uName, uSeq, socketId, gSeq } = userInfo;
         console.log('현재 접속중인 유저', userInfo);
         console.log(
@@ -209,6 +208,31 @@ exports.chatSocket = async (io, socket) => {
           }
         });
 
+        // 1대 1 채팅
+        socket.on('DM', async (data) => {
+          try {
+            const targetSeq = data.targetSeq;
+            // 클릭시 대화방(room${uSeq}p) 입장
+            socket.join(`room${uSeq}w${targetSeq}`);
+
+            // 대화내역 load hash
+            // 을 사용하여 리스트의 길이(메시지 개수)
+            const listLength = await redisCli.lLen(``);
+            if (listLength !== 0) {
+              const messages = await redisCli.lRange(`room${gSeq}`, 0, -1);
+              // 가져온 메시지를 파싱
+              const parsedMessages = messages
+                .map((message) => JSON.parse(message))
+                .filter(
+                  (parsedMessage) =>
+                    new Date(parsedMessage.timeStamp) >= userInfo.loginTime
+                );
+            }
+          } catch (err) {
+            console.error('DM error', err);
+          }
+        });
+
         // 메세지보내기
         socket.on('sendMsg', async (data) => {
           try {
@@ -248,13 +272,17 @@ exports.chatSocket = async (io, socket) => {
                 .to(`room${gSeq}`)
                 .emit('msg', { uName, uSeq, timeStamp, msg });
             } else {
-              // 귓속말인 경우(자료구조: 리스트로 저장)
+              // 1대1 채팅인 경우(자료구조: 해시로 저장)
               const targetId = userSocketMap[targetSeq];
               console.log('targetId>>>>>>>>>', targetId);
+              // 1. 메세지 리스트 업데이트 : 보내는 사람의 seq를 키값으로 하고, 메세지를 배열로 저장
+              const messageBySeq = {};
+
+              // 2. 해시로 저장
 
               await redisCli.lPush(
-                `${targetSeq}from${uSeq}`,
-                JSON.stringify({ msg, timeStamp, gSeq, uName })
+                ``,
+                JSON.stringify({ msg, timeStamp, uName })
               );
               await redisCli.lPush(
                 `${uSeq}to${targetSeq}`,
