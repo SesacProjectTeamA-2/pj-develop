@@ -6,6 +6,14 @@ const redisCli = require('../models/redis').redis_Cli;
 const sub = require('../models/redis.js').sub;
 const userSocketMap = {};
 
+// 내림차순 정렬 위한 함수
+function personRoom(uSeq, targetSeq) {
+  const a = Math.min(uSeq, targetSeq);
+  const b = Math.max(uSeq, targetSeq);
+
+  return `room${a}w${b}`;
+}
+
 exports.chatSocket = async (io, socket) => {
   try {
     // 네임스페이스 생성(모임챗) - 룸: 각 모임별 챗
@@ -18,8 +26,7 @@ exports.chatSocket = async (io, socket) => {
     groupChat.on('connection', async (socket) => {
       try {
         let userInfo = socket.userInfo;
-        // 모임별 안읽은 메세지 개수
-        const messageCount = [];
+
         const { uName, uSeq, socketId, gSeq } = userInfo;
         console.log('현재 접속중인 유저', userInfo);
         console.log(
@@ -29,7 +36,6 @@ exports.chatSocket = async (io, socket) => {
         console.log('userSocketMap', userSocketMap);
 
         // redis에 사용자 정보 캐시로 저장 (hash)
-
         // 이미 로그인되어 있는 경우에는 update하지 않음.
         const isConnected = await redisCli.hGet(`socket${uSeq}`, 'uName');
         if (!isConnected) {
@@ -42,10 +48,13 @@ exports.chatSocket = async (io, socket) => {
             'loginTime',
             new Date().toString()
           );
-          await redisCli.hSet(`socket${uSeq}`, 'gSeq', JSON.stringify(gSeq));
         }
         // 만료시간 설정
         await redisCli.expire(`socket${uSeq}`, 86400); // 24시간
+
+        // 1대1 참가방 추출하고 각 방 참가시킴.
+        const targetSeqArray = await redisCli.sMembers(`user${uSeq}`);
+        targetSeqArray.map((seq) => socket.join(personRoom(uSeq, seq)));
 
         // 방참가하기
         if (Array.isArray(gSeq)) {
@@ -60,32 +69,6 @@ exports.chatSocket = async (io, socket) => {
         // 최초 로그인시간 정보 입력
         const loginTime = await redisCli.hGet(`socket${uSeq}`, 'loginTime');
         userInfo.loginTime = new Date(loginTime);
-
-        // 로그인시 각 방에 참여 및 로그인 이후 메세지 개수
-        socket.on('login', async (data) => {
-          try {
-            if (Array.isArray(data.gSeq)) {
-              data.gSeq.map((info) => {
-                const isExisting = groupChat.adapter.rooms.has(`room${info}`);
-
-                console.log(`room${info} 현재 생성되어 있음?`, isExisting);
-                // 방에 참가 및 notice
-                socket.to(`room${info}`).emit('loginNotice', {
-                  msg: `${uName}님이 로그인하셨어요`,
-                });
-              });
-            } else {
-              console.log(`gSeq is not Array222!`);
-              return;
-            }
-            socket.emit('loginSuccess', {
-              msg: `${uName}님이 로그인하셨어요`,
-              userInfo,
-            });
-          } catch (err) {
-            console.error(err);
-          }
-        });
 
         // 모임별 채팅방 입장시
         socket.on('joinRoom', async (data) => {
@@ -209,65 +192,107 @@ exports.chatSocket = async (io, socket) => {
           }
         });
 
+        // 1대 1 채팅(모임별 채팅방에서 클릭시 또는 chatlist에서 클릭시)
+        socket.on('DM', async (data) => {
+          try {
+            const targetSeq = data.targetSeq;
+            // 클릭시 대화방(room${uSeq}p) 입장
+            socket.join(personRoom(uSeq, targetSeq));
+
+            let isLogin = userSocketMap[targetSeq] || false;
+
+            // 대화내역 load : list
+            const listLength = await redisCli.lLen(personRoom(uSeq, targetSeq));
+            if (listLength !== 0) {
+              const messages = await redisCli.lRange(`room${gSeq}`, 0, -1);
+              // 가져온 메시지를 파싱
+              const parsedMessages = messages.map((message) =>
+                JSON.parse(message)
+              );
+              socket.emit('DM', {
+                allMsg: parsedMessages,
+                isLogin,
+              });
+            } else {
+              socket.emit('DM', {
+                allMsg: '주고받은 메세지가 없어요. 대화를 시작해보세요!',
+                isLogin,
+              });
+            }
+          } catch (err) {
+            console.error('DM error', err);
+          }
+        });
+
         // 메세지보내기
         socket.on('sendMsg', async (data) => {
           try {
             // 자료구조 : lists (데이터를 순서대로 저장)
             // 추가 / 삭제 / 조회하는 것은 O(1)의 속도
-            // 닉네임(socketId)/시간/룸/targetSeq 가 0 일경우에는 전체
+            // 닉네임(socketId)/시간/룸/targetSeq 가 null 일경우에는 전체
             const { uSeq, uName, timeStamp, msg, gSeq, targetSeq } = data;
-            const result = JSON.stringify({ msg, timeStamp, uSeq });
-            // 메세지 정보 redis에 저장
-            await redisCli.lPush(
-              `room${gSeq}`,
-              JSON.stringify({ msg, timeStamp, uSeq, gSeq, uName })
-            );
 
-            // publisher setting
-            await redisCli.publish(
-              `newMsg${gSeq}`,
-              JSON.stringify({
-                gSeq,
-                content: {
-                  msg,
-                  timeStamp,
-                  uName,
-                },
-              })
-            );
-            // 만료시간 조회
-            const expirationTime = await redisCli.ttl(`room${gSeq}`);
-            // 메세지 유효시간 : 12시간
-            if (expirationTime > 0) {
-              console.log('이미 만료시간 설정되어 있음!');
-            } else {
+            // 모임별채팅의 경우
+            if (!targetSeq) {
+              // 메세지 정보 redis에 저장
+              await redisCli.lPush(
+                `room${gSeq}`,
+                JSON.stringify({ msg, timeStamp, uSeq, gSeq, uName })
+              );
+
+              // publisher setting
+              await redisCli.publish(
+                `newMsg${gSeq}`,
+                JSON.stringify({
+                  gSeq,
+                  content: {
+                    msg,
+                    timeStamp,
+                    uName,
+                  },
+                })
+              );
+
+              // 메세지 유효시간 : 마지막 메세지를 받은 때로부터 12시간
               await redisCli.expire(`room${gSeq}`, 43200);
+
+              socket
+                .to(`room${gSeq}`)
+                .emit('msg', { uName, uSeq, timeStamp, msg });
+            } else {
+              // 1대1 채팅인 경우(자료구조: 리스트로 저장)
+              // 1. 상대가 로그인되어 있을 때 - 메세지 개수 localstorage 로 관리
+              await redisCli.lPush(
+                personRoom(uSeq, targetSeq),
+                JSON.stringify({ uSeq, msg, timeStamp, uName, targetSeq })
+              );
+              // 채팅방 내역이 있는지 여부 확인 위한 seq 배열 저장 (자료구조 : sets 이용)
+              await redisCli.sADD(`user${targetSeq}`, uSeq);
+
+              // 채팅방의 가장 마지막 메세지로 세팅
+              await redisCli.hSet(
+                `user${targetSeq}`,
+                `msg${uSeq}`,
+                JSON.stringify({ uSeq, msg, timeStamp, uName })
+              );
+
+              // 상대가 로그인되어 있지 않을 때 - redis hash로 관리 : field(senderId)
+              if (!userSocketMap[targetSeq]) {
+                // 기존에 안읽은 메세지가 없을 경우 1 설정
+                await redisCli.hSetNX(`user${targetSeq}`, `count${uSeq}`, 1);
+                // 안읽은 메세지가 있을 경우 +1
+                await redisCli.hIncrBy(`user${targetSeq}`, `count${uSeq}`, 1);
+              }
+
+              // 메세지 유효시간 : 마지막 메세지 받은 때로부터 7일
+              await redisCli.expire(personRoom(uSeq, targetSeq), 604800);
+
+              socket
+                .to(personRoom(uSeq, targetSeq))
+                .emit('msg', { uName, uSeq, timeStamp, msg, targetSeq });
+
+              console.log('Whisper sent successfully to', targetSeq);
             }
-
-            socket
-              .to(`room${gSeq}`)
-              .emit('msg', { uName, uSeq, timeStamp, msg });
-
-            // 귓속말인 경우(자료구조: 리스트로 저장)
-            // if (targetSeq !== 0) {
-            //   const targetId = userSocketMap[targetSeq]
-
-            //     io.to(targetId).emit('whisper', {
-            //       uName,
-            //       uSeq,
-            //       timeStamp,
-            //       msg,
-            //     });
-            //     console.log('Whisper sent successfully to', targetSeq);
-
-            //     await redisCli.hSet(``)
-
-            //   } else {
-            //     console.log('Target user is not online or does not exist');
-            //   }
-            // }
-
-            console.log('msg 전송 성공 !!!! ', result);
           } catch (err) {
             console.error('sendMsg error', err);
           }

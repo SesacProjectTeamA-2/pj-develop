@@ -3,6 +3,14 @@ const redisCli = require('../models/redis').redis_Cli;
 // 로그인 된 사용자인지 아닌지 판별하려면 불러와야함
 const jwt = require('../modules/jwt');
 
+// 내림차순 정렬 위한 함수
+function personRoom(uSeq, targetSeq) {
+  const a = Math.min(uSeq, targetSeq);
+  const b = Math.max(uSeq, targetSeq);
+
+  return `room${a}w${b}`;
+}
+
 exports.roomList = async (req, res) => {
   // 모임별 채팅에 대한 정보
   try {
@@ -12,6 +20,8 @@ exports.roomList = async (req, res) => {
       const uSeq = user.uSeq;
       const gSeq = user.gSeq;
       const roomInfoArray = [];
+      const dmInfoArray = [];
+
       // 1. 모임의 마지막 메세지 정보 송출
       if (Array.isArray(gSeq)) {
         // 아래와같이 사용할 경우, map이 끝날때까지 기다리지 않음 => map에 대한 동작을 변수로 할당해 promise.all() 사용해야한다.
@@ -33,8 +43,25 @@ exports.roomList = async (req, res) => {
             console.log(`room${info}에 메세지 없음!`);
           }
         }
-        res.send({ isSuccess: true, roomInfoArray });
       }
+
+      // 1대1 참가방 추출하고 각 방 참가시킴.
+      const targetSeqArray = await redisCli.sMembers(`user${uSeq}`);
+
+      if (Array.isArray(targetSeqArray)) {
+        for (const targetSeq of targetSeqArray) {
+          const message = await redisCli.hGet(`user${uSeq}`, `msg${targetSeq}`);
+          const count = await redisCli.hGet(`user${uSeq}`, `count${targetSeq}`);
+          const roomInfo = {
+            targetSeq,
+            count,
+            msg: JSON.parse(message),
+          };
+          dmInfoArray.push(roomInfo);
+        }
+      }
+
+      res.send({ isSuccess: true, roomInfoArray, dmInfoArray });
     } else {
       res.send({ isSuccess: false, msg: 'token error' });
     }
