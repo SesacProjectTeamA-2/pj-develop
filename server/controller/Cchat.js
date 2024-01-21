@@ -46,12 +46,18 @@ exports.roomList = async (req, res) => {
       }
 
       // 1대1 참가방 추출하고 각 방 참가시킴.
-      const targetSeqArray = await redisCli.sMembers(`user${uSeq}`);
+      const targetSeqArray = await redisCli.sMembers(`chatUser${uSeq}`);
 
       if (Array.isArray(targetSeqArray)) {
         for (const targetSeq of targetSeqArray) {
-          const message = await redisCli.hGet(`user${uSeq}`, `msg${targetSeq}`);
-          const count = await redisCli.hGet(`user${uSeq}`, `count${targetSeq}`);
+          const message = await redisCli.hGet(
+            `chatUser${uSeq}`,
+            `msg${targetSeq}`
+          );
+          const count = await redisCli.hGet(
+            `chatUser${uSeq}`,
+            `count${targetSeq}`
+          );
           const roomInfo = {
             targetSeq,
             count,

@@ -53,7 +53,7 @@ exports.chatSocket = async (io, socket) => {
         await redisCli.expire(`socket${uSeq}`, 86400); // 24시간
 
         // 1대1 참가방 추출하고 각 방 참가시킴.
-        const targetSeqArray = await redisCli.sMembers(`user${uSeq}`);
+        const targetSeqArray = await redisCli.sMembers(`chatUser${uSeq}`);
         targetSeqArray.map((seq) => socket.join(personRoom(uSeq, seq)));
 
         // 방참가하기
@@ -267,11 +267,11 @@ exports.chatSocket = async (io, socket) => {
                 JSON.stringify({ uSeq, msg, timeStamp, uName, targetSeq })
               );
               // 채팅방 내역이 있는지 여부 확인 위한 seq 배열 저장 (자료구조 : sets 이용)
-              await redisCli.sADD(`user${targetSeq}`, uSeq);
+              await redisCli.sADD(`chatUser${targetSeq}`, uSeq);
 
               // 채팅방의 가장 마지막 메세지로 세팅
               await redisCli.hSet(
-                `user${targetSeq}`,
+                `chatUser${targetSeq}`,
                 `msg${uSeq}`,
                 JSON.stringify({ uSeq, msg, timeStamp, uName })
               );
@@ -279,9 +279,17 @@ exports.chatSocket = async (io, socket) => {
               // 상대가 로그인되어 있지 않을 때 - redis hash로 관리 : field(senderId)
               if (!userSocketMap[targetSeq]) {
                 // 기존에 안읽은 메세지가 없을 경우 1 설정
-                await redisCli.hSetNX(`user${targetSeq}`, `count${uSeq}`, 1);
+                await redisCli.hSetNX(
+                  `chatUser${targetSeq}`,
+                  `count${uSeq}`,
+                  1
+                );
                 // 안읽은 메세지가 있을 경우 +1
-                await redisCli.hIncrBy(`user${targetSeq}`, `count${uSeq}`, 1);
+                await redisCli.hIncrBy(
+                  `chatUser${targetSeq}`,
+                  `count${uSeq}`,
+                  1
+                );
               }
 
               // 메세지 유효시간 : 마지막 메세지 받은 때로부터 7일

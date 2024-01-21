@@ -33,11 +33,28 @@ exports.alarming = async (req, res) => {
 
       // 처음 연결시 보낼 알림목록 및 숫자
 
+      // 알림 목록 중 일주일 지난 알림 삭제
+      const alarmArray = allAlarm.map((item) => JSON.parse(item));
+      const newArray = alarmArray.filter(
+        (sub) =>
+          sub.alarmTime >=
+          new Date(currentTime.getTime() - 7 * 24 * 60 * 60 * 1000)
+      );
+
+      // lPop 사용하여 list 처음에서 삭제함.
+      const difference = alarmArray.length - newArray.length;
+      if (difference > 0) {
+        for (let i = 0; i < difference; i++) {
+          const removedElement = await lPop(`user${uSeq}`);
+          console.log('삭제된 알림', removedElement);
+        }
+      }
+
       // 기존 알람 load (connection)
       // sse.on('connection', async (client) => {
       res.write('event: connected\n' + `data: ${alarmCount}\n\n`);
 
-      res.write('event: allAlarm\n' + `data: ${JSON.stringify(allAlarm)}\n\n`);
+      res.write('event: allAlarm\n' + `data: ${JSON.stringify(newArray)}\n\n`);
 
       // 댓글 작성시 메세지 전송
       await sub.subscribe('comment-alarm', (data) => {

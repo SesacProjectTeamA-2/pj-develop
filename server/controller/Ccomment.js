@@ -100,7 +100,7 @@ exports.createComment = async (req, res) => {
     // (hash) 받는사람 : 게시글 작성자(gbSeq - uSeq)
     // (field) comment
     // (value) gbSeq, uName, date
-    const commentTime = new Date();
+    const alarmTime = new Date();
     const receiver = groupBoard.uSeq;
 
     console.log('gSeq>>>>>>>>>>>>>>>', gSeq);
@@ -116,18 +116,9 @@ exports.createComment = async (req, res) => {
           mSeq,
           gSeq,
           category,
-          commentTime,
+          alarmTime,
         })
       );
-
-      // 만료시간 조회
-      const expirationTime = await redisCli.ttl(`user${receiver}`);
-      // 유효시간 7일
-      if (expirationTime > 0) {
-        console.log('이미 만료시간 설정되어 있음!');
-      } else {
-        await redisCli.expire(`user${receiver}`, 604800);
-      }
 
       // redis pub 처리
       // 모든 알람 리스트
