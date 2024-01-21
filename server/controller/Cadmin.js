@@ -74,7 +74,7 @@ exports.blackUser = async (req, res) => {
 
     // redis 연동
     const blackUser = await GroupUser.findOne({ where: { uSeq, gSeq } });
-    const blackTime = new Date();
+    const alarmTime = new Date();
     const receiver = blackUser.uSeq;
     const result = await redisCli.lPush(
       `user${receiver}`,
@@ -83,18 +83,9 @@ exports.blackUser = async (req, res) => {
         gSeq,
         gName,
         guBanReason,
-        blackTime,
+        alarmTime,
       })
     );
-
-    // 만료시간 조회
-    const expirationTime = await redisCli.ttl(`user${receiver}`);
-    // 유효시간 7일
-    if (expirationTime > 0) {
-      console.log('이미 만료시간 설정되어 있음!');
-    } else {
-      await redisCli.expire(`user${receiver}`, 604800);
-    }
 
     // redis pub 처리
     const allAlarm = await redisCli.lRange(`user${receiver}`, 0, -1);
