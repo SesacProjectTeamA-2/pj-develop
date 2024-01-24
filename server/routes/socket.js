@@ -199,7 +199,7 @@ exports.chatSocket = async (io, socket) => {
             // 클릭시 대화방(room${uSeq}p) 입장
             socket.join(personRoom(uSeq, targetSeq));
 
-            let isLogin = userSocketMap[targetSeq] || false;
+            let isLogin = userSocketMap[targetSeq] ? [targetSeq] : [];
 
             // 대화내역 load : list
             const listLength = await redisCli.lLen(personRoom(uSeq, targetSeq));
@@ -211,12 +211,16 @@ exports.chatSocket = async (io, socket) => {
               );
               socket.emit('DM', {
                 allMsg: parsedMessages,
-                isLogin,
+              });
+              socket.emit('loginUser', {
+                loginUser: isLogin,
               });
             } else {
               socket.emit('DM', {
                 allMsg: '주고받은 메세지가 없어요. 대화를 시작해보세요!',
-                isLogin,
+              });
+              socket.emit('loginUser', {
+                loginUser: isLogin,
               });
             }
           } catch (err) {
