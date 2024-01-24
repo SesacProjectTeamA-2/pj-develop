@@ -157,8 +157,6 @@ export default function Header(props: any) {
     //] 실시간으로 채팅 메세지 오면 업데이트
     //_ newMsg 최신 메세지 받아오면 실행 O
     useEffect(() => {
-        console.log('newMsg Event data ::::');
-
         const socketNewMsg = (newMsgData: any) => {
             const gSeq = newMsgData.gSeq;
             const content = newMsgData.content; // 최신 메세지 내용, 시간
@@ -212,12 +210,26 @@ export default function Header(props: any) {
             // );
             // }
 
-            // gSeq가 같은 데이터만 업데이트
-            props.setRecentMsg((prevRecentMsg: any) =>
-                prevRecentMsg?.map((item: any) =>
-                    item.gSeq == gSeq ? { ...item, msg: formattedData } : item
-                )
+            const foundItem = props.recentMsg.find(
+                (item: any) => item.gSeq === gSeq
             );
+
+            if (foundItem) {
+                props.setRecentMsg((prevRecentMsg: any) =>
+                    prevRecentMsg?.map((item: any) =>
+                        item.gSeq === gSeq
+                            ? [...item, { gSeq, msg: formattedData }]
+                            : item
+                    )
+                );
+            } else {
+                props.setRecentMsg((prevRecentMsg: any) => [
+                    ...prevRecentMsg,
+                    { gSeq, msg: formattedData },
+                ]);
+            }
+
+            console.log('formattedData*****', formattedData);
 
             console.log('isEnter', props.isEnter);
 
@@ -255,7 +267,9 @@ export default function Header(props: any) {
             props.socket?.off('newMsg', socketNewMsg);
             props.socket?.off('loginUser', loginUserSocket);
         };
-    }, [props.socket, props.allGroupInfo, props.isEnter]);
+    }, [props.socket, props.allGroupInfo, props.isEnter, props.recentMsg]);
+
+    console.log('props.recentMsg:::::', props.recentMsg);
 
     useEffect(() => {
         getRecentMsg(); // axios
