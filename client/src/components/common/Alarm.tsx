@@ -28,12 +28,16 @@ any) {
         const formattedAlarmsData = alarmList?.map((alarm: any) => {
             let date: Date | any = ''; // date 변수의 타입을 Date 또는 string으로 지정
 
-            // 각 알람 항목에서 commentTime을 Date 객체로 변환
-            if (alarm.commentTime) {
-                date = new Date(alarm?.commentTime);
-            } else if (alarm.blackTime) {
-                date = new Date(alarm?.blackTime);
+            if (alarm.alarmTime) {
+                date = new Date(alarm?.alarmTime);
             }
+
+            // 각 알람 항목에서 commentTime을 Date 객체로 변환
+            // if (alarm.commentTime) {
+            //     date = new Date(alarm?.commentTime);
+            // } else if (alarm.blackTime) {
+            //     date = new Date(alarm?.blackTime);
+            // }
 
             // 시간을 24시간 형식으로 변환
             const formattedTime = date.toLocaleTimeString('en-US', {

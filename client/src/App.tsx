@@ -77,6 +77,8 @@ function App() {
     const [isEnter, setIsEnter] = useState(false); // 입장/나가기
     const [loginUser, setLoginUser] = useState<any>([]); // joinRoom 이후 접속한 유저 리스트 업데이트
 
+    console.log('App - recentMsg::::::::', recentMsg);
+
     //++ Header 채팅 아이콘 클릭 시, socket roomInfo 이벤트
     // 모임별 채팅 최신 정보 (최신 메세지, 안읽은 메세지)
     useEffect(() => {
@@ -140,6 +142,7 @@ function App() {
                 setAlarmList={setAlarmList}
                 commentAlarm={commentAlarm}
                 setRecentMsg={setRecentMsg} // 전역으로 실시간 최신 메세지 업데이트
+                recentMsg={recentMsg}
                 isEnter={isEnter} // 퇴장할 때마다, unreadMsg 업데이트
                 // isEnter인 경우에는 미확인 채팅 메세지 +1 안함
                 allGroupInfo={allGroupInfo}
