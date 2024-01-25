@@ -131,7 +131,7 @@ export default function ChatRoom({
 
         //-- loginUser 이벤트에 대한 리스너 추가
         socket?.on('loginUser', (data: any) => {
-            console.log('loginUser #########', data); // 서버에서 보낸 data
+            // console.log('loginUser #########', data); // 서버에서 보낸 data
 
             if (data.loginUser?.length > 0) {
                 setLoginUser(data.loginUser);
@@ -167,7 +167,7 @@ export default function ChatRoom({
     useEffect(() => {
         //-- loginUser 이벤트
         socket?.on('loginUser', (data: any) => {
-            console.log('loginUser ##########', data); // 서버에서 보낸 data)
+            // console.log('loginUser ##########', data); // 서버에서 보낸 data)
 
             if (data.loginUser.length > 0) {
                 // setLoginUser(data.loginUser);
@@ -182,9 +182,9 @@ export default function ChatRoom({
 
         //-- joinRoom 이벤트에 대한 리스너 추가
         socket?.on('joinRoom', (data: any) => {
-            console.log('joinRoom event received on client', data); // 서버에서 보낸 data
+            // console.log('joinRoom event received on client', data); // 서버에서 보낸 data
 
-            console.log('data.allMsg >>>>>>', data.allMsg);
+            // console.log('data.allMsg >>>>>>', data.allMsg);
 
             if (typeof data.allMsg !== 'string') {
                 const formattedData = data.allMsg?.map((msg: any) => ({
@@ -495,6 +495,7 @@ export default function ChatRoom({
     const leaveHandler = () => {
         setIsSent(false);
         setIsEnter(false);
+        setDmMode(false);
         // setLeaveRoom(true);
         // console.log('leaveRoom', leaveRoom);
     };
@@ -546,13 +547,77 @@ export default function ChatRoom({
     // };
     // }, [leaveRoom]);
 
-    console.log(msgData);
-    console.log('allMsg', allMsg);
+    // console.log(msgData);
+    // console.log('allMsg', allMsg);
 
-    console.log('외부 loginUName ::::: ', loginUName);
+    // console.log('외부 loginUName ::::: ', loginUName);
+
+    //=== 일대일 채팅방
+    const [dmMode, setDmMode] = useState(false);
+    const [targetInfo, setTargetInfo] = useState({ uSeq: 0, uName: '' });
+
+    const [key, setKey] = useState(0); // key 상태 추가
+
+    const dmRoomHandler = (uSeq: number, uName: string) => {
+        setDmMode(true);
+        setTargetInfo({ uSeq, uName });
+
+        // key 값을 변경하여 리렌더링 유도
+        setKey((prevKey: any) => prevKey + 1);
+    };
+
+    //-- 일대일 채팅방 입장
+    useEffect(() => {
+        if (dmMode) {
+            socket?.emit('DM', { targetSeq: targetInfo.uSeq });
+
+            socket?.on('DM', (data: any) => {
+                console.log('DM #########', data); // 서버에서 보낸 data
+
+                if (typeof data.allMsg !== 'string') {
+                    const formattedData = data.allMsg?.map((msg: any) => ({
+                        gSeq: msg.gSeq,
+                        msg: msg.msg,
+                        timeStamp: new Date(msg.timeStamp).toLocaleTimeString(
+                            [],
+                            {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                // hour12: false,
+                            }
+                        ),
+                        uSeq: msg.uSeq,
+                        uName: msg.uName,
+                    }));
+
+                    setAllMsg(formattedData);
+                }
+            });
+
+            socket?.on('loginUser', (data: any) => {
+                console.log('DM --- loginUser #########', data); // 서버에서 보낸 data
+
+                if (data?.loginUser?.length > 0) {
+                    // setLoginUser(data.loginUser);
+
+                    let updatedLoginUName = [];
+                    for (let i = 0; i < data.loginUser.length; i++) {
+                        updatedLoginUName.push(data.loginUser[i]?.uName);
+                    }
+                    setLoginUName(updatedLoginUName);
+                }
+            });
+        }
+    }, [dmMode]);
+
+    console.log('DM - allMsg #########', allMsg);
+    console.log('DM - loginUser #########', loginUser);
+
+    console.log('targetInfo>>>>', targetInfo);
+    console.log('dmMode>>>>', dmMode);
 
     return (
-        <main className="chat-box">
+        <main className="chat-box" key={key}>
             {/* <button id="send-btn" type="button" onClick={leaveHandler}>
                 나가기
             </button> */}
@@ -576,7 +641,15 @@ export default function ChatRoom({
                         <h2>Member</h2>
                     </div>
 
-                    <div className="contact">
+                    <div
+                        className="contact"
+                        onClick={() =>
+                            dmRoomHandler(
+                                groupDetail.leaderInfo.uSeq,
+                                groupDetail.leaderInfo.uName
+                            )
+                        }
+                    >
                         {/* --- LEADER --- */}
                         <div className="pic rogers">
                             <img
@@ -616,7 +689,12 @@ export default function ChatRoom({
                     {/* --- MEMBER --- */}
                     {groupDetail.memberArray?.map((member: any) => {
                         return (
-                            <div className="contact">
+                            <div
+                                className="contact"
+                                onClick={() =>
+                                    dmRoomHandler(member.uSeq, member.uName)
+                                }
+                            >
                                 <div className="pic rogers">
                                     <img
                                         src={
@@ -670,11 +748,11 @@ export default function ChatRoom({
                         <path d="M289.94 256l95-95A24 24 0 00351 127l-95 95-95-95a24 24 0 00-34 34l95 95-95 95a24 24 0 1034 34l95-95 95 95a24 24 0 0034-34z" />
                     </svg>
 
-                    {/* <div className="pic title7">{nowGSeq}번</div> */}
-                    <div className="group-name">{nowGName}</div>
-                    {/* <div className="pic stark" /> */}
-                    {/* <div className="name">Tony Stark</div> */}
-                    {/* <div className="seen">Today at 12:56</div> */}
+                    {dmMode ? (
+                        <div className="group-name">{targetInfo.uName}</div>
+                    ) : (
+                        <div className="group-name">{nowGName}</div>
+                    )}
                 </div>
 
                 {/*========= 채팅 ========== */}
